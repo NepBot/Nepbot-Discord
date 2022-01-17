@@ -1,0 +1,40 @@
+.wrap {
+  width: 100vw;
+  height: 100vh;
+  /*background: rgba(0,0,0,.8);*/
+}
+.wrap .content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 50%;
+  height: 90%;
+  background: #fff;
+  box-shadow: 10px 10px 10px #ccc, -10px -10px 10px #ccc, -10px 10px 10px #ccc,
+    10px -10px 10px #ccc;
+  border-radius: 15px;
+  position: absolute;
+  left: calc(50% - 25%);
+  top: calc(50% - 45%);
+  padding: 20px;
+}
+.wrap .content .title {
+  text-align: center;
+}
+.wrap .nickName {
+  display: block;
+  margin-bottom: 2rem;
+}
+.wrap .ant-btn {
+  width: 80%;
+  display: block;
+  margin: 0 auto;
+}
+
+@media (max-width: 780px) {
+  .wrap .content {
+    width: 90%;
+    left: calc(50% - 45%);
+    top: calc(50% - 45%);
+  }
+}

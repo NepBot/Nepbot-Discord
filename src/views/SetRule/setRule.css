@@ -1,0 +1,8 @@
+.setRule_content{
+    margin: 0 auto;
+}
+.setRule_content .search_bar{
+    margin: 20px 0;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
