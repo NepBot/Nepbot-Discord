@@ -1,10 +1,13 @@
-import React, { useEffect} from 'react';
+import React, { useEffect, useState} from 'react';
 import qs from 'qs';
 import {notification} from 'antd'
 import {setInfo} from "../../api/api";
 import store from "../../store/discordInfo";
+import {sign} from "../../utils/util";
+
 
 export default function Success(props) {
+
     const openNotificationWithIcon = type => {
         notification[type]({
             message: 'Important information is missing',
@@ -12,12 +15,23 @@ export default function Success(props) {
                 'Please close the current page and return to discord to restart wallet authorization',
         });
     };
+
+
+
     useEffect(()=>{
 
         (async ()=>{
-
-            const data = store.get('user_id');
-            const datas =  await setInfo({...qs.parse(props.location.search.slice(1)) , user_id:data,guild_id:store.get('guild_id') })
+            const params = qs.parse(props.location.search.slice(1))
+            console.log(params)
+            const signature = await sign(params.account_id)
+            const user_id = params.user_id
+            const guild_id = params.guild_id
+            const datas =  await setInfo({
+                account_id: params.account_id, 
+                user_id: user_id,
+                guild_id: guild_id,
+                sign: signature 
+            })
 
             if(datas && datas?.success){
                 window.open('https://discord.com/channels/','_self')

@@ -1,5 +1,6 @@
-import {connect, KeyPair, keyStores} from "near-api-js";
+import {connect, KeyPair, keyStores, utils, WalletConnection} from "near-api-js";
 import {config} from "../config";
+import bs58 from 'bs58'
 const account_id = 'lzs.testnet';
 export const contract = async ()=>{
     const keyStore = new keyStores.InMemoryKeyStore();
@@ -12,4 +13,23 @@ export const contract = async ()=>{
     config.keyStore = keyStore;
     const _near = await connect(config);
     return await _near.account(account_id);
+}
+
+export function parseAmount(amount) {
+    return utils.format.parseNearAmount(String(amount))
+}
+
+export function formatAmount(amount) {
+    return utils.format.formatNearAmount(String(amount))
+}
+
+export async function sign(account_id, obj) {
+    const near = await connect(config);
+    const wallet = new WalletConnection(near,"nepbot");
+    const account = wallet.account(account_id)
+    const keyPair = await account.connection.signer.keyStore.getKey(config.networkId, account.accountId);
+    const data_buffer = Buffer.from(JSON.stringify(obj));
+    const { signature } = keyPair.sign(data_buffer);
+    let sign = bs58.encode(signature);
+    return sign
 }

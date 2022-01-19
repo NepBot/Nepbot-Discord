@@ -2,8 +2,8 @@ import React,{useState} from 'react';
 import {Modal, Form, Input, Button, Select} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {config} from "../../config";
-import {sign} from "../../api/api";
-import {contract} from "../../utils/util";
+import {signRule} from "../../api/api";
+import {contract, parseAmount, sign} from "../../utils/util";
 const { Item } = Form;
 const { Option } = Select;
 function AddRule(props) {
@@ -16,9 +16,7 @@ function AddRule(props) {
         const _near = await connect(config);
         const _wallet = new WalletConnection(_near,1);
         const account = await _wallet.account();
-        // const data = await account.functionCall({contractId:'discord-roles.bhc8521.testnet', methodName:'set_roles',args:values});
-        // console.log(data);
-       const rule= await account.viewFunction('discord-roles.bhc8521.testnet','get_guild', {guild_id:values.guild_id});
+        const rule= await account.viewFunction(config.contract_id,'get_guild', {guild_id:values.guild_id});
         console.log(rule);
     };
 
@@ -28,12 +26,25 @@ function AddRule(props) {
     const onCheck = async () => {
         try {
             const values = await form.validateFields();
-            const _sign = await sign([values]);
-            const account = await contract();
-
             setConfirmLoading(true);
+            const near = await connect(config);
+            const wallet = new WalletConnection(near,"nepbot");
+            const account = wallet.account()
+            let metadata = await account.viewFunction(values.token_id, 'ft_metadata', {})
+            values.amount += '.'
+            for (let i = 0; i < metadata.decimals; i ++) {
+                values.amount += '0'
+            }
+            values.amount = parseAmount(values.amount)
+            const msg = {
+                args: [values],
+                sign: await sign(account.accountId, [values]),
+                account_id: account.accountId
+            }
+            const _sign = await signRule(msg);
+            
             const data = await account.functionCall(
-                'discord-roles.bhc8521.testnet',
+                config.contract_id,
                 'set_roles',
                  {args:JSON.stringify([values]),sign:_sign.sign},
                 '300000000000000',

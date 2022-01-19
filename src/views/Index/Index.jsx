@@ -7,51 +7,34 @@ import {config} from '../../config';
 import './Index.css';
 import store from "../../store/discordInfo";
 
-const signIn = (wallet,nickName) => {
-  wallet.requestSignIn(
-    nickName, // contract requesting access
-    "discord Bot", // optional
-    `${window.location.origin}/success`, // optional
-    `${window.location.origin}/failure` // optional
-  );
-};
+
 export default function Index(props) {
-    const [nickName, setNickName] = useState('');
     const [near,setNear] = useState({})
     const [wallet,setWallet] = useState({})
-    const [balance,setBalance] = useState({total:0})
+    const [redirect, setRedirect] = useState('success')
+
+    const signIn = (wallet) => {
+        wallet.requestSignIn(
+          config.contract_id, // contract requesting access
+          "nepbot", // optional
+          `${window.location.origin}/${'setrule'}${props.location.search}`, // optional
+          `${window.location.origin}/failure` // optional
+        );
+    };
 
     const handleConnect = useCallback(async () => {
         const _near = await connect(config);
-        const _wallet = new WalletConnection(_near,nickName);
+        const _wallet = new WalletConnection(_near,"nepbot");
         setNear(_near);
         setWallet(_wallet)
-        signIn(_wallet,nickName);
+        signIn(_wallet);
     }, [near,wallet])
-    const handleNickName = useCallback((e) => {
-        console.log(e)
-        setNickName(e.target.value)
-    }, []);
-
-    const handleGetInfo = useCallback(async () => {
-        const _near = await connect(config);
-        const _wallet = new WalletConnection(_near,null);
-        const account = await _wallet.account();
-        const _balance = await account.getAccountBalance();
-        const detail = await account.getAccountDetails();
-        console.log("detail>>>>",detail)
-        setBalance(_balance)
-        console.log(_balance)
-        console.log(store)
-        // storage.set("name", { name: "SuperIron" }, { expires: 1 });
-    }, [nickName,balance]);
 
     useEffect(()=>{
         const search =  qs.parse(props.location.search.slice(1));
-        setNickName(search?.near_wallet || '')
-        store.set('user_id',search?.user_id , {expires:1})
-        store.set('guild_id',search?.guild_id , {expires:1})
-    },[])
+        console.log(search.redirect?search.redirect:'success')
+        setRedirect(search.redirect?search.redirect:'success')
+    },[redirect])
 
     return (
         <div className={"wrap"}>

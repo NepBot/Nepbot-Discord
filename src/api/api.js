@@ -7,7 +7,7 @@ export const setInfo = async (data)=>{
         data,
     })
 }
-export const sign = async (args)=>{
+export const signRule = async (args)=>{
     const json = await fetch(`/api/sign/${store.get('guild_id')}`,{
         headers:{ 'Content-Type': 'application/json' },
         method:"POST",
@@ -24,36 +24,36 @@ export const getServer = async ()=>{
     return await json.json();
 }
 
-export const getRuleList = async (params)=>{
-    return await axios.request({
-        method:"get",
-        url:`/role/list/${store.get('guild_id')}`,
-        params,
-    })
-}
+// export const getRuleList = async (params)=>{
+//     return await axios.request({
+//         method:"get",
+//         url:`/role/list/${store.get('guild_id')}`,
+//         params,
+//     })
+// }
 
-export const addRule = async (data)=>{
-    return await axios.request({
-        method:"post",
-        url:"/role/add",
-        data,
-    })
-}
+// export const addRule = async (data)=>{
+//     return await axios.request({
+//         method:"post",
+//         url:"/role/add",
+//         data,
+//     })
+// }
 
-export const delRule = async (id)=>{
-    return await axios.request({
-        method:"delete",
-        url:"/role/del",
-        data:{
-            id,
-        },
-    })
-}
+// export const delRule = async (id)=>{
+//     return await axios.request({
+//         method:"delete",
+//         url:"/role/del",
+//         data:{
+//             id,
+//         },
+//     })
+// }
 
-export const editRule = async (data)=>{
-    return await axios.request({
-        method:"put",
-        url:"/role/edit",
-        data,
-    })
-}
+// export const editRule = async (data)=>{
+//     return await axios.request({
+//         method:"put",
+//         url:"/role/edit",
+//         data,
+//     })
+// }
