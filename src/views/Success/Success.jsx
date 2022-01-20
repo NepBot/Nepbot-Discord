@@ -22,14 +22,18 @@ export default function Success(props) {
 
         (async ()=>{
             const params = qs.parse(props.location.search.slice(1))
-            console.log(params)
-            const signature = await sign(params.account_id)
+            
             const user_id = params.user_id
             const guild_id = params.guild_id
-            const datas =  await setInfo({
+            const args = {
                 account_id: params.account_id, 
                 user_id: user_id,
                 guild_id: guild_id,
+            }
+            const signature = await sign(params.account_id, args)
+            const datas =  await setInfo({
+                args: args,
+                account_id: params.account_id,
                 sign: signature 
             })
 

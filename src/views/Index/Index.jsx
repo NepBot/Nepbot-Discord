@@ -17,7 +17,7 @@ export default function Index(props) {
         wallet.requestSignIn(
           config.contract_id, // contract requesting access
           "nepbot", // optional
-          `${window.location.origin}/${'setrule'}${props.location.search}`, // optional
+          `${window.location.origin}/${redirect}${props.location.search}`, // optional
           `${window.location.origin}/failure` // optional
         );
     };
