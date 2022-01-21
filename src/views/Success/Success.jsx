@@ -4,6 +4,8 @@ import {notification} from 'antd'
 import {setInfo} from "../../api/api";
 import store from "../../store/discordInfo";
 import {sign} from "../../utils/util";
+import {connect, WalletConnection} from "near-api-js";
+import {config} from "../../config";
 
 
 export default function Success(props) {
@@ -30,7 +32,9 @@ export default function Success(props) {
                 user_id: user_id,
                 guild_id: guild_id,
             }
-            const signature = await sign(params.account_id, args)
+            const near = await connect(config);
+            const wallet = new WalletConnection(near,"nepbot");
+            const signature = await sign(wallet.account(), args)
             const datas =  await setInfo({
                 args: args,
                 account_id: params.account_id,

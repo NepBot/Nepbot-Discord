@@ -23,10 +23,8 @@ export function formatAmount(amount) {
     return utils.format.formatNearAmount(String(amount))
 }
 
-export async function sign(account_id, obj) {
-    const near = await connect(config);
-    const wallet = new WalletConnection(near,"nepbot");
-    const account = wallet.account(account_id)
+export async function sign(account, obj) {
+    console.log(account)
     const keyPair = await account.connection.signer.keyStore.getKey(config.networkId, account.accountId);
     const data_buffer = Buffer.from(JSON.stringify(obj));
     const { signature } = keyPair.sign(data_buffer);

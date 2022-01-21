@@ -124,7 +124,7 @@ function SetRule(props) {
         const obj = {role_id:record.role_id,signType:'del'}
         const msg = {
             args: obj,
-            sign: await sign(account.accountId, obj),
+            sign: await sign(account, obj),
             account_id: account.accountId
         }
         const _sign = await signRule(msg);

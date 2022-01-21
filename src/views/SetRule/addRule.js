@@ -38,7 +38,7 @@ function AddRule(props) {
             values.amount = parseAmount(values.amount)
             const msg = {
                 args: [values],
-                sign: await sign(account.accountId, [values]),
+                sign: await sign(account, [values]),
                 account_id: account.accountId
             }
             const _sign = await signRule(msg);
@@ -63,6 +63,58 @@ function AddRule(props) {
     };
     const {serverList} = props;
     const roleList = props.roleList.map(item=><Option value={item.id} key={item.id}>{item.name}</Option>);
+    const itemList = []
+    itemList.push(
+        <Item
+            label="server name"
+            name="guild_id"
+            rules={[{ required: true, message: 'Please choose a server' }]}
+        >
+            <Select>
+                <Option value={serverList.id}>{serverList.name}</Option>
+            </Select>
+        </Item>
+    )
+    itemList.push(
+        <Item
+            label="role"
+            name="role_id"
+            rules={[{ required: true, message: 'Please choose a role' }]}
+        >
+            <Select>
+                <Option value={item.id} key={item.id}>{item.name}</Option>
+            </Select>
+        </Item>
+    )
+
+    itemList.push(
+        <Item
+            label="type"
+            name="type"
+            rules={[{ required: true, message: 'Please choose a type' }]}
+        >
+            <Select>
+                {roleList}
+            </Select>
+        </Item>
+    )
+    
+    
+    <Item
+        label="token_address"
+        name="token_id"
+        rules={[{ required: true, message: 'Enter a token address' }]}
+    >
+        <Input />
+    </Item>
+    <Item
+        label="token_amount"
+        name="amount"
+        rules={[{ required: true, message: 'Enter a token amount' }]}
+    >
+        <Input />
+    </Item> )
+
     return (
         <div>
             <Modal title="add rule"   visible={props.visible} onOk={props.onOk}
@@ -84,38 +136,7 @@ function AddRule(props) {
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
                 >
-                    <Item
-                        label="server name"
-                        name="guild_id"
-                        rules={[{ required: true, message: 'Please choose a server' }]}
-                    >
-                        <Select>
-                            <Option value={serverList.id}>{serverList.name}</Option>
-                        </Select>
-                    </Item>
-                    <Item
-                        label="role"
-                        name="role_id"
-                        rules={[{ required: true, message: 'Please choose a role' }]}
-                    >
-                        <Select>
-                            {roleList}
-                        </Select>
-                    </Item>
-                    <Item
-                        label="token_address"
-                        name="token_id"
-                        rules={[{ required: true, message: 'Enter a token address' }]}
-                    >
-                        <Input />
-                    </Item>
-                    <Item
-                        label="token_amount"
-                        name="amount"
-                        rules={[{ required: true, message: 'Enter a token amount' }]}
-                    >
-                        <Input />
-                    </Item>
+                    
 
                     {/*<Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button type="primary" htmlType="submit">
