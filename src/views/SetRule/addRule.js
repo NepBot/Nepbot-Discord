@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import {Modal, Form, Input, Button, Select} from "antd";
+import {Modal, Form, Input, Button, Select, Space} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {config} from "../../config";
 import {signRule} from "../../api/api";
@@ -9,6 +9,7 @@ const { Option } = Select;
 function AddRule(props) {
     const [form] = Form.useForm();
     const [confirmLoading, setConfirmLoading] = useState(false);
+    let server = useState[''];
     // const [checkNick, setCheckNick] = useState(false);
     const onFinish = async (values) => {
         console.log('Success:', values);
@@ -61,71 +62,41 @@ function AddRule(props) {
             console.log('Failed:', errorInfo);
         }
     };
-    const {serverList} = props;
-    const roleList = props.roleList.map(item=><Option value={item.id} key={item.id}>{item.name}</Option>);
+    const handleChangeServer = async (v) => {
+        console.log(v,'----------v--------');
+        server = v;
+    }
+    // const {serverList} = props;
     const itemList = []
+
+    const serverList = props.serverList.map(server => 
+        <Option value={server.id} key={server.id} >{server.name}</Option>
+    );
     itemList.push(
         <Item
             label="server name"
             name="guild_id"
             rules={[{ required: true, message: 'Please choose a server' }]}
         >
-            <Select>
-                <Option value={serverList.id}>{serverList.name}</Option>
+            <Select onChange={()=>{handleChangeServer()}}>
+                {serverList}
             </Select>
         </Item>
-    )
-    itemList.push(
-        <Item
-            label="role"
-            name="role_id"
-            rules={[{ required: true, message: 'Please choose a role' }]}
-        >
-            <Select>
-                <Option value={item.id} key={item.id}>{item.name}</Option>
-            </Select>
-        </Item>
-    )
 
-    itemList.push(
-        <Item
-            label="type"
-            name="type"
-            rules={[{ required: true, message: 'Please choose a type' }]}
-        >
-            <Select>
-                {roleList}
-            </Select>
-        </Item>
     )
-    
-    
-    <Item
-        label="token_address"
-        name="token_id"
-        rules={[{ required: true, message: 'Enter a token address' }]}
-    >
-        <Input />
-    </Item>
-    <Item
-        label="token_amount"
-        name="amount"
-        rules={[{ required: true, message: 'Enter a token amount' }]}
-    >
-        <Input />
-    </Item> )
-
     return (
         <div>
             <Modal title="add rule"   visible={props.visible} onOk={props.onOk}
-                   footer={[
-                <Button key="back" onClick={()=>{ form.resetFields();props.onCancel(); }}>
-                    cancel
-                </Button>,
-                <Button loading={confirmLoading}  key="submit" htmlType="submit" type="primary" onClick={onCheck}>
-                    ok
-                </Button>
-            ]} onCancel={props.onCancel}>
+                footer={[
+                    <Button key="back" onClick={()=>{ form.resetFields();props.onCancel(); }}>
+                        cancel
+                    </Button>,
+                    <Button loading={confirmLoading}  key="submit" htmlType="submit" type="primary" onClick={onCheck}>
+                        ok
+                    </Button>
+                ]} 
+                onCancel={props.onCancel}
+                >
                 <Form
                     form={form}
                     name="basic"
@@ -136,8 +107,8 @@ function AddRule(props) {
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
                 >
-                    
-
+                    {itemList}
+                    <ServerDetail server={server} roleList={props.roleList}/>
                     {/*<Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button type="primary" htmlType="submit">
                             Submit
@@ -147,6 +118,63 @@ function AddRule(props) {
             </Modal>
         </div>
     );
+}
+
+
+function ServerDetail(props){
+    const server = props.server;
+    if(server === 'token Amount'){
+        return <Token />;
+    }else if(server === 'oct role'){
+        return <Role roleList={props.roleList}/>
+    }
+}
+
+function Token(props){
+    return <div>
+        <Item
+        label="token_address"
+        name="token_id"
+        rules={[{ required: true, message: 'Enter a token address' }]}
+        >
+            <Input />
+        </Item>
+        <Item
+            label="token_amount"
+            name="amount"
+            rules={[{ required: true, message: 'Enter a token amount' }]}
+        >
+            <Input />
+        </Item>
+    </div>
+}
+
+function Role(props){
+    const roleList = props.roleList.map(item => 
+        <Option value={item.id} key={item.id}>{item.name}</Option>
+    );
+    return <div>
+        <Item
+            label="role"
+            name="role_id"
+            rules={[{ required: true, message: 'Please chose a role' }]}
+        >
+            <Select>
+                {roleList}
+                {/* <Option value={item.id} key={item.id}>{item.name}</Option> */}
+            </Select>
+        </Item>
+        <Item
+            label="type"
+            name="type"
+            rules={[{ required: true, message: 'Please choose a type' }]}
+        >
+            <Select>
+                {roleList}
+            </Select>
+        </Item>
+
+    </div>
 }
 
 export default AddRule;
