@@ -23,6 +23,7 @@ function SetRule(props) {
     const [dataSource, setDataSource] = useState(['']);
     const [tableStatus, setTableStatus] = useState(true);
     const [account, setAccount] = useState({})
+    const [appchainIds, setAppchainIds] = useState([])
     const columns = [
         {
             dataIndex: 'guild_name',
@@ -43,14 +44,41 @@ function SetRule(props) {
             }
         },
         {
-            dataIndex: 'token_id',
-            title: 'Token Id',
-            key: 'token_id',
+            dataIndex: 'key_field',
+            title: 'Key value',
+            key: 'key_field',
+            render: (text,record) => {
+                if (record.key_field) {
+                    return (
+                        <p key={record.key_field[1]}>{`${record.key_field[0]}: ${record.key_field[1]}`}</p>
+                    )
+                }
+                else {
+                    return (<div/>)
+                }
+            }
         },
         {
-            dataIndex: 'amount',
-            title: 'Token Amount',
-            key: 'amount',
+            dataIndex: 'fields',
+            title: 'Attribute',
+            key: 'fields',
+            render: (text,record) => {
+                if (record.key_field) {
+                    if (record.key_field[0] == 'token_id') {
+                        return (
+                            <p key={Math.random()}>{`token amount: ${formatAmount(record.fields.token_amount)}`}</p>
+                        )
+                    } else if (record.key_field[0] == 'appchain_id') {
+                        return (
+                            <p key={Math.random()}>{`oct role: ${record.fields.oct_role}`}</p>
+                        )
+                    }
+                }
+                else {
+                    return (<div/>)
+                }
+                
+            }
         },
         {
             title: 'Action',
@@ -65,17 +93,38 @@ function SetRule(props) {
 
     const handleData = async (data, servername) => {
         const roleList = await getRoleList();
-        roleList.forEach(item => {
-            data.forEach(async (it, index) => {
-                if (item.id === it["role_id"] && item.name!=='@everyone' && item.name) {
+        data.forEach(async (it, index) => {
+            roleList.forEach(item => {
+                if (item.id === it["role_id"]) {
                     it.role_name = item.name
                     it.guild_name = servername
                     it.key = index;
-                    it.amount = formatAmount(it.amount)
-                }
 
+                }
             })
         })
+        console.log(data)
+        // roleList.forEach(item => {
+        //     data.forEach(async (it, index) => {
+        //         if (item.id === it["role_id"] && item.name!=='@everyone' && item.name) {
+        //             it.role_name = item.name
+        //             it.guild_name = servername
+        //             it.key = index;
+
+        //         }
+        //         // if (it.key_field[0] == 'token_id') {
+        //         //     it.key_value = it.key_field[1]
+        //         //     it.key_field = 'token id'
+        //         //     it.attriute_field = 'token amount'
+        //         //     //it.attriute_value = formatAmount(it.fields['token_amount'])
+        //         // } else if (it.key_field[0] == 'appchain_id') {
+        //         //     it.key_value = it.key_field[1]
+        //         //     it.key_field = 'appchain id'
+        //         //     it.attriute_field = 'oct role'
+        //         //     it.attriute_value = it.fields['oct_role']
+        //         // }
+        //     })
+        // })
         console.log("roleList>>>",data)
         return data;
     }
@@ -94,11 +143,14 @@ function SetRule(props) {
             setServerList(server);
             const account = await _wallet.account();
             setAccount(account)
+            const appchainIds = await account.viewFunction(config.OCT_CONTRACT, 'get_appchain_ids', {})
+            setAppchainIds(appchainIds)
 
             try{
                 setTableStatus(true)
-                const data = await account.viewFunction(config.contract_id, 'get_guild', {guild_id: server.id})
+                const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: server.id})
                 const _data = await handleData(data, server.name)
+                console.log(data)
 
                 setTableStatus(false)
                 setDataSource(_data)
@@ -120,22 +172,24 @@ function SetRule(props) {
     }, [addDialogStatus]);
 
     const handleDelete = async (record) =>{
-        console.log(record.role_id)
-        const obj = {role_id:record.role_id,signType:'del'}
+        const obj = {
+            guild_id: record.guild_id,
+            role_id: record.role_id,
+            key_field: record.key_field,
+            fields: record.fields
+        }
         const msg = {
-            args: obj,
-            sign: await sign(account, obj),
+            args: [obj],
+            sign: await sign(account, [obj]),
             account_id: account.accountId
         }
         const _sign = await signRule(msg);
-        console.log(_sign)
-        console.log({args:record.role_id,..._sign})
         try {
             setTableStatus(true);
            const delRule = await account.functionCall(
-                config.contract_id,
+                config.RULE_CONTRACT,
                 'del_role',
-                {args:JSON.stringify(record.role_id),..._sign},
+                {args:JSON.stringify([obj]),..._sign},
                 '300000000000000'
             );
            setTimeout(async ()=>{
@@ -153,7 +207,7 @@ function SetRule(props) {
             await handleReload();
         } else {
             const account = await contract();
-            const data = await account.viewFunction(config.contract_id, 'get_token', {token_id: tokenId})
+            const data = await account.viewFunction(config.RULE_CONTRACT, 'get_token', {token_id: tokenId})
             const _data = await handleData(data, serverList.name);
             console.log(_data)
             setDataSource(_data);
@@ -164,7 +218,7 @@ function SetRule(props) {
     const handleReload = async () => {
         setTableStatus(true)
         const account = await contract();
-        const data = await account.viewFunction(config.contract_id, 'get_guild', {guild_id: serverList.id})
+        const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: serverList.id})
         const _data = await handleData(data, serverList.name)
         setDataSource(_data);
         setTableStatus(false)
@@ -187,7 +241,7 @@ function SetRule(props) {
             </div>
             <Table loading={tableStatus} columns={columns} dataSource={dataSource} rowKey={(record)=>`rest${record.key*Math.random()}`}/>
 
-            <AddRule title="Basic Modal" roleList={roleList} serverList={serverList} visible={addDialogStatus}
+            <AddRule title="Basic Modal" appchainIds={appchainIds} roleList={roleList} serverList={serverList} visible={addDialogStatus}
                      onOk={handleAddStatus} onCancel={handleAddStatus}/>
         </div>
     );

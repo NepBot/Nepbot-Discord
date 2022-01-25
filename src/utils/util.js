@@ -24,7 +24,6 @@ export function formatAmount(amount) {
 }
 
 export async function sign(account, obj) {
-    console.log(account)
     const keyPair = await account.connection.signer.keyStore.getKey(config.networkId, account.accountId);
     const data_buffer = Buffer.from(JSON.stringify(obj));
     const { signature } = keyPair.sign(data_buffer);

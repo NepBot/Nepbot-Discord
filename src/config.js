@@ -1,7 +1,8 @@
 import {keyStores} from 'near-api-js';
 const key = new keyStores.BrowserLocalStorageKeyStore();
 export const config = {
-  contract_id: 'discord-roles.bhc8521.testnet',
+  RULE_CONTRACT: 'v2-discord-roles.bhc8521.testnet',
+  OCT_CONTRACT: 'registry.test_oct.testnet',
   networkId: "testnet",
   keyStore: key,
   nodeUrl: "https://rpc.testnet.near.org",

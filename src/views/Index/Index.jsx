@@ -15,7 +15,7 @@ export default function Index(props) {
 
     const signIn = (wallet) => {
         wallet.requestSignIn(
-          config.contract_id, // contract requesting access
+          config.RULE_CONTRACT, // contract requesting access
           "nepbot", // optional
           `${window.location.origin}/${redirect}${props.location.search}`, // optional
           `${window.location.origin}/failure` // optional

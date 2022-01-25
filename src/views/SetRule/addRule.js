@@ -9,7 +9,7 @@ const { Option } = Select;
 function AddRule(props) {
     const [form] = Form.useForm();
     const [confirmLoading, setConfirmLoading] = useState(false);
-    let server = useState[''];
+    const [type, setType] = useState('');
     // const [checkNick, setCheckNick] = useState(false);
     const onFinish = async (values) => {
         console.log('Success:', values);
@@ -17,7 +17,7 @@ function AddRule(props) {
         const _near = await connect(config);
         const _wallet = new WalletConnection(_near,1);
         const account = await _wallet.account();
-        const rule= await account.viewFunction(config.contract_id,'get_guild', {guild_id:values.guild_id});
+        const rule= await account.viewFunction(config.RULE_CONTRACT,'get_guild', {guild_id:values.guild_id});
         console.log(rule);
     };
 
@@ -27,27 +27,40 @@ function AddRule(props) {
     const onCheck = async () => {
         try {
             const values = await form.validateFields();
+            let args = {
+                guild_id: values.guild_id,
+                role_id: values.role_id,
+            }
             setConfirmLoading(true);
             const near = await connect(config);
             const wallet = new WalletConnection(near,"nepbot");
             const account = wallet.account()
-            let metadata = await account.viewFunction(values.token_id, 'ft_metadata', {})
-            values.amount += '.'
-            for (let i = 0; i < metadata.decimals; i ++) {
-                values.amount += '0'
+            if (type == 'token amount') {
+                let metadata = await account.viewFunction(values.token_id, 'ft_metadata', {})
+                let amount = values.token_amount + '.'
+                for (let i = 0; i < metadata.decimals; i ++) {
+                    amount += '0'
+                }
+                amount = parseAmount(amount)
+                args.key_field = ['token_id', values.token_id]
+                args.fields = {token_amount: amount}
+            } else {
+                args.key_field = ['appchain_id', values.appchain_id]
+                args.fields = {oct_role: values.oct_role}
             }
-            values.amount = parseAmount(values.amount)
+            
+            
+            
             const msg = {
-                args: [values],
-                sign: await sign(account, [values]),
+                args: [args],
+                sign: await sign(account, [args]),
                 account_id: account.accountId
             }
             const _sign = await signRule(msg);
-            
             const data = await account.functionCall(
-                config.contract_id,
+                config.RULE_CONTRACT,
                 'set_roles',
-                 {args:JSON.stringify([values]),sign:_sign.sign},
+                 {args:JSON.stringify([args]),sign:_sign.sign},
                 '300000000000000',
                 '20000000000000000000000',
             );
@@ -62,28 +75,14 @@ function AddRule(props) {
             console.log('Failed:', errorInfo);
         }
     };
-    const handleChangeServer = async (v) => {
-        console.log(v,'----------v--------');
-        server = v;
+    const handleChangeType = async (v) => {
+        setType(v);
     }
     // const {serverList} = props;
-    const itemList = []
-
-    const serverList = props.serverList.map(server => 
-        <Option value={server.id} key={server.id} >{server.name}</Option>
+    const {serverList} = props
+    const roleList = props.roleList.map(item => 
+        <Option value={item.id} key={item.id}>{item.name}</Option>
     );
-    itemList.push(
-        <Item
-            label="server name"
-            name="guild_id"
-            rules={[{ required: true, message: 'Please choose a server' }]}
-        >
-            <Select onChange={()=>{handleChangeServer()}}>
-                {serverList}
-            </Select>
-        </Item>
-
-    )
     return (
         <div>
             <Modal title="add rule"   visible={props.visible} onOk={props.onOk}
@@ -107,8 +106,35 @@ function AddRule(props) {
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
                 >
-                    {itemList}
-                    <ServerDetail server={server} roleList={props.roleList}/>
+                    <Item
+                        label="server name"
+                        name="guild_id"
+                        rules={[{ required: true, message: 'Please choose a server' }]}
+                    >
+                        <Select>
+                            <Option value={serverList.id}>{serverList.name}</Option>
+                        </Select>
+                    </Item>
+                    <Item
+                        label="role"
+                        name="role_id"
+                        rules={[{ required: true, message: 'Please choose a role' }]}
+                    >
+                        <Select>
+                            {roleList}
+                        </Select>
+                    </Item>
+                    <Item
+                        label="type"
+                        name="type"
+                        rules={[{ required: true, message: 'Please choose a type' }]}
+                    >
+                        <Select onChange={(v)=>{handleChangeType(v)}}>
+                            <Option value='token amount'>token amount</Option>
+                            <Option value='oct roles'>oct roles</Option>
+                        </Select>
+                    </Item>
+                    <TypeDetail type={type} appchainIds={props.appchainIds}/>
                     {/*<Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button type="primary" htmlType="submit">
                             Submit
@@ -121,27 +147,29 @@ function AddRule(props) {
 }
 
 
-function ServerDetail(props){
-    const server = props.server;
-    if(server === 'token Amount'){
+function TypeDetail(props){
+    const type = props.type;
+    if(type === 'token amount'){
         return <Token />;
-    }else if(server === 'oct role'){
-        return <Role roleList={props.roleList}/>
+    }else if(type === 'oct roles'){
+        return <OctRoles appchainIds={props.appchainIds}/>
+    } else {
+        return <div/>
     }
 }
 
 function Token(props){
     return <div>
         <Item
-        label="token_address"
+        label="token address"
         name="token_id"
         rules={[{ required: true, message: 'Enter a token address' }]}
         >
             <Input />
         </Item>
         <Item
-            label="token_amount"
-            name="amount"
+            label="token amount"
+            name="token_amount"
             rules={[{ required: true, message: 'Enter a token amount' }]}
         >
             <Input />
@@ -149,28 +177,29 @@ function Token(props){
     </div>
 }
 
-function Role(props){
-    const roleList = props.roleList.map(item => 
-        <Option value={item.id} key={item.id}>{item.name}</Option>
+function OctRoles(props){
+    const appchainIds = props.appchainIds.map(item => 
+        <Option value={item + '.' + config.OCT_CONTRACT} key={item}>{item}</Option>
     );
     return <div>
+        
         <Item
-            label="role"
-            name="role_id"
-            rules={[{ required: true, message: 'Please chose a role' }]}
+            label="appchain id"
+            name="appchain_id"
+            rules={[{ required: true, message: 'Please choose a appchain' }]}
         >
             <Select>
-                {roleList}
-                {/* <Option value={item.id} key={item.id}>{item.name}</Option> */}
+                {appchainIds}
             </Select>
         </Item>
         <Item
-            label="type"
-            name="type"
-            rules={[{ required: true, message: 'Please choose a type' }]}
+            label="oct role"
+            name="oct_role"
+            rules={[{ required: true, message: 'Please choose an oct role' }]}
         >
             <Select>
-                {roleList}
+                <Option value='delegator'>delegator</Option>
+                <Option value='validator'>validator</Option>
             </Select>
         </Item>
 
