@@ -183,6 +183,7 @@ function SetRule(props) {
             sign: await sign(account, [obj]),
             account_id: account.accountId
         }
+        console.log(msg)
         const _sign = await signRule(msg);
         try {
             setTableStatus(true);

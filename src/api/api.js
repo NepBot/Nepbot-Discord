@@ -8,7 +8,7 @@ export const setInfo = async (data)=>{
     })
 }
 export const signRule = async (args)=>{
-    const json = await fetch(`/api/sign/${store.get('guild_id')}`,{
+    const json = await fetch(`/api/sign`,{
         headers:{ 'Content-Type': 'application/json' },
         method:"POST",
         body:typeof args === 'string'?args:JSON.stringify(args)
