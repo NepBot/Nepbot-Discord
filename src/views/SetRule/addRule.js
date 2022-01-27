@@ -179,7 +179,7 @@ function Token(props){
 
 function OctRoles(props){
     const appchainIds = props.appchainIds.map(item => 
-        <Option value={item + '.' + config.OCT_CONTRACT} key={item}>{item}</Option>
+        <Option value={item} key={item}>{item}</Option>
     );
     return <div>
         
