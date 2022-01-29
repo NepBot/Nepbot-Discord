@@ -44,9 +44,12 @@ function AddRule(props) {
                 amount = parseAmount(amount)
                 args.key_field = ['token_id', values.token_id]
                 args.fields = {token_amount: amount}
-            } else {
+            } else if (type == 'oct roles') {
                 args.key_field = ['appchain_id', values.appchain_id]
                 args.fields = {oct_role: values.oct_role}
+            } else if (type == 'near balance') {
+                args.key_field = ['near', 'balance']
+                args.fields = {balance: parseAmount(values.balance)}
             }
             
             
@@ -130,8 +133,9 @@ function AddRule(props) {
                         rules={[{ required: true, message: 'Please choose a type' }]}
                     >
                         <Select onChange={(v)=>{handleChangeType(v)}}>
-                            <Option value='token amount'>token amount</Option>
-                            <Option value='oct roles'>oct roles</Option>
+                            <Option value='token amount'>Token amount</Option>
+                            <Option value='oct roles'>OCT roles</Option>
+                            <Option value='near balance'>Near balance</Option>
                         </Select>
                     </Item>
                     <TypeDetail type={type} appchainIds={props.appchainIds}/>
@@ -153,7 +157,9 @@ function TypeDetail(props){
         return <Token />;
     }else if(type === 'oct roles'){
         return <OctRoles appchainIds={props.appchainIds}/>
-    } else {
+    }else if(type === 'near balance'){
+        return <Balance />
+    }else {
         return <div/>
     }
 }
@@ -203,6 +209,18 @@ function OctRoles(props){
             </Select>
         </Item>
 
+    </div>
+}
+
+function Balance(props){
+    return <div>
+        <Item
+        label="balance"
+        name="balance"
+        rules={[{ required: true, message: 'Enter a balance' }]}
+        >
+            <Input />
+        </Item>
     </div>
 }
 

@@ -72,6 +72,10 @@ function SetRule(props) {
                         return (
                             <p key={Math.random()}>{`oct role: ${record.fields.oct_role}`}</p>
                         )
+                    } else if (record.key_field[0] == 'near') {
+                        return (
+                            <p key={Math.random()}>{`near balance: ${formatAmount(record.fields.balance)}`}</p>
+                        )
                     }
                 }
                 else {
@@ -185,6 +189,7 @@ function SetRule(props) {
         }
         console.log(msg)
         const _sign = await signRule(msg);
+        console.log(_sign)
         try {
             setTableStatus(true);
            const delRule = await account.functionCall(
