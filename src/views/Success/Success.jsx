@@ -23,26 +23,36 @@ export default function Success(props) {
     useEffect(()=>{
 
         (async ()=>{
-            const params = qs.parse(props.location.search.slice(1))
-            
+            const near = await connect(config);
+            const wallet = new WalletConnection(near,"nepbot");
+            const account_id = wallet.getAccountId()
+            const params = store.get("info")
+            const accoutState = await wallet.account().state()
+            console.log(accoutState)
             const user_id = params.user_id
             const guild_id = params.guild_id
             const args = {
-                account_id: params.account_id, 
+                account_id: account_id, 
                 user_id: user_id,
                 guild_id: guild_id,
             }
-            const near = await connect(config);
-            const wallet = new WalletConnection(near,"nepbot");
+            
+            
             const signature = await sign(wallet.account(), args)
             const datas =  await setInfo({
                 args: args,
-                account_id: params.account_id,
+                account_id: account_id,
                 sign: signature 
             })
-
+            console.log(datas)
             if(datas && datas?.success){
-                window.open('https://discord.com/channels/','_self')
+                console.log(params)
+                if (!params.redirect) {
+                    window.open('https://discord.com/channels/','_self')
+                } else if (params.redirect == "setrule") {
+                    window.open(`${window.location.origin}/setrule?user_id=${params.user_id}&guild_id=${params.guild_id}&guild_name=${params.guild_name}`,'_self')
+                }
+                
                 // openNotificationWithIcon('error');
             }else{
                 openNotificationWithIcon('error');

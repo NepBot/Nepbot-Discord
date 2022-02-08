@@ -11,13 +11,12 @@ import store from "../../store/discordInfo";
 export default function Index(props) {
     const [near,setNear] = useState({})
     const [wallet,setWallet] = useState({})
-    const [redirect, setRedirect] = useState('success')
 
     const signIn = (wallet) => {
         wallet.requestSignIn(
           config.RULE_CONTRACT, // contract requesting access
           "nepbot", // optional
-          `${window.location.origin}/${redirect}${props.location.search}`, // optional
+          `${window.location.origin}/success`, // optional
           `${window.location.origin}/failure` // optional
         );
     };
@@ -32,9 +31,14 @@ export default function Index(props) {
 
     useEffect(()=>{
         const search =  qs.parse(props.location.search.slice(1));
-        console.log(search.redirect?search.redirect:'success')
-        setRedirect(search.redirect?search.redirect:'success')
-    },[redirect])
+        store.set("info", {
+            redirect: search.redirect,
+            guild_id: search.guild_id,
+            user_id: search.user_id,
+            guild_name: search.guild_name
+        }, { expires: 1 });
+        //window.location.replace(window.location.href.replace(window.location.search, ""));
+    },[])
 
     return (
         <div className={"wrap"}>
