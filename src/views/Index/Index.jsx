@@ -43,22 +43,14 @@ export default function Index(props) {
     return (
         <div className={"wrap"}>
             <div className={'content'}>
-                <h1 className={'title'}>Connect near wallet</h1>
-                {/*<Input size="large" className={'nickName'} value={nickName}  onInput={handleNickName}*/}
-                {/*       placeholder="Please enter your wallet nickname"/>*/}
-                <Row justify={'space-around'}>
-                    <Col span='12'>
-                        <Button type={'primary'} shape="round" danger size={'large'}
-                                onClick={handleConnect}>connect near wallet</Button>
-                    </Col>
-                    {/*<Col span='12'>*/}
-                    {/*    <Button type={'primary'} shape="round" size={'large'} onClick={handleGetInfo}>Get Info</Button>*/}
-                    {/*</Col>*/}
-                    {/*<List.Item>*/}
-                    {/*    <span>Balance:</span>{balance.total / 10 **24}*/}
-                    {/*</List.Item>*/}
-                </Row>
+                <div className={'text'}>
+                    vera
+                </div>
             </div>
+            <div className={'title'}>Connect to your Near wallet</div>
+            <Button className={'connect'} type={'primary'}
+                        onClick={handleConnect}>Connect</Button>
+            
         </div>
     )
 }
