@@ -6,6 +6,8 @@ import qs from 'qs';
 import {config} from '../../config';
 import './Oauth.css';
 import store from "../../store/discordInfo";
+import bg_top from '../../assets/imgs/bg_top.svg';
+import bg_right from '../../assets/imgs/bg_right.svg';
 
 
 export default function Index(props) {
@@ -41,15 +43,17 @@ export default function Index(props) {
     },[])
 
     return (
-        <div className={"wrap"}>
-            <div className={'content'}>
+        <div className={"oauth-box"}>
+            <img class="bg-top" src={bg_top}/>
+            <div className={'oauth-content'}>
                 <div className={'text'}>
                     vera
                 </div>
-            </div>
-            <div className={'title'}>Connect to your Near wallet</div>
-            <Button className={'connect'} type={'primary'}
+                <div className={'title'}>Connect to your Near wallet</div>
+                <Button className={'connect'} type={'primary'}
                         onClick={handleConnect}>Connect</Button>
+            </div>
+            <img class="bg-right" src={bg_right}/>
             
         </div>
     )

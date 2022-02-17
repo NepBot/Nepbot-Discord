@@ -87,8 +87,8 @@ function AddRule(props) {
         <Option value={item.id} key={item.id}>{item.name}</Option>
     );
     return (
-        <div>
-            <Modal title="add rule"   visible={props.visible} onOk={props.onOk}
+        <div className={'modal-box'}>
+            <Modal title="Add Rule"   visible={props.visible} onOk={props.onOk}
                 footer={[
                     <Button key="back" onClick={()=>{ form.resetFields();props.onCancel(); }}>
                         cancel
@@ -103,7 +103,7 @@ function AddRule(props) {
                     form={form}
                     name="basic"
                     labelCol={{ span: 8 }}
-                    wrapperCol={{ span: 16 }}
+                    wrapperCol={{ span: 14 }}
                     initialValues={{ remember: true }}
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}

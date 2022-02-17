@@ -1,8 +1,199 @@
-.setRule_content{
-    margin: 0 auto;
+.setRule-box{
+    min-height: 100vh;
+    position: relative;
 }
-.setRule_content .search_bar{
-    margin: 20px 0;
+.nav-bar{
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:70px;
+    z-index:99;
+    display: flex;
+    align-items:center;
+    padding:0 40px;
+    border-bottom:1px solid #999;
+}
+.nav-bar .add-btn,.nav-bar .search-btn{
+    width:120px;
+    height:30px;
+    border-radius:30px;
+    text-align:center;
+    line-height:30px;
+    color:#ffffff;
+    font-size:16px;
+    font-weight:bold;
+    background: #5F8AFA;
+    cursor: pointer;
+}
+.nav-bar .search-bar{
+    width:450px;
+    height:30px;
+    line-height:30px;
+    margin-left: 120px;
     padding: 0 20px;
     box-sizing: border-box;
+    border:1px solid #999;
+    border-radius:30px;
+}
+
+.nav-bar .search-btn{
+    background: #4FD1D9;
+    margin-left:10px;
+}
+
+
+
+.setRule-content{
+    width:100%;
+    margin:0 auto;
+    display: flex;
+    justify-content: center;
+}
+.setRule-list{
+    min-width:740px;
+    padding:70px 25px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.setRule-item{
+    width:315px;
+    height:315px;
+    border-radius:30px;
+    border: 1px solid #999;
+    padding:30px;
+    color:#000;
+    font-size:14px;
+    margin:30px 15px 0; 
+    position: relative;
+}
+.guild-name{
+    color:#999;
+    font-size:12px;
+}
+.role_name{
+    font-weight:bold;
+    font-size:22px;
+}
+.file-list{
+    margin-top:10px;
+    font-weight: 400;
+    font-size:14px;
+}
+.file-list>div{
+    margin-bottom:10px;
+}
+
+.token-icon{
+    position: absolute;
+    top:30px;
+    right:30px;
+    width:50px;
+    height:50px;
+    border-radius: 50%;
+}
+
+.delete-btn{
+    position: absolute;
+    bottom:30px;
+    right:30px;
+    width:80px;
+    height:26px;
+    line-height:26px;
+    text-align: center;
+    border-radius: 30px;
+    background: red;
+    color: #FFFFFF;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.no-data{
+    position: absolute;
+    left:50%;
+    top:50%;
+    transform: translate(-50%,-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.no-data>img{
+    width:230px;
+}
+.no-data>.tip{
+    font-size: 14px;;
+    color: #999;
+}
+.no-data>.btn{
+    width:120px;
+    height:30px;
+    border-radius:30px;
+    text-align:center;
+    line-height:30px;
+    color:#ffffff;
+    font-size:16px;
+    font-weight:bold;
+    background: #5F8AFA;
+    cursor: pointer;
+    margin-top:50px;
+}
+
+
+
+@media (min-width: 740px) {
+    .setRule-list {
+      width: 740px;
+    }
+}
+@media (min-width: 1085px) {
+    .setRule-list {
+      width: 1085px;
+    }
+}
+@media (min-width: 1430px) {
+    .setRule-list {
+      width: 1430px;
+    }
+}
+@media (min-width: 1775px) {
+    .setRule-list {
+      width: 1775px;
+    }
+}
+
+
+
+
+
+
+
+.ant-modal .ant-modal-content{
+    border-radius:30px;
+    overflow: hidden;
+}
+.ant-modal .ant-modal-close{
+    display: none;
+}
+.ant-modal .ant-modal-header{
+    border: none;
+    padding-top:24px;
+    
+}
+.ant-modal .ant-modal-header .ant-modal-title{
+    font-size:20px;
+}
+.ant-modal .ant-modal-footer{
+    border: none;
+    text-align:center;
+    padding-bottom:60px;
+}
+.ant-modal .ant-modal-footer .ant-btn{
+    width:100px;
+    border-radius:30px;
+}
+.ant-modal .ant-form-item-label{
+    padding-right:20px;
+}
+.ant-modal .ant-select:not(.ant-select-customize-input) .ant-select-selector,.ant-modal .ant-input{
+    border-radius: 30px;
 }

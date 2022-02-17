@@ -8,7 +8,8 @@ import './setRule.css'
 import qs from "qs";
 import store from "../../store/discordInfo";
 import {contract, formatAmount, sign} from "../../utils/util";
-
+import test_icon from '../../assets/imgs/test_icon.png';
+import no_data from '../../assets/imgs/no_data.jpg';
 
 
 function SetRule(props) {
@@ -229,26 +230,76 @@ function SetRule(props) {
         setDataSource(_data);
         setTableStatus(false)
     }
-    return (
-        <div className={'setRule_content'}>
-            <div className={'search_bar'}>
 
-                <Row gutter={24}>
-                    <Col>
-                        <Button type={"primary"} onClick={handleAddStatus}>add</Button>
-                    </Col>
-                    <Col><Input placeholder={'Enter a token ID to search'} value={tokenId} onInput={(e) => {
-                        setTokenId(e.target.value)
-                    }}/></Col>
-                    <Col>
-                        <Button onClick={handleSearch}>Search</Button>
-                    </Col>
-                </Row>
+
+    function SetRuleList(){
+        if(dataSource.length>0){
+            const setRuleItems = dataSource.map(item => 
+                <div className={'setRule-item'} key={item}>
+                    <div className={'guild-name'}>#{item.guild_name}guild_name</div>
+                    <div className={'role_name'}>{item.role_name}role_name</div>
+                    <FileList item={item}/>
+                    <img className={'token-icon'} src={test_icon}/>
+                    <div className={'delete-btn'} onClick={()=>{handleDelete(item)}}>delete</div>
+                </div>
+            );
+            return <div className={'setRule-list'}>
+                {setRuleItems}
             </div>
-            <Table loading={tableStatus} columns={columns} dataSource={dataSource} rowKey={(record)=>`rest${record.key*Math.random()}`}/>
+        }else{
+            return <div className={'no-data'}>
+                <img src={no_data}/>
+                <div className={'tip'}>No data, Please add a rule.</div>
+                <div className={'btn'} onClick={handleAddStatus}>+ Add</div>
+            </div>
+        }
+    }
 
-            <AddRule title="Basic Modal" appchainIds={appchainIds} roleList={roleList} serverList={serverList} visible={addDialogStatus}
-                     onOk={handleAddStatus} onCancel={handleAddStatus}/>
+
+    function FileList(props){
+        if(props.item.key_field){
+            return <div className={'file-list'}>
+                <div>{`${props.item.key_field[0]}: ${props.item.key_field[1]}`}</div>
+                <Files key_field={props.item.key_field} fields={props.item.fields}/>
+            </div>
+        }else{
+            return '';
+        }
+        
+    }
+
+
+    function Files(props){
+        if (props.key_field[0] == 'token_id') {
+            return (
+                <div>{`token amount: ${formatAmount(props.fields.token_amount)}`}</div>
+            )
+        } else if (props.key_field[0] == 'appchain_id') {
+            return (
+                <div>{`oct role: ${props.fields.oct_role}`}</div>
+            )
+        } else if (props.key_field[0] == 'near') {
+            return (
+                <div>{`near balance: ${formatAmount(props.fields.balance)}`}</div>
+            )
+        }
+    }
+
+
+    return (
+        <div className={'setRule-box'}>
+            <div className={'nav-bar'}>
+                <div className={'add-btn'} onClick={handleAddStatus}>+ Add</div>
+                <Input className={'search-bar'} placeholder={'Enter a token ID to search'} value={tokenId} onInput={(e) => {
+                    setTokenId(e.target.value)}}/>
+                <div className={'search-btn'} onClick={handleSearch}>Search</div>
+            </div>
+            <div className={'setRule-content'}>
+                <SetRuleList/>
+                {/* <Table loading={tableStatus} columns={columns} dataSource={dataSource} rowKey={(record)=>`rest${record.key*Math.random()}`}/> */}
+                <AddRule title="Basic Modal" appchainIds={appchainIds} roleList={roleList} serverList={serverList} visible={addDialogStatus}
+                        onOk={handleAddStatus} onCancel={handleAddStatus}/>
+            </div>
         </div>
     );
 }
