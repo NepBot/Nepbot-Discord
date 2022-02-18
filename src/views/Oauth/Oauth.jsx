@@ -8,12 +8,17 @@ import './Oauth.css';
 import store from "../../store/discordInfo";
 import bg_top from '../../assets/imgs/bg_top.svg';
 import bg_right from '../../assets/imgs/bg_right.svg';
+import oauth_bg from '../../assets/imgs/oauth_bg.svg';
 import { getServer, getUser } from '../../api/api';
+
 
 
 export default function Index(props) {
     const [near,setNear] = useState({})
     const [wallet,setWallet] = useState({})
+    const [serverName,setServerName] = useState('')
+    const [displayName,setDisplayName] = useState('')
+    const [avatarURL,setAvatarURL] = useState('')
 
     const signIn = (wallet) => {
         wallet.requestSignIn(
@@ -42,7 +47,9 @@ export default function Index(props) {
         }, { expires: 1 });
         const serverInfo = await getServer(search.guild_id)
         const userInfo = await getUser(search.guild_id, search.user_id)
-        console.log(userInfo)
+        setServerName(serverInfo.name)
+        setDisplayName(userInfo.displayName)
+        setAvatarURL(userInfo.displayAvatarURL)
         //avatarURL, displayName 
         
     },[])
@@ -51,8 +58,13 @@ export default function Index(props) {
         <div className={"oauth-box"}>
             <img className="bg-top" src={bg_top}/>
             <div className={'oauth-content'}>
-                <div className={'text'}>
-                    vera
+                <div className={'oauth-info-box'}>
+                    <img className={'oauth_bg'} src={oauth_bg}/>
+                    <div className={'oauth-info'}>
+                        <img className={'avatar'} src={avatarURL}/>
+                        <div className={'server-name'}>{serverName}</div>
+                        <div className={'name'}>{displayName}</div>
+                    </div>
                 </div>
                 <div className={'title'}>Connect to your Near wallet</div>
                 <Button className={'connect'} type={'primary'}
