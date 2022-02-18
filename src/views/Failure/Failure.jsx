@@ -20,11 +20,11 @@ function Failure(props) {
     },[countdown])
     return (
         <div className={'failure-box'}>
-            <img class="bg-left-top" src={bg_left_top}/>
+            <img className="bg-left-top" src={bg_left_top}/>
             <div className={'failure-content'}>
                 <img src={failure}/>
             </div>
-            <img class="bg-right-bottom" src={bg_right_bottom}/>
+            <img className="bg-right-bottom" src={bg_right_bottom}/>
         </div>
     );
 }

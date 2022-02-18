@@ -8,6 +8,7 @@ import './Oauth.css';
 import store from "../../store/discordInfo";
 import bg_top from '../../assets/imgs/bg_top.svg';
 import bg_right from '../../assets/imgs/bg_right.svg';
+import { getServer, getUser } from '../../api/api';
 
 
 export default function Index(props) {
@@ -31,7 +32,7 @@ export default function Index(props) {
         signIn(_wallet);
     }, [near,wallet])
 
-    useEffect(()=>{
+    useEffect(async ()=>{
         const search =  qs.parse(props.location.search.slice(1));
         store.set("info", {
             redirect: search.redirect,
@@ -39,12 +40,16 @@ export default function Index(props) {
             user_id: search.user_id,
             guild_name: search.guild_name
         }, { expires: 1 });
-        //window.location.replace(window.location.href.replace(window.location.search, ""));
+        const serverInfo = await getServer(search.guild_id)
+        const userInfo = await getUser(search.guild_id, search.user_id)
+        console.log(userInfo)
+        //avatarURL, displayName 
+        
     },[])
 
     return (
         <div className={"oauth-box"}>
-            <img class="bg-top" src={bg_top}/>
+            <img className="bg-top" src={bg_top}/>
             <div className={'oauth-content'}>
                 <div className={'text'}>
                     vera
@@ -53,7 +58,7 @@ export default function Index(props) {
                 <Button className={'connect'} type={'primary'}
                         onClick={handleConnect}>Connect</Button>
             </div>
-            <img class="bg-right" src={bg_right}/>
+            <img className="bg-right" src={bg_right}/>
             
         </div>
     )

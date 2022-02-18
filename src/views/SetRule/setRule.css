@@ -82,6 +82,11 @@
 }
 .file-list>div{
     margin-bottom:10px;
+    font-family: Baloo 2;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 19.4299px;
+    line-height: 31px;
 }
 
 .token-icon{

@@ -36,32 +36,24 @@ export default function Success(props) {
             const user_id = params.user_id
             const guild_id = params.guild_id
 
-            const args = {
-                account_id: account_id, 
-                user_id: user_id,
-                guild_id: guild_id,
-            }
-            
-            const signature = await sign(wallet.account(), args)
-            const datas =  await setInfo({
-                args: args,
-                account_id: account_id,
-                sign: signature 
-            })
-            
-            if(datas && datas?.success){
-                // console.log(params)
-                // if (!params.redirect) {
-                //     window.open('https://discord.com/channels/','_self')
-                // } else if (params.redirect == "setrule") {
-                //     window.open(`${window.location.origin}/setrule?user_id=${params.user_id}&guild_id=${params.guild_id}&guild_name=${params.guild_name}`,'_self')
-                // }
+            if (!params.redirect) {
+                const args = {
+                    account_id: account_id, 
+                    user_id: user_id,
+                    guild_id: guild_id,
+                }
                 
-                // openNotificationWithIcon('error');
-            }else{
-                openNotificationWithIcon('error');
-                // setSt(true)
+                const signature = await sign(wallet.account(), args)
+                await setInfo({
+                    args: args,
+                    account_id: account_id,
+                    sign: signature 
+                })
+                window.open('https://discord.com/channels/','_self')
+            } else if (params.redirect == "setrule") {
+                window.open(`${window.location.origin}/setrule?user_id=${params.user_id}&guild_id=${params.guild_id}&guild_name=${params.guild_name}`,'_self')
             }
+                
         })();
         return ()=>{
 
@@ -74,11 +66,11 @@ export default function Success(props) {
 
     return (
         <div className={'success-box'}>
-            <img class="bg-left-top" src={bg_left_top}/>
+            <img className="bg-left-top" src={bg_left_top}/>
             <div className={'success-content'}>
                 <img src={success}/>
             </div>
-            <img class="bg-right-bottom" src={bg_right_bottom}/>
+            <img className="bg-right-bottom" src={bg_right_bottom}/>
         </div>
 
     );

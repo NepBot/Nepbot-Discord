@@ -15,12 +15,16 @@ export const signRule = async (args)=>{
     })
     return await json.json();
 }
-export const getRoleList = async ()=>{
-    const json = await fetch(`/api/getRole/${store.get('guild_id')}`);
+export const getRoleList = async (guild_id)=>{
+    const json = await fetch(`/api/getRole/${guild_id}`);
     return await json.json();
 }
-export const getServer = async ()=>{
-    const json = await fetch(`/api/getServer/${store.get('guild_id')}`);
+export const getServer = async (guild_id)=>{
+    const json = await fetch(`/api/getServer/${guild_id}`);
+    return await json.json();
+}
+export const getUser = async (guild_id, user_id) => {
+    const json = await fetch(`/api/getUser/${guild_id}/${user_id}`);
     return await json.json();
 }
 

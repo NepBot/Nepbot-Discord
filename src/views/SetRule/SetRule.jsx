@@ -16,12 +16,11 @@ function SetRule(props) {
 
     const guildData = qs.parse(props.location.search.slice(1));
     store.set('guild_id',guildData.guild_id , {expires:1})
-    store.set('guild_name',guildData.guild_name , {expires:1})
     const [roleList, setRoleList] = useState([]);
     const [addDialogStatus, setAddDialogStatus] = useState(false);
     const [serverList, setServerList] = useState([]);
     const [tokenId, setTokenId] = useState('')
-    const [dataSource, setDataSource] = useState(['']);
+    const [dataSource, setDataSource] = useState([]);
     const [tableStatus, setTableStatus] = useState(true);
     const [account, setAccount] = useState({})
     const [appchainIds, setAppchainIds] = useState([])
@@ -30,9 +29,12 @@ function SetRule(props) {
             dataIndex: 'guild_name',
             title: 'Discord Server',
             key: 'guild_name',
-            render:(text, record)=>(
-                <span key={Math.random()}>{guildData.guild_name}</span>
-            )
+            render:(text, record)=> {
+                return (
+                    <span key={Math.random()}>{guildData.guild_name}</span>
+                )
+            }
+            
         },
         {
             dataIndex: 'role_name',
@@ -96,40 +98,38 @@ function SetRule(props) {
         },
     ]
 
-    const handleData = async (data, servername) => {
-        const roleList = await getRoleList();
+    const handleData = async (data, account, serverName) => {
+        const roleList = await getRoleList(store.get("guild_id"));
         data.forEach(async (it, index) => {
             roleList.forEach(item => {
                 if (item.id === it["role_id"]) {
                     it.role_name = item.name
-                    it.guild_name = servername
+                    it.guild_name = serverName
                     it.key = index;
-
                 }
             })
         })
         console.log(data)
-        // roleList.forEach(item => {
-        //     data.forEach(async (it, index) => {
-        //         if (item.id === it["role_id"] && item.name!=='@everyone' && item.name) {
-        //             it.role_name = item.name
-        //             it.guild_name = servername
-        //             it.key = index;
-
-        //         }
-        //         // if (it.key_field[0] == 'token_id') {
-        //         //     it.key_value = it.key_field[1]
-        //         //     it.key_field = 'token id'
-        //         //     it.attriute_field = 'token amount'
-        //         //     //it.attriute_value = formatAmount(it.fields['token_amount'])
-        //         // } else if (it.key_field[0] == 'appchain_id') {
-        //         //     it.key_value = it.key_field[1]
-        //         //     it.key_field = 'appchain id'
-        //         //     it.attriute_field = 'oct role'
-        //         //     it.attriute_value = it.fields['oct_role']
-        //         // }
-        //     })
-        // })
+        roleList.forEach(item => {
+            data.forEach((it, index) => {
+                if (item.id === it["role_id"] && item.name!=='@everyone' && item.name) {
+                    it.role_name = item.name
+                    it.guild_name = serverName
+                    it.key = index;
+                    
+                }
+                
+            })
+        })
+        for (let it of data) {
+            if (it.key_field[0] === 'token_id') {
+                let metadata = await account.viewFunction(it.key_field[1], "ft_metadata", {})
+                it.token_symbol = metadata.symbol
+                it.icon = metadata.icon
+            } else if (it.key_field[0] === 'appchain_id') {
+                it.icon = test_icon
+            }
+        }
         console.log("roleList>>>",data)
         return data;
     }
@@ -137,31 +137,25 @@ function SetRule(props) {
     useEffect(() => {
         (async () => {
 
-            
             const _near = await connect(config);
             const _wallet = new WalletConnection(_near, 'nepbot');
             if (!_wallet.isSignedIn()) {
                 props.history.push(`/${props.location.search}&redirect=setrule`)
                 return
             }
-            const server = await getServer();
+            const server = await getServer(store.get("guild_id"));
             setServerList(server);
-            const account = await _wallet.account();
-            setAccount(account)
+            let account = await _wallet.account();
+            //setAccount(account)
             const appchainIds = await account.viewFunction(config.OCT_CONTRACT, 'get_appchain_ids', {})
             setAppchainIds(appchainIds)
 
-            try{
-                setTableStatus(true)
-                const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: server.id})
-                const _data = await handleData(data, server.name)
-                console.log(data)
+            setTableStatus(true)
+            const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: server.id})
+            const _data = await handleData(data, account, server.name)
+            setDataSource(_data)
+            setTableStatus(false)
 
-                setTableStatus(false)
-                setDataSource(_data)
-            }catch (e) {
-                setTableStatus(false)
-            }
 
         })();
         return () => {
@@ -170,7 +164,7 @@ function SetRule(props) {
 
     const handleAddStatus = useCallback(async () => {
         if (!addDialogStatus) {
-            const roles = await getRoleList();
+            const roles = await getRoleList(store.get("guild_id"));
             setRoleList(roles.filter(item=>item.name!=="@everyone"))
         }
         setAddDialogStatus(!addDialogStatus)
@@ -235,54 +229,50 @@ function SetRule(props) {
     function SetRuleList(){
         if(dataSource.length>0){
             const setRuleItems = dataSource.map(item => 
-                <div className={'setRule-item'} key={item}>
-                    <div className={'guild-name'}>#{item.guild_name}guild_name</div>
-                    <div className={'role_name'}>{item.role_name}role_name</div>
+                <div className={'setRule-item'} key={Math.random()}>
+                    <div className={'guild-name'}>#{item.guild_name}</div>
+                    <div className={'role_name'}>{item.role_name}</div>
                     <FileList item={item}/>
-                    <img className={'token-icon'} src={test_icon}/>
+                    <img className={'token-icon'} src={item.icon}/>
                     <div className={'delete-btn'} onClick={()=>{handleDelete(item)}}>delete</div>
                 </div>
             );
-            return <div className={'setRule-list'}>
+            
+            return (<div className={'setRule-list'}>
                 {setRuleItems}
-            </div>
+            </div>)
         }else{
-            return <div className={'no-data'}>
+            return (<div className={'no-data'}>
                 <img src={no_data}/>
                 <div className={'tip'}>No data, Please add a rule.</div>
                 <div className={'btn'} onClick={handleAddStatus}>+ Add</div>
-            </div>
+            </div>)
         }
     }
 
 
     function FileList(props){
         if(props.item.key_field){
-            return <div className={'file-list'}>
-                <div>{`${props.item.key_field[0]}: ${props.item.key_field[1]}`}</div>
-                <Files key_field={props.item.key_field} fields={props.item.fields}/>
-            </div>
+            if (props.item.key_field[0] == "token_id") {
+                return (<div className={'file-list'}>
+                    <div>{`token: ${props.item.token_symbol}`}</div>
+                    <div>{`amount: ${formatAmount(props.item.fields.token_amount)}`}</div>
+                </div>)
+            } else if (props.item.key_field[0] == "appchain_id") {
+                return (<div className={'file-list'}>
+                    <div>{`appchain: ${props.item.key_field[1]}`}</div>
+                    <div>{`role: ${props.item.fields.oct_role}`}</div>
+                </div>)
+            } else if (props.item.key_field[0] == "near") {
+                return (<div className={'file-list'}>
+                    <div>{`near balance: ${formatAmount(props.fields.balance)}`}</div>
+                </div>)
+            }
+            
         }else{
-            return '';
+            return (<div></div>);
         }
         
-    }
-
-
-    function Files(props){
-        if (props.key_field[0] == 'token_id') {
-            return (
-                <div>{`token amount: ${formatAmount(props.fields.token_amount)}`}</div>
-            )
-        } else if (props.key_field[0] == 'appchain_id') {
-            return (
-                <div>{`oct role: ${props.fields.oct_role}`}</div>
-            )
-        } else if (props.key_field[0] == 'near') {
-            return (
-                <div>{`near balance: ${formatAmount(props.fields.balance)}`}</div>
-            )
-        }
     }
 
 
