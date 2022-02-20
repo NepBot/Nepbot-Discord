@@ -36,19 +36,19 @@ export default function Success(props) {
             const user_id = params.user_id
             const guild_id = params.guild_id
 
+            const args = {
+                account_id: account_id, 
+                user_id: user_id,
+                guild_id: guild_id,
+            }
+            
+            const signature = await sign(wallet.account(), args)
+            await setInfo({
+                args: args,
+                account_id: account_id,
+                sign: signature 
+            })
             if (!params.redirect) {
-                const args = {
-                    account_id: account_id, 
-                    user_id: user_id,
-                    guild_id: guild_id,
-                }
-                
-                const signature = await sign(wallet.account(), args)
-                await setInfo({
-                    args: args,
-                    account_id: account_id,
-                    sign: signature 
-                })
                 window.open('https://discord.com/channels/','_self')
             } else if (params.redirect == "setrule") {
                 window.open(`${window.location.origin}/setrule?user_id=${params.user_id}&guild_id=${params.guild_id}&guild_name=${params.guild_name}`,'_self')

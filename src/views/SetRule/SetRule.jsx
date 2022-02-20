@@ -13,7 +13,7 @@ import no_data from '../../assets/imgs/no_data.jpg';
 
 
 function SetRule(props) {
-
+    let account = {}
     const guildData = qs.parse(props.location.search.slice(1));
     store.set('guild_id',guildData.guild_id , {expires:1})
     const [roleList, setRoleList] = useState([]);
@@ -21,8 +21,6 @@ function SetRule(props) {
     const [serverList, setServerList] = useState([]);
     const [tokenId, setTokenId] = useState('')
     const [dataSource, setDataSource] = useState([]);
-    const [tableStatus, setTableStatus] = useState(true);
-    const [account, setAccount] = useState({})
     const [appchainIds, setAppchainIds] = useState([])
     const columns = [
         {
@@ -98,8 +96,9 @@ function SetRule(props) {
         },
     ]
 
-    const handleData = async (data, account, serverName) => {
+    const handleData = async (data) => {
         const roleList = await getRoleList(store.get("guild_id"));
+        let serverName = serverList.name
         data.forEach(async (it, index) => {
             roleList.forEach(item => {
                 if (item.id === it["role_id"]) {
@@ -128,6 +127,8 @@ function SetRule(props) {
                 it.icon = metadata.icon
             } else if (it.key_field[0] === 'appchain_id') {
                 it.icon = test_icon
+            } else if (it.key_field[0] === 'near') {
+                it.icon = "https://near.org/wp-content/themes/near-19/assets/img/brand-icon.png"
             }
         }
         console.log("roleList>>>",data)
@@ -137,24 +138,21 @@ function SetRule(props) {
     useEffect(() => {
         (async () => {
 
-            const _near = await connect(config);
-            const _wallet = new WalletConnection(_near, 'nepbot');
-            if (!_wallet.isSignedIn()) {
-                props.history.push(`/${props.location.search}&redirect=setrule`)
+            const near = await connect(config);
+            const wallet = new WalletConnection(near, 'nepbot');
+            if (!wallet.isSignedIn()) {
+                props.history.push(`/oauth/${props.location.search}&redirect=setrule`)
                 return
             }
             const server = await getServer(store.get("guild_id"));
             setServerList(server);
-            let account = await _wallet.account();
-            //setAccount(account)
+            account = await wallet.account();
             const appchainIds = await account.viewFunction(config.OCT_CONTRACT, 'get_appchain_ids', {})
             setAppchainIds(appchainIds)
 
-            setTableStatus(true)
             const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: server.id})
-            const _data = await handleData(data, account, server.name)
+            const _data = await handleData(data)
             setDataSource(_data)
-            setTableStatus(false)
 
 
         })();
@@ -171,6 +169,9 @@ function SetRule(props) {
     }, [addDialogStatus]);
 
     const handleDelete = async (record) =>{
+        const near = await connect(config);
+        const wallet = new WalletConnection(near, 'nepbot');
+        account = await wallet.account();
         const obj = {
             guild_id: record.guild_id,
             role_id: record.role_id,
@@ -185,8 +186,7 @@ function SetRule(props) {
         console.log(msg)
         const _sign = await signRule(msg);
         console.log(_sign)
-        try {
-            setTableStatus(true);
+
            const delRule = await account.functionCall(
                 config.RULE_CONTRACT,
                 'del_role',
@@ -195,21 +195,20 @@ function SetRule(props) {
             );
            setTimeout(async ()=>{
                if(delRule){
-                   setTableStatus(false);
                    await handleReload()
                }
            })
-        }catch (e) {
-            console.error(e)
-        }
     }
     const handleSearch = useCallback(async () => {
+        const near = await connect(config);
+        const wallet = new WalletConnection(near, 'nepbot');
+        account = await wallet.account();
         if (!tokenId) {
             await handleReload();
         } else {
-            const account = await contract();
+            // const account = await contract();
             const data = await account.viewFunction(config.RULE_CONTRACT, 'get_token', {token_id: tokenId})
-            const _data = await handleData(data, serverList.name);
+            const _data = await handleData(data);
             console.log(_data)
             setDataSource(_data);
         }
@@ -217,12 +216,12 @@ function SetRule(props) {
     }, [serverList.name, tokenId])
 
     const handleReload = async () => {
-        setTableStatus(true)
-        const account = await contract();
+        const near = await connect(config);
+        const wallet = new WalletConnection(near, 'nepbot');
+        account = await wallet.account();
         const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: serverList.id})
-        const _data = await handleData(data, serverList.name)
+        const _data = await handleData(data)
         setDataSource(_data);
-        setTableStatus(false)
     }
 
 
@@ -265,7 +264,7 @@ function SetRule(props) {
                 </div>)
             } else if (props.item.key_field[0] == "near") {
                 return (<div className={'file-list'}>
-                    <div>{`near balance: ${formatAmount(props.fields.balance)}`}</div>
+                    <div>{`near balance: ${formatAmount(props.item.fields.balance)}`}</div>
                 </div>)
             }
             
@@ -280,9 +279,6 @@ function SetRule(props) {
         <div className={'setRule-box'}>
             <div className={'nav-bar'}>
                 <div className={'add-btn'} onClick={handleAddStatus}>+ Add</div>
-                <Input className={'search-bar'} placeholder={'Enter a token ID to search'} value={tokenId} onInput={(e) => {
-                    setTokenId(e.target.value)}}/>
-                <div className={'search-btn'} onClick={handleSearch}>Search</div>
             </div>
             <div className={'setRule-content'}>
                 <SetRuleList/>
