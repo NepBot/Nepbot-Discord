@@ -54,7 +54,7 @@
 }
 .media-box{
     width:11.3717%;
-    margin:40px auto;
+    margin:0px auto;
     position: relative;
 }
 .media-box>a{
@@ -71,4 +71,16 @@
 }
 .discord{
     left:83%;
+}
+
+.power-box {
+    width:11.3717%;
+    margin:0px auto;
+    position: relative;
+}
+.power-box>a{
+    position: absolute;
+    left:41%;
+    width:33%;
+    height:100%;
 }
