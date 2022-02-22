@@ -55,7 +55,7 @@ export default function Index(props) {
 
 
     return (
-        <div className={"wrap"}>
+        <div className={"claim-wrap"}>
             {text}
             
         </div>
