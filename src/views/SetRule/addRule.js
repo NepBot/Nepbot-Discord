@@ -60,6 +60,8 @@ function AddRule(props) {
                 account_id: account.accountId
             }
             const _sign = await signRule(msg);
+            console.log(_sign)
+            return
             const data = await account.functionCall(
                 config.RULE_CONTRACT,
                 'set_roles',
