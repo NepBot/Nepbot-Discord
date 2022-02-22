@@ -14,16 +14,6 @@ import success from '../../assets/imgs/success.svg';
 
 export default function Success(props) {
 
-    const openNotificationWithIcon = type => {
-        notification[type]({
-            message: 'Important information is missing',
-            description:
-                'Please close the current page and return to discord to restart wallet authorization',
-        });
-    };
-
-
-
     useEffect(()=>{
 
         (async ()=>{
@@ -48,11 +38,7 @@ export default function Success(props) {
                 account_id: account_id,
                 sign: signature 
             })
-            if (!params.redirect) {
-                window.open('https://discord.com/channels/','_self')
-            } else if (params.redirect == "setrule") {
-                window.open(`${window.location.origin}/setrule?user_id=${params.user_id}&guild_id=${params.guild_id}&guild_name=${params.guild_name}`,'_self')
-            }
+            window.open('https://discord.com/channels/','_self')
                 
         })();
         return ()=>{

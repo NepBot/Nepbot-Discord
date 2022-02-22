@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useCallback, useEffect, useState} from 'react';
 import {Row, Col, Input, Button, List} from 'antd';
-import {connect, WalletConnection} from 'near-api-js';
+import nearAPI from 'near-api-js';
 import qs from 'qs';
 import {config} from '../../config';
 import './Index.css';
@@ -14,6 +14,7 @@ import power from '../../assets/imgs/powered_by.svg';
 import near_logo from '../../assets/imgs/near_logo.svg';
 
 export default function Index(props) {
+
 
     return (
         <div className={"wrap"}>
@@ -29,7 +30,7 @@ export default function Index(props) {
                 <img className={"cover"} src={cover2}/>
                 <div className={"cover-start-box"}>
                     <img className={"cover"} src={cover_start}/>
-                    <a className={"start-btn"} href='' ></a>
+                    <a className={"start-btn"} href="/claim" ></a>
                 </div>
             </div>
             <div className={"media-box"}>

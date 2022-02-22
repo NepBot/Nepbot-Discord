@@ -141,7 +141,7 @@ function SetRule(props) {
             const near = await connect(config);
             const wallet = new WalletConnection(near, 'nepbot');
             if (!wallet.isSignedIn()) {
-                props.history.push(`/oauth/${props.location.search}&redirect=setrule`)
+                wallet.requestSignIn(config.RULE_CONTRACT, "nepbot")
                 return
             }
             const server = await getServer(store.get("guild_id"));
