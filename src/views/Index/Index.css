@@ -80,7 +80,8 @@
 }
 .power-box>a{
     position: absolute;
-    left:41%;
+    top:0;
     width:33%;
     height:100%;
+    left:41%;
 }

@@ -10,8 +10,7 @@ import cover1 from '../../assets/imgs/index/cover1.svg';
 import cover2 from '../../assets/imgs/index/cover2.svg';
 import cover_start from '../../assets/imgs/index/cover_start.svg';
 import media from '../../assets/imgs/index/media.svg';
-import power from '../../assets/imgs/powered_by.svg';
-import near_logo from '../../assets/imgs/near_logo.svg';
+import near_logo from '../../assets/imgs/index/nearlogo.svg';
 
 export default function Index(props) {
 
@@ -40,8 +39,7 @@ export default function Index(props) {
                 <a className={"discord"} href="https://discord.gg/avqufmzS6t" target="view_window"></a>
             </div>
             <div className={"power-box"}>
-                <img src={power}/>
-                <img src={near_logo}/>
+                <img className={"cover"} src={near_logo}/>
                 <a href="https://near.org" target="view_window"></a>
             </div>
             {/* <div className={'content'}>
