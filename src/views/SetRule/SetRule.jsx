@@ -67,7 +67,7 @@ function SetRule(props) {
                 if (record.key_field) {
                     if (record.key_field[0] == 'token_id') {
                         return (
-                            <p key={Math.random()}>{`token amount: ${formatAmount(record.fields.token_amount)}`}</p>
+                            <p key={Math.random()}>{`token amount: ${formatAmount(record.fields.token_amount, record.decimals)}`}</p>
                         )
                     } else if (record.key_field[0] == 'appchain_id') {
                         return (
@@ -125,6 +125,7 @@ function SetRule(props) {
                 let metadata = await account.viewFunction(it.key_field[1], "ft_metadata", {})
                 it.token_symbol = metadata.symbol
                 it.icon = metadata.icon
+                it.decimals = metadata.decimals
             } else if (it.key_field[0] === 'appchain_id') {
                 it.icon = test_icon
             } else if (it.key_field[0] === 'near') {
@@ -255,7 +256,7 @@ function SetRule(props) {
             if (props.item.key_field[0] == "token_id") {
                 return (<div className={'file-list'}>
                     <div>{`token: ${props.item.token_symbol}`}</div>
-                    <div>{`amount: ${formatAmount(props.item.fields.token_amount)}`}</div>
+                    <div>{`amount: ${formatAmount(props.item.fields.token_amount, props.item.decimals)}`}</div>
                 </div>)
             } else if (props.item.key_field[0] == "appchain_id") {
                 return (<div className={'file-list'}>

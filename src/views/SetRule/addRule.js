@@ -37,11 +37,8 @@ function AddRule(props) {
             const account = wallet.account()
             if (type == 'token amount') {
                 let metadata = await account.viewFunction(values.token_id, 'ft_metadata', {})
-                let amount = values.token_amount + '.'
-                for (let i = 0; i < metadata.decimals; i ++) {
-                    amount += '0'
-                }
-                amount = parseAmount(amount)
+                let amount = parseAmount(values.token_amount, metadata.decimals)
+                console.log(amount)
                 args.key_field = ['token_id', values.token_id]
                 args.fields = {token_amount: amount}
             } else if (type == 'oct roles') {
@@ -53,15 +50,12 @@ function AddRule(props) {
             }
             
             
-            
             const msg = {
                 args: [args],
                 sign: await sign(account, [args]),
                 account_id: account.accountId
             }
             const _sign = await signRule(msg);
-            console.log(_sign)
-            return
             const data = await account.functionCall(
                 config.RULE_CONTRACT,
                 'set_roles',
