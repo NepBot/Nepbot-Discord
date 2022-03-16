@@ -10,6 +10,7 @@ function AddRule(props) {
     const [form] = Form.useForm();
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [type, setType] = useState('');
+    const [isParas, setParas] = useState(false)
     // const [checkNick, setCheckNick] = useState(false);
     const onFinish = async (values) => {
         console.log('Success:', values);
@@ -38,7 +39,6 @@ function AddRule(props) {
             if (type == 'token amount') {
                 let metadata = await account.viewFunction(values.token_id, 'ft_metadata', {})
                 let amount = parseAmount(values.token_amount, metadata.decimals)
-                console.log(amount)
                 args.key_field = ['token_id', values.token_id]
                 args.fields = {token_amount: amount}
             } else if (type == 'oct roles') {
@@ -47,6 +47,16 @@ function AddRule(props) {
             } else if (type == 'near balance') {
                 args.key_field = ['near', 'balance']
                 args.fields = {balance: parseAmount(values.balance)}
+            } else if (type == 'nft amount') {
+                if (values.contract_id == 'x.paras.near') {
+                    const fractions = values.collection_url.split("/")
+                    const lastFraction = fractions[fractions.length - 1].split("?")
+                    args.key_field = ['x.paras.near', lastFraction[0]]
+                    args.fields = {token_amount: values.token_amount}
+                } else {
+                    args.key_field = ['nft_contract_id', values.contract_id]
+                    args.fields = {token_amount: values.token_amount}
+                }
             }
             
             
@@ -77,11 +87,124 @@ function AddRule(props) {
     const handleChangeType = async (v) => {
         setType(v);
     }
+    const handleInputChange = async (v) => {
+        setParas(v.target.value == "x.paras.near")
+    }
+    
     // const {serverList} = props;
     const {serverList} = props
     const roleList = props.roleList.map(item => 
         <Option value={item.id} key={item.id}>{item.name}</Option>
     );
+
+
+    function TypeDetail(){
+        if(type === 'token amount'){
+            return <Token />;
+        }else if(type === 'oct roles'){
+            return <OctRoles />
+        }else if(type === 'near balance'){
+            return <Balance />
+        }else if(type === 'nft amount'){
+            return <NftAmount />
+        }else {
+            return <div/>
+        }
+    }
+    
+    function Token(){
+        return <div>
+            <Item
+            label="token address"
+            name="token_id"
+            rules={[{ required: true, message: 'Enter a token address' }]}
+            >
+                <Input />
+            </Item>
+            <Item
+                label="token amount"
+                name="token_amount"
+                rules={[{ required: true, message: 'Enter a token amount' }]}
+            >
+                <Input />
+            </Item>
+        </div>
+    }
+    
+    function OctRoles(){
+        const appchainIds = appchainIds.map(item => 
+            <Option value={item} key={item}>{item}</Option>
+        );
+        return <div>
+            
+            <Item
+                label="appchain id"
+                name="appchain_id"
+                rules={[{ required: true, message: 'Please choose a appchain' }]}
+            >
+                <Select>
+                    {appchainIds}
+                </Select>
+            </Item>
+            <Item
+                label="oct role"
+                name="oct_role"
+                rules={[{ required: true, message: 'Please choose an oct role' }]}
+            >
+                <Select>
+                    <Option value='delegator'>delegator</Option>
+                    <Option value='validator'>validator</Option>
+                </Select>
+            </Item>
+    
+        </div>
+    }
+    
+    function Balance(){
+        return <div>
+            <Item
+            label="balance"
+            name="balance"
+            rules={[{ required: true, message: 'Enter a balance' }]}
+            >
+                <Input />
+            </Item>
+        </div>
+    }
+    
+    function NftAmount(){
+        
+        return <div>
+            
+            <Item
+                label="nft contract id"
+                name="contract_id"
+                rules={[{ required: true, message: 'Please input contract id' }]}
+            >
+                <Input onChange={(v) => {handleInputChange(v)}}/>
+            </Item>
+            <Item
+                label="collection url"
+                name="collection_url"
+                rules={[{ required: true, message: 'Please input collection id' }]}
+                hidden={!isParas}
+            >
+                <Input />
+            </Item>
+            <Item
+                label="amount"
+                name="token_amount"
+                rules={[{ required: true, message: 'Please input amount' }]}
+            >
+                <Input />
+            </Item>
+    
+        </div>
+    }
+
+
+
+
     return (
         <div className={'modal-box'}>
             <Modal title="Add Rule"   visible={props.visible} onOk={props.onOk}
@@ -132,6 +255,7 @@ function AddRule(props) {
                             <Option value='token amount'>Token amount</Option>
                             <Option value='oct roles'>OCT roles</Option>
                             <Option value='near balance'>Near balance</Option>
+                            <Option value='nft amount'>NFT amount</Option>
                         </Select>
                     </Item>
                     <TypeDetail type={type} appchainIds={props.appchainIds}/>
@@ -147,77 +271,6 @@ function AddRule(props) {
 }
 
 
-function TypeDetail(props){
-    const type = props.type;
-    if(type === 'token amount'){
-        return <Token />;
-    }else if(type === 'oct roles'){
-        return <OctRoles appchainIds={props.appchainIds}/>
-    }else if(type === 'near balance'){
-        return <Balance />
-    }else {
-        return <div/>
-    }
-}
 
-function Token(props){
-    return <div>
-        <Item
-        label="token address"
-        name="token_id"
-        rules={[{ required: true, message: 'Enter a token address' }]}
-        >
-            <Input />
-        </Item>
-        <Item
-            label="token amount"
-            name="token_amount"
-            rules={[{ required: true, message: 'Enter a token amount' }]}
-        >
-            <Input />
-        </Item>
-    </div>
-}
-
-function OctRoles(props){
-    const appchainIds = props.appchainIds.map(item => 
-        <Option value={item} key={item}>{item}</Option>
-    );
-    return <div>
-        
-        <Item
-            label="appchain id"
-            name="appchain_id"
-            rules={[{ required: true, message: 'Please choose a appchain' }]}
-        >
-            <Select>
-                {appchainIds}
-            </Select>
-        </Item>
-        <Item
-            label="oct role"
-            name="oct_role"
-            rules={[{ required: true, message: 'Please choose an oct role' }]}
-        >
-            <Select>
-                <Option value='delegator'>delegator</Option>
-                <Option value='validator'>validator</Option>
-            </Select>
-        </Item>
-
-    </div>
-}
-
-function Balance(props){
-    return <div>
-        <Item
-        label="balance"
-        name="balance"
-        rules={[{ required: true, message: 'Enter a balance' }]}
-        >
-            <Input />
-        </Item>
-    </div>
-}
 
 export default AddRule;
