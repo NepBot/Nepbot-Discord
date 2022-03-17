@@ -54,6 +54,7 @@ function AddRule(props) {
                     args.key_field = ['x.paras.near', lastFraction[0]]
                     args.fields = {token_amount: values.token_amount}
                 } else {
+                    await account.viewFunction(values.contract_id, 'nft_metadata', {})
                     args.key_field = ['nft_contract_id', values.contract_id]
                     args.fields = {token_amount: values.token_amount}
                 }
@@ -186,7 +187,7 @@ function AddRule(props) {
             <Item
                 label="collection url"
                 name="collection_url"
-                rules={[{ required: true, message: 'Please input collection id' }]}
+                rules={[{ required: false, message: 'Please input collection id' }]}
                 hidden={!isParas}
             >
                 <Input />

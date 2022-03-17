@@ -130,6 +130,12 @@ function SetRule(props) {
                 it.icon = test_icon
             } else if (it.key_field[0] === 'near') {
                 it.icon = "https://near.org/wp-content/themes/near-19/assets/img/brand-icon.png"
+            } else if (it.key_field[0] === 'nft_contract_id') {
+                let metadata = await account.viewFunction(it.key_field[1], "nft_metadata", {})
+                it.icon = metadata.icon
+                it.name = metadata.name
+            } else if (it.key_field[0] === 'x.paras.near') {
+
             }
         }
         console.log("roleList>>>",data)
@@ -188,17 +194,17 @@ function SetRule(props) {
         const _sign = await signRule(msg);
         console.log(_sign)
 
-           const delRule = await account.functionCall(
-                config.RULE_CONTRACT,
-                'del_role',
-                {args:JSON.stringify([obj]),..._sign},
-                '300000000000000'
-            );
-           setTimeout(async ()=>{
-               if(delRule){
-                   await handleReload()
-               }
-           })
+        const delRule = await account.functionCall(
+            config.RULE_CONTRACT,
+            'del_role',
+            {args:JSON.stringify([obj]),..._sign},
+            '300000000000000'
+        );
+        setTimeout(async ()=>{
+            if(delRule){
+                await handleReload()
+            }
+        })
     }
     const handleSearch = useCallback(async () => {
         const near = await connect(config);
@@ -266,6 +272,11 @@ function SetRule(props) {
             } else if (props.item.key_field[0] == "near") {
                 return (<div className={'file-list'}>
                     <div>{`near balance: ${formatAmount(props.item.fields.balance)}`}</div>
+                </div>)
+            } else if (props.item.key_field[0] == "nft_contract_id") {
+                return (<div className={'file-list'}>
+                    <div>{`NFT: ${props.item.name}`}</div>
+                    <div>{`amount: ${props.item.fields.token_amount}`}</div>
                 </div>)
             }
             
