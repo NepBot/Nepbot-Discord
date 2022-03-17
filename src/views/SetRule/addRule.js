@@ -256,7 +256,7 @@ function AddRule(props) {
                             <Option value='token amount'>Token amount</Option>
                             <Option value='oct roles'>OCT roles</Option>
                             <Option value='near balance'>Near balance</Option>
-                            <Option value='nft amount'>NFT amount</Option>
+                            <Option value='nft amount'>NFT</Option>
                         </Select>
                     </Item>
                     <TypeDetail type={type} appchainIds={props.appchainIds}/>
