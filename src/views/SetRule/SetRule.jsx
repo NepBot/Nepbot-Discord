@@ -1,16 +1,17 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Button, Input, Table, Row, Col,Space} from "antd";
 import {connect, WalletConnection} from "near-api-js";
-import {config} from "../../config";
+import {getConfig} from "../../config";
 import AddRule from "./addRule";
 import {getRoleList, getServer, signRule} from "../../api/api";
 import './setRule.css'
 import qs from "qs";
 import store from "../../store/discordInfo";
-import {contract, formatAmount, sign} from "../../utils/util";
+import {formatAmount, sign} from "../../utils/util";
 import test_icon from '../../assets/imgs/test_icon.png';
 import no_data from '../../assets/imgs/no_data.jpg';
 
+const config = getConfig()
 
 function SetRule(props) {
     let account = {}

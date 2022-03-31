@@ -1,9 +1,12 @@
 import React,{useState} from 'react';
 import {Modal, Form, Input, Button, Select, Space} from "antd";
 import {connect, WalletConnection} from "near-api-js";
-import {config} from "../../config";
+import {getConfig} from "../../config";
 import {signRule} from "../../api/api";
 import {contract, parseAmount, sign} from "../../utils/util";
+
+const config = getConfig()
+
 const { Item } = Form;
 const { Option } = Select;
 function AddRule(props) {

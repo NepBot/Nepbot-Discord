@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Row, Col, Input, Button, List} from 'antd';
 import {connect, WalletConnection} from 'near-api-js';
 import qs from 'qs';
-import {config} from '../../config';
+import {getConfig} from '../../config';
 import './Oauth.css';
 import store from "../../store/discordInfo";
 import bg_top from '../../assets/imgs/bg_top.svg';
@@ -11,7 +11,7 @@ import bg_right from '../../assets/imgs/bg_right.svg';
 import oauth_bg from '../../assets/imgs/oauth_bg.svg';
 import { getServer, getUser } from '../../api/api';
 
-
+const config = getConfig()
 
 export default function Index(props) {
     const [near,setNear] = useState({})

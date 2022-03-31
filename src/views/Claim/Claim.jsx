@@ -2,9 +2,10 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Row, Col, Input, Button, List} from 'antd';
 import {connect, WalletConnection, keyStores, KeyPair} from "near-api-js";
-import {config} from '../../config';
+import {getConfig} from '../../config';
 import './Claim.css';
-import store from "../../store/discordInfo";
+
+const config = getConfig()
 
 export default function Index(props) {
     const [text, setText] = useState("LOADING...")

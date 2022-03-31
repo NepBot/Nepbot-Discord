@@ -1,11 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useCallback, useEffect, useState} from 'react';
-import {Row, Col, Input, Button, List} from 'antd';
-import nearAPI from 'near-api-js';
-import qs from 'qs';
-import {config} from '../../config';
 import './Index.css';
-import store from "../../store/discordInfo";
 import cover1 from '../../assets/imgs/index/cover1.svg';
 import cover2 from '../../assets/imgs/index/cover2.svg';
 import cover_start from '../../assets/imgs/index/cover_start.svg';

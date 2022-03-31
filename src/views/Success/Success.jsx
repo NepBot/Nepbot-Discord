@@ -5,12 +5,13 @@ import {setInfo} from "../../api/api";
 import store from "../../store/discordInfo";
 import {sign} from "../../utils/util";
 import {connect, WalletConnection} from "near-api-js";
-import {config} from "../../config";
+import {getConfig} from "../../config";
 import './success.css';
 import bg_left_top from '../../assets/imgs/bg_left_top.svg';
 import bg_right_bottom from '../../assets/imgs/bg_right_bottom.svg';
 import success from '../../assets/imgs/success.svg';
 
+const config = getConfig()
 
 export default function Success(props) {
 
