@@ -13,7 +13,8 @@ export function getConfig() {
           walletUrl: 'https://wallet.near.org',
           helperUrl: 'https://helper.mainnet.near.org',
           RULE_CONTRACT: 'app.nepbot.near',
-          OCT_CONTRACT: 'registry.test_oct.testnet',
+          OCT_CONTRACT: 'octopus-registry.near',
+          APPLICATION_ID: '958997413803196476'
         }
       case 'development':
       case 'testnet':
@@ -26,6 +27,7 @@ export function getConfig() {
           RULE_CONTRACT: 'v2-discord-roles.bhc8521.testnet',
           OCT_CONTRACT: 'registry.test_oct.testnet',
           LINKDROP: 'linkdrop6.bhc8521.testnet',
+          APPLICATION_ID: '928559137179172874'
         }
       case 'betanet':
         return {

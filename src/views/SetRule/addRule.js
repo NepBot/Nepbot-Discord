@@ -136,7 +136,7 @@ function AddRule(props) {
     }
     
     function OctRoles(){
-        const appchainIds = appchainIds.map(item => 
+        const appchainIds = props.appchainIds.map(item => 
             <Option value={item} key={item}>{item}</Option>
         );
         return <div>

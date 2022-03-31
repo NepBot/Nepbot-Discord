@@ -1,3 +1,3 @@
 module.exports = {
-    env: "testnet"
+    env: "mainnet"
 }

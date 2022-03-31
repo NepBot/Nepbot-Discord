@@ -22,7 +22,7 @@ export default function Index(props) {
 
     const signIn = (wallet) => {
         wallet.requestSignIn(
-          config.RULE_CONTRACT, // contract requesting access
+          "", // contract requesting access
           "nepbot", // optional
           `${window.location.origin}/success`, // optional
           `${window.location.origin}/failure` // optional
