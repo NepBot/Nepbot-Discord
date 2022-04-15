@@ -4,11 +4,11 @@ import {Row, Col, Input, Button, List} from 'antd';
 import {connect, WalletConnection} from 'near-api-js';
 import qs from 'qs';
 import {getConfig} from '../../config';
-import './Oauth.css';
+import './Verify.css';
 import store from "../../store/discordInfo";
 import bg_top from '../../assets/imgs/bg_top.svg';
 import bg_right from '../../assets/imgs/bg_right.svg';
-import oauth_bg from '../../assets/imgs/oauth_bg.svg';
+import verify_bg from '../../assets/imgs/verify_bg.svg';
 import { getServer, getUser } from '../../api/api';
 
 const config = getConfig()
@@ -40,10 +40,10 @@ export default function Index(props) {
     useEffect(async ()=>{
         const search =  qs.parse(props.location.search.slice(1));
         store.set("info", {
-            redirect: search.redirect,
             guild_id: search.guild_id,
             user_id: search.user_id,
-            guild_name: search.guild_name
+            sign: search.sign
+
         }, { expires: 1 });
         const serverInfo = await getServer(search.guild_id)
         const userInfo = await getUser(search.guild_id, search.user_id)
@@ -55,12 +55,12 @@ export default function Index(props) {
     },[])
 
     return (
-        <div className={"oauth-box"}>
+        <div className={"verify-box"}>
             <img className="bg-top" src={bg_top}/>
-            <div className={'oauth-content'}>
-                <div className={'oauth-info-box'}>
-                    <img className={'oauth_bg'} src={oauth_bg}/>
-                    <div className={'oauth-info'}>
+            <div className={'verify-content'}>
+                <div className={'verify-info-box'}>
+                    <img className={'verify_bg'} src={verify_bg}/>
+                    <div className={'verify-info'}>
                         <img className={'avatar'} src={avatarURL}/>
                         <div className={'server-name'}>{serverName}</div>
                         <div className={'name'}>{displayName}</div>

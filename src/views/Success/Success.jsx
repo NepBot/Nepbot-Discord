@@ -20,23 +20,19 @@ export default function Success(props) {
         (async ()=>{
             const near = await connect(config);
             const wallet = new WalletConnection(near,"nepbot");
-            const account_id = wallet.getAccountId()
+            const accountId = wallet.getAccountId()
             const params = store.get("info")
-            const accoutState = await wallet.account().state()
-            console.log(accoutState)
-            const user_id = params.user_id
-            const guild_id = params.guild_id
-
             const args = {
-                account_id: account_id, 
-                user_id: user_id,
-                guild_id: guild_id,
+                account_id: accountId, 
+                user_id: params.user_id,
+                guild_id: params.user_id,
+                sign: params.sign
             }
             
             const signature = await sign(wallet.account(), args)
             await setInfo({
                 args: args,
-                account_id: account_id,
+                account_id: accountId,
                 sign: signature 
             })
             window.open('https://discord.com/channels/','_self')

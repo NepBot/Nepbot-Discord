@@ -1,5 +1,4 @@
 import {axios} from "./requst";
-import store from "../store/discordInfo";
 export const setInfo = async (data)=>{
     return await axios.request({
         method:"post",
@@ -27,37 +26,11 @@ export const getUser = async (guild_id, user_id) => {
     const json = await fetch(`/api/getUser/${guild_id}/${user_id}`);
     return await json.json();
 }
-
-// export const getRuleList = async (params)=>{
-//     return await axios.request({
-//         method:"get",
-//         url:`/role/list/${store.get('guild_id')}`,
-//         params,
-//     })
-// }
-
-// export const addRule = async (data)=>{
-//     return await axios.request({
-//         method:"post",
-//         url:"/role/add",
-//         data,
-//     })
-// }
-
-// export const delRule = async (id)=>{
-//     return await axios.request({
-//         method:"delete",
-//         url:"/role/del",
-//         data:{
-//             id,
-//         },
-//     })
-// }
-
-// export const editRule = async (data)=>{
-//     return await axios.request({
-//         method:"put",
-//         url:"/role/edit",
-//         data,
-//     })
-// }
+export const getOperationSign = async (args) => {
+    const json = await fetch('/api/operationSign', {
+        headers:{ 'Content-Type': 'application/json' },
+        method:"POST",
+        body:typeof args === 'string'?args:JSON.stringify(args)
+    })
+    return await json.json()
+}

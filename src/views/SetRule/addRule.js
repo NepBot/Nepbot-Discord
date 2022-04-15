@@ -31,7 +31,7 @@ function AddRule(props) {
     const onCheck = async () => {
         try {
             const values = await form.validateFields();
-            let args = {
+            let arg = {
                 guild_id: values.guild_id,
                 role_id: values.role_id,
             }
@@ -42,38 +42,41 @@ function AddRule(props) {
             if (type == 'token amount') {
                 let metadata = await account.viewFunction(values.token_id, 'ft_metadata', {})
                 let amount = parseAmount(values.token_amount, metadata.decimals)
-                args.key_field = ['token_id', values.token_id]
-                args.fields = {token_amount: amount}
+                arg.key_field = ['token_id', values.token_id]
+                arg.fields = {token_amount: amount}
             } else if (type == 'oct roles') {
-                args.key_field = ['appchain_id', values.appchain_id]
-                args.fields = {oct_role: values.oct_role}
+                arg.key_field = ['appchain_id', values.appchain_id]
+                arg.fields = {oct_role: values.oct_role}
             } else if (type == 'near balance') {
-                args.key_field = ['near', 'balance']
-                args.fields = {balance: parseAmount(values.balance)}
+                arg.key_field = ['near', 'balance']
+                arg.fields = {balance: parseAmount(values.balance)}
             } else if (type == 'nft amount') {
                 if (values.contract_id == 'x.paras.near') {
                     const fractions = values.collection_url.split("/")
                     const lastFraction = fractions[fractions.length - 1].split("?")
-                    args.key_field = ['x.paras.near', lastFraction[0]]
-                    args.fields = {token_amount: values.token_amount}
+                    arg.key_field = ['x.paras.near', lastFraction[0]]
+                    arg.fields = {token_amount: values.token_amount}
                 } else {
                     await account.viewFunction(values.contract_id, 'nft_metadata', {})
-                    args.key_field = ['nft_contract_id', values.contract_id]
-                    args.fields = {token_amount: values.token_amount}
+                    arg.key_field = ['nft_contract_id', values.contract_id]
+                    arg.fields = {token_amount: values.token_amount}
                 }
             }
-            
+            const args = {
+                items: [arg],
+                sign: props.operationSign
+            }
             
             const msg = {
-                args: [args],
-                sign: await sign(account, [args]),
+                args: args,
+                sign: await sign(account, args),
                 account_id: account.accountId
             }
             const _sign = await signRule(msg);
             const data = await account.functionCall(
                 config.RULE_CONTRACT,
                 'set_roles',
-                 {args:JSON.stringify([args]),sign:_sign.sign},
+                 {args:JSON.stringify([arg]),sign:_sign.sign},
                 '300000000000000',
                 '20000000000000000000000',
             );

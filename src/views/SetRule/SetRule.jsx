@@ -3,7 +3,7 @@ import {Button, Input, Table, Row, Col,Space} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
 import AddRule from "./addRule";
-import {getRoleList, getServer, signRule} from "../../api/api";
+import {getRoleList, getServer, signRule, getOperationSign} from "../../api/api";
 import './setRule.css'
 import qs from "qs";
 import store from "../../store/discordInfo";
@@ -23,6 +23,7 @@ function SetRule(props) {
     const [tokenId, setTokenId] = useState('')
     const [dataSource, setDataSource] = useState([]);
     const [appchainIds, setAppchainIds] = useState([])
+    const [operationSign, setOperationSign] = useState("")
     const columns = [
         {
             dataIndex: 'guild_name',
@@ -150,9 +151,24 @@ function SetRule(props) {
             const near = await connect(config);
             const wallet = new WalletConnection(near, 'nepbot');
             if (!wallet.isSignedIn()) {
-                wallet.requestSignIn(config.RULE_CONTRACT, "nepbot")
+                wallet.requestSignIn("", "nepbot")
                 return
             }
+            const accountId = wallet.getAccountId()
+            const params = store.get("info")
+            const args = {
+                account_id: accountId, 
+                user_id: params.user_id,
+                guild_id: params.user_id,
+                sign: params.sign
+            }
+            const signature = await sign(wallet.account(), args)
+            const operationSign = await getOperationSign({
+                args: args,
+                account_id: accountId,
+                sign: signature 
+            })
+            setOperationSign(operationSign)
             const server = await getServer(store.get("guild_id"));
             setServerList(server);
             account = await wallet.account();
@@ -188,9 +204,13 @@ function SetRule(props) {
             key_field: record.key_field,
             fields: record.fields
         }
+        const args = {
+            items: [obj],
+            sign: operationSign
+        }
         const msg = {
-            args: [obj],
-            sign: await sign(account, [obj]),
+            args: args,
+            sign: await sign(account, args),
             account_id: account.accountId
         }
         console.log(msg)
