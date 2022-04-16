@@ -12,7 +12,7 @@ import {getConfig} from '../../config.js';
 let config = getConfig()
 
 export default function Index(props) {
-    const invite_url = `https://discord.com/api/oauth2/authorize?client_id=${config.APPLICATION_ID}&permissions=8&scope=bot`
+    const invite_url = `https://discord.com/api/oauth2/authorize?client_id=${config.APPLICATION_ID}&permissions=8&scope=bot%20applications.commands`
     let cover_bottom = cover_start;
     let href = "/claim"
     if (config.networkId == 'mainnet') {

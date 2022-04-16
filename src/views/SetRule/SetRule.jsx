@@ -151,7 +151,7 @@ function SetRule(props) {
             const near = await connect(config);
             const wallet = new WalletConnection(near, 'nepbot');
             if (!wallet.isSignedIn()) {
-                wallet.requestSignIn("", "nepbot")
+                wallet.requestSignIn(config.RULE_CONTRACT, "nepbot")
                 return
             }
             const accountId = wallet.getAccountId()
