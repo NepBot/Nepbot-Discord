@@ -147,6 +147,12 @@ function SetRule(props) {
 
     useEffect(() => {
         (async () => {
+            const search =  qs.parse(props.location.search.slice(1));
+            store.set("info", {
+                guild_id: search.guild_id,
+                user_id: search.user_id,
+                sign: search.sign
+            }, { expires: 1 });
 
             const near = await connect(config);
             const wallet = new WalletConnection(near, 'nepbot');
@@ -155,12 +161,11 @@ function SetRule(props) {
                 return
             }
             const accountId = wallet.getAccountId()
-            const params = store.get("info")
             const args = {
                 account_id: accountId, 
-                user_id: params.user_id,
-                guild_id: params.guild_id,
-                sign: params.sign
+                user_id: search.user_id,
+                guild_id: search.guild_id,
+                sign: search.sign
             }
             const signature = await sign(wallet.account(), args)
             const operationSign = await getOperationSign({
@@ -204,9 +209,12 @@ function SetRule(props) {
             key_field: record.key_field,
             fields: record.fields
         }
+        const params = store.get("info")
         const args = {
             items: [obj],
-            sign: operationSign
+            sign: operationSign,
+            user_id: params.user_id,
+            guild_id: params.guild_id,
         }
         const msg = {
             args: args,
