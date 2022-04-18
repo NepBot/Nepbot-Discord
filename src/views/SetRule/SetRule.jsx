@@ -161,19 +161,24 @@ function SetRule(props) {
                 return
             }
             const accountId = wallet.getAccountId()
+            
+            const signature = await sign(wallet.account(), args)
+            const now = Date.now()
+            let operationSign = store.get("operationSign")
             const args = {
                 account_id: accountId, 
                 user_id: search.user_id,
                 guild_id: search.guild_id,
-                sign: search.sign
+                sign: search.sign,
+                operationSign: operationSign
             }
-            const signature = await sign(wallet.account(), args)
-            const operationSign = await getOperationSign({
+            operationSign = await getOperationSign({
                 args: args,
                 account_id: accountId,
                 sign: signature 
             })
             setOperationSign(operationSign)
+            store.set("operationSign", operationSign)
             const server = await getServer(store.get("guild_id"));
             setServer(server);
             account = await wallet.account();
@@ -181,11 +186,8 @@ function SetRule(props) {
             setAppchainIds(appchainIds)
 
             const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: server.id})
-            console.log(data)
-            const _data = await handleData(data)
-            setDataSource(_data)
-
-
+            const guildData = await handleData(data)
+            setDataSource(guildData)
         })();
         return () => {
         }
