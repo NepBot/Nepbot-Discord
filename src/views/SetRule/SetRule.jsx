@@ -15,12 +15,9 @@ const config = getConfig()
 
 function SetRule(props) {
     let account = {}
-    const guildData = qs.parse(props.location.search.slice(1));
-    store.set('guild_id',guildData.guild_id , {expires:1})
     const [roleList, setRoleList] = useState([]);
     const [addDialogStatus, setAddDialogStatus] = useState(false);
     const [server, setServer] = useState({});
-    const [tokenId, setTokenId] = useState('')
     const [dataSource, setDataSource] = useState([]);
     const [appchainIds, setAppchainIds] = useState([])
     const [operationSign, setOperationSign] = useState("")
@@ -31,7 +28,7 @@ function SetRule(props) {
             key: 'guild_name',
             render:(text, record)=> {
                 return (
-                    <span key={Math.random()}>{guildData.guild_name}</span>
+                    <span key={Math.random()}>{server.guild_name}</span>
                 )
             }
             
@@ -99,7 +96,7 @@ function SetRule(props) {
     ]
 
     const handleData = async (data) => {
-        const roleList = await getRoleList(store.get("guild_id"));
+        const roleList = await getRoleList(store.get("info").guild_id);
         let serverName = server.name
         data.forEach(async (it, index) => {
             roleList.forEach(item => {
@@ -162,6 +159,7 @@ function SetRule(props) {
             }
             const accountId = wallet.getAccountId()
             let operationSign = store.get("operationSign")
+            console.log(operationSign)
             const args = {
                 account_id: accountId, 
                 user_id: search.user_id,
@@ -176,14 +174,14 @@ function SetRule(props) {
                 sign: signature 
             })
             setOperationSign(operationSign)
-            store.set("operationSign", operationSign)
-            const server = await getServer(store.get("guild_id"));
+            store.set("operationSign", operationSign, { expires: 1 })
+            const server = await getServer(search.guild_id);
             setServer(server);
             account = await wallet.account();
             const appchainIds = await account.viewFunction(config.OCT_CONTRACT, 'get_appchain_ids', {})
             setAppchainIds(appchainIds)
 
-            const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: server.id})
+            const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: search.guild_id})
             const guildData = await handleData(data)
             setDataSource(guildData)
         })();
@@ -193,7 +191,7 @@ function SetRule(props) {
 
     const handleAddStatus = useCallback(async () => {
         if (!addDialogStatus) {
-            const roles = await getRoleList(store.get("guild_id"));
+            const roles = await getRoleList(store.get("info").guild_id);
             setRoleList(roles.filter(item=>item.name!=="@everyone"))
         }
         setAddDialogStatus(!addDialogStatus)
@@ -235,27 +233,27 @@ function SetRule(props) {
             }
         })
     }
-    const handleSearch = useCallback(async () => {
-        const near = await connect(config);
-        const wallet = new WalletConnection(near, 'nepbot');
-        account = await wallet.account();
-        if (!tokenId) {
-            await handleReload();
-        } else {
-            // const account = await contract();
-            const data = await account.viewFunction(config.RULE_CONTRACT, 'get_token', {token_id: tokenId})
-            const _data = await handleData(data);
-            console.log(_data)
-            setDataSource(_data);
-        }
-        // eslint-disable-next-line
-    }, [server.name, tokenId])
+    // const handleSearch = useCallback(async () => {
+    //     const near = await connect(config);
+    //     const wallet = new WalletConnection(near, 'nepbot');
+    //     account = await wallet.account();
+    //     if (!tokenId) {
+    //         await handleReload();
+    //     } else {
+    //         // const account = await contract();
+    //         const data = await account.viewFunction(config.RULE_CONTRACT, 'get_token', {token_id: tokenId})
+    //         const _data = await handleData(data);
+    //         console.log(_data)
+    //         setDataSource(_data);
+    //     }
+    //     // eslint-disable-next-line
+    // }, [server.name, tokenId])
 
     const handleReload = async () => {
         const near = await connect(config);
         const wallet = new WalletConnection(near, 'nepbot');
         account = await wallet.account();
-        const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: server.id})
+        const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: store.get("info").guild_id})
         const _data = await handleData(data)
         setDataSource(_data);
     }
