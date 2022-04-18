@@ -163,7 +163,6 @@ function SetRule(props) {
             const accountId = wallet.getAccountId()
             
             const signature = await sign(wallet.account(), args)
-            const now = Date.now()
             let operationSign = store.get("operationSign")
             const args = {
                 account_id: accountId, 
