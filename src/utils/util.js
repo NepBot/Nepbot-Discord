@@ -53,7 +53,6 @@ export function formatAmount(balance, decimals=24, fracDigits=2) {
 
 export async function sign(account, obj) {
     const keyPair = await account.connection.signer.keyStore.getKey(config.networkId, account.accountId);
-    console.log(keyPair)
     const data_buffer = Buffer.from(JSON.stringify(obj));
     const { signature } = keyPair.sign(data_buffer);
     let sign = bs58.encode(signature);

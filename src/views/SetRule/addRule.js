@@ -4,6 +4,7 @@ import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
 import {signRule} from "../../api/api";
 import {contract, parseAmount, sign} from "../../utils/util";
+import store from "../../store/discordInfo";
 
 const config = getConfig()
 
@@ -21,8 +22,7 @@ function AddRule(props) {
         const _near = await connect(config);
         const _wallet = new WalletConnection(_near,1);
         const account = await _wallet.account();
-        const rule= await account.viewFunction(config.RULE_CONTRACT,'get_guild', {guild_id:values.guild_id});
-        console.log(rule);
+        const rule = await account.viewFunction(config.RULE_CONTRACT,'get_guild', {guild_id: props.server.id});
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -32,7 +32,7 @@ function AddRule(props) {
         try {
             const values = await form.validateFields();
             let arg = {
-                guild_id: values.guild_id,
+                guild_id: props.server.id,
                 role_id: values.role_id,
             }
             setConfirmLoading(true);
@@ -62,9 +62,12 @@ function AddRule(props) {
                     arg.fields = {token_amount: values.token_amount}
                 }
             }
+            const params = store.get("info")
             const args = {
                 items: [arg],
-                sign: props.operationSign
+                sign: props.operationSign,
+                user_id: params.user_id,
+                guild_id: params.guild_id,
             }
             
             const msg = {
@@ -98,8 +101,6 @@ function AddRule(props) {
         setParas(v.target.value == "x.paras.near")
     }
     
-    // const {serverList} = props;
-    const {serverList} = props
     const roleList = props.roleList.map(item => 
         <Option value={item.id} key={item.id}>{item.name}</Option>
     );
@@ -235,15 +236,15 @@ function AddRule(props) {
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
                 >
-                    <Item
+                    {/* <Item
                         label="server name"
                         name="guild_id"
                         rules={[{ required: true, message: 'Please choose a server' }]}
                     >
                         <Select>
-                            <Option value={serverList.id}>{serverList.name}</Option>
+                            <Option value={server.id}>{server.name}</Option>
                         </Select>
-                    </Item>
+                    </Item> */}
                     <Item
                         label="role"
                         name="role_id"

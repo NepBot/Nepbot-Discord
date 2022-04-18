@@ -19,7 +19,7 @@ function SetRule(props) {
     store.set('guild_id',guildData.guild_id , {expires:1})
     const [roleList, setRoleList] = useState([]);
     const [addDialogStatus, setAddDialogStatus] = useState(false);
-    const [serverList, setServerList] = useState([]);
+    const [server, setServer] = useState({});
     const [tokenId, setTokenId] = useState('')
     const [dataSource, setDataSource] = useState([]);
     const [appchainIds, setAppchainIds] = useState([])
@@ -100,7 +100,7 @@ function SetRule(props) {
 
     const handleData = async (data) => {
         const roleList = await getRoleList(store.get("guild_id"));
-        let serverName = serverList.name
+        let serverName = server.name
         data.forEach(async (it, index) => {
             roleList.forEach(item => {
                 if (item.id === it["role_id"]) {
@@ -159,7 +159,7 @@ function SetRule(props) {
             const args = {
                 account_id: accountId, 
                 user_id: params.user_id,
-                guild_id: params.user_id,
+                guild_id: params.guild_id,
                 sign: params.sign
             }
             const signature = await sign(wallet.account(), args)
@@ -170,7 +170,7 @@ function SetRule(props) {
             })
             setOperationSign(operationSign)
             const server = await getServer(store.get("guild_id"));
-            setServerList(server);
+            setServer(server);
             account = await wallet.account();
             const appchainIds = await account.viewFunction(config.OCT_CONTRACT, 'get_appchain_ids', {})
             setAppchainIds(appchainIds)
@@ -243,13 +243,13 @@ function SetRule(props) {
             setDataSource(_data);
         }
         // eslint-disable-next-line
-    }, [serverList.name, tokenId])
+    }, [server.name, tokenId])
 
     const handleReload = async () => {
         const near = await connect(config);
         const wallet = new WalletConnection(near, 'nepbot');
         account = await wallet.account();
-        const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: serverList.id})
+        const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: server.id})
         const _data = await handleData(data)
         setDataSource(_data);
     }
@@ -323,7 +323,7 @@ function SetRule(props) {
             <div className={'setRule-content'}>
                 <SetRuleList/>
                 {/* <Table loading={tableStatus} columns={columns} dataSource={dataSource} rowKey={(record)=>`rest${record.key*Math.random()}`}/> */}
-                <AddRule title="Basic Modal" appchainIds={appchainIds} roleList={roleList} serverList={serverList} visible={addDialogStatus}
+                <AddRule title="Basic Modal" appchainIds={appchainIds} roleList={roleList} server={server} visible={addDialogStatus}
                         onOk={handleAddStatus} onCancel={handleAddStatus}/>
             </div>
         </div>

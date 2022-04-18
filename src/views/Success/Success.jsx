@@ -25,7 +25,7 @@ export default function Success(props) {
             const args = {
                 account_id: accountId, 
                 user_id: params.user_id,
-                guild_id: params.user_id,
+                guild_id: params.guild_id,
                 sign: params.sign
             }
             
