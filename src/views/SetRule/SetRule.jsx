@@ -161,8 +161,6 @@ function SetRule(props) {
                 return
             }
             const accountId = wallet.getAccountId()
-            
-            const signature = await sign(wallet.account(), args)
             let operationSign = store.get("operationSign")
             const args = {
                 account_id: accountId, 
@@ -171,6 +169,7 @@ function SetRule(props) {
                 sign: search.sign,
                 operationSign: operationSign
             }
+            const signature = await sign(wallet.account(), args)
             operationSign = await getOperationSign({
                 args: args,
                 account_id: accountId,
@@ -222,9 +221,7 @@ function SetRule(props) {
             sign: await sign(account, args),
             account_id: account.accountId
         }
-        console.log(msg)
         const _sign = await signRule(msg);
-        console.log(_sign)
 
         const delRule = await account.functionCall(
             config.RULE_CONTRACT,
