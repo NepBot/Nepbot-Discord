@@ -29,6 +29,18 @@ export function getConfig() {
           LINKDROP: 'linkdrop6.bhc8521.testnet',
           APPLICATION_ID: '928559137179172874'
         }
+      case 'dev-testnet':
+        return {
+          networkId: 'testnet',
+          keyStore: key,
+          nodeUrl: 'https://rpc.testnet.near.org',
+          walletUrl: 'https://wallet.testnet.near.org',
+          helperUrl: 'https://helper.testnet.near.org',
+          RULE_CONTRACT: 'app.dev-nepbot.testnet',
+          OCT_CONTRACT: 'registry.test_oct.testnet',
+          LINKDROP: 'linkdrop6.bhc8521.testnet',
+          APPLICATION_ID: '967009211823304744'
+        }
       case 'betanet':
         return {
           networkId: 'betanet',
