@@ -63,9 +63,10 @@ function AddRule(props) {
                 }
             }
             const params = store.get("info")
+            const operationSign = store.get("operationSign")
             const args = {
                 items: [arg],
-                sign: props.operationSign,
+                sign: operationSign,
                 user_id: params.user_id,
                 guild_id: params.guild_id,
             }

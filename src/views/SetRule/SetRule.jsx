@@ -159,7 +159,6 @@ function SetRule(props) {
             }
             const accountId = wallet.getAccountId()
             let operationSign = store.get("operationSign")
-            console.log(operationSign)
             const args = {
                 account_id: accountId, 
                 user_id: search.user_id,
