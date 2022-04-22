@@ -24,7 +24,7 @@ export function getConfig() {
           nodeUrl: 'https://rpc.testnet.near.org',
           walletUrl: 'https://wallet.testnet.near.org',
           helperUrl: 'https://helper.testnet.near.org',
-          RULE_CONTRACT: 'v2-discord-roles.bhc8521.testnet',
+          RULE_CONTRACT: 'app.nepbot.testnet',
           OCT_CONTRACT: 'registry.test_oct.testnet',
           LINKDROP: 'linkdrop6.bhc8521.testnet',
           APPLICATION_ID: '928559137179172874'
