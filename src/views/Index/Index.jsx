@@ -17,7 +17,7 @@ export default function Index(props) {
     let href = "/claim"
     if (config.networkId == 'mainnet') {
         cover_bottom = cover_mainnet;
-        href = invite_url
+        href = invite_url 
     }
 
     return (
