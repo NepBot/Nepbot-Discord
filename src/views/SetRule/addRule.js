@@ -123,14 +123,14 @@ function AddRule(props) {
             name="token_id"
             rules={[{ required: true, message: 'Enter a token address' }]}
             >
-                <Input />
+                <Input bordered={false}/>
             </Item>
             <Item
                 label="token amount"
                 name="token_amount"
                 rules={[{ required: true, message: 'Enter a token amount' }]}
             >
-                <Input />
+                <Input bordered={false}/>
             </Item>
         </div>
     }
@@ -146,7 +146,7 @@ function AddRule(props) {
                 name="appchain_id"
                 rules={[{ required: true, message: 'Please choose a appchain' }]}
             >
-                <Select>
+                <Select dropdownClassName={"dropdown"}>
                     {appchainIds}
                 </Select>
             </Item>
@@ -155,7 +155,7 @@ function AddRule(props) {
                 name="oct_role"
                 rules={[{ required: true, message: 'Please choose an oct role' }]}
             >
-                <Select>
+                <Select dropdownClassName={"dropdown"}>
                     <Option value='delegator'>delegator</Option>
                     <Option value='validator'>validator</Option>
                 </Select>
@@ -171,7 +171,7 @@ function AddRule(props) {
             name="balance"
             rules={[{ required: true, message: 'Enter a balance' }]}
             >
-                <Input />
+                <Input bordered={false}/>
             </Item>
         </div>
     }
@@ -185,7 +185,7 @@ function AddRule(props) {
                 name="contract_id"
                 rules={[{ required: true, message: 'Please input contract id' }]}
             >
-                <Input onChange={(v) => {handleInputChange(v)}}/>
+                <Input bordered={false} onChange={(v) => {handleInputChange(v)}}/>
             </Item>
             <Item
                 label="collection url"
@@ -193,14 +193,14 @@ function AddRule(props) {
                 rules={[{ required: false, message: 'Please input collection id' }]}
                 hidden={!isParas}
             >
-                <Input />
+                <Input bordered={false} />
             </Item>
             <Item
                 label="amount"
                 name="token_amount"
                 rules={[{ required: true, message: 'Please input amount' }]}
             >
-                <Input />
+                <Input bordered={false} />
             </Item>
     
         </div>
@@ -237,7 +237,7 @@ function AddRule(props) {
                         name="guild_id"
                         rules={[{ required: true, message: 'Please choose a server' }]}
                     >
-                        <Select>
+                        <Select dropdownClassName={"dropdown"}>
                             <Option value={serverList.id}>{serverList.name}</Option>
                         </Select>
                     </Item>
@@ -246,7 +246,7 @@ function AddRule(props) {
                         name="role_id"
                         rules={[{ required: true, message: 'Please choose a role' }]}
                     >
-                        <Select>
+                        <Select dropdownClassName={"dropdown"}>
                             {roleList}
                         </Select>
                     </Item>
@@ -255,7 +255,7 @@ function AddRule(props) {
                         name="type"
                         rules={[{ required: true, message: 'Please choose a type' }]}
                     >
-                        <Select onChange={(v)=>{handleChangeType(v)}}>
+                        <Select dropdownClassName={"dropdown"} onChange={(v)=>{handleChangeType(v)}}>
                             <Option value='token amount'>Token amount</Option>
                             <Option value='oct roles'>OCT roles</Option>
                             <Option value='near balance'>Near balance</Option>

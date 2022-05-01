@@ -2,131 +2,72 @@
   position: relative;
   width:100vw;
   height:100vh;
-  background-size:100% 100%;
+  background:url('../../assets/images/bg-connect-wallet.png') no-repeat center center;
+  background-size:cover;
 }
-.oauth-content{
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
-}
-.bg-top{
-  position: absolute;
-  width:60.2083%;
-  top:0;
-  left:3.1944%;
-}
-.bg-right{
-  position: absolute;
-  width:10.2778%;
-  right:0;
-  bottom:12.375%;
-}
-
-
-
-
-
-.oauth-content {
+.oauth-info {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 760px;
+  width:360px;
+  padding:60px 30px;
+  box-sizing: border-box;
+  background: rgba(48,51,77,0.70);
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.oauth-content .oauth-info-box {
-  font-family: Basic;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 40px;
-  line-height: 50px;
-  color: #000000;
-  position: relative;
-}
-.oauth-info-box .oauth_bg{
-  width: 100%;
-}
-.oauth-info-box .oauth-info{
-  position: absolute;
-  top:26%;
-  left:13%;
-  height:176px;
-  width:560px;
-}
 .oauth-info .avatar{
-  width:124px;
-  height:124px;
+  width:90px;
+  height:90px;
   border-radius: 50%;
-  position: absolute;
-  top:26px;
-  left:26px;
-}
-.oauth-info .server-name{
-  position: absolute;
-  top:35px;
-  left:180px;
-  font-size:34px;
-  font-weight:bold;
 }
 .oauth-info .name{
-  position: absolute;
-  bottom:35px;
-  left:180px;
-  font-size:24px;
-  font-weight:bold;
-}
-.oauth-content .title {
-  position: absolute;
-  width: 775px;
-  height: 67px;
-  left: calc(50% - 775px/2 - 12.5px);
-  top: calc(50% - 67px/2 + 137.5px);
-  text-align: center;
-
-  font-family: Baloo 2;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 20px;
-  line-height: 80%;
-  /* or 16px */
-
-  text-align: center;
-  letter-spacing: -0.05em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  box-sizing: border-box;
-  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-}
-.oauth-content .connect {
-  position: absolute;
-  width: 309px;
-  height: 77px;
-  left: calc(50% - 309px/2 - 13.5px);
-  top: calc(50% - 77px/2 + 200.5px);
-  position: absolute;
-  background: #6B6EF9;
-  border-radius: 40px;
-
-  font-family: Baloo;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 40px;
-  line-height: 63px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-top:24px;
+  font-family: Gilroy-Bold;
+  font-size: 18px;
   color: #FFFFFF;
+  text-align: center;
+  line-height: 26px;
+  font-weight: 700;
+}
+.oauth-info .server-name{
+  margin-top:6px;
+  font-family: Gilroy-Regular;
+  font-size: 16px;
+  color: #FFFFFF;
+  text-align: center;
+  font-weight: 400;
+}
+.oauth-info .connect-btn{
+  margin-top:60px;
+  display:block;
+  width:150px;
+  height:50px;
+  text-align: center;
+  line-height:50px;
+  background-image: linear-gradient(-83deg, #9D7DFF 0%, #8C97FF 43%, #9FD0FF 100%);
+  border-radius: 8px;
+  font-family: Gilroy-Regular;
+  font-size: 16px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  text-align: center;
+  font-weight: 400;
+  cursor: pointer;
+}
+.oauth-info .connect-btn:hover{
+  background-image: linear-gradient(-88deg, #812BFF 0%, #6A79FF 41%, #4D85FF 100%);
+}
+.oauth-info .tip{
+  margin-top:12px;
+  opacity: 0.4;
+  font-family: Gilroy-Regular;
+  font-size: 14px;
+  color: #FFFFFF;
+  text-align: center;
+  font-weight: 400;
 }
 
-@media (max-width: 780px) {
-  .oauth-content .content {
-    width: 90%;
-    left: calc(50% - 45%);
-    top: calc(50% - 45%);
-  }
-}

@@ -1,15 +1,11 @@
 import React, { useEffect, useState} from 'react';
-import qs from 'qs';
-import {notification} from 'antd'
 import {setInfo} from "../../api/api";
 import store from "../../store/discordInfo";
 import {sign} from "../../utils/util";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
-import './success.css';
-import bg_left_top from '../../assets/imgs/bg_left_top.svg';
-import bg_right_bottom from '../../assets/imgs/bg_right_bottom.svg';
-import success from '../../assets/imgs/success.svg';
+import './Loading.css';
+import load from '../../assets/images/load.gif';
 
 const config = getConfig()
 
@@ -52,12 +48,11 @@ export default function Success(props) {
     // },[])
 
     return (
-        <div className={'success-box'}>
-            <img className="bg-left-top" src={bg_left_top}/>
-            <div className={'success-content'}>
-                <img src={success}/>
+        <div className={'loading-box'}>
+            <div className={'loading-content'}>
+                <img src={load}/>
+                <div className={'text'}>Loading…</div>
             </div>
-            <img className="bg-right-bottom" src={bg_right_bottom}/>
         </div>
 
     );

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Button, Input, Table, Row, Col,Space} from "antd";
+import {Button, Input, Table, Row, Col,Space,message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
 import AddRule from "./addRule";
@@ -10,6 +10,10 @@ import store from "../../store/discordInfo";
 import {formatAmount, sign} from "../../utils/util";
 import test_icon from '../../assets/imgs/test_icon.png';
 import no_data from '../../assets/imgs/no_data.jpg';
+
+import logo from '../../assets/images/index/logo.png';
+import add from '../../assets/images/setRule/add.png';
+import success from '../../assets/images/success.png';
 
 const config = getConfig()
 
@@ -174,6 +178,8 @@ function SetRule(props) {
         if (!addDialogStatus) {
             const roles = await getRoleList(store.get("guild_id"));
             setRoleList(roles.filter(item=>item.name!=="@everyone"))
+        }else{
+            message.info('Success');
         }
         setAddDialogStatus(!addDialogStatus)
     }, [addDialogStatus]);
@@ -206,6 +212,7 @@ function SetRule(props) {
         setTimeout(async ()=>{
             if(delRule){
                 await handleReload()
+                message.info('Success');
             }
         })
     }
@@ -237,25 +244,58 @@ function SetRule(props) {
 
     function SetRuleList(){
         if(dataSource.length>0){
-            const setRuleItems = dataSource.map(item => 
-                <div className={'setRule-item'} key={Math.random()}>
-                    <div className={'guild-name'}>#{item.guild_name}</div>
+            const setRuleItems = dataSource.map((item,index) => 
+                <div className={['setRule-item', (index%3===2) ? 'mr0' : '']} key={Math.random()}>
+                    <div className={'token-info'}>
+                        <img className={'token-icon'} src={item.icon} alt={"token"}/>
+                        <div className={'token-symbol'}>{item.token_symbol}</div>
+                        <div className={'delete-btn'} onClick={()=>{handleDelete(item)}}></div>
+                    </div>
+                    <div className={'file-item'}>
+                        <div className={'name'}>guild name:</div>
+                        <div className={'info'}>#{item.guild_name}</div>
+                    </div>
+                    <div className={'file-item'}>
+                        <div className={'name'}>role name:</div>
+                        <div className={'info'}>{item.role_name}</div>
+                    </div>
+                    <FileList item={item}/>
+
+                    {/* <div className={'guild-name'}>#{item.guild_name}</div>
                     <div className={'role_name'}>{item.role_name}</div>
                     <FileList item={item}/>
                     <img className={'token-icon'} src={item.icon}/>
-                    <div className={'delete-btn'} onClick={()=>{handleDelete(item)}}>delete</div>
+                    <div className={'delete-btn'} onClick={()=>{handleDelete(item)}}>delete</div> */}
                 </div>
             );
             
             return (<div className={'setRule-list'}>
                 {setRuleItems}
+                {/* <div className={'setRule-item'} key={Math.random()}>
+                    <div className={'token-info'}>
+                        <img className={'token-icon'} src={""} alt={"token"}/>
+                        <div className={'token-symbol'}>symbol</div>
+                        <div className={'delete-btn'} onClick={()=>{handleDelete({})}}></div>
+                    </div>
+                    <div className={'file-item'}>
+                        <div className={'name'}>guild name:</div>
+                        <div className={'info'}>XX</div>
+                    </div>
+                    <div className={'file-item'}>
+                        <div className={'name'}>role name:</div>
+                        <div className={'info'}>XX</div>
+                    </div>
+                    <FileList item={item}/>
+                </div> */}
             </div>)
-        }else{
-            return (<div className={'no-data'}>
-                <img src={no_data}/>
-                <div className={'tip'}>No data, Please add a rule.</div>
-                <div className={'btn'} onClick={handleAddStatus}>+ Add</div>
-            </div>)
+        }
+        else{
+            return ("");
+            // return (<div className={'no-data'}>
+            //     <img src={no_data}/>
+            //     <div className={'tip'}>No data, Please add a rule.</div>
+            //     <div className={'btn'} onClick={handleAddStatus}>+ Add</div>
+            // </div>)
         }
     }
 
@@ -264,27 +304,63 @@ function SetRule(props) {
         if(props.item.key_field){
             if (props.item.key_field[0] == "token_id") {
                 return (<div className={'file-list'}>
-                    <div>{`token: ${props.item.token_symbol}`}</div>
-                    <div>{`amount: ${formatAmount(props.item.fields.token_amount, props.item.decimals)}`}</div>
+                    <div className={'file-item'}>
+                        <div className={'name'}>token:</div>
+                        <div className={'info'}>{props.item.token_symbol}</div>
+                    </div>
+                    <div className={'file-item'}>
+                        <div className={'name'}>amount:</div>
+                        <div className={'info'}>{formatAmount(props.item.fields.token_amount, props.item.decimals)}</div>
+                    </div>
+                    {/* <div>{`token: ${props.item.token_symbol}`}</div>
+                    <div>{`amount: ${formatAmount(props.item.fields.token_amount, props.item.decimals)}`}</div> */}
                 </div>)
             } else if (props.item.key_field[0] == "appchain_id") {
                 return (<div className={'file-list'}>
-                    <div>{`appchain: ${props.item.key_field[1]}`}</div>
-                    <div>{`role: ${props.item.fields.oct_role}`}</div>
+                    <div className={'file-item'}>
+                        <div className={'name'}>appchain:</div>
+                        <div className={'info'}>{props.item.key_field[1]}</div>
+                    </div>
+                    <div className={'file-item'}>
+                        <div className={'name'}>role:</div>
+                        <div className={'info'}>{props.item.fields.oct_role}</div>
+                    </div>
+                    {/* <div>{`appchain: ${props.item.key_field[1]}`}</div>
+                    <div>{`role: ${props.item.fields.oct_role}`}</div> */}
                 </div>)
             } else if (props.item.key_field[0] == "near") {
                 return (<div className={'file-list'}>
-                    <div>{`near balance: ${formatAmount(props.item.fields.balance)}`}</div>
+                    <div className={'file-item'}>
+                        <div className={'name'}>near balance:</div>
+                        <div className={'info'}>{formatAmount(props.item.fields.balance)}</div>
+                    </div>
+                    {/* <div>{`near balance: ${formatAmount(props.item.fields.balance)}`}</div> */}
                 </div>)
             } else if (props.item.key_field[0] == "nft_contract_id") {
                 return (<div className={'file-list'}>
-                    <div>{`NFT: ${props.item.name}`}</div>
-                    <div>{`amount: ${props.item.fields.token_amount}`}</div>
+                    <div className={'file-item'}>
+                        <div className={'name'}>NFT:</div>
+                        <div className={'info'}>{props.item.name}</div>
+                    </div>
+                    <div className={'file-item'}>
+                        <div className={'name'}>amount:</div>
+                        <div className={'info'}>{props.item.fields.token_amount}</div>
+                    </div>
+                    {/* <div>{`NFT: ${props.item.name}`}</div>
+                    <div>{`amount: ${props.item.fields.token_amount}`}</div> */}
                 </div>)
             } else if (props.item.key_field[0] == "x.paras.near") {
                 return (<div className={'file-list'}>
-                    <div>{`NFT: ${props.item.name}`}</div>
-                    <div>{`amount: ${props.item.fields.token_amount}`}</div>
+                    <div className={'file-item'}>
+                        <div className={'name'}>NFT:</div>
+                        <div className={'info'}>{props.item.name}</div>
+                    </div>
+                    <div className={'file-item'}>
+                        <div className={'name'}>amount:</div>
+                        <div className={'info'}>{props.item.fields.token_amount}</div>
+                    </div>
+                    {/* <div>{`NFT: ${props.item.name}`}</div>
+                    <div>{`amount: ${props.item.fields.token_amount}`}</div> */}
                 </div>)
             }
             
@@ -297,15 +373,18 @@ function SetRule(props) {
 
     return (
         <div className={'setRule-box'}>
-            <div className={'nav-bar'}>
-                <div className={'add-btn'} onClick={handleAddStatus}>+ Add</div>
+            <div className={'bg'}></div>
+            <div className={'header'}>
+                <img className={"logo"} src={logo}/>
+                {/* <Input className={'search-input'} bordered={false} placeholder="Enter a token ID to search" /> */}
+                <div className={'add-btn'} onClick={handleAddStatus}>
+                    <img className={"add-icon"} src={add}/>
+                    Add
+                </div>
             </div>
-            <div className={'setRule-content'}>
-                <SetRuleList/>
-                {/* <Table loading={tableStatus} columns={columns} dataSource={dataSource} rowKey={(record)=>`rest${record.key*Math.random()}`}/> */}
-                <AddRule title="Basic Modal" appchainIds={appchainIds} roleList={roleList} serverList={serverList} visible={addDialogStatus}
-                        onOk={handleAddStatus} onCancel={handleAddStatus}/>
-            </div>
+            <SetRuleList/>
+            {/* <Table loading={tableStatus} columns={columns} dataSource={dataSource} rowKey={(record)=>`rest${record.key*Math.random()}`}/> */}
+            <AddRule title="Basic Modal" appchainIds={appchainIds} roleList={roleList} serverList={serverList} visible={addDialogStatus}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
         </div>
     );
 }
