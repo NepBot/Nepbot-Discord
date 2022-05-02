@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import store from "../../store/discordInfo";
 import React, {useCallback, useEffect, useState} from 'react';
 import {Select} from "antd";
 import './Index.css';
@@ -12,23 +13,32 @@ import verfication from '../../assets/images/index/verfication.png';
 import workInvite from '../../assets/images/index/work-invite.png';
 import workRule from '../../assets/images/index/work-rule.png';
 import workConnect from '../../assets/images/index/work-connect.png';
+import flux from '../../assets/images/index/logo-flux.png';
+import QSTN from '../../assets/images/index/logo-QSTN.png';
+import OCT from '../../assets/images/index/logo-OCT.png';
 const { Option } = Select;
-let config = getConfig()
+// let config = getConfig()
 
 export default function Index(props) {
-    const mainnet_invite_url = `https://discord.com/api/oauth2/authorize?client_id=${config.APPLICATION_ID}&permissions=8&scope=bot`
-    const testnet_invite_url = `https://discord.com/api/oauth2/authorize?client_id=${config.APPLICATION_ID}&permissions=8&scope=bot%20applications.commands`
-
-    const [networkId,setNetwork] = useState('mainnet')
-    const [inviteUrl,setInviteUrl] = useState(mainnet_invite_url)
-    const handleChange = (value) => {
-        setNetwork(value)
-        if(networkId==='mainnet'){
-            setInviteUrl(mainnet_invite_url)
+    const getInviteUrl = (network) => {
+        const config = getConfig()
+        if(network === 'mainnet'){
+            return `https://discord.com/api/oauth2/authorize?client_id=${config.APPLICATION_ID}&permissions=8&scope=bot`
         }else{
-            setInviteUrl(testnet_invite_url)
+            return `https://discord.com/api/oauth2/authorize?client_id=${config.APPLICATION_ID}&permissions=8&scope=bot%20applications.commands`
         }
-      }
+    }
+
+    const network = store.get("network")
+    const [networkId,setNetwork] = useState(network)
+    const [inviteUrl,setInviteUrl] = useState(getInviteUrl(network))
+    const handleChange = (value) => {
+        store.set("network", value, { expires: 1 });
+        setNetwork(value)
+        setInviteUrl(getInviteUrl(value))
+        store.remove("info");
+        store.remove("guild_id");
+    }
 
     return (
         <div className={"wrap"}>
@@ -42,7 +52,7 @@ export default function Index(props) {
                         <a className={"nav-item faq"} href='https://nepbot.notion.site/Discord-NepBot-Knowledge-Base-dc875fc6c3f84149aa8a76ef7a2a23ab' target="view_window">FAQ</a>
                         <a className={"nav-item community"} href='https://discord.gg/avqufmzS6t' target="view_window">Community</a>
                         <div className={[networkId,'nav-item'].join(' ')} >
-                            <Select defaultOpen={true} value={networkId} dropdownClassName={"network-dropdown"} onChange={handleChange}>
+                            <Select value={networkId} dropdownClassName={"network-dropdown"} onChange={handleChange}>
                                 <Option value='mainnet' key='mainnet'>Mainnet</Option>
                                 <Option value='testnet' key='testnet'>TestNet</Option>
                             </Select>
@@ -103,10 +113,13 @@ export default function Index(props) {
 
                     <div className={"partner"}>
                         <div className={"brand"}>
-                            OCT
+                            <img src={OCT} alt="OCT"/>
                         </div>
                         <div className={"brand"}>
-                            OCT
+                            <img src={QSTN} alt="QSTN"/>
+                        </div>
+                        <div className={"brand"}>
+                            <img src={flux} alt="flux"/>
                         </div>
                     </div>
                 </div>
