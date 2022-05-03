@@ -112,15 +112,15 @@ export default function Index(props) {
                     </div>
 
                     <div className={"partner"}>
-                        <div className={"brand"}>
+                        <a className={"brand"} href="https://oct.network" target="view_window">
                             <img src={OCT} alt="OCT"/>
-                        </div>
-                        <div className={"brand"}>
+                        </a>
+                        <a className={"brand"} href="https://qstn.us" target="view_window">
                             <img src={QSTN} alt="QSTN"/>
-                        </div>
-                        <div className={"brand"}>
+                        </a>
+                        <a className={"brand"} href="https://fluxprotocol.org" target="view_window">
                             <img src={flux} alt="flux"/>
-                        </div>
+                        </a>
                     </div>
                 </div>
 
