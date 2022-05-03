@@ -213,7 +213,6 @@
 /*Partner*/
 .partner{
     margin-top:52px;
-    margin-bottom:120px;
     display: flex;
     justify-content: center;
 }
@@ -241,6 +240,25 @@
     margin-right:0;
 }
 
+.power{
+    margin-top:60px;
+    margin-bottom:120px;
+    height:20px;
+    display: flex;
+    justify-content:center;
+    align-items:center;
+    font-family: Gilroy-Regular;
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0;
+    text-align: center;
+    font-weight: 400;
+}
+.power img{
+    width:60px;
+    margin-left:8px;
+}
+
 .footer{
     width: 100%;
     padding:0 13.888889%;
@@ -254,9 +272,6 @@
     color: #FFFFFF;
     letter-spacing: 0;
     font-weight: 400;
-}
-.footer .footer-content{
-
 }
 .footer .media-list{
     display: flex;
@@ -283,6 +298,10 @@
     background:url('../../assets/images/index/youtube.png') no-repeat left center;
     background-size: 24px 24px;
 }
+.media-list .media.medium{
+    background:url('../../assets/images/index/medium.png') no-repeat left center;
+    background-size: 24px 24px;
+}
 .media-list .media.twitter:hover{
     background:url('../../assets/images/index/twitter-hover.png') no-repeat left center;
     background-size: 24px 24px;
@@ -297,6 +316,10 @@
 }
 .media-list .media.youtube:hover{
     background:url('../../assets/images/index/youtube-hover.png') no-repeat left center;
+    background-size: 24px 24px;
+}
+.media-list .media.medium:hover{
+    background:url('../../assets/images/index/medium-hover.png') no-repeat left center;
     background-size: 24px 24px;
 }
 

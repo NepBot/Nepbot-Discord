@@ -13,13 +13,17 @@ import verfication from '../../assets/images/index/verfication.png';
 import workInvite from '../../assets/images/index/work-invite.png';
 import workRule from '../../assets/images/index/work-rule.png';
 import workConnect from '../../assets/images/index/work-connect.png';
+import fusotao from '../../assets/images/index/logo-fusotao.png';
 import flux from '../../assets/images/index/logo-flux.png';
 import QSTN from '../../assets/images/index/logo-QSTN.png';
 import OCT from '../../assets/images/index/logo-OCT.png';
+import near from '../../assets/images/index/logo-near.png';
 const { Option } = Select;
 // let config = getConfig()
 
 export default function Index(props) {
+    const initNetwork = store.get("network") || 'mainnet';
+    store.set("network", initNetwork, { expires: 1 });
     const getInviteUrl = (network) => {
         const config = getConfig()
         if(network === 'mainnet'){
@@ -121,7 +125,16 @@ export default function Index(props) {
                         <a className={"brand"} href="https://fluxprotocol.org" target="view_window">
                             <img src={flux} alt="flux"/>
                         </a>
+                        <a className={"brand"} href="https://www.fusotao.org/" target="view_window">
+                            <img src={fusotao} alt="fusotao"/>
+                        </a>
                     </div>
+                </div>
+                <div className={"power"}>
+                    powered by 
+                    <a href="https://near.org/" target="view_window">
+                        <img src={near} alt="near"/>
+                    </a>
                 </div>
 
                 <div className={"footer"}>
@@ -130,6 +143,7 @@ export default function Index(props) {
                         <a className={"media twitter"} href="https://twitter.com/nepbot4near" target="view_window"></a>
                         <a className={"media discord"} href="https://discord.gg/avqufmzS6t" target="view_window"></a>
                         <a className={"media youtube"} href="https://discord.gg/avqufmzS6t" target="view_window"></a>
+                        <a className={"media medium"} href="https://nepbot.medium.com" target="view_window"></a>
                     </div>
                     <div className={"email"}>Email：hi@nepbot.org</div>
                 </div>
