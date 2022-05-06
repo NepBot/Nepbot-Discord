@@ -30,7 +30,6 @@ export default function Index(props) {
         } else if (value == "testnet") {
             window.location.href = "https://testnet.nepbot.org"
         }
-        
     }
 
     return (
@@ -44,8 +43,8 @@ export default function Index(props) {
                         <a className={"nav-item commands"} href='https://nepbot.notion.site/Command-Glossary-e5ffdf2d51e24fc0a569d1cb3ef6e035' target="view_window">Commands</a>
                         <a className={"nav-item faq"} href='https://nepbot.notion.site/Discord-NepBot-Knowledge-Base-dc875fc6c3f84149aa8a76ef7a2a23ab' target="view_window">FAQ</a>
                         <a className={"nav-item community"} href='https://discord.gg/avqufmzS6t' target="view_window">Community</a>
-                        <div className={[networkId,'nav-item'].join(' ')} >
-                            <Select value={networkId} dropdownClassName={"network-dropdown"} onChange={handleChange}>
+                        <div className={[config.networkId,'nav-item'].join(' ')} >
+                            <Select value={config.networkId} dropdownClassName={"network-dropdown"} onChange={handleChange}>
                                 <Option value='mainnet' key='mainnet'>Mainnet</Option>
                                 <Option value='testnet' key='testnet'>TestNet</Option>
                             </Select>

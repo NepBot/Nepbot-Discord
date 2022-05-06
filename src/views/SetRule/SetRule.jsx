@@ -407,7 +407,7 @@ function SetRule(props) {
             </div>
             <SetRuleList/>
             {/* <Table loading={tableStatus} columns={columns} dataSource={dataSource} rowKey={(record)=>`rest${record.key*Math.random()}`}/> */}
-            <AddRule title="Basic Modal" appchainIds={appchainIds} roleList={roleList} serverList={serverList} visible={addDialogStatus}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
+            <AddRule title="Basic Modal" appchainIds={appchainIds} roleList={roleList} server={server} visible={addDialogStatus}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
         </div>
     );
 }
