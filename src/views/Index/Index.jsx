@@ -142,7 +142,7 @@ export default function Index(props) {
                         <a className={"media github"} href="https://github.com/NepBot" target="view_window"></a>
                         <a className={"media twitter"} href="https://twitter.com/nepbot4near" target="view_window"></a>
                         <a className={"media discord"} href="https://discord.gg/avqufmzS6t" target="view_window"></a>
-                        <a className={"media youtube"} href="https://discord.gg/avqufmzS6t" target="view_window"></a>
+                        <a className={"media youtube"} href="https://www.youtube.com/channel/UCXUE0Achwcvc_EYMkybXC4Q" target="view_window"></a>
                         <a className={"media medium"} href="https://nepbot.medium.com" target="view_window"></a>
                     </div>
                     <div className={"email"}>Email：hi@nepbot.org</div>
