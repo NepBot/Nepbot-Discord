@@ -1,13 +1,19 @@
-body {
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  padding:0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@font-face {
+  font-family: 'Gilroy-Regular';  
+  src: url('./assets/fonts/gilroy-regular-3.otf') 
+}
+@font-face {
+  font-family: 'Gilroy-Bold';  
+  src: url('./assets/fonts/gilroy-bold-4.otf') 
+}
+@font-face {
+  font-family: 'Gilroy-SemiBold';  
+  src: url('./assets/fonts/Radomir Tinkov - Gilroy-SemiBold.otf') 
 }

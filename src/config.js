@@ -1,9 +1,11 @@
 import {keyStores} from 'near-api-js';
-import {env} from "./env.js"
+import {env} from "./env.js";
+import store from "./store/discordInfo";
 const key = new keyStores.BrowserLocalStorageKeyStore();
 
 export function getConfig() {
-    switch (env) {
+    const network = store.get("network") || env;
+    switch (network) {
       case 'production':
       case 'mainnet':
         return {

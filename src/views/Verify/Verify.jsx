@@ -6,9 +6,6 @@ import qs from 'qs';
 import {getConfig} from '../../config';
 import './Verify.css';
 import store from "../../store/discordInfo";
-import bg_top from '../../assets/imgs/bg_top.svg';
-import bg_right from '../../assets/imgs/bg_right.svg';
-import verify_bg from '../../assets/imgs/verify_bg.svg';
 import { getServer, getUser } from '../../api/api';
 
 const config = getConfig()
@@ -24,7 +21,7 @@ export default function Index(props) {
         wallet.requestSignIn(
           config.RULE_CONTRACT, // contract requesting access
           "nepbot", // optional
-          `${window.location.origin}/success`, // optional
+          `${window.location.origin}/wait`, // optional
           `${window.location.origin}/failure` // optional
         );
     };
@@ -56,21 +53,13 @@ export default function Index(props) {
 
     return (
         <div className={"verify-box"}>
-            <img className="bg-top" src={bg_top}/>
-            <div className={'verify-content'}>
-                <div className={'verify-info-box'}>
-                    <img className={'verify_bg'} src={verify_bg}/>
-                    <div className={'verify-info'}>
-                        <img className={'avatar'} src={avatarURL}/>
-                        <div className={'server-name'}>{serverName}</div>
-                        <div className={'name'}>{displayName}</div>
-                    </div>
-                </div>
-                <div className={'title'}>Connect to your Near wallet</div>
-                <Button className={'connect'} type={'primary'}
-                        onClick={handleConnect}>Connect</Button>
+            <div className={'verify-info'}>
+                <img className={'avatar'} src={avatarURL} alt={displayName}/>
+                <div className={'name'}>{displayName}</div>
+                <div className={'server-name'}>{serverName}</div>
+                <div className={'connect-btn'} onClick={handleConnect}>Connect</div>
+                <div className={'tip'}>Connect to your Near wallet</div>
             </div>
-            <img className="bg-right" src={bg_right}/>
             
         </div>
     )
