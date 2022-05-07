@@ -111,7 +111,6 @@ function SetRule(props) {
                 }
             })
         })
-        console.log(data)
         roleList.forEach(item => {
             data.forEach((it, index) => {
                 if (item.id === it["role_id"] && item.name!=='@everyone' && item.name) {

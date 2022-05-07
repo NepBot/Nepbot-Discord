@@ -10,7 +10,6 @@ import load from '../../assets/images/load.gif';
 const config = getConfig()
 
 export default function Success(props) {
-
     useEffect(()=>{
 
         (async ()=>{
@@ -26,12 +25,18 @@ export default function Success(props) {
             }
             
             const signature = await sign(wallet.account(), args)
-            await setInfo({
+            let result = await setInfo({
                 args: args,
                 account_id: accountId,
                 sign: signature 
             })
-            window.open('https://discord.com/channels/','_self')
+            if (!result) {
+                window.location.href = `${window.location.origin}/failure`
+                console.log("============================")
+            } else {
+                //window.open('https://discord.com/channels/','_self')
+            }
+            
                 
         })();
         return ()=>{

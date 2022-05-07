@@ -4,7 +4,7 @@ import store from "./store/discordInfo";
 const key = new keyStores.BrowserLocalStorageKeyStore();
 
 export function getConfig() {
-    const network = store.get("network") || env;
+    const network = env;
     switch (network) {
       case 'production':
       case 'mainnet':
@@ -56,7 +56,7 @@ export function getConfig() {
           networkId: 'local',
           keyStore: key,
           nodeUrl: 'http://localhost:3030',
-          keyPath: `${process.env.HOME}/.near/validator_key.json`,
+          //keyPath: `.near/validator_key.json`,
           walletUrl: 'http://localhost:4000/wallet',
         }
       case 'test':

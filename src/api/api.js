@@ -5,7 +5,11 @@ export const setInfo = async (args) => {
         method:"POST",
         body:typeof args === 'string'?args:JSON.stringify(args)
     })
-    return await json.json()
+    const result = await json.json()
+    if (result.success) {
+        return result.data
+    }
+    return false
 }
 export const signRule = async (args)=>{
     const json = await fetch(`/api/sign`,{
@@ -13,20 +17,35 @@ export const signRule = async (args)=>{
         method:"POST",
         body:typeof args === 'string'?args:JSON.stringify(args)
     })
-    return await json.json();
+    const result = await json.json()
+    if (result.success) {
+        return result.data
+    }
+    return false
 }
 export const getRoleList = async (guild_id)=>{
     const json = await fetch(`/api/getRole/${guild_id}`);
-    return await json.json();
+    const result = await json.json()
+    if (result.success) {
+        return result.data
+    }
+    return false
 }
 export const getServer = async (guild_id)=>{
     const json = await fetch(`/api/getServer/${guild_id}`);
-    console.log(json.json())
-    return await json.json();
+    const result = await json.json()
+    if (result.success) {
+        return result.data
+    }
+    return false
 }
 export const getUser = async (guild_id, user_id) => {
     const json = await fetch(`/api/getUser/${guild_id}/${user_id}`);
-    return await json.json();
+    const result = await json.json()
+    if (result.success) {
+        return result.data
+    }
+    return false
 }
 export const getOperationSign = async (args) => {
     const json = await fetch('/api/operationSign', {
@@ -34,5 +53,9 @@ export const getOperationSign = async (args) => {
         method:"POST",
         body:typeof args === 'string'?args:JSON.stringify(args)
     })
-    return await json.json()
+    const result = await json.json()
+    if (result.success) {
+        return result.data
+    }
+    return false
 }
