@@ -66,7 +66,7 @@ export default function Index(props) {
                 <div className={"banner-box"}>
                     <img className={"banner"} src={banner}/>
                     <div className={"banner-content"}>
-                        <div className={"title"}>Nepbot Team</div>
+                        <div className={"title"}>Nepbot</div>
                         <div className={"intro"}>Build up token gated discord experiences on <br/>Near</div>
                         <a className={"invite-btn"} href={inviteUrl} target="view_window">Invite</a>
                     </div>
