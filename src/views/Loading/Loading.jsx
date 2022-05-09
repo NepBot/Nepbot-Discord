@@ -14,8 +14,13 @@ export default function Success(props) {
     useEffect(()=>{
 
         (async ()=>{
+
+            localStorage.removeItem("nepbot_wallet_auth_key")
             const near = await connect(config);
             const wallet = new WalletConnection(near,"nepbot");
+            try {
+                await wallet._completeSignInWithAccessKey()
+            } catch {}
             const account_id = wallet.getAccountId()
             const params = store.get("info")
             const accoutState = await wallet.account().state()
