@@ -245,7 +245,7 @@ function SetRule(props) {
     function SetRuleList(){
         if(dataSource.length>0){
             const setRuleItems = dataSource.map((item,index) => 
-                <div className={['setRule-item', (index%3===2) ? 'mr0' : '']} key={Math.random()}>
+                <div className={['setRule-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()}>
                     <div className={'token-info'}>
                         <img className={'token-icon'} src={item.icon} alt={"token"}/>
                         <div className={'token-symbol'}>{item.token_symbol}</div>
