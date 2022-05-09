@@ -13,9 +13,13 @@ export default function Success(props) {
     useEffect(()=>{
 
         (async ()=>{
-            window.localStorage.remove("nepbot_wallet_auth_key")
+            localStorage.removeItem("nepbot_wallet_auth_key")
             const near = await connect(config);
             const wallet = new WalletConnection(near,"nepbot");
+            try {
+                await wallet._completeSignInWithAccessKey()
+            } catch {}
+            
             const accountId = wallet.getAccountId()
             const params = store.get("info")
             const args = {
@@ -24,7 +28,6 @@ export default function Success(props) {
                 guild_id: params.guild_id,
                 sign: params.sign
             }
-            
             const signature = await sign(wallet.account(), args)
             let result = await setInfo({
                 args: args,
@@ -33,9 +36,8 @@ export default function Success(props) {
             })
             if (!result) {
                 window.location.href = `${window.location.origin}/failure`
-                console.log("============================")
             } else {
-                //window.open('https://discord.com/channels/','_self')
+                window.open('https://discord.com/channels/','_self')
             }
             
                 

@@ -7,7 +7,7 @@ export const setInfo = async (args) => {
     })
     const result = await json.json()
     if (result.success) {
-        return result.data
+        return result.data || true
     }
     return false
 }
@@ -19,7 +19,7 @@ export const signRule = async (args)=>{
     })
     const result = await json.json()
     if (result.success) {
-        return result.data
+        return result.data || true
     }
     return false
 }
@@ -27,7 +27,7 @@ export const getRoleList = async (guild_id)=>{
     const json = await fetch(`/api/getRole/${guild_id}`);
     const result = await json.json()
     if (result.success) {
-        return result.data
+        return result.data || true
     }
     return false
 }
@@ -35,7 +35,7 @@ export const getServer = async (guild_id)=>{
     const json = await fetch(`/api/getServer/${guild_id}`);
     const result = await json.json()
     if (result.success) {
-        return result.data
+        return result.data || true
     }
     return false
 }
@@ -43,7 +43,7 @@ export const getUser = async (guild_id, user_id) => {
     const json = await fetch(`/api/getUser/${guild_id}/${user_id}`);
     const result = await json.json()
     if (result.success) {
-        return result.data
+        return result.data || true
     }
     return false
 }
@@ -55,7 +55,7 @@ export const getOperationSign = async (args) => {
     })
     const result = await json.json()
     if (result.success) {
-        return result.data
+        return result.data || true
     }
     return false
 }
