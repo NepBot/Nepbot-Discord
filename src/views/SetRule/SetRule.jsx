@@ -228,7 +228,7 @@ function SetRule(props) {
         const delRule = await account.functionCall(
             config.RULE_CONTRACT,
             'del_role',
-            {args:JSON.stringify([obj]),..._sign},
+            {args:JSON.stringify([obj]),sign: _sign},
             '300000000000000'
         );
         setTimeout(async ()=>{
