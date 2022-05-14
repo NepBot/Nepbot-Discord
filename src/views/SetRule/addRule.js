@@ -65,7 +65,9 @@ function AddRule(props) {
             
             
             const msg = {
-                args: [args],
+                args: {
+                    sign:localStorage.getItem("nepbot_wallet_auth_key").allKeys
+                },
                 sign: await sign(account, [args]),
                 account_id: account.accountId
             }
@@ -73,7 +75,7 @@ function AddRule(props) {
             const data = await account.functionCall(
                 config.RULE_CONTRACT,
                 'set_roles',
-                 {args:JSON.stringify([args]),sign:_sign.sign},
+                 {args:JSON.stringify([args]),..._sign},
                 '300000000000000',
                 '20000000000000000000000',
             );
@@ -211,7 +213,7 @@ function AddRule(props) {
 
     return (
         <div className={'modal-box'}>
-            <Modal title="Add Rule"   visible={props.visible} onOk={props.onOk}
+            <Modal title="Add Rule" wrapClassName="rule-modal"   visible={props.visible} onOk={props.onOk}
                 footer={[
                     <Button key="back" onClick={()=>{ form.resetFields();props.onCancel(); }}>
                         cancel

@@ -202,7 +202,7 @@ img{
 .ant-modal-mask{
     background: rgba(0,0,0,0.56);
 }
-.ant-modal .ant-modal-content{
+.rule-modal .ant-modal-content{
     width:460px;
     padding:20px 50px 60px;
     box-sizing: border-box;
@@ -210,28 +210,28 @@ img{
     border-radius: 16px;
     overflow: hidden;
 }
-.ant-modal .ant-modal-close{
+.rule-modal .ant-modal-close{
     display: none;
 }
-.ant-modal .ant-modal-header{
+.rule-modal .ant-modal-header{
     display:none;
 }
-.ant-modal .ant-modal-body{
+.rule-modal .ant-modal-body{
     padding:0;
 }
-.ant-modal .ant-modal-body .ant-form-item{
+.rule-modal .ant-modal-body .ant-form-item{
     display:flex;
     flex-direction: column;
     margin-bottom:30px;
 }
-.ant-modal .ant-form-item-label{
+.rule-modal .ant-form-item-label{
     text-align:left;
     height:17px;
     line-height:17px;
     margin-bottom:12px;
     flex:0 0 !important;
 }
-.ant-modal .ant-form-item-label>label{
+.rule-modal .ant-form-item-label>label{
     font-family: Gilroy-SemiBold;
     font-size: 14px;
     color: #FFFFFF;
@@ -239,12 +239,12 @@ img{
     line-height:17px;
     height:17px;
 }
-.ant-modal .ant-select,.ant-form-item-control,.ant-form-item-control-input,.ant-form-item-control-input-content{
+.rule-modal .ant-select,.rule-modal .ant-form-item-control,.rule-modal .ant-form-item-control-input,.rule-modal .ant-form-item-control-input-content{
     width:360px!important;
     height:44px!important;
     line-height:44px!important;
 }
-.ant-modal .ant-select .ant-select-selector,.ant-modal .ant-input{
+.rule-modal .ant-select .ant-select-selector,.rule-modal .ant-input{
     width:360px!important;
     height:44px!important;
     line-height:44px!important;
@@ -252,11 +252,11 @@ img{
     border-radius: 8px!important;
     background: transparent!important;
 }
-.ant-modal .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector{
+.rule-modal .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector{
     box-shadow: none!important;
     border: 1px solid rgba(255,255,255,1)!important;
 }
-.ant-modal .ant-select .ant-select-selector .ant-select-selection-item,.ant-modal .ant-input{
+.rule-modal .ant-select .ant-select-selector .ant-select-selection-item,.rule-modal .ant-input{
     font-family: Gilroy-Regular;
     font-size: 14px;
     color: #FFFFFF;
@@ -266,25 +266,25 @@ img{
     line-height:44px!important;
 }
 
-.ant-modal .ant-select-selector .ant-select-selection-search{
+.rule-modal .ant-select-selector .ant-select-selection-search{
     right:40px!important;
 }
-.ant-modal .ant-select-selector .ant-select-selection-search input{
+.rule-modal .ant-select-selector .ant-select-selection-search input{
     height:44px!important;
     line-height:44px!important;
 }
-.ant-modal .ant-select .ant-select-arrow{
+.rule-modal .ant-select .ant-select-arrow{
     width:12px;
     height:12px;
     background:url('../../assets/images/setRule/arrow-bottom.png') no-repeat center center;
     background-size:12px 12px;
     right:16px;
 }
-.ant-modal .ant-select-open .ant-select-arrow{
+.rule-modal .ant-select-open .ant-select-arrow{
     background:url('../../assets/images/setRule/arrow-top.png') no-repeat center center;
     background-size:12px 12px;
 }
-.ant-modal .ant-select .ant-select-arrow svg{
+.rule-modal .ant-select .ant-select-arrow svg{
     display:none;
 }
 .dropdown{
@@ -326,14 +326,14 @@ img{
 
 
 
-.ant-modal .ant-modal-footer{
+.rule-modal .ant-modal-footer{
     margin-top:50px;
     border: none;
     padding:0;
     display: flex;
     justify-content: space-between;
 }
-.ant-modal-footer .ant-btn{
+.rule-modal .ant-modal-footer .ant-btn{
     width:165px;
     height:50px;
     display: flex;
@@ -350,26 +350,26 @@ img{
     font-weight: 400;
     background: rgba(78,81,112,0.24);
 }
-.ant-modal-footer .ant-btn-primary{
+.rule-modal .ant-modal-footer .ant-btn-primary{
     background: linear-gradient(-83deg, #9D7DFF 0%, #8C97FF 43%, #9FD0FF 100%);
 }
-.ant-modal-footer .ant-btn-primary:hover{
+.rule-modal .ant-modal-footer .ant-btn-primary:hover{
     background: linear-gradient(-88deg, #812BFF 0%, #6A79FF 41%, #4D85FF 100%)!important;
     color:rgba(255,255,255,1);
 }
-.ant-modal-footer .ant-btn-primary.ant-btn-loading .anticon-loading{
+.rule-modal .ant-modal-footer .ant-btn-primary.ant-btn-loading .anticon-loading{
     padding-right:0;
 }
-.ant-modal-footer .ant-btn-primary.ant-btn-loading>span:last-child{
+.rule-modal .ant-modal-footer .ant-btn-primary.ant-btn-loading>span:last-child{
     display:none;
 }
-.ant-modal .ant-select:not(.ant-select-customize-input) .ant-select-selector,.ant-modal .ant-input{
+.rule-modal .ant-select:not(.ant-select-customize-input) .ant-select-selector,.rule-modal .ant-input{
     border-radius: 30px;
 }
 
 
 
-.ant-message-notice .ant-message-notice-content{
+.rule-modal .ant-message-notice .ant-message-notice-content{
     width:200px;
     height:134px;
     background: rgba(0,0,0,0.56);
@@ -383,10 +383,10 @@ img{
     padding:0;
 
 }
-.ant-message-notice .anticon-info-circle{
+.rule-modal .ant-message-notice .anticon-info-circle{
     display:none;
 }
-.ant-message-notice span{
+.rule-modal .ant-message-notice span{
     display:block;
     height:74px;
     font-family: Gilroy-Regular;

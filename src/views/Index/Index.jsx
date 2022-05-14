@@ -18,6 +18,7 @@ import flux from '../../assets/images/index/logo-flux.png';
 import QSTN from '../../assets/images/index/logo-QSTN.png';
 import OCT from '../../assets/images/index/logo-OCT.png';
 import near from '../../assets/images/index/logo-near.png';
+import near_large from '../../assets/images/index/logo-near-large.png';
 const { Option } = Select;
 // let config = getConfig()
 
@@ -118,6 +119,9 @@ export default function Index(props) {
                     <div className={"partner"}>
                         <a className={"brand"} href="https://oct.network" target="view_window">
                             <img src={OCT} alt="OCT"/>
+                        </a>
+                        <a className={"brand"} href="https://near.org/" target="view_window">
+                            <img src={near_large} alt="NEAR"/>
                         </a>
                         <a className={"brand"} href="https://qstn.us" target="view_window">
                             <img src={QSTN} alt="QSTN"/>

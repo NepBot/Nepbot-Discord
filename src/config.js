@@ -15,6 +15,7 @@ export function getConfig() {
           walletUrl: 'https://wallet.near.org',
           helperUrl: 'https://helper.mainnet.near.org',
           RULE_CONTRACT: 'app.nepbot.near',
+          NFT_CONTRACT:'nft.dev-nepbot.testnet',
           OCT_CONTRACT: 'octopus-registry.near',
           APPLICATION_ID: '958997413803196476'
         }
@@ -27,6 +28,7 @@ export function getConfig() {
           walletUrl: 'https://wallet.testnet.near.org',
           helperUrl: 'https://helper.testnet.near.org',
           RULE_CONTRACT: 'v2-discord-roles.bhc8521.testnet',
+          NFT_CONTRACT:'nft.dev-nepbot.testnet',
           OCT_CONTRACT: 'registry.test_oct.testnet',
           LINKDROP: 'linkdrop6.bhc8521.testnet',
           APPLICATION_ID: '928559137179172874'

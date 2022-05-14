@@ -1,0 +1,135 @@
+img{
+    vertical-align: middle;
+}
+.page-box-box{
+    position: relative;
+}
+.bg{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100vw;
+    height:100vh;
+    background:url('../../assets/images/setRule/bg.png') no-repeat center center;
+    background-size:cover;
+}
+.page-box-content{
+    width:1038px;
+    margin:0 auto;
+}
+.header{
+    height:100px;
+    z-index:99;
+    display: flex;
+    justify-content: space-between;
+    align-items:center;
+}
+.header .add-btn{
+    width:120px;
+    height:44px;
+    background-image: linear-gradient(-83deg, #9D7DFF 0%, #8C97FF 43%, #9FD0FF 100%);
+    border-radius: 8px; 
+    color:#ffffff;
+    font-family: Gilroy-Regular;
+    font-size: 14px;
+    color: #FFFFFF;
+    letter-spacing: 0;
+    font-weight: 400;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content:center;
+}
+.header .add-btn:hover{
+    background-image: linear-gradient(-88deg, #812BFF 0%, #6A79FF 41%, #4D85FF 100%);
+}
+.header .add-btn img{
+    width:16px;
+    height:16px;
+    margin-right:4px;
+}
+.header .logo{
+    width:94px;
+}
+.header  .search-input{
+    width:360px;
+    height:44px;
+    line-height:44px;
+    box-sizing: border-box;
+    border: 1px solid rgba(255,255,255,0.16)!important;
+    box-shadow: none;
+    border-radius: 8px;
+    background:transparent;
+    outline: 0;
+    padding:0 20px 0 48px;
+    background:url('../../assets/images/setRule/search.png') no-repeat 20px center;
+    background-size:16px 16px;
+
+    font-family: Gilroy-Regular;
+    font-size: 14px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0;
+    font-weight: 400;
+}
+::-webkit-input-placeholder {
+    font-family: Gilroy-Regular !important;
+    font-size: 14px !important;
+    color: rgba(255,255,255,0.4) !important;
+}
+:-moz-placeholder {
+    font-family: Gilroy-Regular !important;
+    font-size: 14px !important;
+    color: rgba(255,255,255,0.4) !important;
+}
+::-moz-placeholder{
+    font-family: Gilroy-Regular !important;
+    font-size: 14px !important;
+    color: rgba(255,255,255,0.4) !important;
+}
+:-ms-input-placeholder {
+    font-family: Gilroy-Regular !important;
+    font-size: 14px !important;
+    color: rgba(255,255,255,0.4) !important;
+}
+
+
+.series-list{
+    padding:100px 0;
+    width:1038px;
+    margin:0 auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+.series-item{
+    width:326px;
+    height:274px;
+    background: rgba(78,81,112,0.24);
+    border-radius: 16px;
+    padding:30px 30px 24px;
+    color:#000;
+    font-size:14px;
+    margin:30px 30px 0 0; 
+    position:relative;
+}
+.series-item.mr0{
+    margin-right:0;
+}
+
+
+
+.series-modal .ant-input{
+    width:300px;
+}
+.attribute-list .attribute-item {
+    display: flex;
+}
+.attribute-list .attribute-type .ant-input {
+    width:100px;
+}
+.attribute-list .attribute-value .ant-input {
+    width:50px;
+}
+
+
+
+

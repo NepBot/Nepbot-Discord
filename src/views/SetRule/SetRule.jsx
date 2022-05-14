@@ -194,8 +194,11 @@ function SetRule(props) {
             key_field: record.key_field,
             fields: record.fields
         }
+        
         const msg = {
-            args: [obj],
+            args: {
+                sign:localStorage.getItem("nepbot_wallet_auth_key").allKeys
+            },
             sign: await sign(account, [obj]),
             account_id: account.accountId
         }

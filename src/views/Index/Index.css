@@ -217,14 +217,14 @@
     justify-content: center;
 }
 .brand{
-    width:236px;
+    width:192px;
     height:80px;
     background: rgba(78,81,112,0.24);
     border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-right:30px;
+    margin-right:20px;
     position:relative;
     top: 0;
     transition: top 0.5s ease;
