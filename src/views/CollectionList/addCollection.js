@@ -2,8 +2,10 @@ import React,{useState} from 'react';
 import {Modal, Form, Input, Button,Select, Dragger, Upload,message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
-import {signRule,createCollection} from "../../api/api";
+import {signRule,createCollection, getCollection} from "../../api/api";
 import {contract, parseAmount, sign} from "../../utils/util";
+import store from "../../store/discordInfo";
+import js_sha256 from "js-sha256"
 
 const config = getConfig()
 
@@ -36,6 +38,10 @@ function AddCollection(props) {
             const wallet = new WalletConnection(near,"nepbot");
             const account = wallet.account() 
 
+            const collection = await getCollection(`${values.name}-by-${account.accountId.replace(".", "")}`)
+            if (!collection || collection.results.length > 0) {
+                return
+            }
             //formData
             const params = {
                 collection: values.name,
@@ -51,13 +57,49 @@ function AddCollection(props) {
             });
 
 
-            const logo = values.logo[0]['originFileObj'];
-            const cover = values.cover[0]['originFileObj'];
+            let logo = values.logo[0]['originFileObj'];
+            let cover = values.cover[0]['originFileObj'];
             formData.append('files',logo)
             formData.append('files',cover)
 
             //paras - collection
             const res = await createCollection(formData);
+            console.log(res)
+            //{"status":1,"data":{"collection":{"_id":"6280b224692d163b193d09de","collection_id":"fff-by-bhc22testnet","blurhash":"UE3UQdpLQ8VWksZ}Z~ksL#Z}pfkXVWp0kXVq","collection":"fff","cover":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","createdAt":1652601380975,"creator_id":"bhc22.testnet","description":"fff","media":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","socialMedia":{"twitter":"","discord":"","website":""},"updatedAt":1652601380975}}}
+            
+            const info = store.get("info")
+            const operationSign = store.get("operationSign")
+            const args = {
+                sign: operationSign,
+                user_id: info.user_id,
+                guild_id: info.guild_id,
+            }
+            const msg = {
+                args: args,
+                sign: await sign(account, args),
+                account_id: account.accountId
+            }
+            const _sign = await signRule(msg);
+            await account.functionCall({
+                contractId: config.NFT_CONTRACT,
+                methodName: "create_collection",
+                args: {
+                    outer_collection_id: res.collection.collection_id,
+                    contract_type: "paras",
+                    guild_id: info.guild_id,
+                    //mintable_roles: null,
+                    price: values.mintPrice,
+                    ..._sign
+                },
+                amount: '20000000000000000000000'
+            })
+            
+            
+            
+            
+            
+            
+            
             // console.log(res,'paras-res');
             
             // const msg = {
@@ -108,13 +150,13 @@ function AddCollection(props) {
     }
 
     function uploadLogo(info){
-        console.log(info,'info');
+        console.log('info', info);
         getBase64(info.file, imageUrl =>
             setLogo(imageUrl)
         );
     }
     function uploadCover(info){
-        console.log(info,'info');
+        console.log('info', info);
         getBase64(info.file, imageUrl =>
             setCover(imageUrl)
         );

@@ -79,7 +79,7 @@ function AddRule(props) {
             const data = await account.functionCall(
                 config.RULE_CONTRACT,
                 'set_roles',
-                 {args: [arg], ..._sign},
+                 {roles: [arg], ..._sign},
                 '300000000000000',
                 '20000000000000000000000',
             );

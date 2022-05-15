@@ -25,79 +25,6 @@ function SetRule(props) {
     const [dataSource, setDataSource] = useState([]);
     const [appchainIds, setAppchainIds] = useState([])
     const [operationSign, setOperationSign] = useState("")
-    const columns = [
-        {
-            dataIndex: 'guild_name',
-            title: 'Discord Server',
-            key: 'guild_name',
-            render:(text, record)=> {
-                return (
-                    <span key={Math.random()}>{server.guild_name}</span>
-                )
-            }
-            
-        },
-        {
-            dataIndex: 'role_name',
-            title: 'Role',
-            key: 'role_name',
-            render: (text,record) => {
-                return (
-                    <p key={record.role_id}>{record.role_name ?? (<span style={{color:"#f40"}}>Deleted</span>)}</p>
-                )
-            }
-        },
-        {
-            dataIndex: 'key_field',
-            title: 'Key value',
-            key: 'key_field',
-            render: (text,record) => {
-                if (record.key_field) {
-                    return (
-                        <p key={record.key_field[1]}>{`${record.key_field[0]}: ${record.key_field[1]}`}</p>
-                    )
-                }
-                else {
-                    return (<div/>)
-                }
-            }
-        },
-        {
-            dataIndex: 'fields',
-            title: 'Attribute',
-            key: 'fields',
-            render: (text,record) => {
-                if (record.key_field) {
-                    if (record.key_field[0] == 'token_id') {
-                        return (
-                            <p key={Math.random()}>{`token amount: ${formatAmount(record.fields.token_amount, record.decimals)}`}</p>
-                        )
-                    } else if (record.key_field[0] == 'appchain_id') {
-                        return (
-                            <p key={Math.random()}>{`oct role: ${record.fields.oct_role}`}</p>
-                        )
-                    } else if (record.key_field[0] == 'near') {
-                        return (
-                            <p key={Math.random()}>{`near balance: ${formatAmount(record.fields.balance)}`}</p>
-                        )
-                    }
-                }
-                else {
-                    return (<div/>)
-                }
-                
-            }
-        },
-        {
-            title: 'Action',
-            key: 'action',
-            render: (text, record) => (
-                <Space size="middle">
-                    <span onClick={()=>{handleDelete(record)}} style={{color:'#f40', cursor: 'pointer'}}>Delete</span>
-                </Space>
-            ),
-        },
-    ]
 
     const handleData = async (data) => {
         const roleList = await getRoleList(store.get("info").guild_id);
@@ -156,6 +83,10 @@ function SetRule(props) {
 
             const near = await connect(config);
             const wallet = new WalletConnection(near, 'nepbot');
+            try {
+                await wallet._completeSignInWithAccessKey()
+            } catch {}
+
             if (!wallet.isSignedIn()) {
                 wallet.requestSignIn(config.RULE_CONTRACT, "nepbot")
                 return
@@ -227,7 +158,7 @@ function SetRule(props) {
         const delRule = await account.functionCall(
             config.RULE_CONTRACT,
             'del_role',
-            {args:[obj], ..._sign},
+            {roles:[obj], ..._sign},
             '300000000000000'
         );
         setTimeout(async ()=>{
