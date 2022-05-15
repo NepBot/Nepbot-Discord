@@ -10,7 +10,7 @@ img{
     left:0;
     width:100vw;
     height:100vh;
-    background:url('../../assets/images/setRule/bg.png') no-repeat center center;
+    background:url('../../assets/images/bg.png') no-repeat center center;
     background-size:cover;
 }
 .page-box-content{
@@ -117,18 +117,28 @@ img{
 
 
 
-.series-modal .ant-input{
-    width:300px;
+.my-modal-content .upload-logo{
+    margin-bottom:60px;
+}
+  .my-modal-content .upload-logo .ant-form-item{
+    margin-bottom:0;
+}
+
+
+.attribute-list{
+    width:964px;
 }
 .attribute-list .attribute-item {
     display: flex;
+    margin-bottom:20px;
 }
-.attribute-list .attribute-type .ant-input {
-    width:100px;
+.attribute-list  .ant-input {
+    width: 458px !important;
 }
-.attribute-list .attribute-value .ant-input {
-    width:50px;
+.attribute-list .attribute-value{
+    margin:0 12px 0 20px;
 }
+
 
 
 

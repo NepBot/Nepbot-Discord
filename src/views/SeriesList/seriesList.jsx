@@ -12,6 +12,7 @@ import {formatAmount, sign} from "../../utils/util";
 
 import logo from '../../assets/images/index/logo.png';
 import add from '../../assets/images/setRule/add.png';
+import no_data from '../../assets/images/no-data.png';
 
 const config = getConfig()
 
@@ -19,6 +20,7 @@ function Series(props) {
     const [seriesList, setSeriesList] = useState([]);
     const [addDialogStatus, setAddDialogStatus] = useState(false);
     // const [roleList, setRoleList] = useState([]);
+    const [collectionDetail, setCollectionDetail] =  useState({});
 
     useEffect(() => {
         (async () => {
@@ -66,20 +68,18 @@ function Series(props) {
             </div>)
         }
         else{
-            return ("");
-            // return (<div className={'no-data'}>
-            //     <img src={no_data}/>
-            //     <div className={'tip'}>No data, Please add a rule.</div>
-            //     <div className={'btn'} onClick={handleAddStatus}>+ Add</div>
-            // </div>)
+            return (<div className={'no-data'}>
+                <img src={no_data}/>
+                <div className={'tip'}>No data,please add a new collection.</div>
+            </div>)
         }
     }
 
     return (
         <div className={'page-box'}>
-            <div className={'bg'}></div>
-            <div className={'header'}>
-                <img className={"logo"} src={logo}/>
+            <div className={'page-bg'}></div>
+            <div className={'page-header'}>
+                <div className={"title"}>Collection Name : {collectionDetail.name}</div>
                 <div className={'add-btn'} onClick={handleAddStatus}>
                     <img className={"add-icon"} src={add}/>
                     Add

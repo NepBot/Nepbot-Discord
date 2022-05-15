@@ -12,8 +12,10 @@ const { Option } = Select;
 function AddCollection(props) {
     const [form] = Form.useForm();
     const [confirmLoading, setConfirmLoading] = useState(false);
-    const [logo, setLogo] = useState('');
-    const [cover, setCover] = useState('');
+    const [logo_url, setLogoUrl] = useState('');
+    const [cover_url, setCoverUrl] = useState('');
+    const [logo, setLogo] = useState(null);
+    const [cover, setCover] = useState(null);
     const [royaltyList,setRoyaltyList] = useState([{account:'',amount:''}])
     // const [isParas, setParas] = useState(false)
 
@@ -49,12 +51,10 @@ function AddCollection(props) {
             Object.keys(params).forEach((key) => {
                 formData.append(key, params[key]);
             });
-
-
-            const logo = values.logo[0]['originFileObj'];
-            const cover = values.cover[0]['originFileObj'];
-            formData.append('files',logo)
-            formData.append('files',cover)
+            console.log(values,formData,'---formData----');
+            formData.append('files',values['logo'][0]['originFileObj'])
+            formData.append('files',values['cover'][0]['originFileObj'])
+            
 
             //paras - collection
             const res = await createCollection(formData);
@@ -108,16 +108,16 @@ function AddCollection(props) {
     }
 
     function uploadLogo(info){
-        console.log(info,'info');
-        getBase64(info.file, imageUrl =>
-            setLogo(imageUrl)
-        );
+        setLogo(info.file)
+        getBase64(info.file, imageUrl =>{
+            setLogoUrl(imageUrl)
+        });
     }
     function uploadCover(info){
-        console.log(info,'info');
-        getBase64(info.file, imageUrl =>
-            setCover(imageUrl)
-        );
+        setCover(info.file)
+        getBase64(info.file, imageUrl =>{
+            setCoverUrl(imageUrl)
+        });
     }
     const normFile = (e) => {
         console.log('Upload event:', e);
@@ -128,8 +128,8 @@ function AddCollection(props) {
     };
 
     function UploadLogoContent(){
-        if(logo){
-            return <img src={logo} alt="logo" style={{ width: '100%' }} />
+        if(logo_url){
+            return <img className={'logo-preview'} src={logo_url} alt="logo" style={{ width: '100%' }} />
         }else{
             return <div>
                 click to upload logo
@@ -137,8 +137,8 @@ function AddCollection(props) {
         }
     }
     function UploadCoverContent(){
-        if(cover){
-            return <img src={cover} alt="cover" style={{ width: '100%' }} />
+        if(cover_url){
+            return <img className={'cover-preview'} src={cover_url} alt="cover" style={{ width: '100%' }} />
         }else{
             return <div>
                 click to upload cover
@@ -150,15 +150,17 @@ function AddCollection(props) {
             return <div key={index} className={'royalty-item'}>
 				<div className={'royalty-account'}>
 					<Form.Item name={['royaltyList',index,'account']} noStyle>
-                        <Input placeholder="Account ID" onChange={(event)=>onChange(index,'account',event)}/>
+                        <Input bordered={false} placeholder="Account ID" onChange={(event)=>onChange(index,'account',event)}/>
                     </Form.Item>
 				</div>
 				<div className={'royalty-amount'}>
-					<Form.Item name={['royaltyList',index,'amount']} noStyle>
-                        <Input placeholder="0" onChange={(event)=>onChange(index,'amount',event)}/>
-                    </Form.Item>
-				</div>
-				<div className={'royalty-del'} type="primary" onClick={()=>del(index)}>delete</div>
+                    <div className={'royalty-amount-content'}>
+                        <Form.Item name={['royaltyList',index,'amount']} noStyle>
+                            <Input bordered={false} placeholder="0" onChange={(event)=>onChange(index,'amount',event)}/>
+                        </Form.Item>
+                    </div>
+                </div>
+				<div className={['form-remove-button', (index===0) ? 'hidden' : ''].join(' ')} onClick={()=>del(index)}></div>
 			</div>
         })
         return (<div className={'royalty-list'}>
@@ -174,6 +176,7 @@ function AddCollection(props) {
 		return setRoyaltyList(tempArray)
 	}
     const add = ()=>{
+        if(royaltyList.length>=10){return false;}
 		form.setFieldsValue({"royaltyList":[...royaltyList,{account:'',amount:''}]})
 		// return 
         setRoyaltyList([...royaltyList,{account:'',amount:''}])
@@ -183,120 +186,165 @@ function AddCollection(props) {
 		form.setFieldsValue({"royaltyList":[...royaltyList.slice(0,index),...royaltyList.slice(index+1)]})
 		return setRoyaltyList([...royaltyList.slice(0,index),...royaltyList.slice(index+1)])
 	}
-    const roleList = props.roleList.map(item => 
+
+    const roles = [{id:1,name:"A"},{id:2,name:"B"},{id:3,name:"C"}]
+    const roleList = roles.map(item => 
         <Option value={item.id} key={item.id}>{item.name}</Option>
     );
 
+    function checkUpload(){
+        const type = "logo"
+        if((type==='logo' && !logo) || (type==='cover' && !cover)){
+            return false;
+        }
+        return true;
+    }
 
-    return (
-        <div className={'modal-box'}>
-            <Modal title="Add Collection" wrapClassName="collection-modal"   visible={props.visible} onOk={props.onOk}
-                footer={[
-                    <Button key="back" onClick={()=>{ form.resetFields();props.onCancel(); }}>
-                        cancel
-                    </Button>,
-                    <Button loading={confirmLoading}  key="submit" htmlType="submit" type="primary" onClick={onCheck}>
-                        ok
-                    </Button>
-                ]} 
-                onCancel={props.onCancel}
-                >
-                <Form
-                    form={form}
-                    name="basic"
-                    labelCol={{ span: 8 }}
-                    wrapperCol={{ span: 14 }}
-                    onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
-                    autoComplete="off"
-                    initialValues={{royaltyList:royaltyList,}}
-                >
-                    <Item
-                        label="Logo"
-                        name="logo"
-                        valuePropName="fileList"
-                        getValueFromEvent={normFile}
-                        rules={[{ required: true, message: 'upload logo' }]}
+    
+
+    if(props.visible){
+        return (
+            <div className="my-modal collection-modal">
+                <div className={'my-modal-header'}>Create Collection</div>
+                <div className={'my-modal-content'}>
+                    <Form
+                        form={form}
+                        name="basic"
+                        onFinish={onFinish}
+                        onFinishFailed={onFinishFailed}
+                        autoComplete="off"
+                        initialValues={{royaltyList:royaltyList,}}
+                        
                     >
-                        <Upload
-                            name="logo"
-                            listType="picture-card"
-                            className="logo-uploader"
-                            showUploadList={false}
-                            // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                            beforeUpload={beforeUpload}
-                            // onChange={handleChange}
-                            customRequest={uploadLogo}
+                        <div className={'my-modal-upload-box'}>
+                            <div className={'upload-logo'}>
+                                <Item
+                                    label="Logo"
+                                    name="logo"
+                                    valuePropName="fileList"
+                                    getValueFromEvent={normFile}
+                                    rules={[
+                                        () => ({
+                                            validator() {
+                                                if(logo) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject('upload logo');
+                                            }
+                                        })
+                                    ]}
+                                >
+                                    <Upload
+                                        name="upload_logo"
+                                        listType="picture-card"
+                                        className="logo-uploader"
+                                        showUploadList={false}
+                                        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                        beforeUpload={beforeUpload}
+                                        // onChange={handleChange}
+                                        customRequest={uploadLogo}
+                                    >
+                                        <UploadLogoContent/>
+                                    </Upload>
+                                </Item>
+                                <div className={'upload-tip'}>JPG/JPEG/ PNG/GIF/SVG. Max size:1MB.</div>
+                            </div>
+                            
+                            <div className={'upload-cover'}>
+                                <Item
+                                    label="Cover"
+                                    name="cover"
+                                    valuePropName="fileList"
+                                    getValueFromEvent={normFile}
+                                    rules={[
+                                        () => ({
+                                            validator() {
+                                                if(cover) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject('upload cover');
+                                            }
+                                        })
+                                    ]}
+                                >
+                                    <Upload
+                                        name="upload_cover"
+                                        listType="picture-card"
+                                        className="cover-uploader"
+                                        showUploadList={false}
+                                        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                        beforeUpload={beforeUpload}
+                                        // onChange={handleChange}
+                                        customRequest={uploadCover}
+                                    >
+                                        <UploadCoverContent/>
+                                    </Upload>
+                                   
+                                </Item>
+                                <div className={'upload-tip'}>JPG/JPEG/ PNG/GIF/SVG. Max size:1MB.</div>
+                            </div>
+                        </div>
+                        
+                        <Item
+                            label="Name"
+                            name="name"
+                            rules={[{ required: true, message: 'Enter a name' }]}
                         >
-                            <UploadLogoContent/>
-                        </Upload>
-                    </Item>
-                    <Item
-                        label="Cover"
-                        name="cover"
-                        valuePropName="fileList"
-                        getValueFromEvent={normFile}
-                        rules={[{ required: true, message: 'upload cover' }]}
-                    >
-                        <Upload
-                            name="cover"
-                            listType="picture-card"
-                            className="cover-uploader"
-                            showUploadList={false}
-                            // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                            beforeUpload={beforeUpload}
-                            // onChange={handleChange}
-                            customRequest={uploadCover}
+                            <Input bordered={false}/>
+                        </Item>
+                        <Item
+                            label="Description"
+                            name="description"
+                            rules={[{ required: true, message: 'Enter a description' }]}
                         >
-                            <UploadCoverContent/>
-                        </Upload>
-                    </Item>
-                    <Item
-                        label="Name"
-                        name="name"
-                        rules={[{ required: true, message: 'Enter a name' }]}
-                    >
-                        <Input/>
-                    </Item>
-                    <Item
-                        label="Description"
-                        name="description"
-                        rules={[{ required: true, message: 'Enter a description' }]}
-                    >
-                        <Input/>
-                    </Item>
-                    <Item
-                        label="Mint Price"
-                        name="mintPrice"
-                        rules={[{ required: true, message: 'Enter price' }]}
-                    >
-                        <Input/>
-                    </Item>
-                    <Item
-                        label="Royalty"
-                    >
-                        <Royalty/>
-                        <Button type="primary" onClick={add}>+</Button>
-                    </Item>
-                    <Item
-                        label="Role"
-                        name="role_id"
-                        // rules={[{ required: true, message: 'Please choose a role' }]}
-                    >
-                        <Select
-                            mode="multiple"
-                            allowClear
-                            style={{ width: '100%' }}
-                            placeholder="Please select"
-                            dropdownClassName={"collection-modal-role-dropdown"}
+                            <Input bordered={false}/>
+                        </Item>
+                        <Item
+                            label="Mint Price"
+                            name="mintPrice"
                         >
-                            {roleList}
-                        </Select>
-                    </Item>
-                </Form>
-            </Modal>
-        </div>
-    );
+                            <Input bordered={false} type="number"/>
+                        </Item>
+                        <Item
+                            label="Royalty"
+                        >
+                            <Royalty/>
+                            <div className={'form-add-button'} onClick={add}>
+                                Add
+                            </div>
+                        </Item>
+                        <Item
+                            label="Required Role"
+                        >
+                            <div className={'role-intro'}>Items in this collection can only be minted by members with at lease one of the selected roles. This collection is open to all if no roles are selected.</div>
+                            <Item name="role_id">
+                                <Select
+                                    mode="multiple"
+                                    placeholder="Please select"
+                                    dropdownClassName={"collection-modal-role-dropdown"}
+                                    // defaultOpen={true}
+                                    // autoFocus={true}
+                                    // open={true}
+                                >
+                                    {roleList}
+                                </Select>
+                            </Item>
+                        </Item>
+                    </Form>
+                    <div className={'my-modal-footer'}>
+                        <div className={'btn cancel'} onClick={()=>{ form.resetFields();props.onCancel(); }}>
+                            cancel
+                        </div>
+                        <div className={'btn ok'} onClick={onCheck}>
+                            ok
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }else{
+        return "";
+    }
 }
 
 

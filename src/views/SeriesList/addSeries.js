@@ -11,7 +11,8 @@ const { Item } = Form;
 function AddSeries(props) {
     const [form] = Form.useForm();
     const [confirmLoading, setConfirmLoading] = useState(false);
-    const [cover, setCover] = useState('');
+    const [image, setImage] = useState(null);
+    const [image_url, setImageUrl] = useState('');
     const [attributeList,setAttributeList] = useState([{type:'',value:''}])
     // const [isParas, setParas] = useState(false)
 
@@ -107,10 +108,10 @@ function AddSeries(props) {
         reader.readAsDataURL(img);
     }
 
-    function uploadCover(info){
-        console.log(info,'info');
+    function uploadImage(info){
+        setImage(info.file)
         getBase64(info.file, imageUrl =>
-            setCover(imageUrl)
+            setImageUrl(imageUrl)
         );
     }
     const normFile = (e) => {
@@ -121,12 +122,12 @@ function AddSeries(props) {
         return e && e.fileList;
     };
 
-    function UploadCoverContent(){
-        if(cover){
-            return <img src={cover} alt="cover" style={{ width: '100%' }} />
+    function UploadImageContent(){
+        if(image_url){
+            return <img className={'logo-preview'} src={image_url} alt="image" style={{ width: '100%' }} />
         }else{
             return <div>
-                click to upload cover
+                click to upload image
             </div>
         }
     }
@@ -143,7 +144,7 @@ function AddSeries(props) {
                         <Input placeholder="0" onChange={(event)=>onChange(index,'value',event)}/>
                     </Form.Item>
 				</div>
-				<div className={'attribute-del'} type="primary" onClick={()=>del(index)}>delete</div>
+                <div className={['form-remove-button', (index===0) ? 'hidden' : ''].join(' ')} onClick={()=>del(index)}></div>
 			</div>
         })
         return (<div className={'attribute-list'}>
@@ -171,18 +172,9 @@ function AddSeries(props) {
 
 
     return (
-        <div className={'modal-box'}>
-            <Modal title="Add Series" wrapClassName="series-modal"   visible={props.visible} onOk={props.onOk}
-                footer={[
-                    <Button key="back" onClick={()=>{ form.resetFields();props.onCancel(); }}>
-                        cancel
-                    </Button>,
-                    <Button loading={confirmLoading}  key="submit" htmlType="submit" type="primary" onClick={onCheck}>
-                        ok
-                    </Button>
-                ]} 
-                onCancel={props.onCancel}
-                >
+        <div className="my-modal series-modal">
+                <div className={'my-modal-header'}>Create New Item</div>
+                <div className={'my-modal-content'}>
                 <Form
                     form={form}
                     name="basic"
@@ -193,55 +185,79 @@ function AddSeries(props) {
                     autoComplete="off"
                     initialValues={{attributeList:attributeList,}}
                 >
-                    <Item
-                        label="Cover"
-                        name="cover"
-                        valuePropName="fileList"
-                        getValueFromEvent={normFile}
-                        rules={[{ required: true, message: 'upload cover' }]}
-                    >
-                        <Upload
-                            name="cover"
-                            listType="picture-card"
-                            className="cover-uploader"
-                            showUploadList={false}
-                            // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                            beforeUpload={beforeUpload}
-                            // onChange={handleChange}
-                            customRequest={uploadCover}
+                    <div className={'upload-logo'}>
+                        <Item
+                            label="Image"
+                            name="image"
+                            valuePropName="fileList"
+                            getValueFromEvent={normFile}
+                            rules={[
+                                () => ({
+                                    validator() {
+                                        if(image) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject('upload cover');
+                                    }
+                                })
+                            ]}
                         >
-                            <UploadCoverContent/>
-                        </Upload>
-                    </Item>
+                            <Upload
+                                name="upload_cover"
+                                listType="picture-card"
+                                className="cover-uploader"
+                                showUploadList={false}
+                                // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                beforeUpload={beforeUpload}
+                                // onChange={handleChange}
+                                customRequest={uploadImage}
+                            >
+                                <UploadImageContent/>
+                            </Upload>
+                            
+                        </Item>
+                        <div className={'upload-tip'}>JPG/JPEG/ PNG/GIF/SVG. Max size:1MB.</div>
+                    </div>
+
                     <Item
                         label="Name"
                         name="name"
                         rules={[{ required: true, message: 'Enter a name' }]}
                     >
-                        <Input/>
+                        <Input bordered={false}/>
                     </Item>
                     <Item
                         label="Description"
                         name="description"
                         rules={[{ required: true, message: 'Enter a description' }]}
                     >
-                        <Input/>
+                        <Input bordered={false}/>
                     </Item>
                     <Item
                         label="Number of copies"
                         name="copyNumber"
-                        rules={[{ required: true, message: 'Enter Number' }]}
+                        rules={[{ required: true, message: 'Enter copy number' }]}
                     >
-                        <Input/>
+                        <Input bordered={false} type="number"/>
                     </Item>
                     <Item
                         label="Attribute"
                     >
                         <Attribute/>
-                        <Button type="primary" onClick={add}>+</Button>
+                        <div className={'form-add-button'} onClick={add}>
+                            Add
+                        </div>
                     </Item>
                 </Form>
-            </Modal>
+                <div className={'my-modal-footer'}>
+                    <div className={'btn cancel'} onClick={()=>{ form.resetFields();props.onCancel(); }}>
+                        cancel
+                    </div>
+                    <div className={'btn ok'} onClick={onCheck}>
+                        ok
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
