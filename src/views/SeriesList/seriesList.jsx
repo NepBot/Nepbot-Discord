@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {message} from "antd";
+import {Input,message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
 import AddSeries from "./addSeries";
@@ -59,7 +59,16 @@ function Series(props) {
         if(seriesList.length>0){
             const seriesItems = seriesList.map((item,index) => 
                 <div className={['series-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()}>
-
+                    <img className={'cover'} alt="cover" src={no_data}/>
+                    <div className={'info'}>
+                        <div className={'name txt-wrap'}>irl#2869</div>
+                        <div className={'account txt-wrap'}>Daisy</div>
+                        <div className={'line'}></div>
+                        <div className={'mint-info'}>
+                            <div>Minted:</div>
+                            <div className={'mint-number'}>20/100</div>
+                        </div>
+                    </div>
                 </div>
             );
             
@@ -80,6 +89,7 @@ function Series(props) {
             <div className={'page-bg'}></div>
             <div className={'page-header'}>
                 <div className={"title"}>Collection Name : {collectionDetail.name}</div>
+                <Input className={'search-input'} bordered={false} placeholder="Enter a token ID to search" /> 
                 <div className={'add-btn'} onClick={handleAddStatus}>
                     <img className={"add-icon"} src={add}/>
                     Add

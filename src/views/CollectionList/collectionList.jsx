@@ -25,45 +25,45 @@ function Collection(props) {
 
     useEffect(() => {
         (async () => {
-            const search =  qs.parse(props.location.search.slice(1));
-            store.set("info", {
-                guild_id: search.guild_id,
-                user_id: search.user_id,
-                sign: search.sign
-            }, { expires: 1 });
+            // const search =  qs.parse(props.location.search.slice(1));
+            // store.set("info", {
+            //     guild_id: search.guild_id,
+            //     user_id: search.user_id,
+            //     sign: search.sign
+            // }, { expires: 1 });
 
-            const near = await connect(config);
-            const wallet = new WalletConnection(near, 'nepbot');
+            // const near = await connect(config);
+            // const wallet = new WalletConnection(near, 'nepbot');
 
-            try {
-                await wallet._completeSignInWithAccessKey()
-            } catch {}
+            // try {
+            //     await wallet._completeSignInWithAccessKey()
+            // } catch {}
 
-            if (!wallet.isSignedIn()) {
-                wallet.requestSignIn(config.RULE_CONTRACT, "nepbot")
-                return
-            }
-            const accountId = wallet.getAccountId()
-            let operationSign = store.get("operationSign")
-            const args = {
-                account_id: accountId, 
-                user_id: search.user_id,
-                guild_id: search.guild_id,
-                sign: search.sign,
-                operationSign: operationSign
-            }
-            const signature = await sign(wallet.account(), args)
-            operationSign = await getOperationSign({
-                args: args,
-                account_id: accountId,
-                sign: signature 
-            })
-            setOperationSign(operationSign)
-            store.set("operationSign", operationSign, { expires: 1 })
-            const server = await getServer(search.guild_id);
-            setServer(server);
-            account = await wallet.account();
-            handleData();
+            // if (!wallet.isSignedIn()) {
+            //     wallet.requestSignIn(config.RULE_CONTRACT, "nepbot")
+            //     return
+            // }
+            // const accountId = wallet.getAccountId()
+            // let operationSign = store.get("operationSign")
+            // const args = {
+            //     account_id: accountId, 
+            //     user_id: search.user_id,
+            //     guild_id: search.guild_id,
+            //     sign: search.sign,
+            //     operationSign: operationSign
+            // }
+            // const signature = await sign(wallet.account(), args)
+            // operationSign = await getOperationSign({
+            //     args: args,
+            //     account_id: accountId,
+            //     sign: signature 
+            // })
+            // setOperationSign(operationSign)
+            // store.set("operationSign", operationSign, { expires: 1 })
+            // const server = await getServer(search.guild_id);
+            // setServer(server);
+            // account = await wallet.account();
+            // handleData();
         })();
         return () => {
         }
@@ -92,20 +92,29 @@ function Collection(props) {
         if(collectionList.length>0){
             const collectionItems = collectionList.map((item,index) => 
                 <div className={['collection-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()}>
-                    <img className={'cover'} src={no_data}/>
+                    <img className={'cover'} alt="cover" src={no_data}/>
                     <div className={'info'}>
                         <div className={'user'}>
-                            <img className={'avatar'} src={no_data}/>
+                            <img className={'avatar'} alt="avatar" src={no_data}/>
                             <div className={'user-info'}>
-                                <div className={'guild-id'}></div>
-                                <div className={'account-id'}></div>
+                                <div className={'name txt-wrap'}>irl#2869</div>
+                                <div className={'account txt-wrap'}>Daisy</div>
                             </div>
                         </div>
-                        <div className={'desc'}></div>
+                        <div className={'desc txt-wrap'}>Text Text Text Text Text Text  xt Text Text Text Text Text…</div>
+                        <div className={'roles'}>
+                            <div className="item">Near</div>
+                            <div className="item">Oct</div>
+                        </div>
                         <div className={'bottom-info'}>
-                            <div className={'price'}>
+                            <div className={'mod price'}>
                                 Price
-                                <div className=""></div>
+                                <div className="val">0.052</div>
+                            </div>
+                            <div className={'line'}></div>
+                            <div className={'mod royality'}>
+                                Royality
+                                <div className="val">15%</div>
                             </div>
                         </div>
                     </div>

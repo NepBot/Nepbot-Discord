@@ -22,6 +22,10 @@ img{
 }
 
 
+
+
+
+
 .page-box{
   position: relative;
   min-height:100vh;
@@ -327,4 +331,15 @@ img{
 }
 .my-modal-footer .btn.ok{
   background-image: linear-gradient(-83deg, #9D7DFF 0%, #8C97FF 43%, #9FD0FF 100%);
+}
+
+
+
+
+
+.txt-wrap {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
 }
