@@ -1,3 +1,5 @@
+import {getConfig} from "../config";
+import {generateToken} from "../utils/request";
 
 export const setInfo = async (args) => {
     const json = await fetch(`/api/set-info`, {
@@ -47,7 +49,6 @@ export const getUser = async (guild_id, user_id) => {
     }
     return false
 }
-<<<<<<< HEAD
 export const getCollectionList = async (guild_id)=>{
     const json = await fetch(`/api/getRole/${guild_id}`);
     return await json.json();
@@ -102,7 +103,6 @@ export const createSeries = async (data)=>{
 //         data,
 //     })
 // }
-=======
 export const getOperationSign = async (args) => {
     const json = await fetch('/api/operationSign', {
         headers:{ 'Content-Type': 'application/json' },
@@ -115,4 +115,3 @@ export const getOperationSign = async (args) => {
     }
     return false
 }
->>>>>>> master
