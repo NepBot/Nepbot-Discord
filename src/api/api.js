@@ -1,6 +1,7 @@
 import {axios} from "./requst";
 import store from "../store/discordInfo";
 import {getConfig} from "../config";
+import {generateToken} from "../utils/request";
 const config = getConfig()
 
 export const setInfo = async (data)=>{
@@ -35,10 +36,12 @@ export const getCollectionList = async (guild_id)=>{
     return await json.json();
 }
 export const createCollection = async (data)=>{
+    const Authorization = await generateToken()
     return await axios.request({
         method:"post",
         url:`https://api-v2-${config.networkId}-master.paras.id/collections`,
         data,
+        headers:{Authorization:Authorization}
     })
 }
 export const createSeries = async (data)=>{

@@ -35,7 +35,8 @@ function AddCollection(props) {
             //     guild_id: values.guild_id,
             //     role_id: values.role_id,
             // }
-            setConfirmLoading(true);
+            
+            // setConfirmLoading(true);
             const near = await connect(config);
             const wallet = new WalletConnection(near,"nepbot");
             const account = wallet.account() 
