@@ -17,6 +17,7 @@ function AddCollection(props) {
     const [logo, setLogo] = useState(null);
     const [cover, setCover] = useState(null);
     const [royaltyList,setRoyaltyList] = useState([{account:'',amount:''}])
+    const [showConfirmModal, setConfrimModalStatus] = useState(false);
     // const [isParas, setParas] = useState(false)
 
     const onFinish = async (values) => {
@@ -31,6 +32,10 @@ function AddCollection(props) {
         console.log('Failed:', errorInfo);
     };
     const onCheck = async () => {
+        await form.validateFields();
+        setConfrimModalStatus(true);
+    }
+    const submit= async () => {
         try {
             const values = await form.validateFields();
             // setConfirmLoading(true);
@@ -192,13 +197,29 @@ function AddCollection(props) {
         <Option value={item.id} key={item.id}>{item.name}</Option>
     );
 
-    function checkUpload(){
-        const type = "logo"
-        if((type==='logo' && !logo) || (type==='cover' && !cover)){
-            return false;
+
+    function ConfirmModal(){
+        if(showConfirmModal){
+            return <div className={'confrim-modal-mask'}>
+                <div className={'confrim-modal'}>
+                    <div className={'confrim-modal-title'}>Confirm</div>
+                    <div className={'confrim-modal-info'}>Confirm this creation？</div>
+                    <div className={'confrim-modal-btn my-modal-footer'}>
+                        <div className={'btn cancel'} onClick={()=>{ setConfrimModalStatus(false) }}>
+                            cancel
+                        </div>
+                        <div className={'btn ok'} onClick={submit}>
+                            ok
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }else{
+            return "";
         }
-        return true;
     }
+
+
 
     
 
@@ -340,6 +361,7 @@ function AddCollection(props) {
                         </div>
                     </div>
                 </div>
+                <ConfirmModal/>
             </div>
         );
     }else{

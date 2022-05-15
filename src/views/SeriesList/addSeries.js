@@ -173,8 +173,8 @@ function AddSeries(props) {
 
     return (
         <div className="my-modal series-modal">
-                <div className={'my-modal-header'}>Create New Item</div>
-                <div className={'my-modal-content'}>
+            <div className={'my-modal-header'}>Create New Item</div>
+            <div className={'my-modal-content'}>
                 <Form
                     form={form}
                     name="basic"

@@ -60,7 +60,23 @@ function Collection(props) {
         if(collectionList.length>0){
             const collectionItems = collectionList.map((item,index) => 
                 <div className={['collection-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()}>
-
+                    <img className={'cover'} src={no_data}/>
+                    <div className={'info'}>
+                        <div className={'user'}>
+                            <img className={'avatar'} src={no_data}/>
+                            <div className={'user-info'}>
+                                <div className={'guild-id'}></div>
+                                <div className={'account-id'}></div>
+                            </div>
+                        </div>
+                        <div className={'desc'}></div>
+                        <div className={'bottom-info'}>
+                            <div className={'price'}>
+                                Price
+                                <div className=""></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             );
             

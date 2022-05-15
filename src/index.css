@@ -201,7 +201,6 @@ img{
 /* upload image */
 .my-modal-content .my-modal-upload-box{
   display: flex;
-  margin-bottom:60px;
 }
 .my-modal-content .my-modal-upload-box .ant-form-item{
   margin-bottom:0;
