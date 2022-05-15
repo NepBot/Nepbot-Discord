@@ -20,7 +20,7 @@ const createProxy = (url = '', target = '') =>
  */
 module.exports = function (app) {
     app.use(
-        createProxy('/api', `http://13.251.124.186:5000/api/`),//
+        createProxy('/api', `http://13.214.198.186:6000/api/`),//
         // createProxy('/api', `http://47.241.253.161:5000/api/`),//
     )
 }

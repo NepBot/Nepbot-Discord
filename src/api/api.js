@@ -1,15 +1,15 @@
-import {axios} from "./requst";
-import store from "../store/discordInfo";
-import {getConfig} from "../config";
-import {generateToken} from "../utils/request";
-const config = getConfig()
 
-export const setInfo = async (data)=>{
-    return await axios.request({
-        method:"post",
-        url:`/setInfo`,
-        data,
+export const setInfo = async (args) => {
+    const json = await fetch(`/api/set-info`, {
+        headers:{ 'Content-Type': 'application/json' },
+        method:"POST",
+        body:typeof args === 'string'?args:JSON.stringify(args)
     })
+    const result = await json.json()
+    if (result.success) {
+        return result.data || true
+    }
+    return false
 }
 export const signRule = async (args)=>{
     const json = await fetch(`/api/getOwnerSign`,{
@@ -17,20 +17,37 @@ export const signRule = async (args)=>{
         method:"POST",
         body:typeof args === 'string'?args:JSON.stringify(args)
     })
-    return await json.json();
+    const result = await json.json()
+    if (result.success) {
+        return result.data || true
+    }
+    return false
 }
 export const getRoleList = async (guild_id)=>{
     const json = await fetch(`/api/getRole/${guild_id}`);
-    return await json.json();
+    const result = await json.json()
+    if (result.success) {
+        return result.data || true
+    }
+    return false
 }
 export const getServer = async (guild_id)=>{
     const json = await fetch(`/api/getServer/${guild_id}`);
-    return await json.json();
+    const result = await json.json()
+    if (result.success) {
+        return result.data || true
+    }
+    return false
 }
 export const getUser = async (guild_id, user_id) => {
     const json = await fetch(`/api/getUser/${guild_id}/${user_id}`);
-    return await json.json();
+    const result = await json.json()
+    if (result.success) {
+        return result.data || true
+    }
+    return false
 }
+<<<<<<< HEAD
 export const getCollectionList = async (guild_id)=>{
     const json = await fetch(`/api/getRole/${guild_id}`);
     return await json.json();
@@ -85,3 +102,17 @@ export const createSeries = async (data)=>{
 //         data,
 //     })
 // }
+=======
+export const getOperationSign = async (args) => {
+    const json = await fetch('/api/operationSign', {
+        headers:{ 'Content-Type': 'application/json' },
+        method:"POST",
+        body:typeof args === 'string'?args:JSON.stringify(args)
+    })
+    const result = await json.json()
+    if (result.success) {
+        return result.data || true
+    }
+    return false
+}
+>>>>>>> master

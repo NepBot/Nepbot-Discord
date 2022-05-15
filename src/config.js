@@ -4,7 +4,7 @@ import store from "./store/discordInfo";
 const key = new keyStores.BrowserLocalStorageKeyStore();
 
 export function getConfig() {
-    const network = store.get("network") || env;
+    const network = env;
     switch (network) {
       case 'production':
       case 'mainnet':
@@ -27,11 +27,22 @@ export function getConfig() {
           nodeUrl: 'https://rpc.testnet.near.org',
           walletUrl: 'https://wallet.testnet.near.org',
           helperUrl: 'https://helper.testnet.near.org',
-          RULE_CONTRACT: 'v2-discord-roles.bhc8521.testnet',
-          NFT_CONTRACT:'nft.dev-nepbot.testnet',
+          RULE_CONTRACT: 'app.nepbot.testnet',
           OCT_CONTRACT: 'registry.test_oct.testnet',
           LINKDROP: 'linkdrop6.bhc8521.testnet',
           APPLICATION_ID: '928559137179172874'
+        }
+      case 'dev-testnet':
+        return {
+          networkId: 'testnet',
+          keyStore: key,
+          nodeUrl: 'https://rpc.testnet.near.org',
+          walletUrl: 'https://wallet.testnet.near.org',
+          helperUrl: 'https://helper.testnet.near.org',
+          RULE_CONTRACT: 'app.dev-nepbot.testnet',
+          OCT_CONTRACT: 'registry.test_oct.testnet',
+          LINKDROP: 'linkdrop6.bhc8521.testnet',
+          APPLICATION_ID: '967009211823304744'
         }
       case 'betanet':
         return {
@@ -46,7 +57,7 @@ export function getConfig() {
           networkId: 'local',
           keyStore: key,
           nodeUrl: 'http://localhost:3030',
-          keyPath: `${process.env.HOME}/.near/validator_key.json`,
+          //keyPath: `.near/validator_key.json`,
           walletUrl: 'http://localhost:4000/wallet',
         }
       case 'test':

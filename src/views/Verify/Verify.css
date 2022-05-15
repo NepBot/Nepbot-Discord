@@ -1,11 +1,11 @@
-.oauth-box{
+z.verify-box{
   position: relative;
   width:100vw;
   height:100vh;
   background:url('../../assets/images/bg-connect-wallet.png') no-repeat center center;
   background-size:cover;
 }
-.oauth-info {
+.verify-info {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -19,12 +19,12 @@
   flex-direction: column;
   align-items: center;
 }
-.oauth-info .avatar{
+.verify-info .avatar{
   width:90px;
   height:90px;
   border-radius: 50%;
 }
-.oauth-info .name{
+.verify-info .name{
   margin-top:24px;
   font-family: Gilroy-Bold;
   font-size: 18px;
@@ -33,7 +33,7 @@
   line-height: 26px;
   font-weight: 700;
 }
-.oauth-info .server-name{
+.verify-info .server-name{
   margin-top:6px;
   font-family: Gilroy-Regular;
   font-size: 16px;
@@ -41,7 +41,7 @@
   text-align: center;
   font-weight: 400;
 }
-.oauth-info .connect-btn{
+.verify-info .connect-btn{
   margin-top:60px;
   display:block;
   width:150px;
@@ -58,10 +58,10 @@
   font-weight: 400;
   cursor: pointer;
 }
-.oauth-info .connect-btn:hover{
+.verify-info .connect-btn:hover{
   background-image: linear-gradient(-88deg, #812BFF 0%, #6A79FF 41%, #4D85FF 100%);
 }
-.oauth-info .tip{
+.verify-info .tip{
   margin-top:12px;
   opacity: 0.4;
   font-family: Gilroy-Regular;

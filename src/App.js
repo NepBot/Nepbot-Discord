@@ -1,7 +1,7 @@
 import './App.css';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import Index from './views/Index/Index';
-import Oauth from './views/Oauth/Oauth';
+import Verify from './views/Verify/Verify';
 import Loading from './views/Loading/Loading';
 import Failure from "./views/Failure/Failure";
 import SetRule from "./views/SetRule/SetRule";
@@ -14,7 +14,7 @@ function App() {
     <Router className="App">
         <Switch>
             <Route path='/' exact component={Index} />
-            <Route path='/oauth' exact component={Oauth} />
+            <Route path='/Verify' exact component={Verify} />
             <Route path='/wait' exact component={Loading} />
             <Route path='/failure' exact component={Failure} />
             <Route path='/setrule' exact component={SetRule} />

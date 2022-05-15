@@ -4,7 +4,7 @@ import {Row, Col, Input, Button, List} from 'antd';
 import {connect, WalletConnection} from 'near-api-js';
 import qs from 'qs';
 import {getConfig} from '../../config';
-import './Oauth.css';
+import './Verify.css';
 import store from "../../store/discordInfo";
 import { getServer, getUser } from '../../api/api';
 
@@ -37,10 +37,10 @@ export default function Index(props) {
     useEffect(async ()=>{
         const search =  qs.parse(props.location.search.slice(1));
         store.set("info", {
-            redirect: search.redirect,
             guild_id: search.guild_id,
             user_id: search.user_id,
-            guild_name: search.guild_name
+            sign: search.sign
+
         }, { expires: 1 });
         const serverInfo = await getServer(search.guild_id)
         const userInfo = await getUser(search.guild_id, search.user_id)
@@ -52,8 +52,8 @@ export default function Index(props) {
     },[])
 
     return (
-        <div className={"oauth-box"}>
-            <div className={'oauth-info'}>
+        <div className={"verify-box"}>
+            <div className={'verify-info'}>
                 <img className={'avatar'} src={avatarURL} alt={displayName}/>
                 <div className={'name'}>{displayName}</div>
                 <div className={'server-name'}>{serverName}</div>

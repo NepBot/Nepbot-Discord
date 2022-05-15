@@ -4,6 +4,7 @@ import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
 import {signRule} from "../../api/api";
 import {contract, parseAmount, sign} from "../../utils/util";
+import store from "../../store/discordInfo";
 
 const config = getConfig()
 
@@ -21,8 +22,7 @@ function AddRule(props) {
         const _near = await connect(config);
         const _wallet = new WalletConnection(_near,1);
         const account = await _wallet.account();
-        const rule= await account.viewFunction(config.RULE_CONTRACT,'get_guild', {guild_id:values.guild_id});
-        console.log(rule);
+        const rule = await account.viewFunction(config.RULE_CONTRACT,'get_guild', {guild_id: props.server.id});
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -31,8 +31,8 @@ function AddRule(props) {
     const onCheck = async () => {
         try {
             const values = await form.validateFields();
-            let args = {
-                guild_id: values.guild_id,
+            let arg = {
+                guild_id: props.server.id,
                 role_id: values.role_id,
             }
             setConfirmLoading(true);
@@ -42,40 +42,44 @@ function AddRule(props) {
             if (type == 'token amount') {
                 let metadata = await account.viewFunction(values.token_id, 'ft_metadata', {})
                 let amount = parseAmount(values.token_amount, metadata.decimals)
-                args.key_field = ['token_id', values.token_id]
-                args.fields = {token_amount: amount}
+                arg.key_field = ['token_id', values.token_id]
+                arg.fields = {token_amount: amount}
             } else if (type == 'oct roles') {
-                args.key_field = ['appchain_id', values.appchain_id]
-                args.fields = {oct_role: values.oct_role}
+                arg.key_field = ['appchain_id', values.appchain_id]
+                arg.fields = {oct_role: values.oct_role}
             } else if (type == 'near balance') {
-                args.key_field = ['near', 'balance']
-                args.fields = {balance: parseAmount(values.balance)}
+                arg.key_field = ['near', 'balance']
+                arg.fields = {balance: parseAmount(values.balance)}
             } else if (type == 'nft amount') {
                 if (values.contract_id == 'x.paras.near') {
                     const fractions = values.collection_url.split("/")
                     const lastFraction = fractions[fractions.length - 1].split("?")
-                    args.key_field = ['x.paras.near', lastFraction[0]]
-                    args.fields = {token_amount: values.token_amount}
+                    arg.key_field = ['x.paras.near', lastFraction[0]]
+                    arg.fields = {token_amount: values.token_amount}
                 } else {
                     await account.viewFunction(values.contract_id, 'nft_metadata', {})
-                    args.key_field = ['nft_contract_id', values.contract_id]
-                    args.fields = {token_amount: values.token_amount}
+                    arg.key_field = ['nft_contract_id', values.contract_id]
+                    arg.fields = {token_amount: values.token_amount}
                 }
             }
-            
+            const params = store.get("info")
+            const operationSign = store.get("operationSign")
+            const args = {
+                sign: operationSign,
+                user_id: params.user_id,
+                guild_id: params.guild_id,
+            }
             
             const msg = {
-                args: {
-                    sign:localStorage.getItem("nepbot_wallet_auth_key").allKeys
-                },
-                sign: await sign(account, [args]),
+                args: args,
+                sign: await sign(account, args),
                 account_id: account.accountId
             }
             const _sign = await signRule(msg);
             const data = await account.functionCall(
                 config.RULE_CONTRACT,
                 'set_roles',
-                 {args:JSON.stringify([args]),..._sign},
+                 {args: [arg], ..._sign},
                 '300000000000000',
                 '20000000000000000000000',
             );
@@ -97,8 +101,6 @@ function AddRule(props) {
         setParas(v.target.value == "x.paras.near")
     }
     
-    // const {serverList} = props;
-    const {serverList} = props
     const roleList = props.roleList.map(item => 
         <Option value={item.id} key={item.id}>{item.name}</Option>
     );
@@ -234,15 +236,15 @@ function AddRule(props) {
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
                 >
-                    <Item
+                    {/* <Item
                         label="server name"
                         name="guild_id"
                         rules={[{ required: true, message: 'Please choose a server' }]}
                     >
-                        <Select dropdownClassName={"dropdown"}>
-                            <Option value={serverList.id}>{serverList.name}</Option>
+                        <Select>
+                            <Option value={server.id}>{server.name}</Option>
                         </Select>
-                    </Item>
+                    </Item> */}
                     <Item
                         label="role"
                         name="role_id"

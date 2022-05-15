@@ -23,26 +23,14 @@ const { Option } = Select;
 // let config = getConfig()
 
 export default function Index(props) {
-    const initNetwork = store.get("network") || 'mainnet';
-    store.set("network", initNetwork, { expires: 1 });
-    const getInviteUrl = (network) => {
-        const config = getConfig()
-        if(network === 'mainnet'){
-            return `https://discord.com/api/oauth2/authorize?client_id=${config.APPLICATION_ID}&permissions=8&scope=bot`
-        }else{
-            return `https://discord.com/api/oauth2/authorize?client_id=${config.APPLICATION_ID}&permissions=8&scope=bot%20applications.commands`
-        }
-    }
-
-    const network = store.get("network")
-    const [networkId,setNetwork] = useState(network)
-    const [inviteUrl,setInviteUrl] = useState(getInviteUrl(network))
+    const config = getConfig()
+    const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${config.APPLICATION_ID}&permissions=8&scope=bot%20applications.commands`
     const handleChange = (value) => {
-        store.set("network", value, { expires: 1 });
-        setNetwork(value)
-        setInviteUrl(getInviteUrl(value))
-        store.remove("info");
-        store.remove("guild_id");
+        if (value == "mainnet") {
+            window.location.href = "https://nepbot.org"
+        } else if (value == "testnet") {
+            window.location.href = "https://testnet.nepbot.org"
+        }
     }
 
     return (
@@ -56,8 +44,8 @@ export default function Index(props) {
                         <a className={"nav-item commands"} href='https://nepbot.notion.site/Command-Glossary-e5ffdf2d51e24fc0a569d1cb3ef6e035' target="view_window">Commands</a>
                         <a className={"nav-item faq"} href='https://nepbot.notion.site/Discord-NepBot-Knowledge-Base-dc875fc6c3f84149aa8a76ef7a2a23ab' target="view_window">FAQ</a>
                         <a className={"nav-item community"} href='https://discord.gg/avqufmzS6t' target="view_window">Community</a>
-                        <div className={[networkId,'nav-item'].join(' ')} >
-                            <Select value={networkId} dropdownClassName={"network-dropdown"} onChange={handleChange}>
+                        <div className={[config.networkId,'nav-item'].join(' ')} >
+                            <Select value={config.networkId} dropdownClassName={"network-dropdown"} onChange={handleChange}>
                                 <Option value='mainnet' key='mainnet'>Mainnet</Option>
                                 <Option value='testnet' key='testnet'>TestNet</Option>
                             </Select>
