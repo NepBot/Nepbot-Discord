@@ -10,11 +10,12 @@ import qs from "qs";
 import store from "../../store/discordInfo";
 import {formatAmount, sign} from "../../utils/util";
 import test_icon from '../../assets/imgs/test_icon.png';
-import no_data from '../../assets/imgs/no_data.jpg';
+
 
 import logo from '../../assets/images/index/logo.png';
 import add from '../../assets/images/setRule/add.png';
 import success from '../../assets/images/success.png';
+import no_data from '../../assets/images/no-data.png';
 
 const config = getConfig()
 
@@ -119,10 +120,6 @@ function SetRule(props) {
             account = await wallet.account();
             const appchainIds = await account.viewFunction(config.OCT_CONTRACT, 'get_appchain_ids', {})
             setAppchainIds(appchainIds)
-
-            const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: search.guild_id})
-            const guildData = await handleData(data)
-            setDataSource(guildData)
         })();
         return () => {
         }
@@ -251,12 +248,10 @@ function SetRule(props) {
             </div>)
         }
         else{
-            return ("");
-            // return (<div className={'no-data'}>
-            //     <img src={no_data}/>
-            //     <div className={'tip'}>No data, Please add a rule.</div>
-            //     <div className={'btn'} onClick={handleAddStatus}>+ Add</div>
-            // </div>)
+            return (<div className={'no-data'}>
+                <img src={no_data}/>
+                <div className={'tip'}>No data,please add a new collection.</div>
+            </div>)
         }
     }
 
@@ -333,9 +328,9 @@ function SetRule(props) {
 
 
     return (
-        <div className={'setRule-box'}>
-            <div className={'bg'}></div>
-            <div className={'header'}>
+        <div className={'page-box'}>
+            <div className={'page-bg'}></div>
+            <div className={'page-header'}>
                 <img className={"logo"} src={logo}/>
                 {/* <Input className={'search-input'} bordered={false} placeholder="Enter a token ID to search" /> */}
                 <div className={'add-btn'} onClick={handleAddStatus}>

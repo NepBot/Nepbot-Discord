@@ -11,6 +11,7 @@ import {formatAmount, sign} from "../../utils/util";
 import {getRoleList, getServer, signRule, getOperationSign, getCollection} from "../../api/api";
 import logo from '../../assets/images/index/logo.png';
 import add from '../../assets/images/setRule/add.png';
+import no_data from '../../assets/images/no-data.png';
 
 const config = getConfig()
 
@@ -110,7 +111,32 @@ function Collection(props) {
         if(collectionList.length>0){
             const collectionItems = collectionList.map((item,index) => 
                 <div className={['collection-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()} onClick={() => handleSeriesList(item)}>
-
+                    <img className={'cover'} alt="cover" src={no_data}/>
+                    <div className={'info'}>
+                        <div className={'user'}>
+                            <img className={'avatar'} alt="avatar" src={no_data}/>
+                            <div className={'user-info'}>
+                                <div className={'name txt-wrap'}>irl#2869</div>
+                                <div className={'account txt-wrap'}>Daisy</div>
+                            </div>
+                        </div>
+                        <div className={'desc txt-wrap'}>Text Text Text Text Text Text  xt Text Text Text Text Text…</div>
+                        <div className={'roles'}>
+                            <div className="item">Near</div>
+                            <div className="item">Oct</div>
+                        </div>
+                        <div className={'bottom-info'}>
+                            <div className={'mod price'}>
+                                Price
+                                <div className="val">0.052</div>
+                            </div>
+                            <div className={'line'}></div>
+                            <div className={'mod royality'}>
+                                Royality
+                                <div className="val">15%</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             );
             
@@ -119,20 +145,18 @@ function Collection(props) {
             </div>)
         }
         else{
-            return ("");
-            // return (<div className={'no-data'}>
-            //     <img src={no_data}/>
-            //     <div className={'tip'}>No data, Please add a rule.</div>
-            //     <div className={'btn'} onClick={handleAddStatus}>+ Add</div>
-            // </div>)
+            return (<div className={'no-data'}>
+                <img src={no_data}/>
+                <div className={'tip'}>No data,please add a new collection.</div>
+            </div>)
         }
     }
 
     return (
         <div className={'page-box'}>
-            <div className={'bg'}></div>
-            <div className={'header'}>
-                <img className={"logo"} src={logo}/>
+            <div className={'page-bg'}></div>
+            <div className={'page-header'}>
+                <div className={"title"}>Collections</div>
                 <div className={'add-btn'} onClick={handleAddStatus}>
                     <img className={"add-icon"} src={add}/>
                     Add

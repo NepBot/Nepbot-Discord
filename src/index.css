@@ -4,6 +4,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+img{
+  vertical-align: middle;
+}
 
 @font-face {
   font-family: 'Gilroy-Regular';  
@@ -16,4 +19,327 @@
 @font-face {
   font-family: 'Gilroy-SemiBold';  
   src: url('./assets/fonts/Radomir Tinkov - Gilroy-SemiBold.otf') 
+}
+
+
+
+
+
+
+.page-box{
+  position: relative;
+  min-height:100vh;
+}
+.page-bg{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  background:url('./assets/images/bg.png') no-repeat center center;
+  background-size:cover;
+}
+.page-header{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100px;
+  display: flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 13.888889%;
+
+}
+.page-header .title{
+  font-family: Gilroy-SemiBold;
+  font-size: 18px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  font-weight: 600;
+}
+.page-header .add-btn{
+  width:120px;
+  height:44px;
+  background-image: linear-gradient(-83deg, #9D7DFF 0%, #8C97FF 43%, #9FD0FF 100%);
+  border-radius: 8px; 
+  color:#ffffff;
+  font-family: Gilroy-Regular;
+  font-size: 14px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  font-weight: 400;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content:center;
+}
+.page-header .add-btn:hover{
+  background-image: linear-gradient(-88deg, #812BFF 0%, #6A79FF 41%, #4D85FF 100%);
+}
+.page-header .add-btn img{
+  width:16px;
+  height:16px;
+  margin-right:4px;
+}
+.page-header .logo{
+  width:94px;
+}
+.page-header  .search-input{
+  width:360px;
+  height:44px;
+  line-height:44px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255,255,255,0.16)!important;
+  box-shadow: none;
+  border-radius: 8px;
+  background:transparent;
+  outline: 0;
+  padding:0 20px 0 48px;
+  background:url('./assets/images/setRule/search.png') no-repeat 20px center;
+  background-size:16px 16px;
+
+  font-family: Gilroy-Regular;
+  font-size: 14px;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0;
+  font-weight: 400;
+}
+::-webkit-input-placeholder {
+  font-family: Gilroy-Regular !important;
+  font-size: 14px !important;
+  color: rgba(255,255,255,0.4) !important;
+}
+:-moz-placeholder {
+  font-family: Gilroy-Regular !important;
+  font-size: 14px !important;
+  color: rgba(255,255,255,0.4) !important;
+}
+::-moz-placeholder{
+  font-family: Gilroy-Regular !important;
+  font-size: 14px !important;
+  color: rgba(255,255,255,0.4) !important;
+}
+:-ms-input-placeholder {
+  font-family: Gilroy-Regular !important;
+  font-size: 14px !important;
+  color: rgba(255,255,255,0.4) !important;
+}
+
+
+
+.no-data{
+  position: absolute;
+  left:50%;
+  top:50%;
+  transform: translate(-50%,-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.no-data>img{
+  width:120px;
+}
+.no-data>.tip{
+  margin-top:12px;
+  font-family: Gilroy-Regular;
+  font-size: 16px;
+  color: #FFFFFF;
+  text-align: center;
+  font-weight: 400;
+  line-height:20px;
+}
+
+
+
+
+.my-modal{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  background:url('./assets/images/bg.png') no-repeat center center;
+  background-size:cover;
+  z-index:100;
+  overflow-y:scroll;
+  padding-bottom:60px;
+}
+.my-modal-content{
+  margin-top:30px;
+  width:964px;
+  min-width:964px;
+  margin: 0 auto;
+  position:relative;
+}
+.my-modal-content .ant-form-item{
+  display: flex;
+  flex-flow:column wrap;
+  margin-bottom:60px;
+}
+/* label */
+.my-modal-content .ant-form-item-label{
+  text-align: left;
+  margin-bottom:20px;
+}
+.my-modal-content .ant-form-item-label label{
+  font-family: Gilroy-SemiBold;
+  font-size: 16px;
+  color: #FFFFFF;
+  height: 20px;
+  line-height: 20px;
+  font-weight: 600;
+}
+.my-modal-content .ant-form-item-label label::before,.my-modal-content .ant-form-item-label label::after{
+  display: none!important;
+}
+.my-modal-content .ant-form-item-label>label.ant-form-item-required::after{
+  display: inline-block!important;
+  margin-left: 8px;
+  width:12px;
+  height:12px;
+  content: '';
+  background:url('./assets/images/icon-required.png') no-repeat center center;
+  background-size:12px;
+}
+/* upload image */
+.my-modal-content .my-modal-upload-box{
+  display: flex;
+}
+.my-modal-content .my-modal-upload-box .ant-form-item{
+  margin-bottom:0;
+}
+.my-modal-content .ant-upload.ant-upload-select-picture-card{
+  width:326px;
+  height:326px;
+  margin-right: 30px;
+  margin-bottom: 12px;
+  border:0;
+  background: rgba(78,81,112,0.24);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.my-modal-content .upload-cover .ant-upload.ant-upload-select-picture-card{
+  width:580px;
+  margin-right: 0;
+}
+.my-modal-content .logo-preview{
+  width:326px;
+  height:326px;
+  object-fit: cover;
+}
+.my-modal-content .cover-preview{
+  width:580px;
+  height:326px;
+  object-fit: cover;
+}
+.my-modal-content .ant-upload>div{
+  font-family: Gilroy-Bold;
+  font-size: 14px;
+  color: #FFFFFF;
+  text-align: center;
+  font-weight: 700;
+}
+.my-modal-content .upload-tip{
+  opacity: 0.4;
+  font-family: Gilroy-Regular;
+  font-size: 14px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+/* input */
+.my-modal-content .ant-input{
+  width: 936px !important;;
+  height:50px;
+  line-height:50px;
+  padding:0 20px;
+  border: 1px solid rgba(255,255,255,0.16)!important;
+  border-radius: 8px;
+  background-color:transparent;
+  font-family: Gilroy-Regular;
+  font-size: 14px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+.my-modal-content input::-webkit-outer-spin-button,
+.my-modal-content input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+.my-modal-content input[type="number"]{
+  -moz-appearance: textfield;
+}
+
+.form-add-button{
+  font-family: Gilroy-Regular;
+  font-size: 14px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  font-weight: 400;
+  height:16px;
+  line-height:16px;
+  padding-left:20px;
+  cursor: pointer;
+  background:url('./assets/images/icon-add.png') no-repeat left center;
+  background-size:16px;
+}
+.form-remove-button{
+  width:16px;
+  height:50px;
+  background:url('./assets/images/icon-remove.png') no-repeat center center;
+  background-size:16px;
+  cursor: pointer;
+}
+.form-remove-button.hidden{
+  display: none;
+}
+
+
+.my-modal-header{
+  height:100px;
+  line-height:100px;
+  padding:0 13.888889%;
+  font-family: Gilroy-SemiBold;
+  font-size: 18px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  font-weight: 600;
+}
+.my-modal-footer{
+  padding-right:28px;
+  display:flex;
+  justify-content:flex-end;
+}
+.my-modal-footer .btn{
+  margin-left:30px;
+  width:165px;
+  height:50px;
+  background: rgba(78,81,112,0.24);
+  border-radius: 8px;
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  font-family: Gilroy-Regular;
+  font-size: 16px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  text-align: center;
+  font-weight: 400;
+  cursor: pointer;
+}
+.my-modal-footer .btn.ok{
+  background-image: linear-gradient(-83deg, #9D7DFF 0%, #8C97FF 43%, #9FD0FF 100%);
+}
+
+
+
+
+
+.txt-wrap {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
 }

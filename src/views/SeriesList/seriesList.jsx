@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom'
-import {message} from "antd";
+import {Input,message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
 import AddSeries from "./addSeries";
@@ -13,6 +13,7 @@ import {formatAmount, sign} from "../../utils/util";
 
 import logo from '../../assets/images/index/logo.png';
 import add from '../../assets/images/setRule/add.png';
+import no_data from '../../assets/images/no-data.png';
 
 const config = getConfig()
 
@@ -22,6 +23,7 @@ function Series(props) {
     const [collectionId, setCollectionId] = useState("")
     const history = useHistory()
     // const [roleList, setRoleList] = useState([]);
+    const [collectionDetail, setCollectionDetail] =  useState({});
 
     useEffect(() => {
         (async () => {
@@ -56,7 +58,16 @@ function Series(props) {
         if(seriesList.length>0){
             const seriesItems = seriesList.map((item,index) => 
                 <div className={['series-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()}>
-
+                    <img className={'cover'} alt="cover" src={no_data}/>
+                    <div className={'info'}>
+                        <div className={'name txt-wrap'}>irl#2869</div>
+                        <div className={'account txt-wrap'}>Daisy</div>
+                        <div className={'line'}></div>
+                        <div className={'mint-info'}>
+                            <div>Minted:</div>
+                            <div className={'mint-number'}>20/100</div>
+                        </div>
+                    </div>
                 </div>
             );
             
@@ -65,20 +76,19 @@ function Series(props) {
             </div>)
         }
         else{
-            return ("");
-            // return (<div className={'no-data'}>
-            //     <img src={no_data}/>
-            //     <div className={'tip'}>No data, Please add a rule.</div>
-            //     <div className={'btn'} onClick={handleAddStatus}>+ Add</div>
-            // </div>)
+            return (<div className={'no-data'}>
+                <img src={no_data}/>
+                <div className={'tip'}>No data,please add a new collection.</div>
+            </div>)
         }
     }
 
     return (
         <div className={'page-box'}>
-            <div className={'bg'}></div>
-            <div className={'header'}>
-                <img className={"logo"} src={logo}/>
+            <div className={'page-bg'}></div>
+            <div className={'page-header'}>
+                <div className={"title"}>Collection Name : {collectionDetail.name}</div>
+                <Input className={'search-input'} bordered={false} placeholder="Enter a token ID to search" /> 
                 <div className={'add-btn'} onClick={handleAddStatus}>
                     <img className={"add-icon"} src={add}/>
                     Add
