@@ -31,21 +31,13 @@ function AddCollection(props) {
     const onCheck = async () => {
         try {
             const values = await form.validateFields();
-            // let args = {
-            //     guild_id: values.guild_id,
-            //     role_id: values.role_id,
-            // }
-            
             // setConfirmLoading(true);
             const near = await connect(config);
             const wallet = new WalletConnection(near,"nepbot");
             const account = wallet.account() 
 
-            //authorization
-
             //formData
             const params = {
-                // files:[values.logo,values.cover],
                 collection: values.name,
                 description:values.description,
                 creator_id: account.accountId,
@@ -57,8 +49,12 @@ function AddCollection(props) {
             Object.keys(params).forEach((key) => {
                 formData.append(key, params[key]);
             });
-            formData.append('files',values.logo)
-            formData.append('files',values.cover)
+
+
+            const logo = values.logo[0]['originFileObj'];
+            const cover = values.cover[0]['originFileObj'];
+            formData.append('files',logo)
+            formData.append('files',cover)
 
             //paras - collection
             const res = await createCollection(formData);
