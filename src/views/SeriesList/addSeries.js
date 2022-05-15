@@ -45,23 +45,22 @@ function AddSeries(props) {
             const collection_id = props.collectionId
             const outer_collection_id = collection_id.split(":")[1]
             //authorization
-            // console.log(coverUrl)
-            // const blurhash = await encodeImageToBlurhash(coverUrl)
+            // console.log(imageUrl)
+            // const blurhash = await encodeImageToBlurhash(imageUrl)
             // console.log(blurhash)
             // return
             //formData
             const params = {
-                // files:[values.logo,values.cover],
-                collection: values.name, //??????????????
+                collection: values.name, 
                 description:values.description,
                 creator_id: account.accountId,
                 collection_id: outer_collection_id,
                 attributes:form.attributeList,
-                mime_type: values.cover[0].type,
+                mime_type: values.image[0].type,
                 blurhash: "UE3UQdpLQ8VWksZ}Z~ksL#Z}pfkXVWp0kXVq"
             }
             const formData = new FormData();
-            formData.append('files',values.cover[0]['originFileObj'])
+            formData.append('files',values.image[0]['originFileObj'])
             formData.append('files',new Blob([JSON.stringify(params)], {type: 'application/json'}))
 
             //paras - collection
@@ -97,7 +96,7 @@ function AddSeries(props) {
                     },
                     ..._sign
                 },
-                gas: '30000000000000000',
+                gas: '300000000000000',
                 attachedDeposit: '20000000000000000000000'
             })
             // await account.functionCall({
@@ -233,7 +232,7 @@ function AddSeries(props) {
                                             if(image) {
                                                 return Promise.resolve();
                                             }
-                                            return Promise.reject('upload cover');
+                                            return Promise.reject('upload image');
                                         }
                                     })
                                 ]}
