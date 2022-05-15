@@ -1,4 +1,5 @@
 import React,{useState} from 'react';
+import {useHistory} from 'react-router-dom'
 import {Modal, Form, Input, Button, Select, Space} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
@@ -15,6 +16,7 @@ function AddRule(props) {
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [type, setType] = useState('');
     const [isParas, setParas] = useState(false)
+    const history = useHistory()
     // const [checkNick, setCheckNick] = useState(false);
     const onFinish = async (values) => {
         console.log('Success:', values);
@@ -76,6 +78,10 @@ function AddRule(props) {
                 account_id: account.accountId
             }
             const _sign = await signRule(msg);
+            if (!_sign) {
+                history.push({pathname: '/linkexpired', })
+                return
+            }
             const data = await account.functionCall(
                 config.RULE_CONTRACT,
                 'set_roles',

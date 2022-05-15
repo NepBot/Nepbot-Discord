@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom'
 import {Button, Input, Table, Row, Col,Space,message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
@@ -25,6 +26,7 @@ function SetRule(props) {
     const [dataSource, setDataSource] = useState([]);
     const [appchainIds, setAppchainIds] = useState([])
     const [operationSign, setOperationSign] = useState("")
+    const history = useHistory()
 
     const handleData = async (data) => {
         const roleList = await getRoleList(store.get("info").guild_id);
@@ -106,6 +108,10 @@ function SetRule(props) {
                 account_id: accountId,
                 sign: signature 
             })
+            if (!operationSign) {
+                history.push({pathname: '/linkexpired', })
+                return
+            }
             setOperationSign(operationSign)
             store.set("operationSign", operationSign, { expires: 1 })
             const server = await getServer(search.guild_id);
@@ -154,7 +160,10 @@ function SetRule(props) {
             account_id: account.accountId
         }
         const _sign = await signRule(msg);
-
+        if (!operationSign) {
+            history.push({pathname: '/linkexpired', })
+            return
+        }
         const delRule = await account.functionCall(
             config.RULE_CONTRACT,
             'del_role',

@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom'
 import {message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
@@ -7,7 +8,7 @@ import './collection.css'
 import qs from "qs";
 import store from "../../store/discordInfo";
 import {formatAmount, sign} from "../../utils/util";
-import {getRoleList, getServer, signRule, getOperationSign} from "../../api/api";
+import {getRoleList, getServer, signRule, getOperationSign, getCollection} from "../../api/api";
 import logo from '../../assets/images/index/logo.png';
 import add from '../../assets/images/setRule/add.png';
 
@@ -21,6 +22,7 @@ function Collection(props) {
     const [roleList, setRoleList] = useState([]);
     const [operationSign, setOperationSign] = useState("")
     const [server, setServer] = useState({});
+    const history = useHistory()
 
     useEffect(() => {
         (async () => {
@@ -57,11 +59,15 @@ function Collection(props) {
                 account_id: accountId,
                 sign: signature 
             })
+            if (!operationSign) {
+                history.push({pathname: '/linkexpired', })
+                return
+            }
             setOperationSign(operationSign)
             store.set("operationSign", operationSign, { expires: 1 })
             const server = await getServer(search.guild_id);
             setServer(server);
-            account = await wallet.account();
+            account = wallet.account()
             handleData();
         })();
         return () => {
@@ -69,9 +75,19 @@ function Collection(props) {
     }, [addDialogStatus]);
 
     const handleData = async (data) => {
-        //get_collections_by_guild
-        // const data = await account.viewFunction(config.NFT_CONTRACT, 'get_collections_by_guild', {guild_id: server.id})
-        // setCollectionList(data)
+        const info = store.get("info")
+        const collections = await account.viewFunction(config.NFT_CONTRACT, "get_collections_by_guild", {guild_id: info.guild_id})
+        let wrappedCollections = []
+        for (let collection of collections) {
+            const collectionData = await getCollection(collection.outer_collection_id)
+            if (collectionData && collectionData.results.length > 0) {
+                wrappedCollections.push({
+                    collection_id: collection.collection_id,
+                    outer_collection_id: collection.outer_collection_id
+                })
+            }
+        }
+        setCollectionList(wrappedCollections)
         return data;
     }
 
@@ -85,12 +101,15 @@ function Collection(props) {
         setAddDialogStatus(!addDialogStatus)
     }, [addDialogStatus]);
 
+    const handleSeriesList = useCallback(async (collection) => {
+        history.push({pathname: `/serieslist/${collection.collection_id}`})
+    }, [])
 
 
     function CollectionList(){
         if(collectionList.length>0){
             const collectionItems = collectionList.map((item,index) => 
-                <div className={['collection-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()}>
+                <div className={['collection-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()} onClick={() => handleSeriesList(item)}>
 
                 </div>
             );

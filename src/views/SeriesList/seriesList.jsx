@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom'
 import {message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
@@ -18,21 +19,25 @@ const config = getConfig()
 function Series(props) {
     const [seriesList, setSeriesList] = useState([]);
     const [addDialogStatus, setAddDialogStatus] = useState(false);
+    const [collectionId, setCollectionId] = useState("")
+    const history = useHistory()
     // const [roleList, setRoleList] = useState([]);
 
     useEffect(() => {
         (async () => {
+            const info = store.get("info")
+            const operationSign = store.get("operationSign")
             const near = await connect(config);
             const wallet = new WalletConnection(near, 'nepbot');
-            if (!wallet.isSignedIn()) {
-                wallet.requestSignIn(config.NFT_CONTRACT, "nepbot")
-                return
+            if (!info || !wallet.isSignedIn() || !operationSign) {
+                history.push({pathname: '/linkexpired', })
             }
-            handleData();
+
+            setCollectionId(props.match.params.id)
         })();
         return () => {
         }
-    }, [addDialogStatus]);
+    }, []);
 
     const handleData = async (data) => {
         //get_token_metadata
@@ -42,14 +47,8 @@ function Series(props) {
     }
 
     const handleAddStatus = useCallback(async () => {
-        if (!addDialogStatus) {
-            // const roles = await getRoleList(store.get("guild_id"));
-            // setRoleList(roles.filter(item=>item.name!=="@everyone"))
-        }else{
-            message.info('Success');
-        }
         setAddDialogStatus(!addDialogStatus)
-    }, [addDialogStatus]);
+    }, []);
 
 
 
@@ -86,7 +85,7 @@ function Series(props) {
                 </div>
             </div>
             <SeriesList/>
-            <AddSeries title="Basic Modal"  visible={addDialogStatus}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
+            <AddSeries collectionId={collectionId}  visible={addDialogStatus}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
         </div>
     );
 }

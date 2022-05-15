@@ -1,6 +1,7 @@
 import {connect, KeyPair, keyStores, utils, WalletConnection} from "near-api-js";
 import {getConfig} from "../config";
 import bs58 from 'bs58'
+import { encode } from 'blurhash'
 
 const config = getConfig();
 
@@ -57,4 +58,30 @@ export async function sign(account, obj) {
     const { signature } = keyPair.sign(data_buffer);
     let sign = bs58.encode(signature);
     return sign
+}
+
+
+
+async function loadImage(src) {
+	new Promise((resolve, reject) => {
+		const img = new Image()
+		img.onload = () => resolve(img)
+		img.onerror = (...args) => reject(args)
+		img.src = src
+	})
+}
+
+function getImageData(image) {
+	const canvas = document.createElement('canvas')
+	canvas.width = 360
+	canvas.height = 400
+	const context = canvas.getContext('2d')
+	context.drawImage(image, 0, 0)
+	return context.getImageData(0, 0, 360, 400)
+}
+
+export async function encodeImageToBlurhash(imageUrl) {
+	const image = await loadImage(imageUrl)
+	const imageData = getImageData(image)
+	return encode(imageData.data, imageData.width, imageData.height, 4, 4)
 }
