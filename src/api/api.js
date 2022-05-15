@@ -51,25 +51,48 @@ export const getUser = async (guild_id, user_id) => {
     }
     return false
 }
-export const getCollectionList = async (guild_id)=>{
-    const json = await fetch(`/api/getRole/${guild_id}`);
-    return await json.json();
-}
+
+// export const getCollectionList = async (guild_id)=>{
+//     const json = await fetch(`/api/getRole/${guild_id}`);
+//     return await json.json();
+// }
+
 export const createCollection = async (data)=>{
     const Authorization = await generateToken()
-    return await axios.request({
+    const result =  await axios.request({
         method:"post",
         url:`https://api-v2-${config.networkId}-master.paras.id/collections`,
         data,
         headers:{Authorization:Authorization}
     })
+    if (result.data.status == 1) {
+        return result.data.data
+    }
+    return false
 }
 export const createSeries = async (data)=>{
-    return await axios.request({
+    const Authorization = await generateToken()
+    const result = await axios.request({
         method:"post",
         url:`https://api-v2-${config.networkId}-master.paras.id/uploads`,
         data,
+        headers:{Authorization:Authorization}
     })
+    if (result.data.status == 1) {
+        return result.data.data
+    }
+    return false
+}
+
+export const getCollection = async (collectionId) => {
+    const result = await axios.request({
+        method:"get",
+        url:`https://api-v2-${config.networkId}-master.paras.id/collections?collection_id=${collectionId}`,
+    })
+    if (result.data.status == 1) {
+        return result.data.data
+    }
+    return false
 }
 
 // export const getRuleList = async (params)=>{
@@ -106,7 +129,7 @@ export const createSeries = async (data)=>{
 //     })
 // }
 export const getOperationSign = async (args) => {
-    const json = await fetch('/api/operationSign', {
+    const json = await fetch('/api/getOperationSign', {
         headers:{ 'Content-Type': 'application/json' },
         method:"POST",
         body:typeof args === 'string'?args:JSON.stringify(args)

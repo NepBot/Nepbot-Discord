@@ -4,12 +4,10 @@ import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
 import AddCollection from "./addCollection";
 import './collection.css'
-
-import {getRoleList, getServer, signRule} from "../../api/api";
 import qs from "qs";
 import store from "../../store/discordInfo";
 import {formatAmount, sign} from "../../utils/util";
-
+import {getRoleList, getServer, signRule, getOperationSign} from "../../api/api";
 import logo from '../../assets/images/index/logo.png';
 import add from '../../assets/images/setRule/add.png';
 import no_data from '../../assets/images/no-data.png';
@@ -17,20 +15,54 @@ import no_data from '../../assets/images/no-data.png';
 const config = getConfig()
 
 function Collection(props) {
+    let account = {}
     const guildData = qs.parse(props.location.search.slice(1));
-    store.set('guild_id',guildData.guild_id , {expires:1})
     const [collectionList, setCollectionList] = useState([]);
     const [addDialogStatus, setAddDialogStatus] = useState(false);
     const [roleList, setRoleList] = useState([]);
+    const [operationSign, setOperationSign] = useState("")
+    const [server, setServer] = useState({});
 
     useEffect(() => {
         (async () => {
+            const search =  qs.parse(props.location.search.slice(1));
+            store.set("info", {
+                guild_id: search.guild_id,
+                user_id: search.user_id,
+                sign: search.sign
+            }, { expires: 1 });
+
             const near = await connect(config);
             const wallet = new WalletConnection(near, 'nepbot');
+
+            try {
+                await wallet._completeSignInWithAccessKey()
+            } catch {}
+
             if (!wallet.isSignedIn()) {
-                wallet.requestSignIn(config.NFT_CONTRACT, "nepbot")
+                wallet.requestSignIn(config.RULE_CONTRACT, "nepbot")
                 return
             }
+            const accountId = wallet.getAccountId()
+            let operationSign = store.get("operationSign")
+            const args = {
+                account_id: accountId, 
+                user_id: search.user_id,
+                guild_id: search.guild_id,
+                sign: search.sign,
+                operationSign: operationSign
+            }
+            const signature = await sign(wallet.account(), args)
+            operationSign = await getOperationSign({
+                args: args,
+                account_id: accountId,
+                sign: signature 
+            })
+            setOperationSign(operationSign)
+            store.set("operationSign", operationSign, { expires: 1 })
+            const server = await getServer(search.guild_id);
+            setServer(server);
+            account = await wallet.account();
             handleData();
         })();
         return () => {

@@ -40,6 +40,7 @@ export function getConfig() {
           walletUrl: 'https://wallet.testnet.near.org',
           helperUrl: 'https://helper.testnet.near.org',
           RULE_CONTRACT: 'app.dev-nepbot.testnet',
+          NFT_CONTRACT: 'nft.dev-nepbot.testnet',
           OCT_CONTRACT: 'registry.test_oct.testnet',
           LINKDROP: 'linkdrop6.bhc8521.testnet',
           APPLICATION_ID: '967009211823304744'
