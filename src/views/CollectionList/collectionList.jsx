@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom'
 import {message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
@@ -7,7 +8,7 @@ import './collection.css'
 import qs from "qs";
 import store from "../../store/discordInfo";
 import {formatAmount, sign} from "../../utils/util";
-import {getRoleList, getServer, signRule, getOperationSign} from "../../api/api";
+import {getRoleList, getServer, signRule, getOperationSign, getCollection} from "../../api/api";
 import logo from '../../assets/images/index/logo.png';
 import add from '../../assets/images/setRule/add.png';
 import no_data from '../../assets/images/no-data.png';
@@ -22,57 +23,72 @@ function Collection(props) {
     const [roleList, setRoleList] = useState([]);
     const [operationSign, setOperationSign] = useState("")
     const [server, setServer] = useState({});
+    const history = useHistory()
 
     useEffect(() => {
         (async () => {
-            // const search =  qs.parse(props.location.search.slice(1));
-            // store.set("info", {
-            //     guild_id: search.guild_id,
-            //     user_id: search.user_id,
-            //     sign: search.sign
-            // }, { expires: 1 });
+            const search =  qs.parse(props.location.search.slice(1));
+            store.set("info", {
+                guild_id: search.guild_id,
+                user_id: search.user_id,
+                sign: search.sign
+            }, { expires: 1 });
 
-            // const near = await connect(config);
-            // const wallet = new WalletConnection(near, 'nepbot');
+            const near = await connect(config);
+            const wallet = new WalletConnection(near, 'nepbot');
 
-            // try {
-            //     await wallet._completeSignInWithAccessKey()
-            // } catch {}
+            try {
+                await wallet._completeSignInWithAccessKey()
+            } catch {}
 
-            // if (!wallet.isSignedIn()) {
-            //     wallet.requestSignIn(config.RULE_CONTRACT, "nepbot")
-            //     return
-            // }
-            // const accountId = wallet.getAccountId()
-            // let operationSign = store.get("operationSign")
-            // const args = {
-            //     account_id: accountId, 
-            //     user_id: search.user_id,
-            //     guild_id: search.guild_id,
-            //     sign: search.sign,
-            //     operationSign: operationSign
-            // }
-            // const signature = await sign(wallet.account(), args)
-            // operationSign = await getOperationSign({
-            //     args: args,
-            //     account_id: accountId,
-            //     sign: signature 
-            // })
-            // setOperationSign(operationSign)
-            // store.set("operationSign", operationSign, { expires: 1 })
-            // const server = await getServer(search.guild_id);
-            // setServer(server);
-            // account = await wallet.account();
-            // handleData();
+            if (!wallet.isSignedIn()) {
+                wallet.requestSignIn(config.RULE_CONTRACT, "nepbot")
+                return
+            }
+            const accountId = wallet.getAccountId()
+            let operationSign = store.get("operationSign")
+            const args = {
+                account_id: accountId, 
+                user_id: search.user_id,
+                guild_id: search.guild_id,
+                sign: search.sign,
+                operationSign: operationSign
+            }
+            const signature = await sign(wallet.account(), args)
+            operationSign = await getOperationSign({
+                args: args,
+                account_id: accountId,
+                sign: signature 
+            })
+            if (!operationSign) {
+                history.push({pathname: '/linkexpired', })
+                return
+            }
+            setOperationSign(operationSign)
+            store.set("operationSign", operationSign, { expires: 1 })
+            const server = await getServer(search.guild_id);
+            setServer(server);
+            account = wallet.account()
+            handleData();
         })();
         return () => {
         }
     }, [addDialogStatus]);
 
     const handleData = async (data) => {
-        //get_collections_by_guild
-        // const data = await account.viewFunction(config.NFT_CONTRACT, 'get_collections_by_guild', {guild_id: server.id})
-        // setCollectionList(data)
+        const info = store.get("info")
+        const collections = await account.viewFunction(config.NFT_CONTRACT, "get_collections_by_guild", {guild_id: info.guild_id})
+        let wrappedCollections = []
+        for (let collection of collections) {
+            const collectionData = await getCollection(collection.outer_collection_id)
+            if (collectionData && collectionData.results.length > 0) {
+                wrappedCollections.push({
+                    collection_id: collection.collection_id,
+                    outer_collection_id: collection.outer_collection_id
+                })
+            }
+        }
+        setCollectionList(wrappedCollections)
         return data;
     }
 
@@ -86,12 +102,15 @@ function Collection(props) {
         setAddDialogStatus(!addDialogStatus)
     }, [addDialogStatus]);
 
+    const handleSeriesList = useCallback(async (collection) => {
+        history.push({pathname: `/serieslist/${collection.collection_id}`})
+    }, [])
 
 
     function CollectionList(){
         if(collectionList.length>0){
             const collectionItems = collectionList.map((item,index) => 
-                <div className={['collection-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()}>
+                <div className={['collection-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()} onClick={() => handleSeriesList(item)}>
                     <img className={'cover'} alt="cover" src={no_data}/>
                     <div className={'info'}>
                         <div className={'user'}>

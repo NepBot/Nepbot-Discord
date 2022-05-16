@@ -1,10 +1,11 @@
 import React,{useState} from 'react';
+import {useHistory} from 'react-router-dom'
 import {Form, Input, Upload,message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
 import {signRule,createSeries} from "../../api/api";
-import {contract, parseAmount, sign} from "../../utils/util";
-import icon_upload from '../../assets/images/icon-upload.png';
+import {contract, parseAmount, sign, encodeImageToBlurhash} from "../../utils/util";
+import store from "../../store/discordInfo";
 
 const config = getConfig()
 
@@ -16,6 +17,7 @@ function AddSeries(props) {
     const [image, setImage] = useState(null);
     const [image_url, setImageUrl] = useState('');
     const [attributeList,setAttributeList] = useState([{type:'',value:''}])
+    const history = useHistory()
     // const [isParas, setParas] = useState(false)
 
     const onFinish = async (values) => {
@@ -40,51 +42,80 @@ function AddSeries(props) {
             const near = await connect(config);
             const wallet = new WalletConnection(near,"nepbot");
             const account = wallet.account() 
-
+            
+            const collection_id = props.collectionId
+            const outer_collection_id = collection_id.split(":")[1]
             //authorization
-
+            // console.log(imageUrl)
+            // const blurhash = await encodeImageToBlurhash(imageUrl)
+            // console.log(blurhash)
+            // return
             //formData
             const params = {
-                // files:[values.logo,values.cover],
-                collection: values.name, //??????????????
+                collection: values.name, 
                 description:values.description,
                 creator_id: account.accountId,
-                collection_id:props.match.params.id,
+                collection_id: outer_collection_id,
                 attributes:form.attributeList,
-                mime_type:'',
-                blurhash:''
+                mime_type: values.image[0].type,
+                blurhash: "UE3UQdpLQ8VWksZ}Z~ksL#Z}pfkXVWp0kXVq"
             }
             const formData = new FormData();
-            formData.append('files',values.cover)
-            formData.append('files',params)
+            formData.append('files',values.image[0]['originFileObj'])
+            formData.append('files',new Blob([JSON.stringify(params)], {type: 'application/json'}))
 
             //paras - collection
             const res = await createSeries(formData);
-            // console.log(res,'paras-res');
-            
-            
-            // const msg = {
+
+            const info = store.get("info")
+            const operationSign = store.get("operationSign")
+            const args = {
+                sign: operationSign,
+                user_id: info.user_id,
+                guild_id: info.guild_id,
+            }
+            const msg = {
+                args: args,
+                sign: await sign(account, args),
+                account_id: account.accountId
+            }
+            const _sign = await signRule(msg);
+            if (!operationSign) {
+                history.push({pathname: '/linkexpired', })
+                return
+            }
+            await account.functionCall({
+                contractId: config.NFT_CONTRACT,
+                methodName: "add_token_metadata",
+                args: {
+                    collection_id: collection_id,
+                    token_metadata: {
+                        title: values.name,
+                        description: values.description,
+                        media: res[0].replace("ipfs://", ""),
+                        reference: res[1].replace("ipfs://", ""),
+                    },
+                    ..._sign
+                },
+                gas: '300000000000000',
+                attachedDeposit: '20000000000000000000000'
+            })
+            // await account.functionCall({
+            //     contractId: "paras-token-v2.testnet",
+            //     methodName: "nft_create_series",
             //     args: {
-            //         sign:localStorage.getItem("nepbot_wallet_auth_key").allKeys
+            //         //collection_id: collection_id,
+            //         token_metadata: {
+            //             title: values.name,
+            //             description: values.description,
+            //             media: res[0].replace("ipfs://", ""),
+            //             reference: res[1].replace("ipfs://", ""),
+            //         },
+            //         //..._sign
             //     },
-            //     sign: await sign(account, [args]),
-            //     account_id: account.accountId
-            // }
-            // const _sign = await signRule(msg);
-            // const data = await account.functionCall(
-            //     config.NFT_CONTRACT,
-            //     'add_token_metadata',
-            //      {args:JSON.stringify([args]),sign:_sign.sign},
-            //     '300000000000000',
-            //     '20000000000000000000000',
-            // );
-            // setTimeout(()=>{
-            //     if(data){
-            //         setConfirmLoading(false);
-            //         form.resetFields();
-            //         props.onOk();
-            //     }
+            //     attachedDeposit: '20000000000000000000000'
             // })
+            
         } catch (errorInfo) {
             console.log('Failed:', errorInfo);
         }
@@ -111,6 +142,8 @@ function AddSeries(props) {
     }
 
     function uploadImage(info){
+        console.log(info,'info');
+        setImageUrl(info.file)
         setImage(info.file)
         getBase64(info.file, imageUrl =>
             setImageUrl(imageUrl)
@@ -121,6 +154,7 @@ function AddSeries(props) {
         if (Array.isArray(e)) {
           return e;
         }
+        console.log(e)
         return e && e.fileList;
     };
 
@@ -202,7 +236,7 @@ function AddSeries(props) {
                                             if(image) {
                                                 return Promise.resolve();
                                             }
-                                            return Promise.reject('upload Image');
+                                            return Promise.reject('upload image');
                                         }
                                     })
                                 ]}

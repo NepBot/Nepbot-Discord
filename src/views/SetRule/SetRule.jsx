@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom'
 import {Button, Input, Table, Row, Col,Space,message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
@@ -26,6 +27,7 @@ function SetRule(props) {
     const [dataSource, setDataSource] = useState([]);
     const [appchainIds, setAppchainIds] = useState([])
     const [operationSign, setOperationSign] = useState("")
+    const history = useHistory()
 
     const handleData = async (data) => {
         const roleList = await getRoleList(store.get("info").guild_id);
@@ -93,31 +95,31 @@ function SetRule(props) {
                 return
             }
             const accountId = wallet.getAccountId()
-            // let operationSign = store.get("operationSign")
-            // const args = {
-            //     account_id: accountId, 
-            //     user_id: search.user_id,
-            //     guild_id: search.guild_id,
-            //     sign: search.sign,
-            //     operationSign: operationSign
-            // }
-            // const signature = await sign(wallet.account(), args)
-            // operationSign = await getOperationSign({
-            //     args: args,
-            //     account_id: accountId,
-            //     sign: signature 
-            // })
-            // setOperationSign(operationSign)
-            // store.set("operationSign", operationSign, { expires: 1 })
-            // const server = await getServer(search.guild_id);
-            // setServer(server);
-            // account = await wallet.account();
-            // const appchainIds = await account.viewFunction(config.OCT_CONTRACT, 'get_appchain_ids', {})
-            // setAppchainIds(appchainIds)
-
-            // const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: search.guild_id})
-            // const guildData = await handleData(data)
-            // setDataSource(guildData)
+            let operationSign = store.get("operationSign")
+            const args = {
+                account_id: accountId, 
+                user_id: search.user_id,
+                guild_id: search.guild_id,
+                sign: search.sign,
+                operationSign: operationSign
+            }
+            const signature = await sign(wallet.account(), args)
+            operationSign = await getOperationSign({
+                args: args,
+                account_id: accountId,
+                sign: signature 
+            })
+            if (!operationSign) {
+                history.push({pathname: '/linkexpired', })
+                return
+            }
+            setOperationSign(operationSign)
+            store.set("operationSign", operationSign, { expires: 1 })
+            const server = await getServer(search.guild_id);
+            setServer(server);
+            account = await wallet.account();
+            const appchainIds = await account.viewFunction(config.OCT_CONTRACT, 'get_appchain_ids', {})
+            setAppchainIds(appchainIds)
         })();
         return () => {
         }
@@ -155,7 +157,10 @@ function SetRule(props) {
             account_id: account.accountId
         }
         const _sign = await signRule(msg);
-
+        if (!operationSign) {
+            history.push({pathname: '/linkexpired', })
+            return
+        }
         const delRule = await account.functionCall(
             config.RULE_CONTRACT,
             'del_role',

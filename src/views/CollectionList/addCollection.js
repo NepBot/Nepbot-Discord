@@ -1,5 +1,6 @@
 import React,{useState} from 'react';
-import {Modal, Form, Input, Button,Select, Upload,message} from "antd";
+import {useHistory} from 'react-router-dom'
+import {Form, Input,Select, Upload,message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
 import {signRule,createCollection, getCollection} from "../../api/api";
@@ -21,6 +22,7 @@ function AddCollection(props) {
     const [logo, setLogo] = useState(null);
     const [cover, setCover] = useState(null);
     const [royaltyList,setRoyaltyList] = useState([{account:'',amount:''}])
+    const history = useHistory()
     const [showConfirmModal, setConfrimModalStatus] = useState(false);
     // const [isParas, setParas] = useState(false)
 
@@ -71,7 +73,6 @@ function AddCollection(props) {
 
             //paras - collection
             const res = await createCollection(formData);
-            console.log(res)
             //{"status":1,"data":{"collection":{"_id":"6280b224692d163b193d09de","collection_id":"fff-by-bhc22testnet","blurhash":"UE3UQdpLQ8VWksZ}Z~ksL#Z}pfkXVWp0kXVq","collection":"fff","cover":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","createdAt":1652601380975,"creator_id":"bhc22.testnet","description":"fff","media":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","socialMedia":{"twitter":"","discord":"","website":""},"updatedAt":1652601380975}}}
             
             const info = store.get("info")
@@ -87,6 +88,10 @@ function AddCollection(props) {
                 account_id: account.accountId
             }
             const _sign = await signRule(msg);
+            if (!operationSign) {
+                history.push({pathname: '/linkexpired', })
+                return
+            }
             await account.functionCall({
                 contractId: config.NFT_CONTRACT,
                 methodName: "create_collection",
@@ -98,39 +103,8 @@ function AddCollection(props) {
                     price: values.mintPrice,
                     ..._sign
                 },
-                amount: '20000000000000000000000'
+                attachedDeposit: '20000000000000000000000'
             })
-            
-            
-            
-            
-            
-            
-            
-            // console.log(res,'paras-res');
-            
-            // const msg = {
-            //     args: {
-            //         sign:localStorage.getItem("nepbot_wallet_auth_key").allKeys
-            //     },
-            //     sign: await sign(account, [args]),
-            //     account_id: account.accountId
-            // }
-            // const _sign = await signRule(msg);
-            // const data = await account.functionCall(
-            //     config.NFT_CONTRACT,
-            //     'create_collection',
-            //      {args:JSON.stringify([args]),..._sign},
-            //     '300000000000000',
-            //     '20000000000000000000000',
-            // );
-            // setTimeout(()=>{
-            //     if(data){
-            //         setConfirmLoading(false);
-            //         form.resetFields();
-            //         props.onOk();
-            //     }
-            // })
         } catch (errorInfo) {
             console.log('Failed:', errorInfo);
         }
