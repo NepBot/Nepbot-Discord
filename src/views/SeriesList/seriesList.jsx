@@ -60,12 +60,12 @@ function Series(props) {
                 <div className={['series-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()}>
                     <img className={'cover'} alt="cover" src={no_data}/>
                     <div className={'info'}>
-                        <div className={'name txt-wrap'}>irl#2869</div>
+                        <div className={'name txt-wrap'}>{item.title}</div>
                         <div className={'account txt-wrap'}>Daisy</div>
                         <div className={'line'}></div>
                         <div className={'mint-info'}>
                             <div>Minted:</div>
-                            <div className={'mint-number'}>20/100</div>
+                            <div className={'mint-number'}>20/{item.copies}</div>
                         </div>
                     </div>
                 </div>
