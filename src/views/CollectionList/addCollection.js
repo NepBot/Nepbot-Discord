@@ -280,18 +280,6 @@ function AddCollection(props) {
                                     <Dragger name="upload_logo" beforeUpload={beforeUpload} customRequest={uploadLogo}>
                                         <UploadLogoContent/>
                                     </Dragger>
-                                    {/* <Upload
-                                        name="upload_logo"
-                                        listType="picture-card"
-                                        className="logo-uploader"
-                                        showUploadList={false}
-                                        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                        beforeUpload={beforeUpload}
-                                        // onChange={handleChange}
-                                        customRequest={uploadLogo}
-                                    >
-                                        <UploadLogoContent/>
-                                    </Upload> */}
                                 </Item>
                                 <div className={'upload-tip'}>JPG/JPEG/ PNG/GIF/SVG. Max size:1MB.</div>
                             </div>
@@ -316,19 +304,6 @@ function AddCollection(props) {
                                     <Dragger name="upload_cover" beforeUpload={beforeUpload} customRequest={uploadCover}>
                                         <UploadCoverContent/>
                                     </Dragger>
-                                    {/* <Upload
-                                        name="upload_cover"
-                                        listType="picture-card"
-                                        className="cover-uploader"
-                                        showUploadList={false}
-                                        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                        beforeUpload={beforeUpload}
-                                        // onChange={handleChange}
-                                        customRequest={uploadCover}
-                                    >
-                                        <UploadCoverContent/>
-                                    </Upload> */}
-                                   
                                 </Item>
                                 <div className={'upload-tip'}>JPG/JPEG/ PNG/GIF/SVG. Max size:1MB.</div>
                             </div>
@@ -339,20 +314,20 @@ function AddCollection(props) {
                             name="name"
                             rules={[{ required: true, message: 'Enter a name' }]}
                         >
-                            <Input bordered={false}/>
+                            <Input bordered={false} placeholder="name of the collection"/>
                         </Item>
                         <Item
                             label="Description"
                             name="description"
                             rules={[{ required: true, message: 'Enter a description' }]}
                         >
-                            <Input bordered={false}/>
+                            <Input bordered={false} placeholder="tell others what the collection is about"/>
                         </Item>
                         <Item
                             label="Mint Price"
                             name="mintPrice"
                         >
-                            <Input bordered={false} type="number"/>
+                            <Input bordered={false} placeholder="Price per item" type="number"/>
                         </Item>
                         <Item
                             label="Royalty"
@@ -369,7 +344,7 @@ function AddCollection(props) {
                             <Item name="role_id">
                                 <Select
                                     mode="multiple"
-                                    placeholder="Please select"
+                                    placeholder="Choose a role"
                                     dropdownClassName={"collection-modal-role-dropdown"}
                                     // defaultOpen={true}
                                     // autoFocus={true}
