@@ -65,6 +65,11 @@ export const createCollection = async (data)=>{
         data,
         headers:{Authorization:Authorization}
     })
+    // const json = await fetch(`/api/createParasCollection`, {
+    //     method:"POST",
+    //     body: data
+    // })
+    // const result = await json.json()
     if (result.data.status == 1) {
         return result.data.data
     }

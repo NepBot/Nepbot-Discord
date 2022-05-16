@@ -53,7 +53,7 @@ function AddSeries(props) {
             // return
             //formData
             const params = {
-                collection: values.name, 
+                collection: props.collectionName, 
                 description:values.description,
                 creator_id: account.accountId,
                 collection_id: outer_collection_id,

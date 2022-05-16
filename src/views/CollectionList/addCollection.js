@@ -44,6 +44,8 @@ function AddCollection(props) {
     const submitForm= async () => {
         try {
             const values = await form.validateFields();
+            const info = store.get("info")
+            const operationSign = store.get("operationSign")
             // setConfirmLoading(true);
             const near = await connect(config);
             const wallet = new WalletConnection(near,"nepbot");
@@ -54,7 +56,7 @@ function AddCollection(props) {
                 return
             }
             //formData
-            const params = {
+            let params = {
                 collection: values.name,
                 description:values.description,
                 creator_id: account.accountId,
@@ -62,21 +64,22 @@ function AddCollection(props) {
                 website: "",
                 discord: "",
             }
+            //params.sign = await sign(account, params.args)
             const formData = new FormData();
             Object.keys(params).forEach((key) => {
                 formData.append(key, params[key]);
             });
-            console.log(values,formData,'---formData----');
+            //console.log(values,formData,'---formData----');
             formData.append('files',values['logo'][0]['originFileObj'])
             formData.append('files',values['cover'][0]['originFileObj'])
+            //formData.append('args', JSON.stringify(params))
             
-
+            
             //paras - collection
             const res = await createCollection(formData);
             //{"status":1,"data":{"collection":{"_id":"6280b224692d163b193d09de","collection_id":"fff-by-bhc22testnet","blurhash":"UE3UQdpLQ8VWksZ}Z~ksL#Z}pfkXVWp0kXVq","collection":"fff","cover":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","createdAt":1652601380975,"creator_id":"bhc22.testnet","description":"fff","media":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","socialMedia":{"twitter":"","discord":"","website":""},"updatedAt":1652601380975}}}
             
-            const info = store.get("info")
-            const operationSign = store.get("operationSign")
+            
             const args = {
                 sign: operationSign,
                 user_id: info.user_id,

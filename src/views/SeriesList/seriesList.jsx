@@ -6,7 +6,7 @@ import {getConfig} from "../../config";
 import AddSeries from "./addSeries";
 import './series.css'
 
-import {getRoleList, getServer, signRule} from "../../api/api";
+import {getRoleList, getServer, signRule, getCollection} from "../../api/api";
 import qs from "qs";
 import store from "../../store/discordInfo";
 import {formatAmount, sign} from "../../utils/util";
@@ -21,6 +21,7 @@ function Series(props) {
     const [seriesList, setSeriesList] = useState([]);
     const [addDialogStatus, setAddDialogStatus] = useState(false);
     const [collectionId, setCollectionId] = useState("")
+    const [collectionName, setCollectionName] = useState("")
     const history = useHistory()
     // const [roleList, setRoleList] = useState([]);
     const [collectionDetail, setCollectionDetail] =  useState({});
@@ -34,8 +35,9 @@ function Series(props) {
             if (!info || !wallet.isSignedIn() || !operationSign) {
                 history.push({pathname: '/linkexpired', })
             }
-
-            setCollectionId(props.match.params.id)
+            const collectionId = props.match.params.id
+            setCollectionId(collectionId)
+            setCollectionName(collectionId.split(":")[1].split("-")[0])
         })();
         return () => {
         }
@@ -43,8 +45,8 @@ function Series(props) {
 
     const handleData = async (data) => {
         //get_token_metadata
-        // const data = await account.viewFunction(config.NFT_CONTRACT, 'get_token_metadata', {hash: props.match.params.id})
-        // setSeriesList(data)
+        const data = await account.viewFunction(config.NFT_CONTRACT, 'get_token_metadata', {hash: collectionId})
+        setSeriesList(data)
         return data;
     }
 
@@ -95,7 +97,7 @@ function Series(props) {
                 </div>
             </div>
             <SeriesList/>
-            <AddSeries collectionId={collectionId}  visible={addDialogStatus}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
+            <AddSeries collectionId={collectionId} collectionName={collectionName} visible={addDialogStatus}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
         </div>
     );
 }

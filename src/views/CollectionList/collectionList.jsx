@@ -20,7 +20,6 @@ function Collection(props) {
     const guildData = qs.parse(props.location.search.slice(1));
     const [collectionList, setCollectionList] = useState([]);
     const [addDialogStatus, setAddDialogStatus] = useState(false);
-    const [roleList, setRoleList] = useState([]);
     const [operationSign, setOperationSign] = useState("")
     const [server, setServer] = useState({});
     const history = useHistory()
@@ -77,26 +76,28 @@ function Collection(props) {
 
     const handleData = async (data) => {
         const info = store.get("info")
-        const collections = await account.viewFunction(config.NFT_CONTRACT, "get_collections_by_guild", {guild_id: info.guild_id})
-        let wrappedCollections = []
-        for (let collection of collections) {
-            const collectionData = await getCollection(collection.outer_collection_id)
-            if (collectionData && collectionData.results.length > 0) {
-                wrappedCollections.push({
-                    // collection_id: collection.collection_id,
-                    // outer_collection_id: collection.outer_collection_id,
-                    ...collection
-                })
+        try {
+            const collections = await account.viewFunction(config.NFT_CONTRACT, "get_collections_by_guild", {guild_id: info.guild_id})
+            let wrappedCollections = []
+            for (let collection of collections) {
+                const collectionData = await getCollection(collection.outer_collection_id)
+                if (collectionData && collectionData.results.length > 0) {
+                    wrappedCollections.push({
+                        // collection_id: collection.collection_id,
+                        // outer_collection_id: collection.outer_collection_id,
+                        ...collection
+                    })
+                }
             }
-        }
-        setCollectionList(wrappedCollections)
+            setCollectionList(wrappedCollections)
+        } catch(e) {}
+        
         return data;
     }
 
     const handleAddStatus = useCallback(async () => {
         if (!addDialogStatus) {
-            // const roles = await getRoleList(store.get("guild_id"));
-            // setRoleList(roles.filter(item=>item.name!=="@everyone"))
+
         }else{
             message.info('Success');
         }
@@ -164,7 +165,7 @@ function Collection(props) {
                 </div>
             </div>
             <CollectionList/>
-            <AddCollection title="Basic Modal" roleList={roleList}  visible={addDialogStatus}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
+            <AddCollection  visible={addDialogStatus}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
         </div>
     );
 }
