@@ -279,11 +279,10 @@ img{
 }
 
 /* input */
-.my-modal-content .ant-input{
+.my-modal-content .ant-input,.my-modal-content .ant-input-number-input{
   width: 936px !important;;
-  height:50px;
-  line-height:50px;
-  padding:0 20px;
+  line-height:22px!important;
+  padding:14px 20px!important;
   border: 1px solid rgba(255,255,255,0.16)!important;
   border-radius: 8px;
   background-color:transparent;
@@ -292,6 +291,25 @@ img{
   color: #FFFFFF;
   letter-spacing: 0;
   font-weight: 400;
+}
+.my-modal-content textarea.ant-input{
+  text-align: justify;
+}
+.my-modal-content .ant-input-textarea{
+  position:relative;
+}
+.my-modal-content .ant-input-textarea-show-count::after{
+  margin-bottom: 0 !important;;
+  font-family: Gilroy-Regular;
+  font-size: 14px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  font-weight: 400;
+  opacity:0.6;
+  line-height:22px;
+  position:absolute;
+  bottom:14px;
+  right:48px;
 }
 .my-modal-content input::-webkit-outer-spin-button,
 .my-modal-content input::-webkit-inner-spin-button {

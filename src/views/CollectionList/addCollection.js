@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import {useHistory} from 'react-router-dom'
-import {Form, Input,Select, Upload,message} from "antd";
+import {Form, Input,InputNumber,Select, Upload,message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
 import {signRule,createCollection, getCollection} from "../../api/api";
@@ -180,7 +180,7 @@ function AddCollection(props) {
             return <div key={index} className={'royalty-item'}>
 				<div className={'royalty-account'}>
 					<Item name={['royaltyList',index,'account']} noStyle>
-                        <Input bordered={false} placeholder="Account ID" onBlur={(event)=>onChange(index,'account',event)}/>
+                        <Input.TextArea maxLength={70} autoSize={{ minRows: 1,maxRows:1}} bordered={false} placeholder="Account ID" onBlur={(event)=>onChange(index,'account',event)}/>
                     </Item>
 				</div>
 				<div className={'royalty-amount'}>
@@ -199,10 +199,24 @@ function AddCollection(props) {
     }
     const onChange = (index,name,event)=>{
 		let tempArray = [...royaltyList];
-		if('account'===name)
+		if('account'===name){
 			tempArray[index] = {...tempArray[index],account:event.target.value}
-		else
+		}else{
+            if(event.target.value<0){
+                message.error("Please enter a number greater than 0")
+                return false;
+            }
+            let total = Number(event.target.value);
+            royaltyList.forEach(item=>{
+                total+=Number(item.amount)
+            })
+            if(total>90){
+                message.error("The sum of royalty should be less than 90")
+                return false;
+            }
 			tempArray[index] = {...tempArray[index],amount:event.target.value}
+            
+        }
 		return setRoyaltyList(tempArray)
 	}
     const add = ()=>{
@@ -317,20 +331,30 @@ function AddCollection(props) {
                             name="name"
                             rules={[{ required: true, message: 'Enter a name' }]}
                         >
-                            <Input bordered={false} placeholder="name of the collection"/>
+                            <Input.TextArea showCount={true} maxLength={10} autoSize={{ minRows: 1,maxRows:1}}  bordered={false} placeholder="name of the collection"/>
                         </Item>
                         <Item
                             label="Description"
                             name="description"
                             rules={[{ required: true, message: 'Enter a description' }]}
                         >
-                            <Input bordered={false} placeholder="tell others what the collection is about"/>
+                            <Input.TextArea showCount={true} maxLength={500}  autoSize={{ minRows: 1}} bordered={false} placeholder="tell others what the collection is about"/>
                         </Item>
                         <Item
                             label="Mint Price"
                             name="mintPrice"
+                            rules={[
+                                () => ({
+                                    validator(_, val) {
+                                        if(val==="" || (val>0 && val<10000)) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject('mintPrice should be greater than 0 and less than 10000');
+                                    }
+                                })
+                            ]}
                         >
-                            <Input bordered={false} placeholder="Price per item" type="number"/>
+                            <Input type="number" bordered={false} placeholder="Price per item"/>
                         </Item>
                         <Item
                             label="Royalty"
