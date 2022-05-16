@@ -6,6 +6,7 @@ import {getConfig} from "../../config";
 import {signRule,createSeries} from "../../api/api";
 import {contract, parseAmount, sign, encodeImageToBlurhash} from "../../utils/util";
 import store from "../../store/discordInfo";
+import icon_upload from '../../assets/images/icon-upload.png';
 
 const config = getConfig()
 
