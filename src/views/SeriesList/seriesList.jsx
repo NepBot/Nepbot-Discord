@@ -18,6 +18,7 @@ import no_data from '../../assets/images/no-data.png';
 const config = getConfig()
 
 function Series(props) {
+    let account = {}
     const [seriesList, setSeriesList] = useState([]);
     const [addDialogStatus, setAddDialogStatus] = useState(false);
     const [collectionId, setCollectionId] = useState("")
@@ -38,6 +39,8 @@ function Series(props) {
             const collectionId = props.match.params.id
             setCollectionId(collectionId)
             setCollectionName(collectionId.split(":")[1].split("-")[0])
+            account = wallet.account()
+            handleData()
         })();
         return () => {
         }
@@ -45,8 +48,8 @@ function Series(props) {
 
     const handleData = async (data) => {
         //get_token_metadata
-        const data = await account.viewFunction(config.NFT_CONTRACT, 'get_token_metadata', {hash: collectionId})
-        setSeriesList(data)
+        const res = await account.viewFunction(config.NFT_CONTRACT, 'get_token_metadata', {hash: collectionId})
+        setSeriesList(res)
         return data;
     }
 
