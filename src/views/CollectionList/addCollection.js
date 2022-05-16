@@ -1,16 +1,18 @@
 import React,{useState} from 'react';
-import {Modal, Form, Input, Button,Select, Dragger, Upload,message} from "antd";
+import {Modal, Form, Input, Button,Select, Upload,message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
 import {signRule,createCollection, getCollection} from "../../api/api";
 import {contract, parseAmount, sign} from "../../utils/util";
 import store from "../../store/discordInfo";
-import js_sha256 from "js-sha256"
+import js_sha256 from "js-sha256";
+import icon_upload from '../../assets/images/icon-upload.png';
 
 const config = getConfig()
 
 const { Item } = Form;
 const { Option } = Select;
+const { Dragger } = Upload;
 function AddCollection(props) {
     const [form] = Form.useForm();
     const [confirmLoading, setConfirmLoading] = useState(false);
@@ -37,7 +39,7 @@ function AddCollection(props) {
         await form.validateFields();
         setConfrimModalStatus(true);
     }
-    const submit= async () => {
+    const submitForm= async () => {
         try {
             const values = await form.validateFields();
             // setConfirmLoading(true);
@@ -137,15 +139,15 @@ function AddCollection(props) {
     
 
     function beforeUpload(file) {
-        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-        if (!isJpgOrPng) {
-          message.error('You can only upload JPG/PNG file!');
+        const isAllowType = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png'|| file.type === 'image/gif' || file.type === 'image/svg+xml';
+        if (!isAllowType) {
+          message.error('You can only upload JPG/JPEG/PNG/GIF/SVG file!');
         }
-        const isLt2M = file.size / 1024 / 1024 < 2;
-        if (!isLt2M) {
-          message.error('Image must smaller than 2MB!');
+        const isLt1M = file.size / 1024 / 1024 < 1;
+        if (!isLt1M) {
+          message.error('Image must smaller than 1MB!');
         }
-        return isJpgOrPng && isLt2M;
+        return isAllowType && isLt1M;
     }
 
     function getBase64(img, callback) {
@@ -174,37 +176,41 @@ function AddCollection(props) {
         return e && e.fileList;
     };
 
+    function UploadIntro(){
+        return <div className={'upload-intro'}>
+            <img className={'icon-upload'} src={icon_upload} alt="iconUpload" />
+            <div className={'upload-intro-txt'}>Drag and drop files to upload</div>
+            <span>or</span>
+            <div className={'upload-intro-btn'}>Browse</div>
+        </div>
+    }
     function UploadLogoContent(){
         if(logo_url){
-            return <img className={'logo-preview'} src={logo_url} alt="logo" style={{ width: '100%' }} />
+            return <img className={'logo-preview'} src={logo_url} alt="logo" />
         }else{
-            return <div>
-                click to upload logo
-            </div>
+            return <UploadIntro/>
         }
     }
     function UploadCoverContent(){
         if(cover_url){
-            return <img className={'cover-preview'} src={cover_url} alt="cover" style={{ width: '100%' }} />
+            return <img className={'cover-preview'} src={cover_url} alt="cover"/>
         }else{
-            return <div>
-                click to upload cover
-            </div>
+            return <UploadIntro/>
         }
     }
     function Royalty(){
         const setRoyaltyItems = royaltyList.map((item,index) => {
             return <div key={index} className={'royalty-item'}>
 				<div className={'royalty-account'}>
-					<Form.Item name={['royaltyList',index,'account']} noStyle>
-                        <Input bordered={false} placeholder="Account ID" onChange={(event)=>onChange(index,'account',event)}/>
-                    </Form.Item>
+					<Item name={['royaltyList',index,'account']} noStyle>
+                        <Input bordered={false} placeholder="Account ID" onBlur={(event)=>onChange(index,'account',event)}/>
+                    </Item>
 				</div>
 				<div className={'royalty-amount'}>
                     <div className={'royalty-amount-content'}>
-                        <Form.Item name={['royaltyList',index,'amount']} noStyle>
-                            <Input bordered={false} placeholder="0" onChange={(event)=>onChange(index,'amount',event)}/>
-                        </Form.Item>
+                        <Item name={['royaltyList',index,'amount']} noStyle>
+                            <Input bordered={false} placeholder="0" onBlur={(event)=>onChange(index,'amount',event)}/>
+                        </Item>
                     </div>
                 </div>
 				<div className={['form-remove-button', (index===0) ? 'hidden' : ''].join(' ')} onClick={()=>del(index)}></div>
@@ -250,7 +256,7 @@ function AddCollection(props) {
                         <div className={'btn cancel'} onClick={()=>{ setConfrimModalStatus(false) }}>
                             cancel
                         </div>
-                        <div className={'btn ok'} onClick={submit}>
+                        <div className={'btn ok'} onClick={submitForm}>
                             ok
                         </div>
                     </div>
@@ -297,7 +303,10 @@ function AddCollection(props) {
                                         })
                                     ]}
                                 >
-                                    <Upload
+                                    <Dragger name="upload_logo" beforeUpload={beforeUpload} customRequest={uploadLogo}>
+                                        <UploadLogoContent/>
+                                    </Dragger>
+                                    {/* <Upload
                                         name="upload_logo"
                                         listType="picture-card"
                                         className="logo-uploader"
@@ -308,7 +317,7 @@ function AddCollection(props) {
                                         customRequest={uploadLogo}
                                     >
                                         <UploadLogoContent/>
-                                    </Upload>
+                                    </Upload> */}
                                 </Item>
                                 <div className={'upload-tip'}>JPG/JPEG/ PNG/GIF/SVG. Max size:1MB.</div>
                             </div>
@@ -330,7 +339,10 @@ function AddCollection(props) {
                                         })
                                     ]}
                                 >
-                                    <Upload
+                                    <Dragger name="upload_cover" beforeUpload={beforeUpload} customRequest={uploadCover}>
+                                        <UploadCoverContent/>
+                                    </Dragger>
+                                    {/* <Upload
                                         name="upload_cover"
                                         listType="picture-card"
                                         className="cover-uploader"
@@ -341,7 +353,7 @@ function AddCollection(props) {
                                         customRequest={uploadCover}
                                     >
                                         <UploadCoverContent/>
-                                    </Upload>
+                                    </Upload> */}
                                    
                                 </Item>
                                 <div className={'upload-tip'}>JPG/JPEG/ PNG/GIF/SVG. Max size:1MB.</div>

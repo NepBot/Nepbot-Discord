@@ -185,16 +185,14 @@
     border: 1px solid rgba(255,255,255,0.16)!important;
     border-radius: 8px!important;
     height:50px;
-    line-height:48px;
     padding:0 20px!important;
 }
 .collection-modal .ant-select .ant-select-selection-overflow{
-    height:48px;
-    line-height:48px;
     border: 0!important;
     padding-right:20px;
     background:url('../../assets/images/setRule/arrow-bottom.png') no-repeat right center;
     background-size:12px 12px;
+    align-items: center;
 }
 .collection-modal .ant-select.ant-select-open .ant-select-selection-overflow{
     background:url('../../assets/images/setRule/arrow-top.png') no-repeat right center;
@@ -231,7 +229,31 @@
     width:936px!important;
     background: rgba(255,255,255,0.07)!important;
 }
-.collection-modal-role-dropdown .ant-empty-description{
+.collection-modal .ant-select-multiple .ant-select-selection-item{
+    margin-right:10px;
+    height:30px;
+    line-height: 30px;
+    background: rgba(78,81,112,0.24);
+    border-radius: 4px;
+    padding:0 8px  0 10px;
+}
+.collection-modal .ant-select-multiple .ant-select-selection-item-content{
+    margin-right:10px;
+    font-family: Gilroy-Regular;
+    font-size: 16px;
+    color: #FFFFFF;
+    font-weight: 400;
+}
+.collection-modal .ant-select-selection-item-remove{
+    width:12px;
+    height:28px;
+    background:url('../../assets/images/icon-remove.png') no-repeat center center;
+    background-size:12px;
+}
+.collection-modal .ant-select-selection-item-remove .anticon-close{
+    display:none;
+}
+.collection-modal .ant-empty-description{
     font-family: Gilroy-Regular;
     font-size: 14px;
     color: #FFFFFF!important;

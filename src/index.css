@@ -193,7 +193,7 @@ img{
 .my-modal-content .ant-form-item-label label::before,.my-modal-content .ant-form-item-label label::after{
   display: none!important;
 }
-.my-modal-content .ant-form-item-label>label.ant-form-item-required::after{
+.my-modal-content .ant-form-item-label>label.ant-form-item-required::after,.my-modal-content .upload-logo .ant-form-item-label>label::after,.my-modal-content .upload-cover .ant-form-item-label>label::after{
   display: inline-block!important;
   margin-left: 8px;
   width:12px;
@@ -209,17 +209,23 @@ img{
 .my-modal-content .my-modal-upload-box .ant-form-item{
   margin-bottom:0;
 }
-.my-modal-content .ant-upload.ant-upload-select-picture-card{
+.my-modal-content .ant-upload.ant-upload-drag{
   width:326px;
   height:326px;
   margin-right: 30px;
   margin-bottom: 12px;
   border:0;
-  background: rgba(78,81,112,0.24);
+  background: rgba(78,81,112,0.24)!important;
   border-radius: 16px;
   overflow: hidden;
 }
-.my-modal-content .upload-cover .ant-upload.ant-upload-select-picture-card{
+.my-modal-content .ant-upload.ant-upload-btn{
+  padding:0!important;
+}
+.my-modal-content .ant-upload-list{
+  display:none;
+}
+.my-modal-content .upload-cover .ant-upload.ant-upload-drag{
   width:580px;
   margin-right: 0;
 }
@@ -233,12 +239,35 @@ img{
   height:326px;
   object-fit: cover;
 }
-.my-modal-content .ant-upload>div{
+.my-modal-content .ant-upload .upload-intro{
+  font-family: Gilroy-Regular;
+  font-size: 14px;
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  font-weight: 400;
+}
+.my-modal-content .upload-intro .icon-upload{
+  width:60px;
+  height:60px;
+}
+.my-modal-content .upload-intro .upload-intro-txt{
+  margin:20px 0 16px;
   font-family: Gilroy-Bold;
   font-size: 14px;
   color: #FFFFFF;
   text-align: center;
   font-weight: 700;
+  line-height:17px;
+}
+.my-modal-content .upload-intro .upload-intro-btn{
+  margin:16px auto 0;
+  width:120px;
+  height:44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 8px;
 }
 .my-modal-content .upload-tip{
   opacity: 0.4;

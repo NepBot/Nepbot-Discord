@@ -1,13 +1,15 @@
 import React,{useState} from 'react';
-import {Modal, Form, Input, Button, Dragger, Upload,message} from "antd";
+import {Form, Input, Upload,message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
 import {signRule,createSeries} from "../../api/api";
 import {contract, parseAmount, sign} from "../../utils/util";
+import icon_upload from '../../assets/images/icon-upload.png';
 
 const config = getConfig()
 
 const { Item } = Form;
+const { Dragger } = Upload;
 function AddSeries(props) {
     const [form] = Form.useForm();
     const [confirmLoading, setConfirmLoading] = useState(false);
@@ -91,15 +93,15 @@ function AddSeries(props) {
     
 
     function beforeUpload(file) {
-        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-        if (!isJpgOrPng) {
-          message.error('You can only upload JPG/PNG file!');
+        const isAllowType = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png'|| file.type === 'image/gif' || file.type === 'image/svg+xml';
+        if (!isAllowType) {
+          message.error('You can only upload JPG/JPEG/PNG/GIF/SVG file!');
         }
-        const isLt2M = file.size / 1024 / 1024 < 2;
-        if (!isLt2M) {
-          message.error('Image must smaller than 2MB!');
+        const isLt1M = file.size / 1024 / 1024 < 1;
+        if (!isLt1M) {
+          message.error('Image must smaller than 1MB!');
         }
-        return isJpgOrPng && isLt2M;
+        return isAllowType && isLt1M;
     }
 
     function getBase64(img, callback) {
@@ -124,10 +126,13 @@ function AddSeries(props) {
 
     function UploadImageContent(){
         if(image_url){
-            return <img className={'logo-preview'} src={image_url} alt="image" style={{ width: '100%' }} />
+            return <img className={'logo-preview'} src={image_url} alt="image" />
         }else{
-            return <div>
-                click to upload image
+            return <div className={'upload-intro'}>
+                <img className={'icon-upload'} src={icon_upload} alt="iconUpload" />
+                <div className={'upload-intro-txt'}>Drag and drop files to upload</div>
+                <span>or</span>
+                <div className={'upload-intro-btn'}>Browse</div>
             </div>
         }
     }
@@ -136,12 +141,12 @@ function AddSeries(props) {
             return <div key={index} className={'attribute-item'}>
 				<div className={'attribute-type'}>
 					<Form.Item name={['attributeList',index,'type']} noStyle>
-                        <Input placeholder="Account ID" onChange={(event)=>onChange(index,'type',event)}/>
+                        <Input placeholder="Account ID" onBlur={(event)=>onChange(index,'type',event)}/>
                     </Form.Item>
 				</div>
 				<div className={'attribute-value'}>
 					<Form.Item name={['attributeList',index,'value']} noStyle>
-                        <Input placeholder="0" onChange={(event)=>onChange(index,'value',event)}/>
+                        <Input placeholder="0" onBlur={(event)=>onChange(index,'value',event)}/>
                     </Form.Item>
 				</div>
                 <div className={['form-remove-button', (index===0) ? 'hidden' : ''].join(' ')} onClick={()=>del(index)}></div>
@@ -197,15 +202,17 @@ function AddSeries(props) {
                                             if(image) {
                                                 return Promise.resolve();
                                             }
-                                            return Promise.reject('upload cover');
+                                            return Promise.reject('upload Image');
                                         }
                                     })
                                 ]}
                             >
-                                <Upload
+                                <Dragger name="upload_cover" beforeUpload={beforeUpload} customRequest={uploadImage}>
+                                    <UploadImageContent/>
+                                </Dragger>
+                                {/* <Upload
                                     name="upload_cover"
                                     listType="picture-card"
-                                    className="cover-uploader"
                                     showUploadList={false}
                                     // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                                     beforeUpload={beforeUpload}
@@ -213,7 +220,7 @@ function AddSeries(props) {
                                     customRequest={uploadImage}
                                 >
                                     <UploadImageContent/>
-                                </Upload>
+                                </Upload> */}
                                 
                             </Item>
                             <div className={'upload-tip'}>JPG/JPEG/ PNG/GIF/SVG. Max size:1MB.</div>
