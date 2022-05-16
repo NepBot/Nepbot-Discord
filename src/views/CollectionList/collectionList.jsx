@@ -83,8 +83,9 @@ function Collection(props) {
             const collectionData = await getCollection(collection.outer_collection_id)
             if (collectionData && collectionData.results.length > 0) {
                 wrappedCollections.push({
-                    collection_id: collection.collection_id,
-                    outer_collection_id: collection.outer_collection_id
+                    // collection_id: collection.collection_id,
+                    // outer_collection_id: collection.outer_collection_id,
+                    ...collection
                 })
             }
         }
@@ -116,11 +117,11 @@ function Collection(props) {
                         <div className={'user'}>
                             <img className={'avatar'} alt="avatar" src={no_data}/>
                             <div className={'user-info'}>
-                                <div className={'name txt-wrap'}>irl#2869</div>
+                                <div className={'name txt-wrap'}>{item.description}</div>
                                 <div className={'account txt-wrap'}>Daisy</div>
                             </div>
                         </div>
-                        <div className={'desc txt-wrap'}>Text Text Text Text Text Text  xt Text Text Text Text Text…</div>
+                        <div className={'desc txt-wrap'}>{item.description}</div>
                         <div className={'roles'}>
                             <div className="item">Near</div>
                             <div className="item">Oct</div>
@@ -128,7 +129,7 @@ function Collection(props) {
                         <div className={'bottom-info'}>
                             <div className={'mod price'}>
                                 Price
-                                <div className="val">0.052</div>
+                                <div className="val">{item.price}</div>
                             </div>
                             <div className={'line'}></div>
                             <div className={'mod royality'}>
