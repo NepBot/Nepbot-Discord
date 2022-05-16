@@ -95,6 +95,20 @@ function Collection(props) {
         return data;
     }
 
+    function Roles(props){
+        if(props.roles.length>0){
+            const setRoles = props.roles.map((item,index) => 
+                <div className="item">{item}</div>
+            );
+            return (<div className={'roles'}>
+                {setRoles}
+            </div>)
+        }
+        else{
+            return ""
+        }
+    }
+
     const handleAddStatus = useCallback(async () => {
         if (!addDialogStatus) {
 
@@ -113,7 +127,7 @@ function Collection(props) {
         if(collectionList.length>0){
             const collectionItems = collectionList.map((item,index) => 
                 <div className={['collection-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()} onClick={() => handleSeriesList(item)}>
-                    <img className={'cover'} alt="cover" src={no_data}/>
+                    <img className={'cover'} alt="cover" src={item.cover}/>
                     <div className={'info'}>
                         <div className={'user'}>
                             <img className={'avatar'} alt="avatar" src={no_data}/>
@@ -123,10 +137,7 @@ function Collection(props) {
                             </div>
                         </div>
                         <div className={'desc txt-wrap'}>{item.description}</div>
-                        <div className={'roles'}>
-                            <div className="item">Near</div>
-                            <div className="item">Oct</div>
-                        </div>
+                        <Roles roles={item.mintable_roles}></Roles>
                         <div className={'bottom-info'}>
                             <div className={'mod price'}>
                                 Price

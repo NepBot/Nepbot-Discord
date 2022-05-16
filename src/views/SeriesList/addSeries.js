@@ -176,12 +176,12 @@ function AddSeries(props) {
             return <div key={index} className={'attribute-item'}>
 				<div className={'attribute-type'}>
 					<Form.Item name={['attributeList',index,'type']} noStyle>
-                        <Input placeholder="Account ID" onBlur={(event)=>onChange(index,'type',event)}/>
+                        <Input bordered={false} placeholder="Type" onBlur={(event)=>onChange(index,'type',event)}/>
                     </Form.Item>
 				</div>
 				<div className={'attribute-value'}>
 					<Form.Item name={['attributeList',index,'value']} noStyle>
-                        <Input placeholder="0" onBlur={(event)=>onChange(index,'value',event)}/>
+                        <Input bordered={false} placeholder="Value" onBlur={(event)=>onChange(index,'value',event)}/>
                     </Form.Item>
 				</div>
                 <div className={['form-remove-button', (index===0) ? 'hidden' : ''].join(' ')} onClick={()=>del(index)}></div>
@@ -245,18 +245,6 @@ function AddSeries(props) {
                                 <Dragger name="upload_cover" beforeUpload={beforeUpload} customRequest={uploadImage}>
                                     <UploadImageContent/>
                                 </Dragger>
-                                {/* <Upload
-                                    name="upload_cover"
-                                    listType="picture-card"
-                                    showUploadList={false}
-                                    // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                    beforeUpload={beforeUpload}
-                                    // onChange={handleChange}
-                                    customRequest={uploadImage}
-                                >
-                                    <UploadImageContent/>
-                                </Upload> */}
-                                
                             </Item>
                             <div className={'upload-tip'}>JPG/JPEG/ PNG/GIF/SVG. Max size:1MB.</div>
                         </div>
@@ -266,21 +254,21 @@ function AddSeries(props) {
                             name="name"
                             rules={[{ required: true, message: 'Enter a name' }]}
                         >
-                            <Input bordered={false}/>
+                            <Input bordered={false} placeholder="Item name"/>
                         </Item>
                         <Item
                             label="Description"
                             name="description"
                             rules={[{ required: true, message: 'Enter a description' }]}
                         >
-                            <Input bordered={false}/>
+                            <Input bordered={false} placeholder="Provide a detailed description of your item."/>
                         </Item>
                         <Item
                             label="Number of copies"
                             name="copyNumber"
                             rules={[{ required: true, message: 'Enter copy number' }]}
                         >
-                            <Input bordered={false} type="number"/>
+                            <Input bordered={false} placeholder="The number of items that can be minted." type="number"/>
                         </Item>
                         <Item
                             label="Attribute"
