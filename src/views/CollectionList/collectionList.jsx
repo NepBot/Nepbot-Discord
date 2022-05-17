@@ -70,6 +70,7 @@ function Collection(props) {
             setOperationSign(operationSign)
             store.set("operationSign", operationSign, { expires: 1 })
             const server = await getServer(search.guild_id);
+            console.log(server)
             setServer(server);
             account = wallet.account()
             handleData();
@@ -211,7 +212,7 @@ function Collection(props) {
                 </div>
             </div>
             <CollectionList/>
-            <AddCollection  visible={addDialogStatus} roleList={roleList}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
+            <AddCollection  visible={addDialogStatus} server={server} roleList={roleList}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
         </div>
     );
 }

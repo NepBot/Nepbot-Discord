@@ -54,7 +54,7 @@ function AddCollection(props) {
             const near = await connect(config);
             const wallet = new WalletConnection(near,"nepbot");
             const account = wallet.account() 
-            const outerCollectionId = `${values.name}-by-${config.ACCOUNT_ID.replace(".", "")}`
+            const outerCollectionId = `${values.name}-${props.server.name}-by-${config.NFT_CONTRACT.replace(".", "")}`
             const collection = await getCollection(outerCollectionId)
             if (!collection || collection.results.length > 0) {
                 message.error("-----");
@@ -65,9 +65,9 @@ function AddCollection(props) {
             let params = {
                 args: {
                     args: {
-                        collection: values.name,
+                        collection: `${values.name}-${props.server.name}`,
                         description:values.description,
-                        creator_id: config.ACCOUNT_ID,
+                        creator_id: config.NFT_CONTRACT,
                         twitter: "",
                         website: "",
                         discord: "",

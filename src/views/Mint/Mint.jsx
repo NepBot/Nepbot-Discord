@@ -32,6 +32,9 @@ export default function Success(props) {
                 wallet.requestSignIn(config.RULE_CONTRACT, "nepbot")
                 return
             }
+
+            
+
             const accountId = wallet.getAccountId()
             const args = {
                 user_id: search.user_id,
@@ -42,7 +45,7 @@ export default function Success(props) {
             const signature = await sign(wallet.account(), args)
             const _sign = getMintSign({
                 args: args,
-                accountId: accountId,
+                account_id: accountId,
                 sign: signature
             })
 
