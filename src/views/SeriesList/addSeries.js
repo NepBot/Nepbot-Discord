@@ -176,12 +176,12 @@ function AddSeries(props) {
             return <div key={index} className={'attribute-item'}>
 				<div className={'attribute-type'}>
 					<Form.Item name={['attributeList',index,'type']} noStyle>
-                        <Input bordered={false} placeholder="Type" onBlur={(event)=>onChange(index,'type',event)}/>
+                        <Input.TextArea  maxLength={20} autoSize={{ minRows: 1,maxRows:1}} bordered={false} placeholder="Type" onBlur={(event)=>onChange(index,'type',event)}/>
                     </Form.Item>
 				</div>
 				<div className={'attribute-value'}>
 					<Form.Item name={['attributeList',index,'value']} noStyle>
-                        <Input bordered={false} placeholder="Value" onBlur={(event)=>onChange(index,'value',event)}/>
+                        <Input.TextArea  maxLength={20} autoSize={{ minRows: 1,maxRows:1}} bordered={false} placeholder="Value" onBlur={(event)=>onChange(index,'value',event)}/>
                     </Form.Item>
 				</div>
                 <div className={['form-remove-button', (index===0) ? 'hidden' : ''].join(' ')} onClick={()=>del(index)}></div>
@@ -218,8 +218,6 @@ function AddSeries(props) {
                     <Form
                         form={form}
                         name="basic"
-                        labelCol={{ span: 8 }}
-                        wrapperCol={{ span: 14 }}
                         onFinish={onFinish}
                         onFinishFailed={onFinishFailed}
                         autoComplete="off"
@@ -254,19 +252,29 @@ function AddSeries(props) {
                             name="name"
                             rules={[{ required: true, message: 'Enter a name' }]}
                         >
-                            <Input bordered={false} placeholder="Item name"/>
+                            <Input.TextArea showCount={true} maxLength={10} autoSize={{ minRows: 1,maxRows:1}} bordered={false} placeholder="Item name"/>
                         </Item>
                         <Item
                             label="Description"
                             name="description"
                             rules={[{ required: true, message: 'Enter a description' }]}
                         >
-                            <Input bordered={false} placeholder="Provide a detailed description of your item."/>
+                            <Input.TextArea showCount={true} maxLength={500}  autoSize={{ minRows: 1}} bordered={false} placeholder="Provide a detailed description of your item."/>
                         </Item>
                         <Item
                             label="Number of copies"
                             name="copyNumber"
-                            rules={[{ required: true, message: 'Enter copy number' }]}
+                            rules={[
+                                { required: true, message: 'Enter copy number' },
+                                () => ({
+                                    validator(_, val) {
+                                        if(val==="" || (val>0 && val<1000000 && val%1 === 0)) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject('Number of copies should be an integer greater than 0 and less than 1000000');
+                                    }
+                                })
+                            ]}
                         >
                             <Input bordered={false} placeholder="The number of items that can be minted." type="number"/>
                         </Item>
