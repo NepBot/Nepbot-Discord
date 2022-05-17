@@ -23,7 +23,7 @@ function Series(props) {
     const [searchStr] =  useState("");
     const [showList, setShowList] = useState([]);
     const [seriesList, setSeriesList] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [addDialogStatus, setAddDialogStatus] = useState(false);
     const [collectionId, setCollectionId] = useState("")
     const [collectionName, setCollectionName] = useState("")

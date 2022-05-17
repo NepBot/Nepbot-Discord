@@ -57,8 +57,8 @@ function AddCollection(props) {
             const outerCollectionId = `${values.name}-${props.server.name}-by-${config.NFT_CONTRACT.replace(".", "")}`
             const collection = await getCollection(outerCollectionId)
             if (!collection || collection.results.length > 0) {
-                message.error("-----");
-                return
+                message.error("Collection name has already been taken");
+                return;
             }
             
             //formData
@@ -140,11 +140,11 @@ function AddCollection(props) {
     function beforeUpload(file) {
         const isAllowType = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png'|| file.type === 'image/gif' || file.type === 'image/svg+xml';
         if (!isAllowType) {
-          message.error('You can only upload JPG/JPEG/PNG/GIF/SVG file!');
+          message.error('Image must be a file of type: jpeg, jpg, png, gif, svg.');
         }
         const isLt1M = file.size / 1024 / 1024 < 1;
         if (!isLt1M) {
-          message.error('Image must smaller than 1MB!');
+          message.error('File size exceeded（maximum is 1MB）');
         }
         return isAllowType && isLt1M;
     }
@@ -227,7 +227,7 @@ function AddCollection(props) {
 			tempArray[index] = {...tempArray[index],account:event.target.value}
 		}else{
             if(event.target.value<0){
-                message.error("Please enter a number greater than 0")
+                message.error("Minimum number is 0")
                 return false;
             }
             let total = Number(event.target.value);
@@ -235,7 +235,7 @@ function AddCollection(props) {
                 total+=Number(item.amount)
             })
             if(total>90){
-                message.error("The sum of royalty should be less than 90")
+                message.error("Maximum number of total royalty is 90%")
                 return false;
             }
 			tempArray[index] = {...tempArray[index],amount:event.target.value}

@@ -19,7 +19,7 @@ const config = getConfig()
 function Collection(props) {
     let account = {}
     const guildData = qs.parse(props.location.search.slice(1));
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [collectionList, setCollectionList] = useState([]);
     const [addDialogStatus, setAddDialogStatus] = useState(false);
     const [operationSign, setOperationSign] = useState("")

@@ -136,11 +136,11 @@ function AddSeries(props) {
     function beforeUpload(file) {
         const isAllowType = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png'|| file.type === 'image/gif' || file.type === 'image/svg+xml';
         if (!isAllowType) {
-          message.error('You can only upload JPG/JPEG/PNG/GIF/SVG file!');
+            message.error('Image must be a file of type: jpeg, jpg, png, gif, svg.');
         }
         const isLt1M = file.size / 1024 / 1024 < 1;
         if (!isLt1M) {
-          message.error('Image must smaller than 1MB!');
+            message.error('File size exceeded（maximum is 1MB）');
         }
         return isAllowType && isLt1M;
     }
