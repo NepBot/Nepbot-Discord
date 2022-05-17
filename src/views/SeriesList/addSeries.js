@@ -47,11 +47,9 @@ function AddSeries(props) {
                     attribute_list.push(item);
                 }else if((item.trait_type && !item.value) || (!item.trait_type && item.value)){
                     if(!item.trait_type){
-                        console.log(document.getElementsByClassName("attribute-type-tip"+index));
                         document.getElementsByClassName("attribute-type-tip"+index)[0].style.display = "block";
                         isAccess = false
                     }else if(!item.value){
-                        console.log(document.getElementsByClassName("attribute-value-tip"+index));
                         document.getElementsByClassName("attribute-value-tip"+index)[0].style.display = "block";
                         isAccess = false
                     }
@@ -101,12 +99,10 @@ function AddSeries(props) {
                 account_id: account.accountId
             }
             const _sign = await signRule(msg);
-            console.log(_sign,'_sign__________'); 
             if (!operationSign) {
                 history.push({pathname: '/linkexpired', })
                 return
             }
-            // console.log("copies:",String(values.copies)); return;
             await account.functionCall({
                 contractId: config.NFT_CONTRACT,
                 methodName: "add_token_metadata",
@@ -228,7 +224,6 @@ function AddSeries(props) {
 		form.setFieldsValue({"attributeList":[...attributeList,{trait_type:'',value:''}]})
 		// return 
         setAttributeList([...attributeList,{trait_type:'',value:''}])
-        console.log(attributeList);
 	}
     const del = (index)=>{
 		form.setFieldsValue({"attributeList":[...attributeList.slice(0,index),...attributeList.slice(index+1)]})

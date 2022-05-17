@@ -23,6 +23,7 @@ function AddCollection(props) {
     const [logo, setLogo] = useState(null);
     const [cover, setCover] = useState(null);
     const [royaltyList,setRoyaltyList] = useState([{account:'',amount:''}])
+    const [royalty,setRoyalty] = useState({})
     const history = useHistory()
     const [showConfirmModal, setConfrimModalStatus] = useState(false);
     // const [isParas, setParas] = useState(false)
@@ -32,43 +33,39 @@ function AddCollection(props) {
         const _wallet = new WalletConnection(_near,1);
         const account = await _wallet.account();
         const rule= await account.viewFunction(config.RULE_CONTRACT,'get_guild', {guild_id:values.guild_id});
-        console.log(rule);
     };
 
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
     const onCheck = async () => {
+        const values = await form.getFieldValue();
+        const royalty_list = {};
+        let isAccess = true;
+        values.royaltyList.forEach((royalty,index)=>{
+            if(royalty.account && royalty.amount){
+                royalty_list[royalty.account] = royalty.amount * 100;
+            }else if((royalty.account && !royalty.amount) || (!royalty.account && royalty.amount)){
+                if(!royalty.account){
+                    document.getElementsByClassName("royalty-account-tip"+index)[0].style.display = "block";
+                    isAccess = false
+                }else if(!royalty.amount){
+                    document.getElementsByClassName("royalty-amount-tip"+index)[0].style.display = "block";
+                    isAccess = false
+                }
+            }
+        })
         await form.validateFields();
+        if(!isAccess){return}
+        setRoyalty(royalty_list)
         setConfrimModalStatus(true);
     }
     const submitForm= async () => {
+        if(confirmLoading){
+            return;
+        }
         try {
-            if(confirmLoading){
-                return;
-            }
-            const royalty_list = {};
-            let isAccess = true;
-            
             const values = await form.validateFields();
-            values.royaltyList.forEach((royalty,index)=>{
-                if(royalty.account && royalty.amount){
-                    royalty_list[royalty.account] = royalty.amount * 100;
-                }else if((royalty.account && !royalty.amount) || (!royalty.account && royalty.amount)){
-                    if(!royalty.account){
-                        console.log(document.getElementsByClassName("royalty-account-tip"+index));
-                        document.getElementsByClassName("royalty-account-tip"+index)[0].style.display = "block";
-                        isAccess = false
-                    }else if(!royalty.amount){
-                        console.log(document.getElementsByClassName("royalty-amount-tip"+index));
-                        document.getElementsByClassName("royalty-amount-tip"+index)[0].style.display = "block";
-                        isAccess = false
-                    }
-                }
-            })
-            if(!isAccess){return}
-
-            
             const info = store.get("info")
             const operationSign = store.get("operationSign")
             setConfirmLoading(true);
@@ -101,10 +98,6 @@ function AddCollection(props) {
             }
             params.sign = await sign(account, params.args)
             const formData = new FormData();
-            // Object.keys(params).forEach((key) => {
-            //     formData.append(key, params[key]);
-            // });
-            //console.log(values,formData,'---formData----');
             formData.append('files',values['logo'][0]['originFileObj'])
             formData.append('files',values['cover'][0]['originFileObj'])
             formData.append('args', JSON.stringify(params))
@@ -137,7 +130,7 @@ function AddCollection(props) {
                     outer_collection_id: res.collection_id,
                     contract_type: "paras",
                     guild_id: info.guild_id,
-                    royalty:royalty_list,
+                    royalty:royalty,
                     mintable_roles: values.role_id,
                     price: parseAmount(values.mintPrice) || "0",
                     ..._sign
@@ -227,8 +220,8 @@ function AddCollection(props) {
                         <Item name={['royaltyList',index,'amount']} noStyle>
                             <Input type="number" bordered={false} placeholder="0" onBlur={(event)=>onChange(index,'amount',event)}/>
                         </Item>
-                        <div className={'royalty-tip royalty-amount-tip'+index}>Enter a number</div>
                     </div>
+                    <div className={'royalty-tip royalty-amount-tip'+index}>Enter a number</div>
                 </div>
 				<div className={['form-remove-button', (index===0 && royaltyList.length<=1) ? 'hidden' : ''].join(' ')} onClick={()=>del(index)}></div>
 			</div>
@@ -264,7 +257,6 @@ function AddCollection(props) {
 		form.setFieldsValue({"royaltyList":[...royaltyList,{account:'',amount:''}]})
 		// return 
         setRoyaltyList([...royaltyList,{account:'',amount:''}])
-        console.log(royaltyList);
 	}
     const del = (index)=>{
 		form.setFieldsValue({"royaltyList":[...royaltyList.slice(0,index),...royaltyList.slice(index+1)]})

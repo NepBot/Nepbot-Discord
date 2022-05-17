@@ -70,7 +70,6 @@ function Collection(props) {
             setOperationSign(operationSign)
             store.set("operationSign", operationSign, { expires: 1 })
             const server = await getServer(search.guild_id);
-            console.log(server)
             setServer(server);
             account = wallet.account()
             handleData();
@@ -98,7 +97,6 @@ function Collection(props) {
             let wrappedCollections = []
             for (let collection of collections) {
                 const collectionData = await getCollection(collection.outer_collection_id)
-                // console.log(collection,collectionData,'---collectionData---');
                 if (collectionData && collectionData.results.length > 0) {
                     // const userInfo = await getUser(info.guild_id, info.user_id)
                     let royaltyTotal = 0;
@@ -119,7 +117,6 @@ function Collection(props) {
                     })
                 }
             }
-            console.log(wrappedCollections,'---wrappedCollections----');
             setCollectionList(wrappedCollections)
         } catch(e) {}
         setIsLoading(false);

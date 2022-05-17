@@ -54,11 +54,9 @@ function Series(props) {
         //get_token_metadata
         try{
             setIsLoading(true);
-            // console.log(collectionId)
             const res = await account.viewFunction(config.NFT_CONTRACT, 'get_token_metadata', {collection_id: props.match.params.id})
             setSeriesList(res)
             setShowList(res)
-            console.log(res); 
             
         }catch(e) {
             console.log(e);
