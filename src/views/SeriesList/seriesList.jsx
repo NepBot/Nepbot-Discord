@@ -81,12 +81,16 @@ function Series(props) {
         setShowList(list);
     }
 
+    const handleSeries = (id) => {
+        window.open(`https://testnet.paras.id/token/paras-token-v2.testnet::${id}`,'_blank')
+    }
+
 
 
     function SeriesList(){
         if(showList.length>0){
             const seriesItems = showList.map((item,index) => 
-                <div className={['series-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()}>
+                <div className={['series-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()} onClick={() => handleSeries(item.token_series_id)}>
                     <img className={'cover'} alt="cover" src={'https://ipfs.fleek.co/ipfs/'+item.metadata.media}/>
                     <div className={'info'}>
                         <div className={'name txt-wrap'}>{item.metadata.title}</div>

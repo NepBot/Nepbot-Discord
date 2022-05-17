@@ -4,7 +4,8 @@ import store from "../../store/discordInfo";
 import {sign} from "../../utils/util";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
-import './Loading.css';
+import qs from "qs";
+import './Mint.css';
 import load from '../../assets/images/load.gif';
 
 const config = getConfig()
@@ -23,6 +24,7 @@ export default function Success(props) {
 
             const near = await connect(config);
             const wallet = new WalletConnection(near, 'nepbot');
+            const account = wallet.account() 
 
             try {
                 await wallet._completeSignInWithAccessKey()
@@ -45,6 +47,7 @@ export default function Success(props) {
                 accountId: accountId,
                 sign: signature
             })
+            return;
 
             await account.functionCall({
                 contractId: config.NFT_CONTRACT,
