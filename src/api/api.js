@@ -58,18 +58,18 @@ export const getUser = async (guild_id, user_id) => {
 // }
 
 export const createCollection = async (data)=>{
-    const Authorization = await generateToken()
-    const result =  await axios.request({
-        method:"post",
-        url:`https://api-v2-${config.networkId}-master.paras.id/collections`,
-        data,
-        headers:{Authorization:Authorization}
-    })
-    // const json = await fetch(`/api/createParasCollection`, {
-    //     method:"POST",
-    //     body: data
+    // const Authorization = await generateToken()
+    // const result =  await axios.request({
+    //     method:"post",
+    //     url:`https://api-v2-${config.networkId}-master.paras.id/collections`,
+    //     data,
+    //     headers:{Authorization:Authorization}
     // })
-    // const result = await json.json()
+    const json = await fetch(`/api/createParasCollection`, {
+        method:"POST",
+        body: data
+    })
+    const result = await json.json()
     if (result.data.status == 1) {
         return result.data.data
     }
@@ -100,44 +100,24 @@ export const getCollection = async (collectionId) => {
     return false
 }
 
-// export const getRuleList = async (params)=>{
-//     return await axios.request({
-//         method:"get",
-//         url:`/role/list/${store.get('guild_id')}`,
-//         params,
-//     })
-// }
-
-// export const addRule = async (data)=>{
-//     return await axios.request({
-//         method:"post",
-//         url:"/role/add",
-//         data,
-//     })
-// }
-
-// export const delRule = async (id)=>{
-//     return await axios.request({
-//         method:"delete",
-//         url:"/role/del",
-//         data:{
-//             id,
-//         },
-//     })
-// }
-
-// export const editRule = async (data)=>{
-//     return await axios.request({
-//         method:"put",
-//         url:"/role/edit",
-//         data,
-//     })
-// }
 export const getOperationSign = async (args) => {
     const json = await fetch('/api/getOperationSign', {
         headers:{ 'Content-Type': 'application/json' },
         method:"POST",
         body:typeof args === 'string'?args:JSON.stringify(args)
+    })
+    const result = await json.json()
+    if (result.success) {
+        return result.data || true
+    }
+    return false
+}
+
+export const getMintSign = async (args) => {
+    const json = await fetch('/api/getMintSign', {
+        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        body: typeof args === 'string'?args:JSON.stringify(args)
     })
     const result = await json.json()
     if (result.success) {
