@@ -1,4 +1,5 @@
 import React, { useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom'
 import {getMintSign, setInfo} from "../../api/api";
 import store from "../../store/discordInfo";
 import {sign} from "../../utils/util";
@@ -11,6 +12,7 @@ import load from '../../assets/images/load.gif';
 const config = getConfig()
 
 export default function Success(props) {
+    const history = useHistory()
     useEffect(()=>{
 
         (async ()=>{
@@ -24,7 +26,7 @@ export default function Success(props) {
 
             const near = await connect(config);
             const wallet = new WalletConnection(near, 'nepbot');
-            const account = wallet.account() 
+            const account = wallet.account(); 
 
             try {
                 await wallet._completeSignInWithAccessKey()
@@ -41,13 +43,17 @@ export default function Success(props) {
                 collection_id: search.collection_id,
                 sign: search.sign
             }
+           
             const signature = await sign(wallet.account(), args)
-            const _sign = getMintSign({
+            const _sign = await getMintSign({
                 args: args,
-                accountId: accountId,
+                account_id: accountId,
                 sign: signature
             })
-            return;
+            if(!_sign) {
+                history.push({pathname: '/linkexpired', })
+                return
+            }
 
             await account.functionCall({
                 contractId: config.NFT_CONTRACT,
@@ -56,7 +62,7 @@ export default function Success(props) {
                     collection_id: search.collection_id,
                     ..._sign
                 },
-                attachedDeposit: '20000000000000000000000'
+                attachedDeposit: '90000000000000000000000'
             })
                 
         })();

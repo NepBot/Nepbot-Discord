@@ -204,7 +204,7 @@ function AddCollection(props) {
             return <div key={index} className={'royalty-item'}>
 				<div className={'royalty-account'}>
 					<Item name={['royaltyList',index,'account']} noStyle>
-                        <Input.TextArea maxLength={64} autoSize={{ minRows: 1,maxRows:1}} bordered={false} placeholder="Account ID" onBlur={(event)=>onChange(index,'account',event)}/>
+                        <Input maxLength={64} bordered={false} placeholder="Account ID" onBlur={(event)=>onChange(index,'account',event)}/>
                     </Item>
 				</div>
 				<div className={'royalty-amount'}>
@@ -315,7 +315,7 @@ function AddCollection(props) {
                                                 if(logo) {
                                                     return Promise.resolve();
                                                 }
-                                                return Promise.reject('upload logo');
+                                                return Promise.reject('Upload a logo');
                                             }
                                         })
                                     ]}
@@ -323,18 +323,6 @@ function AddCollection(props) {
                                     <Dragger name="upload_logo" beforeUpload={beforeUpload} customRequest={uploadLogo}>
                                         <UploadLogoContent/>
                                     </Dragger>
-                                    {/* <Upload
-                                        name="upload_logo"
-                                        listType="picture-card"
-                                        className="logo-uploader"
-                                        showUploadList={false}
-                                        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                        beforeUpload={beforeUpload}
-                                        // onChange={handleChange}
-                                        customRequest={uploadLogo}
-                                    >
-                                        <UploadLogoContent/>
-                                    </Upload> */}
                                 </Item>
                                 <div className={'upload-tip'}>JPG/JPEG/ PNG/GIF/SVG. Max size:1MB.</div>
                             </div>
@@ -351,7 +339,7 @@ function AddCollection(props) {
                                                 if(cover) {
                                                     return Promise.resolve();
                                                 }
-                                                return Promise.reject('upload cover');
+                                                return Promise.reject('Upload a cover');
                                             }
                                         })
                                     ]}
@@ -359,18 +347,6 @@ function AddCollection(props) {
                                     <Dragger name="upload_cover" beforeUpload={beforeUpload} customRequest={uploadCover}>
                                         <UploadCoverContent/>
                                     </Dragger>
-                                    {/* <Upload
-                                        name="upload_cover"
-                                        listType="picture-card"
-                                        className="cover-uploader"
-                                        showUploadList={false}
-                                        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                        beforeUpload={beforeUpload}
-                                        // onChange={handleChange}
-                                        customRequest={uploadCover}
-                                    >
-                                        <UploadCoverContent/>
-                                    </Upload> */}
                                    
                                 </Item>
                                 <div className={'upload-tip'}>JPG/JPEG/ PNG/GIF/SVG. Max size:1MB.</div>
@@ -382,7 +358,7 @@ function AddCollection(props) {
                             name="name"
                             rules={[{ required: true, message: 'Enter a name' }]}
                         >
-                            <Input.TextArea showCount={false} maxLength={10} autoSize={{ minRows: 1,maxRows:1}}  bordered={false} placeholder="name of the collection"/>
+                            <Input maxLength={10}  bordered={false} placeholder="name of the collection"/>
                         </Item>
                         <Item
                             label="Description"
@@ -397,10 +373,10 @@ function AddCollection(props) {
                             rules={[
                                 () => ({
                                     validator(_, val) {
-                                        if(!val || (val>0 && val<10000)) {
+                                        if(!val || (val>0)) {
                                             return Promise.resolve();
                                         }
-                                        return Promise.reject('mintPrice should be greater than 0 and less than 10000');
+                                        return Promise.reject('Minimum mint price is 0');
                                     }
                                 })
                             ]}
