@@ -8,6 +8,7 @@ import {getConfig} from "../../config";
 import qs from "qs";
 import './Mint.css';
 import load from '../../assets/images/load.gif';
+import BN from 'bn.js'
 
 const config = getConfig()
 
@@ -37,7 +38,8 @@ export default function Success(props) {
                 return
             }
 
-            
+            const collection = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id: search.collection_id})
+            const price = new BN(collection.price).add(new BN('20000000000000000000000'))
 
             const accountId = wallet.getAccountId()
             const args = {
@@ -65,7 +67,7 @@ export default function Success(props) {
                     collection_id: search.collection_id,
                     ..._sign
                 },
-                attachedDeposit: '90000000000000000000000'
+                attachedDeposit: price.toString()
             })
                 
         })();
