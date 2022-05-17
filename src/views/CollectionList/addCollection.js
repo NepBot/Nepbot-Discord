@@ -381,7 +381,7 @@ function AddCollection(props) {
                             rules={[
                                 () => ({
                                     validator(_, val) {
-                                        if(!val || (val>0)) {
+                                        if(!val || (val>=0)) {
                                             return Promise.resolve();
                                         }
                                         return Promise.reject('Minimum mint price is 0');
