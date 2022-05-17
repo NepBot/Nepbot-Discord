@@ -54,7 +54,8 @@ function AddCollection(props) {
             const near = await connect(config);
             const wallet = new WalletConnection(near,"nepbot");
             const account = wallet.account() 
-            const collection = await getCollection(`${values.name}-by-${account.accountId.replace(".", "")}`)
+            const outerCollectionId = `${values.name}-by-${config.ACCOUNT_ID.replace(".", "")}`
+            const collection = await getCollection(outerCollectionId)
             if (!collection || collection.results.length > 0) {
                 message.error("-----");
                 return
@@ -62,24 +63,32 @@ function AddCollection(props) {
             
             //formData
             let params = {
-                collection: values.name,
-                description:values.description,
-                creator_id: account.accountId,
-                twitter: "",
-                website: "",
-                discord: "",
+                args: {
+                    args: {
+                        collection: values.name,
+                        description:values.description,
+                        creator_id: config.ACCOUNT_ID,
+                        twitter: "",
+                        website: "",
+                        discord: "",
+                    },
+                    sign: operationSign,
+                    user_id: info.user_id,
+                    guild_id: info.guild_id
+                },
+                account_id: account.accountId,
             }
-            //params.sign = await sign(account, params.args)
+            params.sign = await sign(account, params.args)
             const formData = new FormData();
-            Object.keys(params).forEach((key) => {
-                formData.append(key, params[key]);
-            });
+            // Object.keys(params).forEach((key) => {
+            //     formData.append(key, params[key]);
+            // });
             //console.log(values,formData,'---formData----');
             formData.append('files',values['logo'][0]['originFileObj'])
             formData.append('files',values['cover'][0]['originFileObj'])
-            //formData.append('args', JSON.stringify(params))
+            formData.append('args', JSON.stringify(params))
             
-            
+
             //paras - collection
             const res = await createCollection(formData);
             //{"status":1,"data":{"collection":{"_id":"6280b224692d163b193d09de","collection_id":"fff-by-bhc22testnet","blurhash":"UE3UQdpLQ8VWksZ}Z~ksL#Z}pfkXVWp0kXVq","collection":"fff","cover":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","createdAt":1652601380975,"creator_id":"bhc22.testnet","description":"fff","media":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","socialMedia":{"twitter":"","discord":"","website":""},"updatedAt":1652601380975}}}
@@ -111,7 +120,7 @@ function AddCollection(props) {
                 contractId: config.NFT_CONTRACT,
                 methodName: "create_collection",
                 args: {
-                    outer_collection_id: res.collection.collection_id,
+                    outer_collection_id: outerCollectionId,
                     contract_type: "paras",
                     guild_id: info.guild_id,
                     royalty:royalty_list,
@@ -314,6 +323,18 @@ function AddCollection(props) {
                                     <Dragger name="upload_logo" beforeUpload={beforeUpload} customRequest={uploadLogo}>
                                         <UploadLogoContent/>
                                     </Dragger>
+                                    {/* <Upload
+                                        name="upload_logo"
+                                        listType="picture-card"
+                                        className="logo-uploader"
+                                        showUploadList={false}
+                                        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                        beforeUpload={beforeUpload}
+                                        // onChange={handleChange}
+                                        customRequest={uploadLogo}
+                                    >
+                                        <UploadLogoContent/>
+                                    </Upload> */}
                                 </Item>
                                 <div className={'upload-tip'}>JPG/JPEG/ PNG/GIF/SVG. Max size:1MB.</div>
                             </div>
@@ -338,6 +359,19 @@ function AddCollection(props) {
                                     <Dragger name="upload_cover" beforeUpload={beforeUpload} customRequest={uploadCover}>
                                         <UploadCoverContent/>
                                     </Dragger>
+                                    {/* <Upload
+                                        name="upload_cover"
+                                        listType="picture-card"
+                                        className="cover-uploader"
+                                        showUploadList={false}
+                                        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                        beforeUpload={beforeUpload}
+                                        // onChange={handleChange}
+                                        customRequest={uploadCover}
+                                    >
+                                        <UploadCoverContent/>
+                                    </Upload> */}
+                                   
                                 </Item>
                                 <div className={'upload-tip'}>JPG/JPEG/ PNG/GIF/SVG. Max size:1MB.</div>
                             </div>
@@ -388,7 +422,7 @@ function AddCollection(props) {
                             <Item name="role_id">
                                 <Select
                                     mode="multiple"
-                                    placeholder="Choose a role"
+                                    placeholder="Please select"
                                     dropdownClassName={"collection-modal-role-dropdown"}
                                     // defaultOpen={true}
                                     // autoFocus={true}
