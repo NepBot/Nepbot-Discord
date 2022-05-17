@@ -39,6 +39,25 @@ function AddSeries(props) {
                 return;
             }
             const values = await form.validateFields();
+            //attribute_list
+            const attribute_list = []
+            let isAccess = true;
+            attributeList.forEach((item,index)=>{
+                if(item.trait_type && item.value){
+                    attribute_list.push(item);
+                }else if((item.trait_type && !item.value) || (!item.trait_type && item.value)){
+                    if(!item.trait_type){
+                        console.log(document.getElementsByClassName("attribute-type-tip"+index));
+                        document.getElementsByClassName("attribute-type-tip"+index)[0].style.display = "block";
+                        isAccess = false
+                    }else if(!item.value){
+                        console.log(document.getElementsByClassName("attribute-value-tip"+index));
+                        document.getElementsByClassName("attribute-value-tip"+index)[0].style.display = "block";
+                        isAccess = false
+                    }
+                }
+            })
+            if(!isAccess){return}
             // let args = {
             //     guild_id: values.guild_id,
             //     role_id: values.role_id,
@@ -51,13 +70,7 @@ function AddSeries(props) {
             const collection_id = props.collectionId
             const outer_collection_id = collection_id.split(":")[1]
 
-            const attribute_list = []
-            attributeList.forEach(item=>{
-                if(item.trait_type && item.value){
-                    attribute_list.push(item);
-                }
-            })
-            console.log( attribute_list); 
+             
             //formData
             const params = {
                 collection: props.collectionName, 
@@ -88,6 +101,7 @@ function AddSeries(props) {
                 account_id: account.accountId
             }
             const _sign = await signRule(msg);
+            console.log(_sign,'_sign__________'); 
             if (!operationSign) {
                 history.push({pathname: '/linkexpired', })
                 return
@@ -184,14 +198,16 @@ function AddSeries(props) {
         const setAttributeItems = attributeList.map((item,index) => {
             return <div key={index} className={'attribute-item'}>
 				<div className={'attribute-type'}>
-					<Form.Item name={['attributeList',index,'trait_type']} noStyle>
-                        <Input  bordered={false} placeholder="Type" onBlur={(event)=>onChange(index,'trait_type',event)}/>
+                    <Form.Item name={['attributeList',index,'trait_type']} noStyle>
+                        <Input   bordered={false} placeholder="Type" onBlur={(event)=>onChange(index,'trait_type',event)}/>
                     </Form.Item>
+                    <div className={'attribute-tip attribute-type-tip'+index}>Enter a type</div>
 				</div>
 				<div className={'attribute-value'}>
-					<Form.Item name={['attributeList',index,'value']} noStyle>
-                        <Input  bordered={false} placeholder="Value" onBlur={(event)=>onChange(index,'value',event)}/>
+					<Form.Item name={['attributeList',index,'value']} noStyle >
+                        <Input   bordered={false} placeholder="Value" onBlur={(event)=>onChange(index,'value',event)}/>
                     </Form.Item>
+                    <div className={'attribute-tip attribute-value-tip'+index}>Enter a value</div>
 				</div>
                 <div className={['form-remove-button', (index===0 && attributeList.length<=1) ? 'hidden' : ''].join(' ')} onClick={()=>del(index)}></div>
 			</div>
@@ -261,7 +277,7 @@ function AddSeries(props) {
                             name="name"
                             rules={[{ required: true, message: 'Enter a name' }]}
                         >
-                            <Input maxLength={10} autoSize={{ minRows: 1,maxRows:1}} bordered={false} placeholder="Item name"/>
+                            <Input maxLength={10} bordered={false} placeholder="Item name"/>
                         </Item>
                         <Item
                             label="Description"

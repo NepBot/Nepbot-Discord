@@ -99,6 +99,10 @@
 .attribute-list .attribute-value{
     margin:0 12px 0 20px;
 }
+.attribute-tip{
+    display: none;
+    color: #ff4d4f;
+}
 
 
 

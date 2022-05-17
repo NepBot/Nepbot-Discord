@@ -47,14 +47,35 @@ function AddCollection(props) {
             if(confirmLoading){
                 return;
             }
+            const royalty_list = {};
+            let isAccess = true;
+            
             const values = await form.validateFields();
+            values.royaltyList.forEach((royalty,index)=>{
+                if(royalty.account && royalty.amount){
+                    royalty_list[royalty.account] = royalty.amount * 100;
+                }else if((royalty.account && !royalty.amount) || (!royalty.account && royalty.amount)){
+                    if(!royalty.account){
+                        console.log(document.getElementsByClassName("royalty-account-tip"+index));
+                        document.getElementsByClassName("royalty-account-tip"+index)[0].style.display = "block";
+                        isAccess = false
+                    }else if(!royalty.amount){
+                        console.log(document.getElementsByClassName("royalty-amount-tip"+index));
+                        document.getElementsByClassName("royalty-amount-tip"+index)[0].style.display = "block";
+                        isAccess = false
+                    }
+                }
+            })
+            if(!isAccess){return}
+
+            
             const info = store.get("info")
             const operationSign = store.get("operationSign")
             setConfirmLoading(true);
             const near = await connect(config);
             const wallet = new WalletConnection(near,"nepbot");
             const account = wallet.account() 
-            const outerCollectionId = `${values.name}-${props.server.name}-by-${config.NFT_CONTRACT.replace(".", "")}`
+            const outerCollectionId = `${values.name}-${props.server.name.trim()}-by-${config.NFT_CONTRACT.replaceAll(".", "")}`
             const collection = await getCollection(outerCollectionId)
             if (!collection || collection.results.length > 0) {
                 message.error("Collection name has already been taken");
@@ -65,7 +86,7 @@ function AddCollection(props) {
             let params = {
                 args: {
                     args: {
-                        collection: `${values.name}-${props.server.name}`,
+                        collection: `${values.name}-${props.server.name.trim()}`,
                         description:values.description,
                         creator_id: config.NFT_CONTRACT,
                         twitter: "",
@@ -92,7 +113,7 @@ function AddCollection(props) {
             //paras - collection
             const res = await createCollection(formData);
             //{"status":1,"data":{"collection":{"_id":"6280b224692d163b193d09de","collection_id":"fff-by-bhc22testnet","blurhash":"UE3UQdpLQ8VWksZ}Z~ksL#Z}pfkXVWp0kXVq","collection":"fff","cover":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","createdAt":1652601380975,"creator_id":"bhc22.testnet","description":"fff","media":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","socialMedia":{"twitter":"","discord":"","website":""},"updatedAt":1652601380975}}}
-            
+
             const args = {
                 sign: operationSign,
                 user_id: info.user_id,
@@ -109,18 +130,11 @@ function AddCollection(props) {
                 return
             }
             
-            console.log(values.royaltyList);
-            const royalty_list = {};
-            values.royaltyList.forEach(royalty=>{
-                if(royalty.account && royalty.amount){
-                    royalty_list[royalty.account] = royalty.amount * 100;
-                }
-            })
             await account.functionCall({
                 contractId: config.NFT_CONTRACT,
                 methodName: "create_collection",
                 args: {
-                    outer_collection_id: outerCollectionId,
+                    outer_collection_id: res.collection_id,
                     contract_type: "paras",
                     guild_id: info.guild_id,
                     royalty:royalty_list,
@@ -206,12 +220,14 @@ function AddCollection(props) {
 					<Item name={['royaltyList',index,'account']} noStyle>
                         <Input maxLength={64} bordered={false} placeholder="Account ID" onBlur={(event)=>onChange(index,'account',event)}/>
                     </Item>
+                    <div className={'royalty-tip royalty-account-tip'+index}>Enter an account</div>
 				</div>
 				<div className={'royalty-amount'}>
                     <div className={'royalty-amount-content'}>
                         <Item name={['royaltyList',index,'amount']} noStyle>
                             <Input type="number" bordered={false} placeholder="0" onBlur={(event)=>onChange(index,'amount',event)}/>
                         </Item>
+                        <div className={'royalty-tip royalty-amount-tip'+index}>Enter a number</div>
                     </div>
                 </div>
 				<div className={['form-remove-button', (index===0 && royaltyList.length<=1) ? 'hidden' : ''].join(' ')} onClick={()=>del(index)}></div>

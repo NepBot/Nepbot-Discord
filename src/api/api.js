@@ -70,8 +70,9 @@ export const createCollection = async (data)=>{
         body: data
     })
     const result = await json.json()
-    if (result.data.status == 1) {
-        return result.data.data
+    console.log(result,'----result----');
+    if (result.status == 1) {
+        return result.data.collection
     }
     return false
 }

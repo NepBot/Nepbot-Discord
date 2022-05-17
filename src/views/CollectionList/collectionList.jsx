@@ -100,7 +100,7 @@ function Collection(props) {
                 const collectionData = await getCollection(collection.outer_collection_id)
                 // console.log(collection,collectionData,'---collectionData---');
                 if (collectionData && collectionData.results.length > 0) {
-                    const userInfo = await getUser(info.guild_id, info.user_id)
+                    // const userInfo = await getUser(info.guild_id, info.user_id)
                     let royaltyTotal = 0;
                     if(collection.royalty){
                         Object.keys(collection.royalty).forEach(key=>{
@@ -109,7 +109,7 @@ function Collection(props) {
                     }
                     
                     wrappedCollections.push({
-                        creator_avatar:userInfo.displayAvatarURL,
+                        // avatar:userInfo.displayAvatarURL,
                         royaltyTotal:royaltyTotal/100,
                         // collection_id: collection.collection_id,
                         inner_collection_id: collection.collection_id,
@@ -161,10 +161,10 @@ function Collection(props) {
                     <img className={'cover'} alt="cover" src={'https://ipfs.fleek.co/ipfs/'+item.cover}/>
                     <div className={'info'}>
                         <div className={'user'}>
-                            <img className={'avatar'} alt="avatar" src={item.creator_avatar}/>
+                            <img className={'media'} alt="media" src={'https://ipfs.fleek.co/ipfs/'+item.media}/>
                             <div className={'user-info'}>
                                 <div className={'name txt-wrap'}>{item.collection}</div>
-                                <div className={'account txt-wrap'}>{item.creator_id}</div>
+                                <div className={'account txt-wrap'}>{server.name}</div>
                             </div>
                         </div>
                         <div className={'desc txt-wrap'}>{item.description}</div>
