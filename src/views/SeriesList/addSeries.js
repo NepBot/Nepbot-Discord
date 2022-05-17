@@ -7,6 +7,7 @@ import {signRule,createSeries} from "../../api/api";
 import {contract, parseAmount, sign, encodeImageToBlurhash} from "../../utils/util";
 import store from "../../store/discordInfo";
 import icon_upload from '../../assets/images/icon-upload.png';
+import loading from '../../assets/images/loading.png';
 
 const config = getConfig()
 
@@ -17,7 +18,7 @@ function AddSeries(props) {
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [image, setImage] = useState(null);
     const [image_url, setImageUrl] = useState('');
-    const [attributeList,setAttributeList] = useState([{type:'',value:''}])
+    const [attributeList,setAttributeList] = useState([{trait_type:'',value:''}])
     const history = useHistory()
     // const [isParas, setParas] = useState(false)
 
@@ -34,6 +35,9 @@ function AddSeries(props) {
     };
     const onCheck = async () => {
         try {
+            if(confirmLoading){
+                return;
+            }
             const values = await form.validateFields();
             // let args = {
             //     guild_id: values.guild_id,
@@ -46,18 +50,21 @@ function AddSeries(props) {
             
             const collection_id = props.collectionId
             const outer_collection_id = collection_id.split(":")[1]
-            //authorization
-            // console.log(imageUrl)
-            // const blurhash = await encodeImageToBlurhash(imageUrl)
-            // console.log(blurhash)
-            // return
+
+            const attribute_list = []
+            attributeList.forEach(item=>{
+                if(item.trait_type && item.value){
+                    attribute_list.push(item);
+                }
+            })
+            console.log( attribute_list); 
             //formData
             const params = {
                 collection: props.collectionName, 
                 description:values.description,
                 creator_id: account.accountId,
                 collection_id: outer_collection_id,
-                attributes:form.attributeList,
+                attributes:attribute_list,
                 mime_type: values.image[0].type,
                 blurhash: "UE3UQdpLQ8VWksZ}Z~ksL#Z}pfkXVWp0kXVq"
             }
@@ -85,6 +92,7 @@ function AddSeries(props) {
                 history.push({pathname: '/linkexpired', })
                 return
             }
+            // console.log("copies:",String(values.copies)); return;
             await account.functionCall({
                 contractId: config.NFT_CONTRACT,
                 methodName: "add_token_metadata",
@@ -95,6 +103,7 @@ function AddSeries(props) {
                         description: values.description,
                         media: res[0].replace("ipfs://", ""),
                         reference: res[1].replace("ipfs://", ""),
+                        copies:Number(values.copies)
                     },
                     ..._sign
                 },
@@ -175,16 +184,16 @@ function AddSeries(props) {
         const setAttributeItems = attributeList.map((item,index) => {
             return <div key={index} className={'attribute-item'}>
 				<div className={'attribute-type'}>
-					<Form.Item name={['attributeList',index,'type']} noStyle>
-                        <Input.TextArea  maxLength={20} autoSize={{ minRows: 1,maxRows:1}} bordered={false} placeholder="Type" onBlur={(event)=>onChange(index,'type',event)}/>
+					<Form.Item name={['attributeList',index,'trait_type']} noStyle>
+                        <Input.TextArea  maxLength={100} autoSize={{ minRows: 1,maxRows:1}} bordered={false} placeholder="Type" onBlur={(event)=>onChange(index,'trait_type',event)}/>
                     </Form.Item>
 				</div>
 				<div className={'attribute-value'}>
 					<Form.Item name={['attributeList',index,'value']} noStyle>
-                        <Input.TextArea  maxLength={20} autoSize={{ minRows: 1,maxRows:1}} bordered={false} placeholder="Value" onBlur={(event)=>onChange(index,'value',event)}/>
+                        <Input.TextArea  maxLength={100} autoSize={{ minRows: 1,maxRows:1}} bordered={false} placeholder="Value" onBlur={(event)=>onChange(index,'value',event)}/>
                     </Form.Item>
 				</div>
-                <div className={['form-remove-button', (index===0) ? 'hidden' : ''].join(' ')} onClick={()=>del(index)}></div>
+                <div className={['form-remove-button', (index===0 && attributeList.length<=1) ? 'hidden' : ''].join(' ')} onClick={()=>del(index)}></div>
 			</div>
         })
         return (<div className={'attribute-list'}>
@@ -193,16 +202,16 @@ function AddSeries(props) {
     }
     const onChange = (index,name,event)=>{
 		let tempArray = [...attributeList];
-		if('type'===name)
-			tempArray[index] = {...tempArray[index],type:event.target.value}
+		if('trait_type'===name)
+			tempArray[index] = {...tempArray[index],trait_type:event.target.value}
 		else
 			tempArray[index] = {...tempArray[index],value:event.target.value}
 		return setAttributeList(tempArray)
 	}
     const add = ()=>{
-		form.setFieldsValue({"attributeList":[...attributeList,{type:'',value:''}]})
+		form.setFieldsValue({"attributeList":[...attributeList,{trait_type:'',value:''}]})
 		// return 
-        setAttributeList([...attributeList,{type:'',value:''}])
+        setAttributeList([...attributeList,{trait_type:'',value:''}])
         console.log(attributeList);
 	}
     const del = (index)=>{
@@ -252,26 +261,26 @@ function AddSeries(props) {
                             name="name"
                             rules={[{ required: true, message: 'Enter a name' }]}
                         >
-                            <Input.TextArea showCount={true} maxLength={10} autoSize={{ minRows: 1,maxRows:1}} bordered={false} placeholder="Item name"/>
+                            <Input.TextArea showCount={false} maxLength={10} autoSize={{ minRows: 1,maxRows:1}} bordered={false} placeholder="Item name"/>
                         </Item>
                         <Item
                             label="Description"
                             name="description"
                             rules={[{ required: true, message: 'Enter a description' }]}
                         >
-                            <Input.TextArea showCount={true} maxLength={500}  autoSize={{ minRows: 1}} bordered={false} placeholder="Provide a detailed description of your item."/>
+                            <Input.TextArea showCount={false} maxLength={500}  autoSize={{ minRows: 1}} bordered={false} placeholder="Provide a detailed description of your item."/>
                         </Item>
                         <Item
                             label="Number of copies"
-                            name="copyNumber"
+                            name="copies"
                             rules={[
                                 { required: true, message: 'Enter copy number' },
                                 () => ({
                                     validator(_, val) {
-                                        if(val==="" || (val>0 && val<1000000 && val%1 === 0)) {
+                                        if(val==="" || (val>0 && val%1 === 0)) { //&& val<1000000 
                                             return Promise.resolve();
                                         }
-                                        return Promise.reject('Number of copies should be an integer greater than 0 and less than 1000000');
+                                        return Promise.reject('Number of copies should be an integer greater than 0');
                                     }
                                 })
                             ]}
@@ -292,7 +301,8 @@ function AddSeries(props) {
                             cancel
                         </div>
                         <div className={'btn ok'} onClick={onCheck}>
-                            ok
+                            <span className={[confirmLoading ? 'hidden' : '']}>ok</span>
+                            <img className={[confirmLoading ? '' : 'hidden']} src={loading}/>
                         </div>
                     </div>
                 </div>

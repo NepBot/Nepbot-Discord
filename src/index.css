@@ -73,6 +73,7 @@ img{
   display: flex;
   align-items: center;
   justify-content:center;
+  z-index:100;
 }
 .page-header .add-btn:hover{
   background-image: linear-gradient(-88deg, #812BFF 0%, #6A79FF 41%, #4D85FF 100%);
@@ -104,6 +105,19 @@ img{
   color: rgba(255,255,255,0.4);
   letter-spacing: 0;
   font-weight: 400;
+}
+.page-header  .search-input .ant-input{
+  padding:0;
+  height:42px;
+  line-height:42px;
+  font-family: Gilroy-Regular;
+  font-size: 14px;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0;
+  font-weight: 400;
+}
+.page-header  .search-input .ant-input-group-addon{
+  display: none;
 }
 ::-webkit-input-placeholder {
   font-family: Gilroy-Regular !important;
@@ -378,6 +392,31 @@ img{
 }
 .my-modal-footer .btn.ok{
   background-image: linear-gradient(-83deg, #9D7DFF 0%, #8C97FF 43%, #9FD0FF 100%);
+}
+.my-modal-footer .btn.ok .hidden{
+  display: none;
+}
+.my-modal-footer .btn.ok img{
+  display: block;
+  width:18px;
+  height:18px;
+  -webkit-animation:whiteLoadingRotate 1.1s linear infinite;
+  animation:whiteLoadingRotate 1.1s linear infinite;
+}
+@-webkit-keyframes whiteLoadingRotate{
+  0%{ -webkit-transform: rotate(0deg);}
+  100%{ -webkit-transform: rotate(360deg);}
+}
+@keyframes whiteLoadingRotate{
+    0%{ -webkit-transform: rotate(0deg);}
+    100%{ -webkit-transform: rotate(360deg);}
+}
+.no-data .page-loading{
+  display: block;
+  width:18px;
+  height:18px;
+  -webkit-animation:whiteLoadingRotate 1.1s linear infinite;
+  animation:whiteLoadingRotate 1.1s linear infinite;
 }
 
 

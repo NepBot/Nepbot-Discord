@@ -4,7 +4,7 @@ import {generateToken} from "../utils/request";
 const config = getConfig()
 
 export const setInfo = async (args) => {
-    const json = await fetch(`/api/set-info`, {
+    const json = await fetch(`/api/setInfo`, {
         headers:{ 'Content-Type': 'application/json' },
         method:"POST",
         body:typeof args === 'string'?args:JSON.stringify(args)

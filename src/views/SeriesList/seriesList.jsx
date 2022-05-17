@@ -14,12 +14,16 @@ import {formatAmount, sign} from "../../utils/util";
 import logo from '../../assets/images/index/logo.png';
 import add from '../../assets/images/setRule/add.png';
 import no_data from '../../assets/images/no-data.png';
+import loading from '../../assets/images/loading.png';
 
 const config = getConfig()
 
 function Series(props) {
     let account = {}
+    const [searchStr] =  useState("");
+    const [showList, setShowList] = useState([]);
     const [seriesList, setSeriesList] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const [addDialogStatus, setAddDialogStatus] = useState(false);
     const [collectionId, setCollectionId] = useState("")
     const [collectionName, setCollectionName] = useState("")
@@ -48,8 +52,18 @@ function Series(props) {
 
     const handleData = async (data) => {
         //get_token_metadata
-        const res = await account.viewFunction(config.NFT_CONTRACT, 'get_token_metadata', {hash: collectionId})
-        setSeriesList(res)
+        try{
+            setIsLoading(true);
+            // console.log(collectionId)
+            const res = await account.viewFunction(config.NFT_CONTRACT, 'get_token_metadata', {collection_id: props.match.params.id})
+            setSeriesList(res)
+            setShowList(res)
+            console.log(res); 
+            
+        }catch(e) {
+            console.log(e);
+        }
+        setIsLoading(false);
         return data;
     }
 
@@ -57,20 +71,30 @@ function Series(props) {
         setAddDialogStatus(!addDialogStatus)
     }, []);
 
+    const handleSearch = (value) => {
+        const list = [];
+        seriesList.forEach(item=>{
+            if(item.metadata.title.indexOf(value)>-1){
+                list.push(item);
+            }
+        })
+        setShowList(list);
+    }
+
 
 
     function SeriesList(){
-        if(seriesList.length>0){
-            const seriesItems = seriesList.map((item,index) => 
+        if(showList.length>0){
+            const seriesItems = showList.map((item,index) => 
                 <div className={['series-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()}>
-                    <img className={'cover'} alt="cover" src={no_data}/>
+                    <img className={'cover'} alt="cover" src={'https://ipfs.fleek.co/ipfs/'+item.metadata.media}/>
                     <div className={'info'}>
-                        <div className={'name txt-wrap'}>{item.title}</div>
-                        <div className={'account txt-wrap'}>Daisy</div>
+                        <div className={'name txt-wrap'}>{item.metadata.title}</div>
+                        <div className={'account txt-wrap'}>{item.metadata.description}</div>
                         <div className={'line'}></div>
-                        <div className={'mint-info'}>
+                        <div className={['mint-info',item.copies ? '' : 'hidden'].join(" ")}>
                             <div>Minted:</div>
-                            <div className={'mint-number'}>20/{item.copies}</div>
+                            <div className={'mint-number'}>{item.minted_count}/{item.copies}</div>
                         </div>
                     </div>
                 </div>
@@ -80,9 +104,14 @@ function Series(props) {
                 {seriesItems}
             </div>)
         }
+        else if(isLoading){
+            return (<div className={'no-data'}>
+                <img className={"page-loading"}  src={loading}/>
+            </div>)
+        }
         else{
             return (<div className={'no-data'}>
-                <img src={no_data}/>
+                <img  src={no_data}/>
                 <div className={'tip'}>No data,please add a new item.</div>
             </div>)
         }
@@ -92,8 +121,8 @@ function Series(props) {
         <div className={'page-box'}>
             <div className={'page-bg'}></div>
             <div className={'page-header'}>
-                <div className={"title"}>Collection Name : {collectionDetail.name}</div>
-                <Input className={'search-input'} bordered={false} placeholder="Enter a token ID to search" /> 
+                <div className={"title"}>Collection Name : {collectionName}</div>
+                <Input.Search onSearch={handleSearch} className={'search-input'} bordered={false} placeholder="Enter a token ID to search" /> 
                 <div className={'add-btn'} onClick={handleAddStatus}>
                     <img className={"add-icon"} src={add}/>
                     Add

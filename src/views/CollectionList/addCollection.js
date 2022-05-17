@@ -8,6 +8,7 @@ import {contract, parseAmount, sign} from "../../utils/util";
 import store from "../../store/discordInfo";
 import js_sha256 from "js-sha256";
 import icon_upload from '../../assets/images/icon-upload.png';
+import loading from '../../assets/images/loading.png';
 
 const config = getConfig()
 
@@ -43,18 +44,22 @@ function AddCollection(props) {
     }
     const submitForm= async () => {
         try {
+            if(confirmLoading){
+                return;
+            }
             const values = await form.validateFields();
             const info = store.get("info")
             const operationSign = store.get("operationSign")
-            // setConfirmLoading(true);
+            setConfirmLoading(true);
             const near = await connect(config);
             const wallet = new WalletConnection(near,"nepbot");
             const account = wallet.account() 
-
             const collection = await getCollection(`${values.name}-by-${account.accountId.replace(".", "")}`)
             if (!collection || collection.results.length > 0) {
+                message.error("-----");
                 return
             }
+            
             //formData
             let params = {
                 collection: values.name,
@@ -79,7 +84,6 @@ function AddCollection(props) {
             const res = await createCollection(formData);
             //{"status":1,"data":{"collection":{"_id":"6280b224692d163b193d09de","collection_id":"fff-by-bhc22testnet","blurhash":"UE3UQdpLQ8VWksZ}Z~ksL#Z}pfkXVWp0kXVq","collection":"fff","cover":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","createdAt":1652601380975,"creator_id":"bhc22.testnet","description":"fff","media":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","socialMedia":{"twitter":"","discord":"","website":""},"updatedAt":1652601380975}}}
             
-            
             const args = {
                 sign: operationSign,
                 user_id: info.user_id,
@@ -95,6 +99,14 @@ function AddCollection(props) {
                 history.push({pathname: '/linkexpired', })
                 return
             }
+            
+            console.log(values.royaltyList);
+            const royalty_list = {};
+            values.royaltyList.forEach(royalty=>{
+                if(royalty.account && royalty.amount){
+                    royalty_list[royalty.account] = royalty.amount * 100;
+                }
+            })
             await account.functionCall({
                 contractId: config.NFT_CONTRACT,
                 methodName: "create_collection",
@@ -102,8 +114,9 @@ function AddCollection(props) {
                     outer_collection_id: res.collection.collection_id,
                     contract_type: "paras",
                     guild_id: info.guild_id,
-                    //mintable_roles: null,
-                    price: values.mintPrice,
+                    royalty:royalty_list,
+                    mintable_roles: values.role_id,
+                    price: parseAmount(values.mintPrice) || "0",
                     ..._sign
                 },
                 attachedDeposit: '20000000000000000000000'
@@ -175,22 +188,24 @@ function AddCollection(props) {
             return <UploadIntro/>
         }
     }
+
+
     function Royalty(){
         const setRoyaltyItems = royaltyList.map((item,index) => {
             return <div key={index} className={'royalty-item'}>
 				<div className={'royalty-account'}>
 					<Item name={['royaltyList',index,'account']} noStyle>
-                        <Input.TextArea maxLength={70} autoSize={{ minRows: 1,maxRows:1}} bordered={false} placeholder="Account ID" onBlur={(event)=>onChange(index,'account',event)}/>
+                        <Input.TextArea maxLength={64} autoSize={{ minRows: 1,maxRows:1}} bordered={false} placeholder="Account ID" onBlur={(event)=>onChange(index,'account',event)}/>
                     </Item>
 				</div>
 				<div className={'royalty-amount'}>
                     <div className={'royalty-amount-content'}>
                         <Item name={['royaltyList',index,'amount']} noStyle>
-                            <Input bordered={false} placeholder="0" onBlur={(event)=>onChange(index,'amount',event)}/>
+                            <Input type="number" bordered={false} placeholder="0" onBlur={(event)=>onChange(index,'amount',event)}/>
                         </Item>
                     </div>
                 </div>
-				<div className={['form-remove-button', (index===0) ? 'hidden' : ''].join(' ')} onClick={()=>del(index)}></div>
+				<div className={['form-remove-button', (index===0 && royaltyList.length<=1) ? 'hidden' : ''].join(' ')} onClick={()=>del(index)}></div>
 			</div>
         })
         return (<div className={'royalty-list'}>
@@ -231,8 +246,9 @@ function AddCollection(props) {
 		return setRoyaltyList([...royaltyList.slice(0,index),...royaltyList.slice(index+1)])
 	}
 
-    const roles = [{id:1,name:"A"},{id:2,name:"B"},{id:3,name:"C"}]
-    const roleList = roles.map(item => 
+
+    // const roles = [{id:1,name:"A"},{id:2,name:"B"},{id:3,name:"C"}]
+    const roleList = props.roleList.map(item => 
         <Option value={item.id} key={item.id}>{item.name}</Option>
     );
 
@@ -248,7 +264,8 @@ function AddCollection(props) {
                             cancel
                         </div>
                         <div className={'btn ok'} onClick={submitForm}>
-                            ok
+                            <span className={[confirmLoading ? 'hidden' : '']}>ok</span>
+                            <img className={[confirmLoading ? '' : 'hidden']} src={loading}/>
                         </div>
                     </div>
                 </div>
@@ -331,14 +348,14 @@ function AddCollection(props) {
                             name="name"
                             rules={[{ required: true, message: 'Enter a name' }]}
                         >
-                            <Input.TextArea showCount={true} maxLength={10} autoSize={{ minRows: 1,maxRows:1}}  bordered={false} placeholder="name of the collection"/>
+                            <Input.TextArea showCount={false} maxLength={10} autoSize={{ minRows: 1,maxRows:1}}  bordered={false} placeholder="name of the collection"/>
                         </Item>
                         <Item
                             label="Description"
                             name="description"
                             rules={[{ required: true, message: 'Enter a description' }]}
                         >
-                            <Input.TextArea showCount={true} maxLength={500}  autoSize={{ minRows: 1}} bordered={false} placeholder="tell others what the collection is about"/>
+                            <Input.TextArea showCount={false} maxLength={500}  autoSize={{ minRows: 1}} bordered={false} placeholder="tell others what the collection is about"/>
                         </Item>
                         <Item
                             label="Mint Price"
@@ -346,7 +363,7 @@ function AddCollection(props) {
                             rules={[
                                 () => ({
                                     validator(_, val) {
-                                        if(val==="" || (val>0 && val<10000)) {
+                                        if(!val || (val>0 && val<10000)) {
                                             return Promise.resolve();
                                         }
                                         return Promise.reject('mintPrice should be greater than 0 and less than 10000');

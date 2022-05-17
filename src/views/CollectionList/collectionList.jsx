@@ -8,20 +8,24 @@ import './collection.css'
 import qs from "qs";
 import store from "../../store/discordInfo";
 import {formatAmount, sign} from "../../utils/util";
-import {getRoleList, getServer, signRule, getOperationSign, getCollection} from "../../api/api";
+import {getRoleList, getServer, getUser, signRule, getOperationSign, getCollection} from "../../api/api";
 import logo from '../../assets/images/index/logo.png';
 import add from '../../assets/images/setRule/add.png';
 import no_data from '../../assets/images/no-data.png';
+import loading from '../../assets/images/loading.png';
 
 const config = getConfig()
 
 function Collection(props) {
     let account = {}
     const guildData = qs.parse(props.location.search.slice(1));
+    const [isLoading, setIsLoading] = useState(false);
     const [collectionList, setCollectionList] = useState([]);
     const [addDialogStatus, setAddDialogStatus] = useState(false);
     const [operationSign, setOperationSign] = useState("")
     const [server, setServer] = useState({});
+    const [roleList, setRoleList] = useState([]);
+    const [roleMap, setRoleMap] = useState([]);
     const history = useHistory()
 
     useEffect(() => {
@@ -76,42 +80,68 @@ function Collection(props) {
 
     const handleData = async (data) => {
         const info = store.get("info")
+        setIsLoading(true);
         try {
+            //setRoleList
+            const roles = await getRoleList(store.get("info").guild_id);
+            const roleMap = {};
+            roles.forEach(role =>{
+                if(role.name!=="@everyone"){
+                    roleMap[role.id] = role.name;
+                }
+            })
+            setRoleMap(roleMap);
+            setRoleList(roles.filter(item=>item.name!=="@everyone"))
+            //setCollectionList
             const collections = await account.viewFunction(config.NFT_CONTRACT, "get_collections_by_guild", {guild_id: info.guild_id})
             let wrappedCollections = []
             for (let collection of collections) {
                 const collectionData = await getCollection(collection.outer_collection_id)
+                // console.log(collection,collectionData,'---collectionData---');
                 if (collectionData && collectionData.results.length > 0) {
+                    const userInfo = await getUser(info.guild_id, info.user_id)
+                    let royaltyTotal = 0;
+                    if(collection.royalty){
+                        Object.keys(collection.royalty).forEach(key=>{
+                            royaltyTotal += Number(collection.royalty[key]);
+                        })
+                    }
+                    
                     wrappedCollections.push({
+                        creator_avatar:userInfo.displayAvatarURL,
+                        royaltyTotal:royaltyTotal/100,
                         // collection_id: collection.collection_id,
-                        // outer_collection_id: collection.outer_collection_id,
-                        ...collection
+                        inner_collection_id: collection.collection_id,
+                        outer_collection_id: collection.outer_collection_id,
+                        ...collection,
+                        ...collectionData.results[0]
                     })
                 }
             }
+            console.log(wrappedCollections,'---wrappedCollections----');
             setCollectionList(wrappedCollections)
         } catch(e) {}
-        
+        setIsLoading(false);
         return data;
     }
 
     function Roles(props){
-        if(props.roles.length>0){
+        if(props.roles && props.roles.length>0){
             const setRoles = props.roles.map((item,index) => 
-                <div className="item">{item}</div>
+                <div className="item" key={item}>{roleMap[item]}</div>
             );
             return (<div className={'roles'}>
                 {setRoles}
             </div>)
         }
         else{
-            return ""
+            return <div className={'roles'}></div>
         }
     }
 
     const handleAddStatus = useCallback(async () => {
         if (!addDialogStatus) {
-
+            
         }else{
             message.info('Success');
         }
@@ -119,7 +149,7 @@ function Collection(props) {
     }, [addDialogStatus]);
 
     const handleSeriesList = useCallback(async (collection) => {
-        history.push({pathname: `/serieslist/${collection.collection_id}`})
+        history.push({pathname: `/serieslist/${collection.inner_collection_id}`})
     }, [])
 
 
@@ -127,13 +157,13 @@ function Collection(props) {
         if(collectionList.length>0){
             const collectionItems = collectionList.map((item,index) => 
                 <div className={['collection-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()} onClick={() => handleSeriesList(item)}>
-                    <img className={'cover'} alt="cover" src={item.cover}/>
+                    <img className={'cover'} alt="cover" src={'https://ipfs.fleek.co/ipfs/'+item.cover}/>
                     <div className={'info'}>
                         <div className={'user'}>
-                            <img className={'avatar'} alt="avatar" src={no_data}/>
+                            <img className={'avatar'} alt="avatar" src={item.creator_avatar}/>
                             <div className={'user-info'}>
-                                <div className={'name txt-wrap'}>{item.description}</div>
-                                <div className={'account txt-wrap'}>Daisy</div>
+                                <div className={'name txt-wrap'}>{item.collection}</div>
+                                <div className={'account txt-wrap'}>{item.creator_id}</div>
                             </div>
                         </div>
                         <div className={'desc txt-wrap'}>{item.description}</div>
@@ -141,12 +171,12 @@ function Collection(props) {
                         <div className={'bottom-info'}>
                             <div className={'mod price'}>
                                 Price
-                                <div className="val">{item.price}</div>
+                                <div className="val">{formatAmount(item.price,24,4)}</div>
                             </div>
                             <div className={'line'}></div>
                             <div className={'mod royality'}>
                                 Royality
-                                <div className="val">15%</div>
+                                <div className="val">{item.royaltyTotal}%</div>
                             </div>
                         </div>
                     </div>
@@ -155,6 +185,11 @@ function Collection(props) {
             
             return (<div className={'collection-list'}>
                 {collectionItems}
+            </div>)
+        }
+        else if(isLoading){
+            return (<div className={'no-data'}>
+                <img className={"page-loading"}  src={loading}/>
             </div>)
         }
         else{
@@ -176,7 +211,7 @@ function Collection(props) {
                 </div>
             </div>
             <CollectionList/>
-            <AddCollection  visible={addDialogStatus}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
+            <AddCollection  visible={addDialogStatus} roleList={roleList}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
         </div>
     );
 }
