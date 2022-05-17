@@ -185,12 +185,12 @@ function AddSeries(props) {
             return <div key={index} className={'attribute-item'}>
 				<div className={'attribute-type'}>
 					<Form.Item name={['attributeList',index,'trait_type']} noStyle>
-                        <Input.TextArea  maxLength={100} autoSize={{ minRows: 1,maxRows:1}} bordered={false} placeholder="Type" onBlur={(event)=>onChange(index,'trait_type',event)}/>
+                        <Input  bordered={false} placeholder="Type" onBlur={(event)=>onChange(index,'trait_type',event)}/>
                     </Form.Item>
 				</div>
 				<div className={'attribute-value'}>
 					<Form.Item name={['attributeList',index,'value']} noStyle>
-                        <Input.TextArea  maxLength={100} autoSize={{ minRows: 1,maxRows:1}} bordered={false} placeholder="Value" onBlur={(event)=>onChange(index,'value',event)}/>
+                        <Input  bordered={false} placeholder="Value" onBlur={(event)=>onChange(index,'value',event)}/>
                     </Form.Item>
 				</div>
                 <div className={['form-remove-button', (index===0 && attributeList.length<=1) ? 'hidden' : ''].join(' ')} onClick={()=>del(index)}></div>
@@ -244,7 +244,7 @@ function AddSeries(props) {
                                             if(image) {
                                                 return Promise.resolve();
                                             }
-                                            return Promise.reject('upload image');
+                                            return Promise.reject('Upload an image');
                                         }
                                     })
                                 ]}
@@ -261,7 +261,7 @@ function AddSeries(props) {
                             name="name"
                             rules={[{ required: true, message: 'Enter a name' }]}
                         >
-                            <Input.TextArea showCount={false} maxLength={10} autoSize={{ minRows: 1,maxRows:1}} bordered={false} placeholder="Item name"/>
+                            <Input maxLength={10} autoSize={{ minRows: 1,maxRows:1}} bordered={false} placeholder="Item name"/>
                         </Item>
                         <Item
                             label="Description"
@@ -274,13 +274,13 @@ function AddSeries(props) {
                             label="Number of copies"
                             name="copies"
                             rules={[
-                                { required: true, message: 'Enter copy number' },
+                                { required: true, message: 'Enter a number' },
                                 () => ({
                                     validator(_, val) {
-                                        if(val==="" || (val>0 && val%1 === 0)) { //&& val<1000000 
+                                        if(val==null || (val>0 && val%1 === 0)) { //&& val<1000000 
                                             return Promise.resolve();
                                         }
-                                        return Promise.reject('Number of copies should be an integer greater than 0');
+                                        return Promise.reject('Minimum number is 1');
                                     }
                                 })
                             ]}
