@@ -67,6 +67,7 @@ export default function Success(props) {
                     collection_id: search.collection_id,
                     ..._sign
                 },
+                gas: '300000000000000',
                 attachedDeposit: price.toString()
             })
                 
