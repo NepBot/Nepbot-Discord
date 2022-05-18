@@ -15,9 +15,10 @@ export function getConfig() {
           walletUrl: 'https://wallet.near.org',
           helperUrl: 'https://helper.mainnet.near.org',
           RULE_CONTRACT: 'app.nepbot.near',
-          NFT_CONTRACT:'nft.dev-nepbot.testnet',
+          NFT_CONTRACT:'nft.nepbot.near',
           OCT_CONTRACT: 'octopus-registry.near',
-          APPLICATION_ID: '958997413803196476'
+          APPLICATION_ID: '958997413803196476',
+          PARAS_API: "https://api-v2-mainnet.paras.id"
         }
       case 'development':
       case 'testnet':
@@ -31,7 +32,8 @@ export function getConfig() {
           NFT_CONTRACT: 'nft.nepbot.testnet',
           OCT_CONTRACT: 'registry.test_oct.testnet',
           LINKDROP: 'linkdrop6.bhc8521.testnet',
-          APPLICATION_ID: '928559137179172874'
+          APPLICATION_ID: '928559137179172874',
+          PARAS_API: "https://api-v2-testnet-master.paras.id"
         }
       case 'dev-testnet':
         return {
@@ -44,7 +46,8 @@ export function getConfig() {
           NFT_CONTRACT: 'nft.dev-nepbot.testnet',
           OCT_CONTRACT: 'registry.test_oct.testnet',
           LINKDROP: 'linkdrop6.bhc8521.testnet',
-          APPLICATION_ID: '967009211823304744'
+          APPLICATION_ID: '967009211823304744',
+          PARAS_API: "https://api-v2-testnet-master.paras.id"
         }
       case 'betanet':
         return {

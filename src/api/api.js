@@ -58,13 +58,6 @@ export const getUser = async (guild_id, user_id) => {
 // }
 
 export const createCollection = async (data)=>{
-    // const Authorization = await generateToken()
-    // const result =  await axios.request({
-    //     method:"post",
-    //     url:`https://api-v2-${config.networkId}-master.paras.id/collections`,
-    //     data,
-    //     headers:{Authorization:Authorization}
-    // })
     const json = await fetch(`/api/createParasCollection`, {
         method:"POST",
         body: data
@@ -80,7 +73,7 @@ export const createSeries = async (data)=>{
     const Authorization = await generateToken()
     const result = await axios.request({
         method:"post",
-        url:`https://api-v2-${config.networkId}-master.paras.id/uploads`,
+        url:`${config.PARAS_API}/uploads`,
         data,
         headers:{Authorization:Authorization}
     })
@@ -93,7 +86,7 @@ export const createSeries = async (data)=>{
 export const getCollection = async (collectionId) => {
     const result = await axios.request({
         method:"get",
-        url:`https://api-v2-${config.networkId}-master.paras.id/collections?collection_id=${collectionId}`,
+        url:`${config.PARAS_API}/collections?collection_id=${collectionId}`,
     })
     if (result.data.status == 1) {
         return result.data.data
