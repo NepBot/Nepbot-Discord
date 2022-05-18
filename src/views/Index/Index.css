@@ -17,18 +17,18 @@
     top:0;
     left:0;
     width:100%;
-    height:100px;
+    height:10rem;
     display: flex;
     justify-content:space-between;
     align-items:center;
     padding:0 13.888889%;
 }
 .header .logo{
-    width:94px;
+    width:9.4rem;
 }
 .nav{
     display: flex;
-    height:44px;
+    height:4.4rem;
     position:relative;
     z-index: 3;
     align-items: center;
@@ -36,13 +36,13 @@
 .nav-item{
     display: block;
     font-family: Gilroy-Regular;
-    font-size: 14px;
+    font-size: 1.4rem;
     color: rgba(255,255,255,0.6);
     letter-spacing: 0;
     text-align: right;
     font-weight: 400;
     cursor: pointer;
-    margin-left:60px;
+    margin-left:6rem;
 }
 .nav-item:link {color: rgba(255,255,255,0.6);}   
 .nav-item:visited {color: rgba(255,255,255,0.6);} 
@@ -63,33 +63,35 @@
     left:13.888889%;
 }
 .banner-content .title{
-    line-height:79px;
+    line-height:7.9rem;
     font-family: Gilroy-Bold;
-    font-size: 66px;
+    font-size: 6.6rem;
     color: #FFFFFF;
     font-weight: 700;
 }
 .banner-content .intro{
-    margin-top:6px;
-    opacity: 0.7;
+    margin-top:0.6rem;
     font-family: Gilroy-Regular;
-    font-size: 20px;
+    font-size: 2rem;
     color: #FFFFFF;
-    line-height: 30px;
+    line-height: 3rem;
     font-weight: 400;
+}
+.banner-content  .intro span{
+    color: rgba(255,255,255,0.50);
 }
 .banner-content .invite-btn{
     display:block;
-    width:200px;
-    height:60px;
+    width:20rem;
+    height:6rem;
     text-align: center;
-    line-height:60px;
-    margin-top:72px;
+    line-height:6rem;
+    margin-top:7.3rem;
     background-image: linear-gradient(-83deg, #9D7DFF 0%, #8C97FF 43%, #9FD0FF 100%);
     border-radius: 8px;
     font-family: Gilroy-Regular;
-    font-size: 18px;
-    color: #FFFFFF;
+    font-size: 1.8rem;
+    color: #392020;
     letter-spacing: 0;
     text-align: center;
     font-weight: 400;
@@ -130,7 +132,6 @@
     padding:30px;
     box-sizing: border-box;
     width:505px;
-    height:288px;
     background: rgba(78,81,112,0.24);
     border: 1px solid rgba(38,40,62,1);
     border-radius: 16px;
@@ -241,14 +242,14 @@
 }
 
 .power{
-    margin-top:60px;
-    margin-bottom:120px;
-    height:20px;
+    margin-top:6rem;
+    margin-bottom:12rem;
+    height:2rem;
     display: flex;
     justify-content:center;
     align-items:center;
     font-family: Gilroy-Regular;
-    font-size: 14px;
+    font-size: 1.4rem;
     color: rgba(255,255,255,0.6);
     letter-spacing: 0;
     text-align: center;
@@ -268,7 +269,7 @@
     align-items: center;
     background: #000000;
     font-family: Gilroy-Regular;
-    font-size: 16px;
+    font-size: 1.6rem;
     color: #FFFFFF;
     letter-spacing: 0;
     font-weight: 400;
@@ -325,7 +326,7 @@
 
 .footer .email{
     font-family: Gilroy-Regular;
-    font-size: 16px;
+    font-size: 1.6rem;
     color: #FFFFFF;
     letter-spacing: 0;
     text-align: right;
@@ -336,36 +337,36 @@
 
 
 .nav .ant-select{
-    width:156px;
-    height:44px;
-    line-height:44px;
+    width:15.6rem;
+    height:4.4rem;
+    line-height:4.4rem;
     border: 0!important;
-    border-radius: 8px;
+    border-radius: 0.8rem;
 }
 .nav .ant-select-selector{
-    height:44px!important;
-    line-height:44px;
+    height:4.4rem!important;
+    line-height:4.4rem;
     background: transparent!important;
     box-shadow: none!important;
     border: 1px solid rgba(255,255,255,1)!important;
-    border-radius: 8px!important;
+    border-radius: 0.8rem!important;
     padding:0 20px!important;
 }
 .nav .ant-select-selector .ant-select-selection-item{
     font-family: Gilroy-Regular;
-    font-size: 14px;
+    font-size: 1.4rem;
     color: #FFFFFF;
     letter-spacing: 0;
     font-weight: 400;
-    height:44px!important;
-    line-height:44px!important;
-    padding-left:16px!important;
+    height:4.4rem!important;
+    line-height:4.4rem!important;
+    padding-left:1.6rem!important;
     position: relative;
     text-align: left;
 }
 .nav .ant-select-selector .ant-select-selection-item::before{
     position:absolute;
-    top:19px;
+    top:1.9rem;
     left:0;
     content:"";
     width:6px;
@@ -377,15 +378,15 @@
     background: #FFCA8B;
 }
 .nav .ant-select .ant-select-arrow{
-    width:12px;
-    height:12px;
+    width:1.2rem;
+    height:1.2rem;
     background:url('../../assets/images/setRule/arrow-bottom.png') no-repeat center center;
-    background-size:12px 12px;
-    right:16px;
+    background-size:1.2rem 1.2rem;
+    right:1.6rem;
 }
 .nav .ant-select-open .ant-select-arrow{
     background:url('../../assets/images/setRule/arrow-top.png') no-repeat center center;
-    background-size:12px 12px;
+    background-size:1.2rem 1.2rem;
 }
 .nav .ant-select .ant-select-arrow svg{
     display:none;
@@ -393,19 +394,19 @@
 .network-dropdown{
     background: transparent!important;
     border: 1px solid rgba(255,255,255,0.16);
-    border-radius: 8px!important;
+    border-radius: 0.8rem!important;
     padding:0!important;
     overflow:hidden!important;
 }
 .network-dropdown .ant-select-item{
     width: 100%!important;
     padding:0 20px!important;
-    height:44px!important;
-    line-height:44px!important;
+    height:4.4rem!important;
+    line-height:4.4rem!important;
 }
 .network-dropdown .ant-select-item .ant-select-item-option-content{
     font-family: Gilroy-Regular;
-    font-size: 14px;
+    font-size: 1.4rem;
     color: #FFFFFF!important;
     letter-spacing: 0;
     font-weight: 400;
@@ -416,12 +417,12 @@
     background: rgba(255,255,255,0.07)!important;
 }
 .network-dropdown .ant-select-item-option{
-    padding-left:36px!important;
+    padding-left:3.6rem!important;
 }
 .network-dropdown .ant-select-item-option::before{
     position:absolute;
-    top:19px;
-    left:20px;
+    top:1.9rem;
+    left:2rem;
     content:"";
     width:6px;
     height:6px;

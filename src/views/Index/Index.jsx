@@ -23,6 +23,9 @@ const { Option } = Select;
 // let config = getConfig()
 
 export default function Index(props) {
+    // console.log(document.body.clientWidth,'------');
+    const pageWidth = document.body.clientWidth;
+    document.documentElement.style.fontSize =  pageWidth>1440 ? pageWidth/1440*10+"px" : "10px";
     const config = getConfig()
     const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${config.APPLICATION_ID}&permissions=8&scope=bot%20applications.commands`
     const handleChange = (value) => {
@@ -56,7 +59,7 @@ export default function Index(props) {
                     <img className={"banner"} src={banner}/>
                     <div className={"banner-content"}>
                         <div className={"title"}>Nepbot</div>
-                        <div className={"intro"}>Build up token gated discord experiences on <br/>Near</div>
+                        <div className={"intro"}>Nearians,Verify Your Belonging<span>(s)</span></div>
                         <a className={"invite-btn"} href={inviteUrl} target="view_window">Invite</a>
                     </div>
                 </div>
@@ -105,11 +108,11 @@ export default function Index(props) {
                     </div>
 
                     <div className={"partner"}>
-                        <a className={"brand"} href="https://oct.network" target="view_window">
-                            <img src={OCT} alt="OCT"/>
-                        </a>
                         <a className={"brand"} href="https://near.org/" target="view_window">
                             <img src={near_large} alt="NEAR"/>
+                        </a>
+                        <a className={"brand"} href="https://oct.network" target="view_window">
+                            <img src={OCT} alt="OCT"/>
                         </a>
                         <a className={"brand"} href="https://qstn.us" target="view_window">
                             <img src={QSTN} alt="QSTN"/>
