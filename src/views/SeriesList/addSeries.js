@@ -270,7 +270,18 @@ function AddSeries(props) {
                         <Item
                             label="Name"
                             name="name"
-                            rules={[{ required: true, message: 'Enter a name' }]}
+                            // rules={[{ required: true, message: 'Enter a name' }]}
+                            rules={[
+                                { required: true, message: 'Enter a name' },
+                                () => ({
+                                    validator(_, val) {
+                                        if(val == "" || (val && /^[0-9A-Z]+$/i.test(val))) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject('Name must contain only letters(a-z) and numbers (0-9)');
+                                    }
+                                })
+                            ]}
                         >
                             <Input maxLength={10} bordered={false} placeholder="Item name"/>
                         </Item>
