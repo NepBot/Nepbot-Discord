@@ -23,6 +23,9 @@ const { Option } = Select;
 // let config = getConfig()
 
 export default function Index(props) {
+    // console.log(document.body.clientWidth,'------');
+    const pageWidth = document.body.clientWidth;
+    document.documentElement.style.fontSize =  pageWidth>1440 ? pageWidth/1440*10+"px" : "10px";
     const config = getConfig()
     const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${config.APPLICATION_ID}&permissions=8&scope=bot%20applications.commands`
     const handleChange = (value) => {
