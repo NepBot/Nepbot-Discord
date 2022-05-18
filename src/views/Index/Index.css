@@ -71,12 +71,14 @@
 }
 .banner-content .intro{
     margin-top:6px;
-    opacity: 0.7;
     font-family: Gilroy-Regular;
     font-size: 20px;
     color: #FFFFFF;
     line-height: 30px;
     font-weight: 400;
+}
+.banner-content  .intro span{
+    color: rgba(255,255,255,0.50);
 }
 .banner-content .invite-btn{
     display:block;
