@@ -278,7 +278,7 @@ function AddSeries(props) {
                                         if(val == "" || (val && /^[0-9A-Z]+$/i.test(val))) {
                                             return Promise.resolve();
                                         }
-                                        return Promise.reject('Names are only allowed to contain letters and numbers');
+                                        return Promise.reject('Name must contain only letters(a-z) and numbers (0-9)');
                                     }
                                 })
                             ]}
