@@ -161,7 +161,7 @@ function SetRule(props) {
             account_id: account.accountId
         }
         const _sign = await signRule(msg);
-        if (!operationSign) {
+        if (!_sign) {
             history.push({pathname: '/linkexpired', })
             return
         }
