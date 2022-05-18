@@ -138,11 +138,11 @@ function Collection(props) {
     }
 
     const handleAddStatus = useCallback(async () => {
-        if (!addDialogStatus) {
+        // if (!addDialogStatus) {
             
-        }else{
-            message.info('Success');
-        }
+        // }else{
+        //     message.info('Success');
+        // }
         setAddDialogStatus(!addDialogStatus)
     }, [addDialogStatus]);
 

@@ -364,7 +364,18 @@ function AddCollection(props) {
                         <Item
                             label="Name"
                             name="name"
-                            rules={[{ required: true, message: 'Enter a name' }]}
+                            // rules={[{ required: true, message: 'Enter a name' }]}
+                            rules={[
+                                { required: true, message: 'Enter a name' },
+                                () => ({
+                                    validator(_, val) {
+                                        if(val == "" || (val && /^[0-9A-Z]+$/i.test(val))) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject('Names are only allowed to contain letters and numbers');
+                                    }
+                                })
+                            ]}
                         >
                             <Input maxLength={10}  bordered={false} placeholder="name of the collection"/>
                         </Item>
