@@ -30,7 +30,6 @@ function SetRule(props) {
     const history = useHistory()
 
     const handleData = async (data) => {
-        console.log("66666666");
         const roleList = await getRoleList(store.get("info").guild_id);
         let serverName = server.name
         data.forEach(async (it, index) => {
@@ -168,7 +167,7 @@ function SetRule(props) {
         }
         const delRule = await account.functionCall(
             config.RULE_CONTRACT,
-            'del_role',
+            'del_roles',
             {roles:[obj], ..._sign},
             '300000000000000'
         );
