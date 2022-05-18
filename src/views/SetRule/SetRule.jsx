@@ -30,6 +30,7 @@ function SetRule(props) {
     const history = useHistory()
 
     const handleData = async (data) => {
+        console.log("66666666");
         const roleList = await getRoleList(store.get("info").guild_id);
         let serverName = server.name
         data.forEach(async (it, index) => {
@@ -120,6 +121,10 @@ function SetRule(props) {
             account = await wallet.account();
             const appchainIds = await account.viewFunction(config.OCT_CONTRACT, 'get_appchain_ids', {})
             setAppchainIds(appchainIds)
+
+            const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: search.guild_id})
+            const guildData = await handleData(data)
+            setDataSource(guildData)
         })();
         return () => {
         }
