@@ -71,7 +71,7 @@ function AddSeries(props) {
              
             //formData
             const params = {
-                collection: props.collectionName, 
+                collection: props.collectionName.replaceAll("-", " "), 
                 description:values.description,
                 creator_id: account.accountId,
                 collection_id: outer_collection_id,
@@ -283,7 +283,7 @@ function AddSeries(props) {
                                 })
                             ]}
                         >
-                            <Input maxLength={10} bordered={false} placeholder="Item name"/>
+                            <Input maxLength={50} bordered={false} placeholder="Item name"/>
                         </Item>
                         <Item
                             label="Description"
