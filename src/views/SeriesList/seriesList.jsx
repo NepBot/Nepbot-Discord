@@ -42,7 +42,7 @@ function Series(props) {
             }
             const collectionId = props.match.params.id
             setCollectionId(collectionId)
-            setCollectionName(collectionId.split(":")[1].split("-")[0])
+            setCollectionName(collectionId.split(":")[1].split("-guild-")[0].replaceAll("-", " "))
             account = wallet.account()
             handleData()
         })();

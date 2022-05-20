@@ -72,9 +72,11 @@ function AddCollection(props) {
             const near = await connect(config);
             const wallet = new WalletConnection(near,"nepbot");
             const account = wallet.account() 
-            const outerCollectionId = `${values.name}-${props.server.name.trim()}-by-${config.NFT_CONTRACT.replaceAll(".", "")}`
+            const outerCollectionId = `${values.name.replace(/\s+/g, "-")}-guild-${props.server.name.trim()}-by-${config.NFT_CONTRACT.replaceAll(".", "")}`
             const collection = await getCollection(outerCollectionId)
             if (!collection || collection.results.length > 0) {
+                setConfirmLoading(false);
+                setConfrimModalStatus(false)
                 message.error("Collection name has already been taken");
                 return;
             }
@@ -83,7 +85,7 @@ function AddCollection(props) {
             let params = {
                 args: {
                     args: {
-                        collection: `${values.name}-${props.server.name.trim()}`,
+                        collection: `${values.name.replace(/\s+/g, "-")}-guild-${props.server.name.trim()}`,
                         description:values.description,
                         creator_id: config.NFT_CONTRACT,
                         twitter: "",
@@ -369,7 +371,7 @@ function AddCollection(props) {
                                 { required: true, message: 'Enter a name' },
                                 () => ({
                                     validator(_, val) {
-                                        if(val == "" || (val && /^[0-9A-Z]+$/i.test(val))) {
+                                        if(val == "" || (val && /^[0-9A-Z\s+]+$/i.test(val))) {
                                             return Promise.resolve();
                                         }
                                         return Promise.reject('Name must contain only letters(a-z) and numbers (0-9)');
@@ -377,7 +379,7 @@ function AddCollection(props) {
                                 })
                             ]}
                         >
-                            <Input maxLength={10}  bordered={false} placeholder="name of the collection"/>
+                            <Input maxLength={50}  bordered={false} placeholder="name of the collection"/>
                         </Item>
                         <Item
                             label="Description"

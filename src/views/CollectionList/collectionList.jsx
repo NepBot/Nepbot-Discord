@@ -160,7 +160,7 @@ function Collection(props) {
                         <div className={'user'}>
                             <img className={'media'} alt="media" src={'https://ipfs.fleek.co/ipfs/'+item.media}/>
                             <div className={'user-info'}>
-                                <div className={'name txt-wrap'}>{item.collection}</div>
+                                <div className={'name txt-wrap'}>{item.collection.split("-guild-")[0].replaceAll("-", " ")}</div>
                                 <div className={'account txt-wrap'}>{server.name}</div>
                             </div>
                         </div>
