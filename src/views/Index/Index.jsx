@@ -59,7 +59,7 @@ export default function Index(props) {
                     <img className={"banner"} src={banner}/>
                     <div className={"banner-content"}>
                         <div className={"title"}>Nepbot</div>
-                        <div className={"intro"}>Nearians,Verify Your Belonging<span>(s)</span></div>
+                        <div className={"intro"}>Nearians,Verify Your Belonging<span>s</span></div>
                         <a className={"invite-btn"} href={inviteUrl} target="view_window">Invite</a>
                     </div>
                 </div>
@@ -114,14 +114,14 @@ export default function Index(props) {
                         <a className={"brand"} href="https://oct.network" target="view_window">
                             <img src={OCT} alt="OCT"/>
                         </a>
-                        <a className={"brand"} href="https://qstn.us" target="view_window">
-                            <img src={QSTN} alt="QSTN"/>
-                        </a>
                         <a className={"brand"} href="https://fluxprotocol.org" target="view_window">
                             <img src={flux} alt="flux"/>
                         </a>
                         <a className={"brand"} href="https://www.fusotao.org/" target="view_window">
                             <img src={fusotao} alt="fusotao"/>
+                        </a>
+                        <a className={"brand"} href="https://qstn.us" target="view_window">
+                            <img src={QSTN} alt="QSTN"/>
                         </a>
                     </div>
                 </div>
