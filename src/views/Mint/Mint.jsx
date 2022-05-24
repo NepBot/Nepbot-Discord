@@ -68,7 +68,8 @@ export default function Success(props) {
                     ..._sign
                 },
                 gas: '300000000000000',
-                attachedDeposit: price.toString()
+                attachedDeposit: price.toString(),
+                walletCallbackUrl: `${config.PARAS}/${accountId}/collectibles`
             })
                 
         })();
