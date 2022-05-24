@@ -36,11 +36,11 @@
 .nav-item{
     display: block;
     font-family: Gilroy-Regular;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     color: rgba(255,255,255,0.6);
     letter-spacing: 0;
     text-align: right;
-    font-weight: 400;
+    font-weight: 700;
     cursor: pointer;
     margin-left:6rem;
 }
@@ -75,7 +75,7 @@
     font-size: 2rem;
     color: #FFFFFF;
     line-height: 3rem;
-    font-weight: 400;
+    font-weight: 700;
 }
 .banner-content  .intro span{
     color: rgba(255,255,255,0.50);
@@ -90,11 +90,11 @@
     background-image: linear-gradient(-83deg, #9D7DFF 0%, #8C97FF 43%, #9FD0FF 100%);
     border-radius: 8px;
     font-family: Gilroy-Regular;
-    font-size: 1.8rem;
-    color: #392020;
+    font-size: 2rem;
+    color: #FFFFFF;
     letter-spacing: 0;
     text-align: center;
-    font-weight: 400;
+    font-weight: 700;
 }
 .banner-content .invite-btn:hover{
     background-image: linear-gradient(-88deg, #812BFF 0%, #6A79FF 41%, #4D85FF 100%);
@@ -354,10 +354,10 @@
 }
 .nav .ant-select-selector .ant-select-selection-item{
     font-family: Gilroy-Regular;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     color: #FFFFFF;
     letter-spacing: 0;
-    font-weight: 400;
+    font-weight: 700;
     height:4.4rem!important;
     line-height:4.4rem!important;
     padding-left:1.6rem!important;
@@ -406,10 +406,10 @@
 }
 .network-dropdown .ant-select-item .ant-select-item-option-content{
     font-family: Gilroy-Regular;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     color: #FFFFFF!important;
     letter-spacing: 0;
-    font-weight: 400;
+    font-weight: 700;
     width:100%!important;
 }
 .network-dropdown .ant-select-item-option-active,.network-dropdown .ant-select-item-option-selected{
