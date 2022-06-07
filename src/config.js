@@ -17,8 +17,10 @@ export function getConfig() {
           RULE_CONTRACT: 'app.nepbot.near',
           NFT_CONTRACT:'nft.nepbot.near',
           OCT_CONTRACT: 'octopus-registry.near',
+          PARAS_CONTRACT: 'x.paras.near',
           APPLICATION_ID: '958997413803196476',
-          PARAS_API: "https://api-v2-mainnet.paras.id"
+          PARAS_API: "https://api-v2-mainnet.paras.id",
+          PARAS: "https://paras.id"
         }
       case 'development':
       case 'testnet':
@@ -31,9 +33,11 @@ export function getConfig() {
           RULE_CONTRACT: 'app.nepbot.testnet',
           NFT_CONTRACT: 'nft.nepbot.testnet',
           OCT_CONTRACT: 'registry.test_oct.testnet',
+          PARAS_CONTRACT: 'paras-token-v2.testnet',
           LINKDROP: 'linkdrop6.bhc8521.testnet',
           APPLICATION_ID: '928559137179172874',
-          PARAS_API: "https://api-v2-testnet-master.paras.id"
+          PARAS_API: "https://api-v2-testnet-master.paras.id",
+          PARAS: "https://testnet.paras.id"
         }
       case 'dev-testnet':
         return {
@@ -45,9 +49,11 @@ export function getConfig() {
           RULE_CONTRACT: 'app.dev-nepbot.testnet',
           NFT_CONTRACT: 'nft.dev-nepbot.testnet',
           OCT_CONTRACT: 'registry.test_oct.testnet',
+          PARAS_CONTRACT: 'paras-token-v2.testnet',
           LINKDROP: 'linkdrop6.bhc8521.testnet',
           APPLICATION_ID: '967009211823304744',
-          PARAS_API: "https://api-v2-testnet-master.paras.id"
+          PARAS_API: "https://api-v2-testnet-master.paras.id",
+          PARAS: "https://testnet.paras.id"
         }
       case 'betanet':
         return {

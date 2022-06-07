@@ -80,7 +80,7 @@ function Series(props) {
     }
 
     const handleSeries = (id) => {
-        window.open(`https://testnet.paras.id/token/paras-token-v2.testnet::${id}`,'_blank')
+        window.open(`${config.PARAS}/token/${config.PARAS_CONTRACT}::${id}`,'_blank')
     }
 
 
