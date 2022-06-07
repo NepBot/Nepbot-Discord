@@ -127,7 +127,7 @@ export default function Index(props) {
                     </div>
                 </div>
                 <div className={"power"}>
-                    powered by 
+                    Powered by 
                     <a className={"near"} href="https://near.org/" target="view_window">
                         <img src={near} alt="near"/>
                     </a>
