@@ -19,6 +19,7 @@ import QSTN from '../../assets/images/index/logo-QSTN.png';
 import OCT from '../../assets/images/index/logo-OCT.png';
 import near from '../../assets/images/index/logo-near.png';
 import near_large from '../../assets/images/index/logo-near-large.png';
+import awesomenear from '../../assets/images/index/logo-awesomenear.png';
 const { Option } = Select;
 // let config = getConfig()
 
@@ -127,8 +128,13 @@ export default function Index(props) {
                 </div>
                 <div className={"power"}>
                     powered by 
-                    <a href="https://near.org/" target="view_window">
+                    <a className={"near"} href="https://near.org/" target="view_window">
                         <img src={near} alt="near"/>
+                    </a>
+
+                    Find us on
+                    <a className={"awesomenear"} href="https://awesomenear.com/nepbot" target="view_window">
+                        <img src={awesomenear} alt="awesomenear"/>
                     </a>
                 </div>
 

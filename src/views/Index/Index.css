@@ -263,8 +263,15 @@
     font-weight: 400;
 }
 .power img{
-    width:60px;
+    height:20px;
     margin-left:8px;
+}
+.power .near{
+    margin-right:50px;
+}
+.power .awesomenear{
+    position: relative;
+    top:-1px;
 }
 
 .footer{
