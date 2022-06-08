@@ -251,19 +251,19 @@
 .power{
     margin-top:60px;
     margin-bottom:120px;
-    height:20px;
+    height:40px;
     display: flex;
     justify-content:center;
     align-items:center;
     font-family: Gilroy-Regular;
-    font-size: 14px;
+    font-size: 18px;
     color: rgba(255,255,255,0.6);
     letter-spacing: 0;
     text-align: center;
     font-weight: 400;
 }
 .power img{
-    height:20px;
+    height:40px;
     margin-left:8px;
 }
 .power .near{
