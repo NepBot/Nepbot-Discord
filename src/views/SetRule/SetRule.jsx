@@ -219,7 +219,7 @@ function SetRule(props) {
                     </div>
                     <div className={'file-item'}>
                         <div className={'name'}>guild name:</div>
-                        <div className={'info'}>#{item.guild_name}</div>
+                        <div className={'info'}>{item.guild_name}</div>
                     </div>
                     <div className={'file-item'}>
                         <div className={'name'}>role name:</div>

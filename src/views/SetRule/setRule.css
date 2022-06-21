@@ -83,7 +83,8 @@
     width:460px;
     padding:20px 50px 60px;
     box-sizing: border-box;
-    background: rgba(78,81,112,1);
+    /* background: rgba(78,81,112,1); */
+    background: #28282D;
     border-radius: 16px;
     overflow: hidden;
 }
@@ -226,7 +227,8 @@
     text-align: center;
     font-weight: 400;
     /* background: rgba(78,81,112,0.24); */
-    background: rgba(255,255,255,0.16);
+    background: rgba(255,255,255,0.05);
+    /* border:1px solid rgba(255,255,255,0.16); */
 }
 .rule-modal .ant-modal-footer .ant-btn-primary{
     background: linear-gradient(-83deg, #9D7DFF 0%, #8C97FF 43%, #9FD0FF 100%);

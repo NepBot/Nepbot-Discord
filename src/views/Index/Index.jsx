@@ -67,7 +67,7 @@ export default function Index(props) {
                         <div className={"feature"}>
                             <img className={"icon"} src={verfication} alt="Verfication"/>
                             <div className={"title"}>Verfication</div>
-                            <div className={"info"}>Link your Discord account with your Near wallet, set token threshold roles and make your channels exclusive!</div>
+                            <div className={"info"}>Link your Discord account with your Near wallet, set token-gated roles and make your channels exclusive!</div>
                             <div className={"list"}>
                                 <div className={"item"}>Fungible token</div>
                                 <div className={"item"}>Non Fungible token</div>
@@ -81,7 +81,7 @@ export default function Index(props) {
                         </div>
                     </div>
 
-                    <div className={"title work-title"}>Hoe does it work?🔥</div>
+                    <div className={"title work-title"}>How does it work?🔥</div>
                     <div className={"work-list"}>
                         <div className={"txt"}>
                             <div className={"title"}>Invite Nepbot</div>
@@ -93,7 +93,7 @@ export default function Index(props) {
                         <img className={"pic"} src={workRule} alt="Set up Rules"/>
                         <div className={"txt"}>
                             <div className={"title"}>Set up Rules</div>
-                            <div className={"intro"}>Server owners set up rules to roles in he servers and create excluslve channels for the roles.</div>
+                            <div className={"intro"}>Server owners set up rules to roles in servers and create excluslve channels for the roles.</div>
                         </div>
                     </div>
                     <div className={"work-list"}>
