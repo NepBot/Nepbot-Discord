@@ -134,7 +134,7 @@ function SetRule(props) {
             const roles = await getRoleList(store.get("info").guild_id);
             setRoleList(roles.filter(item=>item.name!=="@everyone"))
         }else{
-            message.info('Success');
+            // message.info('Success');
         }
         setAddDialogStatus(!addDialogStatus)
     }, [addDialogStatus]);

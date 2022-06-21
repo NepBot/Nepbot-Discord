@@ -213,7 +213,7 @@ function AddCollection(props) {
             return <div key={index} className={'royalty-item'}>
 				<div className={'royalty-account'}>
 					<Item name={['royaltyList',index,'account']} noStyle>
-                        <Input maxLength={64} bordered={false} placeholder="Account ID" onBlur={(event)=>onChange(index,'account',event)}/>
+                        <Input maxLength={64} bordered={false} placeholder="Near Account ID" onBlur={(event)=>onChange(index,'account',event)}/>
                     </Item>
                     <div className={'royalty-tip royalty-account-tip'+index}>Enter an account</div>
 				</div>
@@ -388,22 +388,24 @@ function AddCollection(props) {
                         >
                             <Input.TextArea showCount={false} maxLength={500}  autoSize={{ minRows: 1}} bordered={false} placeholder="tell others what the collection is about"/>
                         </Item>
-                        <Item
-                            label="Mint Price"
-                            name="mintPrice"
-                            rules={[
-                                () => ({
-                                    validator(_, val) {
-                                        if(!val || (val>=0)) {
-                                            return Promise.resolve();
+                        <div className={'mint-price'}>
+                            <Item
+                                label="Mint Price"
+                                name="mintPrice"
+                                rules={[
+                                    () => ({
+                                        validator(_, val) {
+                                            if(!val || (val>=0)) {
+                                                return Promise.resolve();
+                                            }
+                                            return Promise.reject('Minimum mint price is 0');
                                         }
-                                        return Promise.reject('Minimum mint price is 0');
-                                    }
-                                })
-                            ]}
-                        >
-                            <Input type="number" bordered={false} placeholder="Price per item"/>
-                        </Item>
+                                    })
+                                ]}
+                            >
+                                <Input type="number" bordered={false} placeholder="Price per item"/>
+                            </Item>
+                        </div>
                         <Item
                             label="Royalty"
                         >

@@ -190,6 +190,11 @@
     letter-spacing: 0;
     font-weight: 400;
 }
+.collection-modal .mint-price .ant-input{
+    padding:0 18px 0 0;
+    background:transparent url("../../assets/images/collection/icon-gas.png") no-repeat 909px center;
+    background-size:12px;
+}
 
 .collection-modal .ant-select .ant-select-selector{
     width:936px;
