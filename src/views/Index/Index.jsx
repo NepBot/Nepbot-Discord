@@ -132,7 +132,7 @@ export default function Index(props) {
                         <img src={near} alt="near"/>
                     </a>
 
-                    Find us on
+                    find us on
                     <a className={"awesomenear"} href="https://awesomenear.com/nepbot" target="view_window">
                         <img src={awesomenear} alt="awesomenear"/>
                     </a>
