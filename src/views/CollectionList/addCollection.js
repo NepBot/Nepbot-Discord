@@ -334,7 +334,7 @@ function AddCollection(props) {
                                         <UploadLogoContent/>
                                     </Dragger>
                                 </Item>
-                                <div className={'upload-tip'}>JPG/JPEG/ PNG/GIF/SVG. Max size:1MB.</div>
+                                <div className={'upload-tip'}>JPG/JPEG/PNG/GIF/SVG. Max size:1MB.</div>
                             </div>
                             
                             <div className={'upload-cover'}>
@@ -359,7 +359,7 @@ function AddCollection(props) {
                                     </Dragger>
                                    
                                 </Item>
-                                <div className={'upload-tip'}>JPG/JPEG/ PNG/GIF/SVG. Max size:1MB.</div>
+                                <div className={'upload-tip'}>JPG/JPEG/PNG/GIF/SVG. Max size:1MB.</div>
                             </div>
                         </div>
                         
