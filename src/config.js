@@ -36,7 +36,7 @@ export function getConfig() {
           PARAS_CONTRACT: 'paras-token-v2.testnet',
           LINKDROP: 'linkdrop6.bhc8521.testnet',
           APPLICATION_ID: '928559137179172874',
-          PARAS_API: "https://api-v3-testnet-master.paras.id",
+          PARAS_API: "https://api-v3-marketplace-testnet.paras.id",
           PARAS: "https://testnet.paras.id"
         }
       case 'dev-testnet':
@@ -52,7 +52,7 @@ export function getConfig() {
           PARAS_CONTRACT: 'paras-token-v2.testnet',
           LINKDROP: 'linkdrop6.bhc8521.testnet',
           APPLICATION_ID: '967009211823304744',
-          PARAS_API: "https://api-v3-testnet-master.paras.id",
+          PARAS_API: "https://api-v3-marketplace-testnet.paras.id",
           PARAS: "https://testnet.paras.id"
         }
       case 'betanet':

@@ -34,10 +34,10 @@ export default function Success(props) {
                 account_id: accountId,
                 sign: signature 
             })
-            if (!result) {
-                window.location.href = `${window.location.origin}/failure`
-            } else {
+            if (result == true) {
                 window.open('https://discord.com/channels/','_self')
+            } else {
+                window.location.href = `${window.location.origin}/failure`
             }
             
                 
