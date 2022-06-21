@@ -225,7 +225,8 @@
     letter-spacing: 0;
     text-align: center;
     font-weight: 400;
-    background: rgba(78,81,112,0.24);
+    /* background: rgba(78,81,112,0.24); */
+    background: rgba(255,255,255,0.16);
 }
 .rule-modal .ant-modal-footer .ant-btn-primary{
     background: linear-gradient(-83deg, #9D7DFF 0%, #8C97FF 43%, #9FD0FF 100%);
