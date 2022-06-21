@@ -53,10 +53,10 @@ function AddRule(props) {
                 arg.key_field = ['near', 'balance']
                 arg.fields = {balance: parseAmount(values.balance)}
             } else if (type == 'nft amount') {
-                if (values.contract_id == 'x.paras.near') {
+                if (values.contract_id == config.PARAS_CONTRACT) {
                     const fractions = values.collection_url.split("/")
                     const lastFraction = fractions[fractions.length - 1].split("?")
-                    arg.key_field = ['x.paras.near', lastFraction[0]]
+                    arg.key_field = [config.PARAS_CONTRACT, lastFraction[0]]
                     arg.fields = {token_amount: values.token_amount}
                 } else {
                     await account.viewFunction(values.contract_id, 'nft_metadata', {})
@@ -104,7 +104,7 @@ function AddRule(props) {
         setType(v);
     }
     const handleInputChange = async (v) => {
-        setParas(v.target.value == "x.paras.near")
+        setParas(v.target.value == config.PARAS_CONTRACT)
     }
     
     const roleList = props.roleList.map(item => 
