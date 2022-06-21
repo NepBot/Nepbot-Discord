@@ -74,13 +74,16 @@
 
 
 .ant-modal-mask{
-    background: rgba(0,0,0,0.56);
+    background: rgba(0,0,0,0.45);
+}
+.rule-modal .ant-modal{
+    width:460px!important;
 }
 .rule-modal .ant-modal-content{
     width:460px;
     padding:20px 50px 60px;
     box-sizing: border-box;
-    background: rgba(78,81,112,0.24);
+    background: rgba(78,81,112,1);
     border-radius: 16px;
     overflow: hidden;
 }

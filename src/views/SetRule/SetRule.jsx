@@ -29,9 +29,9 @@ function SetRule(props) {
     const [operationSign, setOperationSign] = useState("")
     const history = useHistory()
 
-    const handleData = async (data) => {
+    const handleData = async (data,server_name='') => {
         const roleList = await getRoleList(store.get("info").guild_id);
-        let serverName = server.name
+        let serverName = server.name || server_name
         data.forEach(async (it, index) => {
             roleList.forEach(item => {
                 if (item.id === it["role_id"]) {
@@ -122,7 +122,7 @@ function SetRule(props) {
             setAppchainIds(appchainIds)
 
             const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: search.guild_id})
-            const guildData = await handleData(data)
+            const guildData = await handleData(data,server.name)
             setDataSource(guildData)
         })();
         return () => {
@@ -222,33 +222,11 @@ function SetRule(props) {
                         <div className={'info'}>{item.role_name}</div>
                     </div>
                     <FileList item={item}/>
-
-                    {/* <div className={'guild-name'}>#{item.guild_name}</div>
-                    <div className={'role_name'}>{item.role_name}</div>
-                    <FileList item={item}/>
-                    <img className={'token-icon'} src={item.icon}/>
-                    <div className={'delete-btn'} onClick={()=>{handleDelete(item)}}>delete</div> */}
                 </div>
             );
             
             return (<div className={'setRule-list'}>
                 {setRuleItems}
-                {/* <div className={'setRule-item'} key={Math.random()}>
-                    <div className={'token-info'}>
-                        <img className={'token-icon'} src={""} alt={"token"}/>
-                        <div className={'token-symbol'}>symbol</div>
-                        <div className={'delete-btn'} onClick={()=>{handleDelete({})}}></div>
-                    </div>
-                    <div className={'file-item'}>
-                        <div className={'name'}>guild name:</div>
-                        <div className={'info'}>XX</div>
-                    </div>
-                    <div className={'file-item'}>
-                        <div className={'name'}>role name:</div>
-                        <div className={'info'}>XX</div>
-                    </div>
-                    <FileList item={item}/>
-                </div> */}
             </div>)
         }
         else{
