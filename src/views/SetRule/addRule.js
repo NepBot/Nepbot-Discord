@@ -197,14 +197,16 @@ function AddRule(props) {
             >
                 <Input bordered={false} onChange={(v) => {handleInputChange(v)}}/>
             </Item>
-            <Item
-                label="collection url"
-                name="collection_url"
-                rules={[{ required: false, message: 'Please input collection id' }]}
-                hidden={!isParas}
-            >
-                <Input bordered={false} />
-            </Item>
+            <div className={['collection-url', (isParas) ? 'show' : ''].join(' ')}>
+                <Item
+                    label="collection url"
+                    name="collection_url"
+                    rules={[{ required: false, message: 'Please input collection id' }]}
+                    hidden={!isParas}
+                >
+                    <Input bordered={false} />
+                </Item>
+            </div>
             <Item
                 label="amount"
                 name="token_amount"

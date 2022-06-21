@@ -202,7 +202,12 @@
 }
 
 
-
+.rule-modal .collection-url{
+    display: none;
+}
+.rule-modal .collection-url.show{
+    display: block;
+}
 
 .rule-modal .ant-modal-footer{
     margin-top:50px;
