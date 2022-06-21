@@ -193,7 +193,7 @@ function Collection(props) {
         else{
             return (<div className={'no-data'}>
                 <img src={no_data}/>
-                <div className={'tip'}>No data,please add a new collection.</div>
+                <div className={'tip'}>No data, please add a new collection.</div>
             </div>)
         }
     }

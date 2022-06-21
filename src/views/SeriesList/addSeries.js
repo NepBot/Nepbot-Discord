@@ -264,7 +264,7 @@ function AddSeries(props) {
                                     <UploadImageContent/>
                                 </Dragger>
                             </Item>
-                            <div className={'upload-tip'}>JPG/JPEG/ PNG/GIF/SVG. Max size:1MB.</div>
+                            <div className={'upload-tip'}>JPG/JPEG/PNG/GIF/SVG. Max size:1MB.</div>
                         </div>
 
                         <Item

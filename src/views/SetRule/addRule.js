@@ -221,7 +221,7 @@ function AddRule(props) {
 
     return (
         <div className={'modal-box'}>
-            <Modal title="Add Rule" wrapClassName="rule-modal"   visible={props.visible} onOk={props.onOk}
+            <Modal title="Add Rule" wrapClassName="rule-modal" maskClosable={false}  visible={props.visible} onOk={props.onOk}
                 footer={[
                     <Button key="back" onClick={()=>{ form.resetFields();props.onCancel(); }}>
                         cancel

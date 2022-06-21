@@ -21,7 +21,7 @@ function Failure(props) {
                 <img className={'pic'} src={failure}/>
                 <div className={'head'}>Oops!</div>
                 <div className={'text'}>
-                    Something went wrong.Please try again.
+                    Something went wrong. Please try again.
                     <a className={"text-strong"} href="https://discord.com/channels/" target="_self">Support</a>
                 </div>
             </div>
