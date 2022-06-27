@@ -66,7 +66,7 @@ export default function Index(props) {
                     <div className={"feature-box"}>
                         <div className={"feature"}>
                             <img className={"icon"} src={verfication} alt="Verfication"/>
-                            <div className={"title"}>Verfication</div>
+                            <div className={"title"}>Verification</div>
                             <div className={"info"}>Link your Discord account with your Near wallet, set token-gated roles and make your channels exclusive!</div>
                             <div className={"list"}>
                                 <div className={"item"}>Fungible token</div>

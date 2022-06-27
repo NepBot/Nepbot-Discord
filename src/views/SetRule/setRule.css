@@ -7,7 +7,7 @@
 }
 .setRule-item{
     width:326px;
-    height:274px;
+    height:306px;
     background: rgba(78,81,112,0.24);
     border-radius: 16px;
     padding:30px 30px 24px;
@@ -69,6 +69,26 @@
     font-size: 14px;
     color: #FFFFFF;
     font-weight: 400;
+}
+.file-item .info.tx{
+    display: flex;
+    align-items:center;
+    justify-content:flex-end;
+}
+.file-item .info.tx.hide{
+    display: none;
+}
+.file-item .info.tx .txt{
+    max-width:144px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-word;
+}
+.file-item .info.tx img{
+    width:12px;
+    height:12px;
+    margin-left:4px;
 }
 
 

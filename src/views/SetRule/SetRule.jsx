@@ -14,7 +14,7 @@ import test_icon from '../../assets/imgs/test_icon.png';
 
 import logo from '../../assets/images/index/logo.png';
 import add from '../../assets/images/setRule/add.png';
-import success from '../../assets/images/success.png';
+import jump from '../../assets/images/setRule/icon-jump.png';
 import no_data from '../../assets/images/no-data.png';
 
 const config = getConfig()
@@ -226,6 +226,13 @@ function SetRule(props) {
                         <div className={'info'}>{item.role_name}</div>
                     </div>
                     <FileList item={item}/>
+                    <div className={'file-item'}>
+                        <div className={'name'}>Tx:</div>
+                        <a className={['info tx',item.transation_hash ? '' : 'hide'].join(' ')} href={item.transation_hash} target="_blank">
+                            <p className={'txt'}>{item.transation_hash}</p>
+                            <img src={jump}/>
+                        </a>
+                    </div>
                 </div>
             );
             

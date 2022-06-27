@@ -124,19 +124,24 @@ function AddCollection(props) {
                 history.push({pathname: '/linkexpired', })
                 return
             }
-            
+
+            //contract request
+            const contract_args = {
+                outer_collection_id: res.collection_id,
+                contract_type: "paras",
+                guild_id: info.guild_id,
+                royalty:royalty,
+                mintable_roles: values.role_id,
+                price: parseAmount(values.mintPrice) || "0",
+                ..._sign
+            }
+            if(values.mintLimit){
+                contract_args.mint_count_limit = values.mintLimit
+            }
             await account.functionCall({
                 contractId: config.NFT_CONTRACT,
                 methodName: "create_collection",
-                args: {
-                    outer_collection_id: res.collection_id,
-                    contract_type: "paras",
-                    guild_id: info.guild_id,
-                    royalty:royalty,
-                    mintable_roles: values.role_id,
-                    price: parseAmount(values.mintPrice) || "0",
-                    ..._sign
-                },
+                args: contract_args,
                 attachedDeposit: '20000000000000000000000'
             })
         } catch (errorInfo) {
@@ -414,23 +419,48 @@ function AddCollection(props) {
                                 Add
                             </div>
                         </Item>
-                        <Item
-                            label="Required Role"
-                        >
-                            <div className={'role-intro'}>Items in this collection can only be minted by members with at lease one of the selected roles. This collection is open to all if no roles are selected.</div>
-                            <Item name="role_id">
-                                <Select
-                                    mode="multiple"
-                                    placeholder="Please select"
-                                    dropdownClassName={"collection-modal-role-dropdown"}
-                                    // defaultOpen={true}
-                                    // autoFocus={true}
-                                    // open={true}
-                                >
-                                    {roleList}
-                                </Select>
+                        <div className={'required-role'}>
+                            <Item
+                                label="Required Role"
+                            >
+                                <div className={'role-intro'}>Items in this collection can only be minted by members with at lease one of the selected roles. This collection is open to all if no roles are selected.</div>
+                                <Item name="role_id">
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Please select"
+                                        dropdownClassName={"collection-modal-role-dropdown"}
+                                        // defaultOpen={true}
+                                        // autoFocus={true}
+                                        // open={true}
+                                    >
+                                        {roleList}
+                                    </Select>
+                                </Item>
                             </Item>
-                        </Item>
+                        </div>
+                        <div className={'mint-limit'}>
+                            <Item
+                                label="Minting Limit Per Wallet"
+                            >
+                                <div className={'role-intro'}>The upper limit of number of NFTs can be minted from this collection per wallet.</div>
+                                <Item
+                                    name="mintLimit"
+                                    rules={[
+                                        () => ({
+                                            validator(_, val) {
+                                                if(!val || (val>=1)) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject("Minimum number is 1. Leave it blank if there's no limit.");
+                                            }
+                                        })
+                                    ]}
+                                >
+                                    <Input type="number" bordered={false} placeholder=""/>
+                                </Item>
+                            </Item>
+                            
+                        </div>
                     </Form>
                     <div className={'my-modal-footer'}>
                         <div className={'btn cancel'} onClick={()=>{ form.resetFields();props.onCancel(); }}>

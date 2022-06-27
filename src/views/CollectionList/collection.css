@@ -270,6 +270,9 @@
 .collection-modal .ant-select-selection-item-remove .anticon-close{
     display:none;
 }
+.collection-modal  .required-role>.ant-form-item,.collection-modal  .mint-limit>.ant-form-item{
+    margin-bottom: 0;
+}
 .collection-modal .ant-empty-description{
     font-family: Gilroy-Regular;
     font-size: 14px;
