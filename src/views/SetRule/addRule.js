@@ -106,6 +106,10 @@ function AddRule(props) {
     const handleInputChange = async (v) => {
         setParas(v.target.value == config.PARAS_CONTRACT)
     }
+
+    const onSearch = (e) => {
+        console.log(e,'-----');
+    }
     
     const roleList = props.roleList.map(item => 
         <Option value={item.id} key={item.id}>{item.name}</Option>
@@ -218,9 +222,6 @@ function AddRule(props) {
         </div>
     }
 
-
-
-
     return (
         <div className={'modal-box'}>
             <Modal title="Add Rule" wrapClassName="rule-modal" maskClosable={false}  visible={props.visible} onOk={props.onOk}
@@ -258,7 +259,7 @@ function AddRule(props) {
                         name="role_id"
                         rules={[{ required: true, message: 'Please choose a role' }]}
                     >
-                        <Select dropdownClassName={"dropdown"}>
+                        <Select allowClear showSearch optionFilterProp="children" onSearch={onSearch} dropdownClassName={"dropdown"}>
                             {roleList}
                         </Select>
                     </Item>

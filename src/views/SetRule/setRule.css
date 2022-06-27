@@ -122,6 +122,9 @@
     flex-direction: column;
     margin-bottom:30px;
 }
+.rule-modal .ant-form-item-explain{
+    margin-top:10px;
+}
 .rule-modal .ant-form-item-label{
     text-align:left;
     height:17px;
@@ -170,6 +173,12 @@
 .rule-modal .ant-select-selector .ant-select-selection-search input{
     height:44px!important;
     line-height:44px!important;
+    font-family: Gilroy-Regular;
+    font-size: 14px;
+    color: #FFFFFF;
+    letter-spacing: 0;
+    font-weight: 400;
+
 }
 .rule-modal .ant-select .ant-select-arrow{
     width:12px;
@@ -184,6 +193,14 @@
 }
 .rule-modal .ant-select .ant-select-arrow svg{
     display:none;
+}
+.rule-modal .ant-select .ant-select-clear{
+    right: 16px;
+    background:#20202D url('../../assets/images/setRule/icon-close.png') no-repeat center center;
+    background-size:12px 12px;
+}
+.rule-modal .ant-select .ant-select-clear .anticon-close-circle{
+   display:none;
 }
 .dropdown{
     background: #0D0D16!important;
