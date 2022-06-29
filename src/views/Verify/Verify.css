@@ -30,25 +30,53 @@
   font-size: 18px;
   color: #FFFFFF;
   text-align: center;
-  line-height: 26px;
+  line-height: 22px;
   font-weight: 700;
 }
-.verify-info .server-name{
-  margin-top:6px;
+.verify-info .account-name{
+  margin-top:8px;
   font-family: Gilroy-Regular;
   font-size: 16px;
   color: #FFFFFF;
   text-align: center;
   font-weight: 400;
+  line-height:20px;
 }
-.verify-info .connect-btn{
+.verify-info .server-name{
+  margin-top:8px;
+  opacity: 0.4;
+  font-family: Gilroy-Regular;
+  font-size: 14px;
+  color: #FFFFFF;
+  text-align: center;
+  font-weight: 400;
+  line-height: 16px;
+}
+.verify-info .disconnect-btn{
   margin-top:60px;
   display:block;
-  width:150px;
+  width:240px;
+  height:50px;
+  text-align: center;
+  line-height:48px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.16);
+  font-family: Gilroy-Regular;
+  font-size: 16px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  text-align: center;
+  font-weight: 400;
+  cursor: pointer;
+}
+.verify-info .near-connect-btn{
+  margin-top:60px;
+  display:block;
+  width:240px;
   height:50px;
   text-align: center;
   line-height:50px;
-  background-image: linear-gradient(-83deg, #9D7DFF 0%, #8C97FF 43%, #9FD0FF 100%);
+  border: 1px solid rgba(255,255,255,0.16);
   border-radius: 8px;
   font-family: Gilroy-Regular;
   font-size: 16px;
@@ -57,6 +85,32 @@
   text-align: center;
   font-weight: 400;
   cursor: pointer;
+  background:url('../../assets/images/logo-near.png') no-repeat 12px center;
+  background-size:24px;
+}
+.verify-info .sw-connect-btn-box{
+  margin-top:20px;
+  display:block;
+  width:240px;
+  height:50px;
+  background-image: linear-gradient(-83deg, #9D7DFF 0%, #8C97FF 43%, #9FD0FF 100%);
+  border-radius: 8px;
+}
+.verify-info .sw-connect-btn{
+  width:240px;
+  height:50px;
+  text-align: center;
+  line-height:50px;
+  border-radius: 8px;
+  font-family: Gilroy-Regular;
+  font-size: 16px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  text-align: center;
+  font-weight: 400;
+  cursor: pointer;
+  background:url('../../assets/images/logo-sender.png') no-repeat 12px center;
+  background-size:24px;
 }
 .verify-info .connect-btn:hover{
   background-image: linear-gradient(-88deg, #812BFF 0%, #6A79FF 41%, #4D85FF 100%);
@@ -69,5 +123,6 @@
   color: #FFFFFF;
   text-align: center;
   font-weight: 400;
+  line-height:16px;
 }
 
