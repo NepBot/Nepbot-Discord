@@ -6,10 +6,12 @@ import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
 import './Loading.css';
 import load from '../../assets/images/load.gif';
+import { useHistory } from 'react-router-dom'
 
 const config = getConfig()
 
 export default function Success(props) {
+    const history = useHistory()
     useEffect(()=>{
 
         (async ()=>{
@@ -37,7 +39,7 @@ export default function Success(props) {
             if (result == true) {
                 window.open('https://discord.com/channels/','_self')
             } else {
-                window.location.href = `${window.location.origin}/failure`
+                history.push({pathname: `/failure`})
             }
             
                 

@@ -15,6 +15,7 @@ export const setInfo = async (args) => {
     }
     return false
 }
+
 export const signRule = async (args)=>{
     const json = await fetch(`/api/getOwnerSign`,{
         headers:{ 'Content-Type': 'application/json' },
@@ -27,6 +28,7 @@ export const signRule = async (args)=>{
     }
     return false
 }
+
 export const getRoleList = async (guild_id)=>{
     const json = await fetch(`/api/getRole/${guild_id}`);
     const result = await json.json()
@@ -35,6 +37,7 @@ export const getRoleList = async (guild_id)=>{
     }
     return false
 }
+
 export const getServer = async (guild_id)=>{
     const json = await fetch(`/api/getServer/${guild_id}`);
     const result = await json.json()
@@ -43,8 +46,18 @@ export const getServer = async (guild_id)=>{
     }
     return false
 }
-export const getUser = async (guild_id, user_id) => {
-    const json = await fetch(`/api/getUser/${guild_id}/${user_id}`);
+
+export const getUser = async (guild_id, user_id, sign) => {
+    const json = await fetch(`/api/getUser/${guild_id}/${user_id}/${sign}`);
+    const result = await json.json()
+    if (result.success) {
+        return result.data || true
+    }
+    return false
+}
+
+export const getConnectedAccount = async (guild_id, user_id) => {
+    const json = await fetch(`/api/getConnectedAccount/${guild_id}/${user_id}`);
     const result = await json.json()
     if (result.success) {
         return result.data || true
