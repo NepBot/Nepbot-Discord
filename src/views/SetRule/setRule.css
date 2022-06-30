@@ -84,6 +84,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     word-break: break-word;
+    margin-bottom:0;
 }
 .file-item .info.tx img{
     width:12px;

@@ -47,6 +47,15 @@ export const getServer = async (guild_id)=>{
     return false
 }
 
+export const getTransactionList = async (guild_id)=>{
+    const json = await fetch(`/api/getTxByGuild/${guild_id}`);
+    const result = await json.json()
+    if (result.success) {
+        return result.data || true
+    }
+    return false
+}
+
 export const getUser = async (guild_id, user_id, sign) => {
     const json = await fetch(`/api/getUser/${guild_id}/${user_id}/${sign}`);
     const result = await json.json()
