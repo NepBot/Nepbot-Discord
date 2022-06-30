@@ -69,26 +69,12 @@
   font-weight: 400;
   cursor: pointer;
 }
-.verify-info .near-connect-btn{
-  margin-top:60px;
-  display:block;
-  width:240px;
-  height:50px;
-  text-align: center;
+.verify-info .disconnect-btn:hover{
   line-height:50px;
-  border: 1px solid rgba(255,255,255,0.16);
-  border-radius: 8px;
-  font-family: Gilroy-Regular;
-  font-size: 16px;
-  color: #FFFFFF;
-  letter-spacing: 0;
-  text-align: center;
-  font-weight: 400;
-  cursor: pointer;
-  background:url('../../assets/images/logo-near.png') no-repeat 12px center;
-  background-size:24px;
+  border: 0;
+  background: linear-gradient(-88deg, #812BFF 0%, #6A79FF 41%, #4D85FF 100%);
 }
-.verify-info .sw-connect-btn-box{
+.verify-info .connect-btn-box{
   margin-top:20px;
   display:block;
   width:240px;
@@ -96,7 +82,7 @@
   background-image: linear-gradient(-83deg, #9D7DFF 0%, #8C97FF 43%, #9FD0FF 100%);
   border-radius: 8px;
 }
-.verify-info .sw-connect-btn{
+.verify-info .connect-btn{
   width:240px;
   height:50px;
   text-align: center;
@@ -109,10 +95,16 @@
   text-align: center;
   font-weight: 400;
   cursor: pointer;
+}
+.verify-info .connect-btn.near-btn{
+  background:url('../../assets/images/logo-near.png') no-repeat 12px center;
+  background-size:24px;
+}
+.verify-info .connect-btn.sw-btn{
   background:url('../../assets/images/logo-sender.png') no-repeat 12px center;
   background-size:24px;
 }
-.verify-info .connect-btn:hover{
+.verify-info .connect-btn-box:hover{
   background-image: linear-gradient(-88deg, #812BFF 0%, #6A79FF 41%, #4D85FF 100%);
 }
 .verify-info .tip{

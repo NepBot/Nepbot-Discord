@@ -92,8 +92,8 @@ export default function Index(props) {
         if (!accountId) {
             return <div>
                 <div className={'server-name'}>{serverName}</div>
-                <div className={'near-connect-btn'} onClick={() => {handleConnect(("near"))}}>Near Wallet</div>
-                <div className={'sw-connect-btn-box'}><div className={'sw-connect-btn'} onClick={() => {handleConnect(("sender"))}}>Sender Wallet</div></div>
+                <div className={'connect-btn-box'}><div className={'connect-btn near-btn'} onClick={() => {handleConnect(("near"))}}>Near Wallet</div></div>
+                <div className={'connect-btn-box'}><div className={'connect-btn sw-btn'} onClick={() => {handleConnect(("sender"))}}>Sender Wallet</div></div>
                 <div className={'tip'}>Connect to your wallet</div>
             </div>
         } else {
