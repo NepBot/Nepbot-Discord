@@ -74,7 +74,7 @@ function SetRule(props) {
             
             for(let tx of txList){
                 if(isObjectValueEqual(it.fields , tx['roles'][0]['fields']) && it.key_field.join('') === tx['roles'][0]['key_field'].join('') && it.role_id === tx['roles'][0]['role_id']){
-                    it.transation_hash = tx.transaction_hash;
+                    it.transaction_hash = tx.transaction_hash;
                 }
             }
 
@@ -256,8 +256,8 @@ function SetRule(props) {
                     <FileList item={item}/>
                     <div className={'file-item'}>
                         <div className={'name'}>Tx:</div>
-                        <a className={['info tx',item.transation_hash ? '' : 'hide'].join(' ')} href={config.explorerUrl+'/transactions/'+item.transation_hash} target="_blank">
-                            <p className={'txt'}>{item.transation_hash}</p>
+                        <a className={['info tx',item.transaction_hash ? '' : 'hide'].join(' ')} href={config.explorerUrl+'/txns/'+item.transaction_hash} target="_blank">
+                            <p className={'txt'}>{item.transaction_hash}</p>
                             <img src={jump}/>
                         </a>
                     </div>
