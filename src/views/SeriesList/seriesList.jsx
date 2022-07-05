@@ -54,6 +54,9 @@ function Series(props) {
         //get_token_metadata
         try{
             setIsLoading(true);
+            const near = await connect(config);
+            const wallet = new WalletConnection(near, 'nepbot');
+            account = wallet.account()
             const res = await account.viewFunction(config.NFT_CONTRACT, 'get_token_metadata', {collection_id: props.match.params.id})
             setSeriesList(res)
             setShowList(res)
@@ -66,8 +69,14 @@ function Series(props) {
     }
 
     const handleAddStatus = useCallback(async () => {
+        if (!addDialogStatus) {
+            
+        }else{
+            handleData();
+            message.info('Success');
+        }
         setAddDialogStatus(!addDialogStatus)
-    }, []);
+    }, [addDialogStatus]);
 
     const handleSearch = (value) => {
         const list = [];

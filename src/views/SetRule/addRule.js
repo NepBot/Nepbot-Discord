@@ -99,6 +99,7 @@ function AddRule(props) {
                 }
             })
         } catch (errorInfo) {
+            setConfirmLoading(false);
             console.log('Failed:', errorInfo);
         }
     };

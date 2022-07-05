@@ -27,6 +27,7 @@ function AddCollection(props) {
     const [royalty,setRoyalty] = useState({})
     const history = useHistory()
     const [showConfirmModal, setConfrimModalStatus] = useState(false);
+    const [isParasCreated, setParasCreated] = useState(false);
     // const [isParas, setParas] = useState(false)
 
     const onFinish = async (values) => {
@@ -73,42 +74,57 @@ function AddCollection(props) {
             const near = await connect(config);
             const wallet = new WalletConnection(near,"nepbot");
             const account = wallet.account() 
-            const outerCollectionId = `${values.name.replace(/\s+/g, "-")}-guild-${props.server.name.trim()}-by-${config.NFT_CONTRACT.replaceAll(".", "")}`
-            const collection = await getCollection(outerCollectionId)
-            if (!collection || collection.results.length > 0) {
-                setConfirmLoading(false);
-                setConfrimModalStatus(false)
-                message.error("Collection name has already been taken");
-                return;
-            }
-            
-            //formData
-            let params = {
-                args: {
+            const outerCollectionId = `${values.name.replace(/\s+/g, "-")}-guild-${props.server.name.replace(/\s+/g, "-")}-by-${config.NFT_CONTRACT.replaceAll(".", "")}`;
+            let res = null;
+            const collection = await getCollection(outerCollectionId);
+            console.log(isParasCreated,'---isParasCreated---');
+            if (!collection || collection.results.length > 0 || isParasCreated) {
+                try{
+                    const check_res = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id: `paras:${outerCollectionId}`})
+                    console.log(check_res,'---check_res---');
+                    setConfirmLoading(false);
+                    setConfrimModalStatus(false)
+                    message.error("Collection name has already been taken");
+                    return;
+                }catch(e){
+                    res = {
+                        collection_id : outerCollectionId,
+                    }
+                    console.log(e,'--e---');
+                }
+            }else{
+                //formData
+                let params = {
                     args: {
-                        collection: `${values.name.replace(/\s+/g, "-")}-guild-${props.server.name.trim()}`,
-                        description:values.description,
-                        creator_id: config.NFT_CONTRACT,
-                        twitter: "",
-                        website: "",
-                        discord: "",
+                        args: {
+                            collection: `${values.name.replace(/\s+/g, "-")}-guild-${props.server.name.replace(/\s+/g, "-")}`,
+                            description:values.description,
+                            creator_id: config.NFT_CONTRACT,
+                            twitter: "",
+                            website: "",
+                            discord: "",
+                        },
+                        sign: operationSign,
+                        user_id: info.user_id,
+                        guild_id: info.guild_id
                     },
-                    sign: operationSign,
-                    user_id: info.user_id,
-                    guild_id: info.guild_id
-                },
-                account_id: account.accountId,
-            }
-            params.sign = await sign(account, params.args)
-            const formData = new FormData();
-            formData.append('files',values['logo'][0]['originFileObj'])
-            formData.append('files',values['cover'][0]['originFileObj'])
-            formData.append('args', JSON.stringify(params))
-            
+                    account_id: account.accountId,
+                }
+                params.sign = await sign(account, params.args)
+                const formData = new FormData();
+                formData.append('files',values['logo'][0]['originFileObj'])
+                formData.append('files',values['cover'][0]['originFileObj'])
+                formData.append('args', JSON.stringify(params))
+                
 
-            //paras - collection
-            const res = await createCollection(formData);
-            //{"status":1,"data":{"collection":{"_id":"6280b224692d163b193d09de","collection_id":"fff-by-bhc22testnet","blurhash":"UE3UQdpLQ8VWksZ}Z~ksL#Z}pfkXVWp0kXVq","collection":"fff","cover":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","createdAt":1652601380975,"creator_id":"bhc22.testnet","description":"fff","media":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","socialMedia":{"twitter":"","discord":"","website":""},"updatedAt":1652601380975}}}
+                //paras - collection
+                res = await createCollection(formData);
+                //{"status":1,"data":{"collection":{"_id":"6280b224692d163b193d09de","collection_id":"fff-by-bhc22testnet","blurhash":"UE3UQdpLQ8VWksZ}Z~ksL#Z}pfkXVWp0kXVq","collection":"fff","cover":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","createdAt":1652601380975,"creator_id":"bhc22.testnet","description":"fff","media":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","socialMedia":{"twitter":"","discord":"","website":""},"updatedAt":1652601380975}}}
+                if(res.collection_id){
+                    setParasCreated(true);
+                    console.log(isParasCreated,'---isParasCreated----1111---');
+                }
+            }
 
             const args = {
                 sign: operationSign,
@@ -139,7 +155,7 @@ function AddCollection(props) {
             if(values.mintLimit){
                 contract_args.mint_count_limit = values.mintLimit
             }
-            await requestTransaction(
+            const data = await requestTransaction(
                 account,
                 config.NFT_CONTRACT,
                 "create_collection",
@@ -147,7 +163,18 @@ function AddCollection(props) {
                 '300000000000000',
                 '20000000000000000000000'
             )
+            setTimeout(()=>{
+                if(data){
+                    setConfirmLoading(false);
+                    setConfrimModalStatus(false);
+                    form.resetFields();
+                    setLogoUrl('');
+                    setCoverUrl('');
+                    props.onOk();
+                }
+            });
         } catch (errorInfo) {
+            setConfirmLoading(false);
             console.log('Failed:', errorInfo);
         }
     };

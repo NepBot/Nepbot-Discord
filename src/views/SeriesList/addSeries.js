@@ -104,7 +104,7 @@ function AddSeries(props) {
                 history.push({pathname: '/linkexpired', })
                 return
             }
-            await requestTransaction(
+            const data = await requestTransaction(
                 account,
                 config.NFT_CONTRACT,
                 "add_token_metadata",
@@ -122,8 +122,15 @@ function AddSeries(props) {
                 '300000000000000',
                 '20000000000000000000000'
             )
+            if(data){
+                setConfirmLoading(false);
+                form.resetFields();
+                setImageUrl('');
+                props.onOk();
+            }
             
         } catch (errorInfo) {
+            setConfirmLoading(false);
             console.log('Failed:', errorInfo);
         }
     };
