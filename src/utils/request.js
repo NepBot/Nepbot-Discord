@@ -9,7 +9,6 @@ export async function generateToken() {
     const account = await _wallet.account();
     const accountId = account.accountId;
 
-    console.log(config,account,accountId,'accountId');
     const arr = new Array(accountId)
     for (var i = 0; i < accountId.length; i++) {
         arr[i] = accountId.charCodeAt(i)

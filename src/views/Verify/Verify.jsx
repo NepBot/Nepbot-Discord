@@ -37,6 +37,7 @@ export default function Index(props) {
             })
             if (res && res.accessKey) {
                 window.localStorage.setItem(`near-api-js:keystore:pending_key${res.accessKey.publicKey}:${config.networkId}`, res.accessKey.secretKey)
+                window.localStorage.setItem("isSender", true)
                 history.push({pathname: `/wait`, search: `account_id=${window.near.accountId}&public_key=${encodeURIComponent(res.accessKey.publicKey)}&all_keys=${encodeURIComponent(res.accessKey.publicKey)}`})
             }
         }  
@@ -53,6 +54,7 @@ export default function Index(props) {
 
     const handleDisconnect = useCallback(async () => {
         const _near = await connect(config);
+        window.localStorage.removeItem("isSender")
         const _wallet = new WalletConnection(_near,"nepbot");
         if (typeof window.near !== 'undefined' && window.near.isSender && window.near.isSignedIn()) {
             await window.near.signOut()

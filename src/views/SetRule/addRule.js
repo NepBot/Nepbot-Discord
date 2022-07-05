@@ -6,6 +6,7 @@ import {getConfig} from "../../config";
 import {signRule} from "../../api/api";
 import {contract, parseAmount, sign} from "../../utils/util";
 import store from "../../store/discordInfo";
+import { requestTransaction } from '../../utils/contract';
 
 const config = getConfig()
 
@@ -82,13 +83,14 @@ function AddRule(props) {
                 history.push({pathname: '/linkexpired', })
                 return
             }
-            const data = await account.functionCall(
+            const data = await requestTransaction(
+                account,
                 config.RULE_CONTRACT,
                 'set_roles',
                  {roles: [arg], ..._sign},
                 '300000000000000',
                 '20000000000000000000000',
-            );
+            )
             setTimeout(()=>{
                 if(data){
                     setConfirmLoading(false);

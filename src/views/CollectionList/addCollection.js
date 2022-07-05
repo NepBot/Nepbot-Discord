@@ -9,6 +9,7 @@ import store from "../../store/discordInfo";
 import js_sha256 from "js-sha256";
 import icon_upload from '../../assets/images/icon-upload.png';
 import loading from '../../assets/images/loading.png';
+import { requestTransaction } from '../../utils/contract';
 
 const config = getConfig()
 
@@ -138,12 +139,14 @@ function AddCollection(props) {
             if(values.mintLimit){
                 contract_args.mint_count_limit = values.mintLimit
             }
-            await account.functionCall({
-                contractId: config.NFT_CONTRACT,
-                methodName: "create_collection",
-                args: contract_args,
-                attachedDeposit: '20000000000000000000000'
-            })
+            await requestTransaction(
+                account,
+                config.NFT_CONTRACT,
+                "create_collection",
+                contract_args,
+                '300000000000000',
+                '20000000000000000000000'
+            )
         } catch (errorInfo) {
             console.log('Failed:', errorInfo);
         }

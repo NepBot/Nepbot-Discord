@@ -8,6 +8,7 @@ import {contract, parseAmount, sign, encodeImageToBlurhash} from "../../utils/ut
 import store from "../../store/discordInfo";
 import icon_upload from '../../assets/images/icon-upload.png';
 import loading from '../../assets/images/loading.png';
+import { requestTransaction } from '../../utils/contract';
 
 const config = getConfig()
 
@@ -103,10 +104,11 @@ function AddSeries(props) {
                 history.push({pathname: '/linkexpired', })
                 return
             }
-            await account.functionCall({
-                contractId: config.NFT_CONTRACT,
-                methodName: "add_token_metadata",
-                args: {
+            await requestTransaction(
+                account,
+                config.NFT_CONTRACT,
+                "add_token_metadata",
+                {
                     collection_id: collection_id,
                     token_metadata: {
                         title: values.name,
@@ -117,24 +119,9 @@ function AddSeries(props) {
                     },
                     ..._sign
                 },
-                gas: '300000000000000',
-                attachedDeposit: '20000000000000000000000'
-            })
-            // await account.functionCall({
-            //     contractId: "paras-token-v2.testnet",
-            //     methodName: "nft_create_series",
-            //     args: {
-            //         //collection_id: collection_id,
-            //         token_metadata: {
-            //             title: values.name,
-            //             description: values.description,
-            //             media: res[0].replace("ipfs://", ""),
-            //             reference: res[1].replace("ipfs://", ""),
-            //         },
-            //         //..._sign
-            //     },
-            //     attachedDeposit: '20000000000000000000000'
-            // })
+                '300000000000000',
+                '20000000000000000000000'
+            )
             
         } catch (errorInfo) {
             console.log('Failed:', errorInfo);
@@ -162,7 +149,6 @@ function AddSeries(props) {
     }
 
     function uploadImage(info){
-        console.log(info,'info');
         setImageUrl(info.file)
         setImage(info.file)
         getBase64(info.file, imageUrl =>

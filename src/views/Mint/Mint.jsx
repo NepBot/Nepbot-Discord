@@ -9,6 +9,7 @@ import qs from "qs";
 import './Mint.css';
 import load from '../../assets/images/load.gif';
 import BN from 'bn.js'
+import { requestTransaction } from '../../utils/contract';
 
 const config = getConfig()
 
@@ -59,18 +60,18 @@ export default function Success(props) {
                 history.push({pathname: '/linkexpired', })
                 return
             }
-
-            await account.functionCall({
-                contractId: config.NFT_CONTRACT,
-                methodName: "nft_mint",
-                args: {
+            await requestTransaction(
+                account,
+                config.NFT_CONTRACT,
+                "nft_mint",
+                {
                     collection_id: search.collection_id,
                     ..._sign
                 },
-                gas: '300000000000000',
-                attachedDeposit: price.toString(),
-                walletCallbackUrl: `${config.PARAS}/${accountId}/collectibles`
-            })
+                '300000000000000',
+                price.toString(),
+                `${config.PARAS}/${accountId}/collectibles`
+            )
                 
         })();
         return ()=>{
