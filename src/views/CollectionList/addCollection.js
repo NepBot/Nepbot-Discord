@@ -153,7 +153,7 @@ function AddCollection(props) {
                 ..._sign
             }
             if(values.mintLimit){
-                contract_args.mint_count_limit = values.mintLimit
+                contract_args.mint_count_limit = parseInt(values.mintLimit)
             }
             const data = await requestTransaction(
                 account,
