@@ -74,6 +74,9 @@
   border: 0;
   background: linear-gradient(-88deg, #812BFF 0%, #6A79FF 41%, #4D85FF 100%);
 }
+.verify-info .disconnect-btn.other-btn{
+  margin-top:20px;
+}
 .verify-info .connect-btn-box{
   margin-top:20px;
   display:block;
