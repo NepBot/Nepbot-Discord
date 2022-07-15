@@ -19,6 +19,19 @@
   flex-direction: column;
   align-items: center;
 }
+.verify-info .avatar-box{
+  width:90px;
+  height:90px;
+  border-radius: 50%;
+  position: relative;
+}
+.verify-info .avatar-box .icon-connected{
+  width:24px;
+  height:24px;
+  position:absolute;
+  right:0;
+  bottom:0;
+}
 .verify-info .avatar{
   width:90px;
   height:90px;
