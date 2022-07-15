@@ -8,7 +8,8 @@ import {sign} from "../../utils/util";
 import './Verify.css';
 import store from "../../store/discordInfo";
 import { setInfo, getServer, getUser, getConnectedAccount, disconnectAccount } from '../../api/api';
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom';
+import icon_connected from '../../assets/images/icon-connected.png';
 
 const config = getConfig()
 
@@ -134,21 +135,30 @@ export default function Index(props) {
             return <div></div>
         }
         if(accountId){
-            return <div>
+            return <div className={'verify-info'}>
+                <div className={'avatar-box'}>
+                    <img className={'avatar'} src={avatarURL} alt={displayName} hidden={avatarURL == ''}/>
+                    <img className={'icon-connected'} src={icon_connected} alt=""/>
+                </div>
+                <div className={'name'}>{displayName}</div>
                 <div className={'account-name'}>{accountId}</div>
                 <div className={'server-name'}>{serverName}</div>
                 <div className={'disconnect-btn'} onClick={handleDisconnect}>Disconnect</div>
             </div>
         }else{
             if(localAccount){
-                return <div>
+                return <div className={'verify-info'}>
+                    <img className={'avatar'} src={avatarURL} alt={displayName} hidden={avatarURL == ''}/>
+                    <div className={'name'}>{displayName}</div>
                     <div className={'server-name'}>{serverName}</div>
                     <div className={'connect-btn-box'}><div className={'connect-btn'} onClick={() => {connectWallet()}}>{localAccount}</div></div>
                     <div className={'disconnect-btn other-btn'} onClick={handleDisconnect}>Other Wallets</div>
                     <div className={'tip'}>Connect to your wallet</div>
                 </div>
             }else{
-                return <div>
+                return <div className={'verify-info'}>
+                    <img className={'avatar'} src={avatarURL} alt={displayName} hidden={avatarURL == ''}/>
+                    <div className={'name'}>{displayName}</div>
                     <div className={'server-name'}>{serverName}</div>
                     <div className={'connect-btn-box'}><div className={'connect-btn near-btn'} onClick={() => {handleConnect(("near"))}}>Near Wallet</div></div>
                     <div className={'connect-btn-box'}><div className={'connect-btn sw-btn'} onClick={() => {handleConnect(("sender"))}}>Sender Wallet</div></div>
@@ -161,13 +171,8 @@ export default function Index(props) {
 
     return (
         <div className={"verify-box"}>
-            <div className={'verify-info'}>
-                <img className={'avatar'} src={avatarURL} alt={displayName} hidden={avatarURL == ''}/>
-                <div className={'name'}>{displayName}</div>
-                
+      
                 <Login></Login>
-                
-            </div>
             
         </div>
     )
