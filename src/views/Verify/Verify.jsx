@@ -46,23 +46,20 @@ export default function Index(props) {
     };
 
     const handleConnect = useCallback(async (type) => {
-        // const _near = await connect(config);
-        // const _wallet = new WalletConnection(_near,"nepbot");
-        // console.log(_wallet)
-        // setNear(_near);
-        // setWallet(_wallet)
         await signIn(wallet, type); 
     }, [near,wallet])
 
     const handleDisconnect = useCallback(async () => {
-        // const _near = await connect(config);
-        window.localStorage.removeItem("isSender")
-        // const _wallet = new WalletConnection(_near,"nepbot");
         if(localAccount){
             if (typeof window.near !== 'undefined' && window.near.isSender && window.near.isSignedIn()) {
-                await window.near.signOut()
+                const res = await window.near.signOut()
+                if (res != true) {
+                    return
+                } 
+                window.localStorage.removeItem("isSender")
+            } else {
+                await wallet.signOut()
             }
-            await wallet.signOut()
         }
         const search =  qs.parse(props.location.search.slice(1));
         const res = await disconnectAccount({
@@ -75,25 +72,7 @@ export default function Index(props) {
     })
 
     const connectWallet = useCallback(async () => {
-        const accountId = wallet.getAccountId()
-        const params = store.get("info")
-        const args = {
-            account_id: accountId, 
-            user_id: params.user_id,
-            guild_id: params.guild_id,
-            sign: params.sign
-        }
-        const signature = await sign(wallet.account(), args)
-        let result = await setInfo({
-            args: args,
-            account_id: accountId,
-            sign: signature 
-        })
-        if (result == true) {
-            window.open('https://discord.com/channels/','_self')
-        } else {
-            history.push({pathname: `/failure`})
-        }
+        history.push({pathname: `/wait`})
     })
 
     useEffect(async ()=>{
