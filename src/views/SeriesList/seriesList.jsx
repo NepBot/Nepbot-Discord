@@ -93,7 +93,9 @@ function Series(props) {
     }
 
     const backCollectionList = () => {
+        // console.log(history,document.location);
         history.push({pathname: `/collectionlist`,search:props.location.search})
+        // history.go(-1);
     }
 
 
