@@ -30,6 +30,7 @@ function Collection(props) {
 
     useEffect(() => {
         (async () => {
+            console.log(props.location.search,'--props.location.search--');
             const search =  qs.parse(props.location.search.slice(1));
             store.set("info", {
                 guild_id: search.guild_id,
@@ -146,9 +147,9 @@ function Collection(props) {
         setAddDialogStatus(!addDialogStatus)
     }, [addDialogStatus]);
 
-    const handleSeriesList = useCallback(async (collection) => {
-        history.push({pathname: `/serieslist/${collection.inner_collection_id}`})
-    }, [])
+    const handleSeriesList = (collection) => {
+        history.push({pathname: `/serieslist/${collection.inner_collection_id}`,search:props.location.search})
+    }
 
 
     function CollectionList(){
