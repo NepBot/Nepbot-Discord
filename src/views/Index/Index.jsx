@@ -160,7 +160,7 @@ export default function Index(props) {
                         <a className={"brand"} href="https://shor.by/tan" target="view_window">
                             <img src={tandao} alt="Tan Dao"/>
                         </a>
-                        <a className={"brand"} href="" target="view_window">
+                        <a className={"brand"} href="https://paras.id/collection/tomorrows-citizens-by-tomorrowscitizensnear" target="view_window">
                             <img src={tomorrow_citizen} alt="tomorrow's citizen"/>
                         </a>
 
