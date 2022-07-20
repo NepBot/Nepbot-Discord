@@ -73,7 +73,7 @@ function Series(props) {
             
         }else{
             handleData();
-            message.info('Success');
+            // message.info('Success');
         }
         setAddDialogStatus(!addDialogStatus)
     }, [addDialogStatus]);
