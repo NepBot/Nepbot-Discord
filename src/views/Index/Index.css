@@ -276,8 +276,15 @@
     top:-1px;
 }
 
+.footer-box{
+    position: relative;
+    z-index: 2;
+    background: #000000;
+    min-width: 1440px;
+}
 .footer{
-    width: 100%;
+    width: 1440px;
+    margin: 0 auto;
     padding:0 13.888889%;
     height:80px;
     display: flex;

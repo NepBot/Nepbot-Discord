@@ -177,7 +177,8 @@ export default function Index(props) {
                         <img src={awesomenear_small} alt="awesomenear"/>
                     </a>
                 </div>
-
+            </div>
+            <div className={"footer-box"}>
                 <div className={"footer"}>
                     <div className={"media-list"}>
                         <a className={"media github"} href="https://github.com/NepBot" target="view_window"></a>
