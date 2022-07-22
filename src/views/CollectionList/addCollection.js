@@ -490,7 +490,7 @@ function AddCollection(props) {
                         </div>
                     </Form>
                     <div className={'my-modal-footer'}>
-                        <div className={'btn cancel'} onClick={()=>{ form.resetFields();props.onCancel(); }}>
+                        <div className={'btn cancel'} onClick={()=>{ form.resetFields();setLogoUrl('');setCoverUrl('');props.onCancel(); }}>
                             cancel
                         </div>
                         <div className={'btn ok'} onClick={onCheck}>

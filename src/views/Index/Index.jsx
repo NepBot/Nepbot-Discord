@@ -18,8 +18,19 @@ import flux from '../../assets/images/index/logo-flux.png';
 import QSTN from '../../assets/images/index/logo-QSTN.png';
 import OCT from '../../assets/images/index/logo-OCT.png';
 import near from '../../assets/images/index/logo-near.png';
-import near_large from '../../assets/images/index/logo-near-large.png';
 import awesomenear from '../../assets/images/index/logo-awesomenear.png';
+import astro from '../../assets/images/index/logo-astro.png';
+import paras from '../../assets/images/index/logo-paras.png';
+import sender from '../../assets/images/index/logo-sender.png';
+import nearblocks from '../../assets/images/index/logo-nearblocks.png';
+import nestercity from '../../assets/images/index/logo-nestercity.png';
+import reboot from '../../assets/images/index/logo-reboot.png';
+import ape from '../../assets/images/index/logo-ape.png';
+import tandao from '../../assets/images/index/logo-tandao.png';
+import tomorrow_citizen from '../../assets/images/index/logo-tomorrow-citizen.png';
+
+import near_small from '../../assets/images/index/logo-near-small.png';
+import awesomenear_small from '../../assets/images/index/logo-awesomenear-small.png';
 const { Option } = Select;
 
 export default function Index(props) {
@@ -106,34 +117,68 @@ export default function Index(props) {
 
                     <div className={"partner"}>
                         <a className={"brand"} href="https://near.org/" target="view_window">
-                            <img src={near_large} alt="NEAR"/>
+                            <img src={near} alt="NEAR"/>
                         </a>
                         <a className={"brand"} href="https://oct.network" target="view_window">
                             <img src={OCT} alt="OCT"/>
                         </a>
                         <a className={"brand"} href="https://fluxprotocol.org" target="view_window">
-                            <img src={flux} alt="flux"/>
+                            <img src={flux} alt="fluxprotocol"/>
+                        </a>
+                        <a className={"brand"} href="https://awesomenear.com/nepbot" target="view_window">
+                            <img src={awesomenear} alt="awesomenear"/>
+                        </a>
+                        <a className={"brand mr0"} href="https://astrodao.com/" target="view_window">
+                            <img src={astro} alt="astrodao"/>
+                        </a>
+                     
+                        <a className={"brand"} href="https://paras.id" target="view_window">
+                            <img src={paras} alt="paras"/>
+                        </a>
+                        <a className={"brand"} href="https://sender.org/" target="view_window">
+                            <img src={sender} alt="sender"/>
+                        </a>
+                        <a className={"brand"} href="https://nearblocks.io/" target="view_window">
+                            <img src={nearblocks} alt="nesrBlocks"/>
                         </a>
                         <a className={"brand"} href="https://www.fusotao.org/" target="view_window">
                             <img src={fusotao} alt="fusotao"/>
                         </a>
-                        <a className={"brand"} href="https://qstn.us" target="view_window">
+                        <a className={"brand mr0"} href="https://qstn.us" target="view_window">
                             <img src={QSTN} alt="QSTN"/>
                         </a>
+
+                        <a className={"brand"} href="https://www.nester.city/" target="view_window">
+                            <img src={nestercity} alt="nestercity"/>
+                        </a>
+                        <a className={"brand"} href="https://discord.com/invite/FH4B6gE52H" target="view_window">
+                            <img src={reboot} alt="REBOOT"/>
+                        </a>
+                        <a className={"brand"} href="https://apemetaerror.com/" target="view_window">
+                            <img src={ape} alt="APE"/>
+                        </a>
+                        <a className={"brand"} href="https://shor.by/tan" target="view_window">
+                            <img src={tandao} alt="Tan Dao"/>
+                        </a>
+                        <a className={"brand"} href="https://paras.id/collection/tomorrows-citizens-by-tomorrowscitizensnear" target="view_window">
+                            <img src={tomorrow_citizen} alt="tomorrow's citizen"/>
+                        </a>
+
                     </div>
                 </div>
                 <div className={"power"}>
                     powered by 
                     <a className={"near"} href="https://near.org/" target="view_window">
-                        <img src={near} alt="near"/>
+                        <img src={near_small} alt="near"/>
                     </a>
 
                     find us on
                     <a className={"awesomenear"} href="https://awesomenear.com/nepbot" target="view_window">
-                        <img src={awesomenear} alt="awesomenear"/>
+                        <img src={awesomenear_small} alt="awesomenear"/>
                     </a>
                 </div>
-
+            </div>
+            <div className={"footer-box"}>
                 <div className={"footer"}>
                     <div className={"media-list"}>
                         <a className={"media github"} href="https://github.com/NepBot" target="view_window"></a>
