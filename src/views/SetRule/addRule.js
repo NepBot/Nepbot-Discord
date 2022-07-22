@@ -17,6 +17,7 @@ function AddRule(props) {
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [type, setType] = useState('');
     const [isParas, setParas] = useState(false)
+    const [astroRoleList,setAstroRoleList] = useState([]);
     const history = useHistory()
     // const [checkNick, setCheckNick] = useState(false);
     const onFinish = async (values) => {
@@ -64,6 +65,9 @@ function AddRule(props) {
                     arg.key_field = ['nft_contract_id', values.contract_id]
                     arg.fields = {token_amount: values.token_amount}
                 }
+            } else if(type == 'AstroDAO roles'){
+                arg.key_field = ['astrodao_id', values.astrodao_id]
+                arg.fields = {astrodao_role: values.astrodao_role}
             }
             const params = store.get("info")
             const operationSign = store.get("operationSign")
@@ -109,6 +113,22 @@ function AddRule(props) {
     const handleInputChange = async (v) => {
         setParas(v.target.value == config.PARAS_CONTRACT)
     }
+    const handleAstrodaoInputChange = async (v) => {
+        const _near = await connect(config);
+        const _wallet = new WalletConnection(_near,1);
+        const account = await _wallet.account();
+        let res = null;
+        try{
+            res = await account.viewFunction(v.target.value.trim(), 'get_policy', {});
+        }catch(e){}
+        if(res && res.roles){
+            setAstroRoleList(res.roles)
+        }else{
+            setAstroRoleList([])
+        }
+        form.setFieldsValue({astrodao_role:'everyone'})
+        form.validateFields(['astrodao_id']);
+    }
 
     const onSearch = (e) => {
         console.log(e,'-----');
@@ -128,6 +148,8 @@ function AddRule(props) {
             return <Balance />
         }else if(type === 'nft amount'){
             return <NftAmount />
+        }else if(type === 'AstroDAO roles'){
+            return <AstroDao />
         }else {
             return <div/>
         }
@@ -225,6 +247,42 @@ function AddRule(props) {
         </div>
     }
 
+    function AstroDao(){
+        return <div>
+            <Item
+                label="DAO contract ID"
+                name="astrodao_id"
+                // rules={[{ required: true, message: 'Enter astrodao id' }]}
+                rules={[
+                    { required: true, message: 'Enter contract id' },
+                    () => ({
+                        validator(e, val) {
+                            if(astroRoleList.length==0 && val.trim()) {
+                                return Promise.reject("That DAO contract doesn't exist");
+                            }
+                            return Promise.resolve();
+                        }
+                    })
+                ]}
+            >
+                <Input bordered={false} onChange ={(v) => {handleAstrodaoInputChange(v)}}/>
+            </Item>
+            <Item
+                label="DAO role"
+                name="astrodao_role"
+                rules={[{ required: true, message: 'Please choose an astrodao role' }]}
+            >
+                <Select defaultValue={'everyone'} dropdownClassName={"dropdown"}>
+                    <Option value='everyone'>everyone</Option>
+                    {astroRoleList.map((item,index) => 
+                        <Option  value={item.name} key={item.name}>{item.name}</Option>
+                    )}
+                </Select>
+            </Item>
+    
+        </div>
+    }
+
     return (
         <div className={'modal-box'}>
             <Modal title="Add Rule" wrapClassName="rule-modal" maskClosable={false}  visible={props.visible} onOk={props.onOk}
@@ -276,6 +334,7 @@ function AddRule(props) {
                             <Option value='oct roles'>OCT roles</Option>
                             <Option value='near balance'>Near balance</Option>
                             <Option value='nft amount'>NFT</Option>
+                            <Option value='AstroDAO roles'>AstroDAO roles</Option>
                         </Select>
                     </Item>
                     <TypeDetail type={type} appchainIds={props.appchainIds}/>
