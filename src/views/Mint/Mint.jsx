@@ -71,7 +71,7 @@ export default function Success(props) {
                 history.push({pathname: '/linkexpired', })
                 return
             }
-            await requestTransaction(
+            const res = await requestTransaction(
                 account,
                 config.NFT_CONTRACT,
                 "nft_mint",

@@ -12,8 +12,14 @@ export async function requestTransaction(account, contractId, methodName, args, 
                 }]
             }
         ]})
+        
+        if (!res.response[0].status) {
+            return false
+        }
+
         if (walletCallbackUrl) {
             window.open(walletCallbackUrl,'_self')
+            return true
         }
         return res.response[0].status
     } else {
@@ -23,7 +29,6 @@ export async function requestTransaction(account, contractId, methodName, args, 
             args,
             gas,
             attachedDeposit: deposit,
-            walletCallbackUrl
         })
     }
 }

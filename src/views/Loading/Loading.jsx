@@ -7,6 +7,7 @@ import {getConfig} from "../../config";
 import './Loading.css';
 import load from '../../assets/images/load.gif';
 import { useHistory } from 'react-router-dom'
+import qs from 'qs';
 
 const config = getConfig()
 
@@ -15,7 +16,10 @@ export default function Success(props) {
     useEffect(()=>{
 
         (async ()=>{
-            localStorage.removeItem("nepbot_wallet_auth_key")
+            const search =  qs.parse(props.location.search.slice(1));
+            if (search.account_id) {
+                localStorage.removeItem("nepbot_wallet_auth_key")
+            }
             const near = await connect(config);
             const wallet = new WalletConnection(near,"nepbot");
             try {
