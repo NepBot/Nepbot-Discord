@@ -1,5 +1,6 @@
 import './App.css';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import { KeepaliveRouterSwitch ,KeepaliveRoute ,addKeeperListener } from 'react-keepalive-router'
 import Index from './views/Index/Index';
 import Verify from './views/Verify/Verify';
 import Loading from './views/Loading/Loading';
@@ -13,19 +14,20 @@ import LinkExpired from "./views/LinkExpired/LinkExpired";
 function App() {
   return (
     <Router className="App">
-        <Switch>
+        <KeepaliveRouterSwitch>
             <Route path='/' exact component={Index} />
             <Route path='/Verify' exact component={Verify} />
             <Route path='/wait' exact component={Loading} />
             <Route path='/failure' exact component={Failure} />
             <Route path='/setrule' exact component={SetRule} />
-            <Route path='/collectionlist' exact component={CollectionList} />
+            {/* <Route path='/collectionlist' exact component={CollectionList} /> */}
+            <KeepaliveRoute path={'/collectionlist'} component={ CollectionList } scroll={true}/>
             <Route path='/serieslist/:id' exact component={SeriesList} />
             <Route path='/mint' exact component={Mint} />
             <Route path='/claim' exact component={Claim} />
             <Route path='/linkexpired' exact component={LinkExpired} />
             {/*<Route path='/setrule' exact component={SetRuleS} />*/}
-        </Switch>
+        </KeepaliveRouterSwitch>
     </Router>
   );
 }

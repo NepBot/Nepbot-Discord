@@ -73,7 +73,7 @@ function Series(props) {
             
         }else{
             handleData();
-            message.info('Success');
+            // message.info('Success');
         }
         setAddDialogStatus(!addDialogStatus)
     }, [addDialogStatus]);
@@ -90,6 +90,12 @@ function Series(props) {
 
     const handleSeries = (id) => {
         window.open(`${config.PARAS}/token/${config.PARAS_CONTRACT}::${id}`,'_blank')
+    }
+
+    const backCollectionList = () => {
+        // console.log(history,document.location);
+        history.push({pathname: `/collectionlist`,search:props.location.search})
+        // history.go(-1);
     }
 
 
@@ -131,7 +137,8 @@ function Series(props) {
     return (
         <div className={'page-box'}>
             <div className={'page-bg'}></div>
-            <div className={'page-header'}>
+            <div className={'page-header series-page-header'}>
+                <div className={'back-collection-list'} onClick={backCollectionList}></div>
                 <div className={"title"}>Collection Name : {collectionName}</div>
                 <Input.Search onSearch={handleSearch} className={'search-input'} bordered={false} placeholder="Enter a token ID to search" /> 
                 <div className={'add-btn'} onClick={handleAddStatus}>

@@ -69,7 +69,20 @@ export const getConnectedAccount = async (guild_id, user_id) => {
     const json = await fetch(`/api/getConnectedAccount/${guild_id}/${user_id}`);
     const result = await json.json()
     if (result.success) {
-        return result.data || true
+        return result.data
+    }
+    return false
+}
+
+export const disconnectAccount = async (data)=>{
+    const json = await fetch(`/api/disconnectAccount`, {
+        headers:{ 'Content-Type': 'application/json' },
+        method:"POST",
+        body:JSON.stringify(data)
+    })
+    const result = await json.json()
+    if (result.success) {
+        return result.data
     }
     return false
 }

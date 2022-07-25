@@ -38,8 +38,19 @@ export default function Success(props) {
                 wallet.requestSignIn(config.RULE_CONTRACT, "nepbot")
                 return
             }
-
-            const collection = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id: search.collection_id})
+            
+            let collection = null;
+            try{
+                collection = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id: search.collection_id})
+                // const minted_count = await account.viewFunction(config.NFT_CONTRACT, "get_minted_count_by_collection", {collection_id: search.collection_id})
+                // console.log(collection,minted_count,'-----count_res-----');
+                // if(minted_count >= collection.mint_count_limit){
+                //     history.push({pathname: `/failure`})
+                // }
+            }catch(e){
+                console.log(e);
+                history.push({pathname: `/failure`})
+            }
             const price = new BN(collection.price).add(new BN('20000000000000000000000'))
 
             const accountId = wallet.getAccountId()
@@ -60,7 +71,7 @@ export default function Success(props) {
                 history.push({pathname: '/linkexpired', })
                 return
             }
-            await requestTransaction(
+            const res = await requestTransaction(
                 account,
                 config.NFT_CONTRACT,
                 "nft_mint",

@@ -223,8 +223,10 @@
     margin-top:52px;
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
 }
 .brand{
+    margin-bottom:20px;
     width:192px;
     height:80px;
     background: rgba(78,81,112,0.24);
@@ -244,26 +246,26 @@
 .brand:hover{
     top:-10px;
 }
-.brand:last-child{
+.brand:last-child,.brand.mr0{
     margin-right:0;
 }
 
 .power{
-    margin-top:60px;
+    margin-top:40px;
     margin-bottom:120px;
     height:30px;
     display: flex;
     justify-content:center;
     align-items:center;
     font-family: Gilroy-Regular;
-    font-size: 18px;
+    font-size: 16px;
     color: rgba(255,255,255,0.6);
     letter-spacing: 0;
     text-align: center;
     font-weight: 400;
 }
 .power img{
-    height:30px;
+    height:25px;
     margin-left:8px;
 }
 .power .near{
@@ -274,8 +276,15 @@
     top:-1px;
 }
 
+.footer-box{
+    position: relative;
+    z-index: 2;
+    background: #000000;
+    min-width: 1440px;
+}
 .footer{
-    width: 100%;
+    width: 1440px;
+    margin: 0 auto;
     padding:0 13.888889%;
     height:80px;
     display: flex;

@@ -27,7 +27,7 @@ function AddCollection(props) {
     const [royalty,setRoyalty] = useState({})
     const history = useHistory()
     const [showConfirmModal, setConfrimModalStatus] = useState(false);
-    const [isParasCreated, setParasCreated] = useState(false);
+    const [parasCreatedList,setParasCreatedList] = useState([]);
     // const [isParas, setParas] = useState(false)
 
     const onFinish = async (values) => {
@@ -77,11 +77,9 @@ function AddCollection(props) {
             const outerCollectionId = `${values.name.replace(/\s+/g, "-")}-guild-${props.server.name.replace(/\s+/g, "-")}-by-${config.NFT_CONTRACT.replaceAll(".", "")}`;
             let res = null;
             const collection = await getCollection(outerCollectionId);
-            console.log(isParasCreated,'---isParasCreated---');
-            if (!collection || collection.results.length > 0 || isParasCreated) {
+            if (!collection || collection.results.length > 0 || parasCreatedList.indexOf(values.name)>-1) {
                 try{
                     const check_res = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id: `paras:${outerCollectionId}`})
-                    console.log(check_res,'---check_res---');
                     setConfirmLoading(false);
                     setConfrimModalStatus(false)
                     message.error("Collection name has already been taken");
@@ -121,8 +119,7 @@ function AddCollection(props) {
                 res = await createCollection(formData);
                 //{"status":1,"data":{"collection":{"_id":"6280b224692d163b193d09de","collection_id":"fff-by-bhc22testnet","blurhash":"UE3UQdpLQ8VWksZ}Z~ksL#Z}pfkXVWp0kXVq","collection":"fff","cover":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","createdAt":1652601380975,"creator_id":"bhc22.testnet","description":"fff","media":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","socialMedia":{"twitter":"","discord":"","website":""},"updatedAt":1652601380975}}}
                 if(res.collection_id){
-                    setParasCreated(true);
-                    console.log(isParasCreated,'---isParasCreated----1111---');
+                    setParasCreatedList([...parasCreatedList,values.name])
                 }
             }
 
@@ -493,7 +490,7 @@ function AddCollection(props) {
                         </div>
                     </Form>
                     <div className={'my-modal-footer'}>
-                        <div className={'btn cancel'} onClick={()=>{ form.resetFields();props.onCancel(); }}>
+                        <div className={'btn cancel'} onClick={()=>{ form.resetFields();setLogoUrl('');setCoverUrl('');props.onCancel(); }}>
                             cancel
                         </div>
                         <div className={'btn ok'} onClick={onCheck}>
