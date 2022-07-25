@@ -113,7 +113,9 @@ function AddRule(props) {
     const handleInputChange = async (v) => {
         setParas(v.target.value == config.PARAS_CONTRACT)
     }
-    const handleAstrodaoInputChange = async (v) => {
+
+    //astrodao
+    const  searchRole = async (v) => {
         const _near = await connect(config);
         const _wallet = new WalletConnection(_near,1);
         const account = await _wallet.account();
@@ -121,13 +123,30 @@ function AddRule(props) {
         try{
             res = await account.viewFunction(v.target.value.trim(), 'get_policy', {});
         }catch(e){}
-        if(res && res.roles){
+        if(res && res.roles && res.roles.length>0){
             setAstroRoleList(res.roles)
+            form.setFieldsValue({astrodao_role:'everyone'})
+            form.validateFields(['astrodao_id']);
         }else{
-            setAstroRoleList([])
+            if(astroRoleList.length != 0){
+                setAstroRoleList([])
+                form.setFieldsValue({astrodao_role:'everyone'})
+                form.validateFields(['astrodao_id']);
+            }
         }
-        form.setFieldsValue({astrodao_role:'everyone'})
-        form.validateFields(['astrodao_id']);
+    }
+    const debounce = (fn, delay) => {
+        let timeout;
+        return function(){
+          clearTimeout(timeout)
+          timeout = setTimeout(()=>{
+            fn.apply(this, arguments)
+          },delay)
+        }
+    }
+    const debounceInput = debounce(searchRole, 500)
+    const handleAstrodaoInputChange = async (v) => {
+        debounceInput(v)
     }
 
     const onSearch = (e) => {
