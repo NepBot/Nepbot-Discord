@@ -5,6 +5,7 @@ import Index from './views/Index/Index';
 import Verify from './views/Verify/Verify';
 import Loading from './views/Loading/Loading';
 import Failure from "./views/Failure/Failure";
+import Success from "./views/Success/Success";
 import SetRule from "./views/SetRule/SetRule";
 import CollectionList from "./views/CollectionList/collectionList";
 import SeriesList from "./views/SeriesList/seriesList";
@@ -19,6 +20,7 @@ function App() {
             <Route path='/Verify' exact component={Verify} />
             <Route path='/wait' exact component={Loading} />
             <Route path='/failure' exact component={Failure} />
+            <Route path='/success' exact component={Success} />
             <Route path='/setrule' exact component={SetRule} />
             {/* <Route path='/collectionlist' exact component={CollectionList} /> */}
             <KeepaliveRoute path={'/collectionlist'} component={ CollectionList } scroll={true}/>
