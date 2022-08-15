@@ -268,7 +268,7 @@ function AddSeries(props) {
                                 { required: true, message: 'Enter a name' },
                                 () => ({
                                     validator(_, val) {
-                                        if(val == "" || (val && /^[0-9A-Z]+$/i.test(val))) {
+                                        if(val == "" || (val && /^[0-9A-Z\s+]+$/i.test(val))) {
                                             return Promise.resolve();
                                         }
                                         return Promise.reject('Name must contain only letters(a-z) and numbers (0-9)');
