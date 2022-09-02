@@ -153,3 +153,30 @@ export const getMintSign = async (args) => {
     }
     return false
 }
+
+export const twitterVerify = async (args)=>{
+    const json = await fetch('https://6987-139-168-173-228.au.ngrok.io/api/twitter/callback', {
+        headers:{ 'Content-Type': 'application/json' },
+        method:"POST",
+        body:typeof args === 'string'?args:JSON.stringify(args)
+    })
+    const result = await json.json()
+    if (result.success) {
+        return result.data || true
+    }
+    return false
+}
+
+export const getSnapshotSign = async (args) => {
+    const json = await fetch('/api/getSnapshotSign', {
+        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        body: typeof args === 'string'?args:JSON.stringify(args)
+    })
+    const result = await json.json()
+    if (result.success) {
+        return result.data || true
+    }
+    return false
+}
+
