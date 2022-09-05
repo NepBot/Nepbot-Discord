@@ -45,11 +45,9 @@ export default function Success(props) {
                 sign: signature
             })
             if(!_sign) {
-                console.log("hhhhhhh");
-                // history.push({pathname: '/linkexpired', })
+                history.push({pathname: '/linkexpired', })
                 return
             }
-            return;
             
 
             const res = await requestTransaction(
@@ -57,13 +55,12 @@ export default function Success(props) {
                 config.SNAPSHOT_CONTRACT,
                 "set_snapshot",
                 {
-                    contract_address: Number(search.contract_address),
-                    timestamp:search.timestamp,
-                    sign:search.sign
+                    contract_address: search.contract_address,
+                    ..._sign
                 },
                 '300000000000000',
                 '0',
-                `${config.ASTRO}/dao/${search.contract_address}/proposals/${search.contract_address}-${search.proposal_id}`
+                'https://discord.com/channels/'
             )
                 
         })();
