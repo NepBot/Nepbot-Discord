@@ -52,8 +52,8 @@ export default function Index(props) {
                     <img className={"logo"} src={logo}/>
                     <div className={"nav"}>
                         <a className={"nav-item invite"} href={inviteUrl} target="view_window">Invite</a>
-                        <a className={"nav-item commands"} href='https://nepbot.notion.site/Command-Glossary-e5ffdf2d51e24fc0a569d1cb3ef6e035' target="view_window">Commands</a>
-                        <a className={"nav-item faq"} href='https://nepbot.notion.site/Discord-NepBot-Knowledge-Base-dc875fc6c3f84149aa8a76ef7a2a23ab' target="view_window">FAQ</a>
+                        <a className={"nav-item commands"} href='https://nepbot.github.io/Nepbot-gitbook/doc/Command_Glossary.html' target="view_window">Commands</a>
+                        <a className={"nav-item faq"} href='https://nepbot.github.io/Nepbot-gitbook/' target="view_window">FAQ</a>
                         <a className={"nav-item community"} href='https://discord.gg/avqufmzS6t' target="view_window">Community</a>
                         <div className={[config.networkId,'nav-item'].join(' ')} >
                             <Select value={config.networkId} dropdownClassName={"network-dropdown"} onChange={handleChange}>

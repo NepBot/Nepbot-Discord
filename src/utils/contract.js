@@ -29,6 +29,7 @@ export async function requestTransaction(account, contractId, methodName, args, 
             args,
             gas,
             attachedDeposit: deposit,
+            walletCallbackUrl: walletCallbackUrl
         })
     }
 }
