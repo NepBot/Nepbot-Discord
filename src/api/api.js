@@ -155,7 +155,7 @@ export const getMintSign = async (args) => {
 }
 
 export const twitterVerify = async (args)=>{
-    const json = await fetch('https://6987-139-168-173-228.au.ngrok.io/api/twitter/callback', {
+    const json = await fetch('/api/twitter/callback', {
         headers:{ 'Content-Type': 'application/json' },
         method:"POST",
         body:typeof args === 'string'?args:JSON.stringify(args)
