@@ -21,7 +21,8 @@ export function getConfig() {
           PARAS_CONTRACT: 'x.paras.near',
           APPLICATION_ID: '958997413803196476',
           PARAS_API: "https://api-v2-mainnet.paras.id",
-          PARAS: "https://paras.id"
+          PARAS: "https://paras.id",
+          ASTRO:"https://app.astrodao.com/"
         }
       case 'development':
       case 'testnet':
@@ -39,7 +40,8 @@ export function getConfig() {
           LINKDROP: 'linkdrop6.bhc8521.testnet',
           APPLICATION_ID: '928559137179172874',
           PARAS_API: "https://api-v3-marketplace-testnet.paras.id",
-          PARAS: "https://testnet.paras.id"
+          PARAS: "https://testnet.paras.id",
+          ASTRO:"https://testnet.app.astrodao.com/"
         }
       case 'dev-testnet':
         return {
@@ -56,7 +58,8 @@ export function getConfig() {
           LINKDROP: 'linkdrop6.bhc8521.testnet',
           APPLICATION_ID: '967009211823304744',
           PARAS_API: "https://api-v3-marketplace-testnet.paras.id",
-          PARAS: "https://testnet.paras.id"
+          PARAS: "https://testnet.paras.id",
+          ASTRO:"https://testnet.app.astrodao.com/"
         }
       case 'betanet':
         return {
