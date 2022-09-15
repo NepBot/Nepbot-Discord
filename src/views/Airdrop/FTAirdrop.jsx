@@ -23,6 +23,7 @@ export default function Success(props) {
             const account = wallet.account(); 
 
             const checkResult = async () => {
+                const hash = localStorage.getItem(`nepbot_airdrop_${search.user_id}`);
                 const res = await sendftmsg({
                     guild_id:search.guild_id,
                     channel_id:search.channel_id,
@@ -49,24 +50,23 @@ export default function Success(props) {
                 return
             }
 
-        
-            const args = {
-                claim_amount: parseAmount(search.amount_per_share),
-                deposit:{
-                    FT:[search.token_id,parseAmount(search.total_amount)]
-                },
-                end_time: String(new Date(search.end_time).getTime() * 1000000),
-                guild_id: search.guild_id,
-                role_ids: [search.role_id],
-                start_time: String(new Date().getTime() * 1000000),
-            }
-            const hash = bs58.encode(js_sha256.array(Buffer.from(JSON.stringify(args))));
-
 
             if(!window.localStorage.getItem("isSender") && search.transactionHashes){
                 await checkResult();
                 return;
             }else{
+                const args = {
+                    claim_amount: parseAmount(search.amount_per_share),
+                    deposit:{
+                        FT:[search.token_id,parseAmount(search.total_amount)]
+                    },
+                    end_time: String(new Date(search.end_time).getTime() * 1000000),
+                    guild_id: search.guild_id,
+                    role_ids: [search.role_id],
+                    start_time: String(new Date().getTime() * 1000000),
+                }
+                const hash = bs58.encode(js_sha256.array(Buffer.from(JSON.stringify(args))));
+                localStorage.setItem(`nepbot_airdrop_${search.user_id}`,hash);
                 const isRegistered = await account.viewFunction(search.token_id, 'storage_balance_of', {account_id: config.AIRDROP_CONTRACT})
 
                 let txs = [];
