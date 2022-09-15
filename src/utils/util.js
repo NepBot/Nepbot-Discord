@@ -1,6 +1,7 @@
 import {connect, KeyPair, keyStores, utils, WalletConnection} from "near-api-js";
 import {getConfig} from "../config";
-import bs58 from 'bs58'
+import bs58 from 'bs58';
+import BN from 'bn.js';
 import { encode } from 'blurhash'
 
 const config = getConfig();
@@ -84,4 +85,13 @@ export async function encodeImageToBlurhash(imageUrl) {
 	const image = await loadImage(imageUrl)
 	const imageData = getImageData(image)
 	return encode(imageData.data, imageData.width, imageData.height, 4, 4)
+}
+
+
+export function getGas(gas) {
+    return gas ? new BN(gas) : new BN('300000000000000');
+}
+
+export function getDeposit(amount) {
+    return amount ? new BN(amount) : new BN('0');
 }
