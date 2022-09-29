@@ -6,9 +6,6 @@ import qs from "qs";
 import './Airdrop.css';
 import load from '../../assets/images/load.gif';
 import { requestTransaction } from '../../utils/contract';
-import {parseAmount} from "../../utils/util";
-import js_sha256 from "js-sha256";
-import bs58 from 'bs58'
 
 const config = getConfig()
 

@@ -50,15 +50,17 @@ export default function Success(props) {
                 return
             }
 
+            const metadata = await account.viewFunction(search.token_id, 'ft_metadata', {})
+
 
             if(!window.localStorage.getItem("isSender") && search.transactionHashes){
                 await checkResult();
                 return;
             }else{
                 const args = {
-                    claim_amount: parseAmount(search.amount_per_share),
+                    claim_amount: parseAmount(search.amount_per_share, metadata.decimals),
                     deposit:{
-                        FT:[search.token_id,parseAmount(search.total_amount)]
+                        FT:[search.token_id,parseAmount(search.total_amount, metadata.decimals)]
                     },
                     end_time: String(new Date(search.end_time).getTime() * 1000000),
                     guild_id: search.guild_id,
@@ -101,7 +103,7 @@ export default function Success(props) {
                     actions:[{
                         args: {
                             receiver_id:config.AIRDROP_CONTRACT,
-                            amount:parseAmount(search.total_amount),
+                            amount:parseAmount(search.total_amount, metadata.decimals),
                             msg:hash
                         },
                         deposit: "1",

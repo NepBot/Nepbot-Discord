@@ -5,7 +5,7 @@ import {getConfig} from "../../config";
 import qs from "qs";
 import './Airdrop.css';
 import load from '../../assets/images/load.gif';
-import {sign, parseAmount} from "../../utils/util";
+import {sign} from "../../utils/util";
 import { requestTransaction } from '../../utils/contract';
 import {getAirdropFTSign} from "../../api/api";
 import js_sha256 from "js-sha256";
