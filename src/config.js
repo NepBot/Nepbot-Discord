@@ -17,6 +17,8 @@ export function getConfig() {
           explorerUrl: "https://nearblocks.io",
           RULE_CONTRACT: 'app.nepbot.near',
           NFT_CONTRACT:'nft.nepbot.near',
+          SNAPSHOT_CONTRACT:'snapshot.nepbot.near',
+          AIRDROP_CONTRACT: 'airdrop.nepbot.near',
           OCT_CONTRACT: 'octopus-registry.near',
           PARAS_CONTRACT: 'x.paras.near',
           APPLICATION_ID: '958997413803196476',
