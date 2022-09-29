@@ -16,7 +16,6 @@ import CreateSnapshot from "./views/Snapshot/CreateSnapshot";
 import FTAirdrop from "./views/Airdrop/FTAirdrop";
 import FTClaim from "./views/Airdrop/FTClaim";
 import FTRedeem from "./views/Airdrop/FTRedeem";
-import Claim from "./views/Claim/Claim";
 import LinkExpired from "./views/LinkExpired/LinkExpired";
 function App() {
   return (
@@ -38,7 +37,6 @@ function App() {
             <Route path='/ftairdrop' exact component={FTAirdrop} />
             <Route path='/ftclaim' exact component={FTClaim} />
             <Route path='/ftredeem' exact component={FTRedeem} />
-            <Route path='/claim' exact component={Claim} />
             <Route path='/linkexpired' exact component={LinkExpired} />
             {/*<Route path='/setrule' exact component={SetRuleS} />*/}
         </KeepaliveRouterSwitch>
