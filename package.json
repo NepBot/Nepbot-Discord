@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/core": "7.12.3",
+    "@here-wallet/connect": "^0.2.1",
     "@pmmmwh/react-refresh-webpack-plugin": "0.4.3",
     "@svgr/webpack": "5.5.0",
     "@testing-library/jest-dom": "^5.11.4",
@@ -46,7 +47,7 @@
     "jest-watch-typeahead": "0.6.1",
     "js-base64": "^3.7.2",
     "mini-css-extract-plugin": "0.11.3",
-    "near-api-js": "^0.43.1",
+    "near-api-js": "1.0.0",
     "optimize-css-assets-webpack-plugin": "5.0.4",
     "package.json": "^2.0.1",
     "pnp-webpack-plugin": "1.6.4",
