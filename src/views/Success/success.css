@@ -35,3 +35,6 @@
     line-height: 16px;
     font-weight: 400;
 }
+.success-content .twitter .text{
+    color: rgba(255,255,255,1);
+}

@@ -11,9 +11,11 @@ function Success(props) {
             const search =  qs.parse(props.location.search.slice(1));
             if(search.from){
                 setType(search.from);
-                setTimeout(async ()=>{
-                    window.location.href="https://discord.com/channels/"
-                },5000)
+                if(search.from !== 'twitterverify'){
+                    setTimeout(async ()=>{
+                        window.location.href="https://discord.com/channels/"
+                    },5000)
+                }
             }
                 
         })();
@@ -24,10 +26,10 @@ function Success(props) {
 
     function Content(){
         if(type === 'twitterverify'){
-            return (<div>
+            return (<div className={'twitter'}>
                 <div className={'head'}>Twitter is verified.</div>
                 <div className={'text'}>
-                Please go back to Discord and click on "Verify Twitter" again.
+                Role Assigned: @xxx 
                 </div>
             </div>)
         }else{

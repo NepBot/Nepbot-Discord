@@ -31,11 +31,11 @@ export default function Success(props) {
 
 
             const res = await twitterVerify({state:search.state,code:search.code});
-            if(res){
-                history.push({pathname: `/success`,search:'from=twitterverify'})
-            }else{
-                history.push({pathname: `/failure`})
-            }
+            // if(res){
+            //     history.push({pathname: `/success`,search:'from=twitterverify'})
+            // }else{
+            //     history.push({pathname: `/failure`})
+            // }
                 
         })();
         return ()=>{

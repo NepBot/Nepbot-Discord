@@ -2,9 +2,9 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Row, Col, Input, Button, List} from 'antd';
 import {connect, WalletConnection, keyStores, KeyPair} from 'near-api-js';
-import * as nearAPI from "near-api-js";
-import runHereWallet from "@here-wallet/connect" 
-import "@here-wallet/connect/index.css"
+// import * as nearAPI from "near-api-js";
+// import runHereWallet from "@here-wallet/connect" 
+// import "@here-wallet/connect/index.css"
 import qs from 'qs';
 import {getConfig} from '../../config';
 import {sign} from "../../utils/util";
@@ -47,14 +47,15 @@ export default function Index(props) {
                 window.localStorage.setItem("isSender", true)
                 history.push({pathname: `/wait`, search: `account_id=${window.near.accountId}&public_key=${encodeURIComponent(res.accessKey.publicKey)}&all_keys=${encodeURIComponent(res.accessKey.publicKey)}`})
             }
-        }  else if (type == "here") {
-            runHereWallet({ near:nearAPI })
-            _wallet.requestSignIn(
-                config.RULE_CONTRACT, // contract requesting access
-                "nepbot", // optional
-                `${window.location.origin}/wait`, // optional
-            );
         }  
+        // else if (type == "here") {
+        //     runHereWallet({ near:nearAPI })
+        //     _wallet.requestSignIn(
+        //         config.RULE_CONTRACT, // contract requesting access
+        //         "nepbot", // optional
+        //         `${window.location.origin}/wait`, // optional
+        //     );
+        // }  
     };
 
     const handleConnect = useCallback(async (type) => {
@@ -152,7 +153,7 @@ export default function Index(props) {
                     <div className={'server-name'}>{serverName}</div>
                     <div className={'connect-btn-box'}><div className={'connect-btn near-btn'} onClick={() => {handleConnect(("near"))}}>Near Wallet</div></div>
                     <div className={'connect-btn-box'}><div className={'connect-btn sw-btn'} onClick={() => {handleConnect(("sender"))}}>Sender Wallet</div></div>
-                    <div className={'connect-btn-box'}><div className={'connect-btn hw-btn'} onClick={() => {handleConnect(("here"))}}>HERE Wallet</div></div>
+                    {/* <div className={'connect-btn-box'}><div className={'connect-btn hw-btn'} onClick={() => {handleConnect(("here"))}}>HERE Wallet</div></div> */}
                     <div className={'tip'}>Connect to your wallet</div>
                 </div>
             }
