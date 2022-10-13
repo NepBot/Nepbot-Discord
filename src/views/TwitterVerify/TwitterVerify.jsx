@@ -31,11 +31,21 @@ export default function Success(props) {
 
 
             const res = await twitterVerify({state:search.state,code:search.code});
-            // if(res){
-            //     history.push({pathname: `/success`,search:'from=twitterverify'})
-            // }else{
-            //     history.push({pathname: `/failure`})
-            // }
+            if(res.success && res.data && res.data.length>0){
+                let info = ''
+                if(res.data[0]['name'] == 'Add role success'){
+                    localStorage.setItem('twitterVerifyInfo',res.data[0]['value'])
+                    history.push({pathname: `/success`,search:'from=twitterverify'})
+                }else{
+                    res.data.forEach(item=>{
+                        info = info + item.value + + '/\n\n'
+                    })
+                    localStorage.setItem('twitterVerifyInfo',info)
+                    history.push({pathname: `/failure`,search:'from=twitterverify&status=1'})
+                }
+            }else{
+                history.push({pathname: `/failure`,search:'from=twitterverify&status=0'})
+            }
                 
         })();
         return ()=>{

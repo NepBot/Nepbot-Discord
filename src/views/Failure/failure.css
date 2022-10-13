@@ -26,7 +26,7 @@
     font-weight: 400;
     line-height:20px;
 }
-.failure-content .text{
+.failure-content .text,.failure-content .text pre{
     margin-top:8px;
     font-family: Gilroy-Regular;
     font-size: 14px;
@@ -38,4 +38,9 @@
 .failure-content .text .text-strong{
     color: #FFFFFF;
     text-decoration:underline;
+}
+.failure-content .twitter .text,.failure-content .twitter .text pre{
+    color: rgba(255,255,255,1);
+    line-height: 20px;
+    margin-top:20px;
 }

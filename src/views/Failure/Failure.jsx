@@ -7,11 +7,18 @@ import qs from "qs";
 
 function Failure(props) {
     const [type, setType] = useState('');
+    const [status, setStatus] = useState('');
+    const [info, setInfo] = useState('');
     useEffect(()=>{
         (async ()=>{
             const search =  qs.parse(props.location.search.slice(1));
             if(search.from){
                 setType(search.from);
+                if(search.from === 'twitterverify'){
+                    setStatus(search.status);
+                    setInfo(localStorage.getItem('twitterVerifyInfo') || '')
+                    localStorage.removeItem('twitterVerifyInfo')
+                }
             }
                 
         })();
@@ -20,11 +27,48 @@ function Failure(props) {
         }
     },[props, props.history, props.location.search])
 
-    function Tip(){
+    function Content(){
         if(type === 'airdrop'){
-            return (<span>Something went wrong. Please check the transaction on Near Explorer.</span>)
+            return (
+                <div>
+                    <div className={'head'}>Oops!</div>
+                    <div className={'text'}>
+                        <span>Something went wrong. Please check the transaction on Near Explorer.</span>
+                        <a className={"text-strong"} href="https://discord.com/channels/" target="_self">Support</a>
+                    </div>
+                </div>
+            )
+        }else if(type === 'twitterverify'){
+            if(status==1){
+                return (
+                <div class="twitter">
+                    <div className={'head'}>Twitter is connected, but ... </div>
+                    <div className={'text '}>
+                        <div><pre>{info}</pre></div>
+                    </div>
+                </div>
+                )
+            }else{
+                return (
+                <div>
+                    <div className={'head'}>Oops!</div>
+                    <div className={'text'}>
+                        <span>Verification failed. </span> 
+                        <a className={"text-strong"} href="https://discord.com/channels/" target="_self">Support</a>
+                    </div>
+                </div>
+                )
+            }
         }else{
-            return (<span>Something went wrong. Please try again.</span>)
+            return (
+            <div>
+                <div className={'head'}>Oops!</div>
+                <div className={'text'}>
+                    <span>Something went wrong. Please try again.</span>
+                    <a className={"text-strong"} href="https://discord.com/channels/" target="_self">Support</a>
+                </div>
+            </div>
+            )
         }
     }
 
@@ -32,11 +76,7 @@ function Failure(props) {
         <div className={'failure-box'}>
             <div className={'failure-content'}>
                 <img className={'pic'} src={failure}/>
-                <div className={'head'}>Oops!</div>
-                <div className={'text'}>
-                    <Tip/>
-                    <a className={"text-strong"} href="https://discord.com/channels/" target="_self">Support</a>
-                </div>
+                <Content/>
             </div>
         </div>
     );

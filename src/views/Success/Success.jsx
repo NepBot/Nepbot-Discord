@@ -5,13 +5,17 @@ import success from '../../assets/images/icon-success.png';
 
 function Success(props) {
     const [type, setType] = useState('');
+    const [info, setInfo] = useState('');
     useEffect(()=>{
 
         (async ()=>{
             const search =  qs.parse(props.location.search.slice(1));
             if(search.from){
                 setType(search.from);
-                if(search.from !== 'twitterverify'){
+                if(search.from == 'twitterverify'){
+                    setInfo(localStorage.getItem('twitterVerifyInfo') || '')
+                    localStorage.removeItem('twitterVerifyInfo')
+                }else{
                     setTimeout(async ()=>{
                         window.location.href="https://discord.com/channels/"
                     },5000)
@@ -27,9 +31,9 @@ function Success(props) {
     function Content(){
         if(type === 'twitterverify'){
             return (<div className={'twitter'}>
-                <div className={'head'}>Twitter is verified.</div>
+                <div className={'head'}>Twitter connected.</div>
                 <div className={'text'}>
-                Role Assigned: @xxx 
+                    <pre>{info}</pre>
                 </div>
             </div>)
         }else{

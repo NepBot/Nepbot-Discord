@@ -80,7 +80,7 @@ export default function Success(props) {
                             args: {
                                 account_id:config.AIRDROP_CONTRACT
                             },
-                            deposit: '1250000000000000000000',
+                            deposit: '12500000000000000000000',
                             gas: '300000000000000'
                         }]
                     }]
