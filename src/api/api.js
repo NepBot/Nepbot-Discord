@@ -180,6 +180,20 @@ export const getSnapshotSign = async (args) => {
     return false
 }
 
+export const sendmsgSnapshot = async (args)=>{
+    const json = await fetch('/api/snapshot/sendmsg', {
+        headers:{ 'Content-Type': 'application/json' },
+        method:"POST",
+        body:typeof args === 'string'?args:JSON.stringify(args)
+    })
+    const result = await json.json()
+    if (result.success) {
+        return result.data || true
+    }
+    return false
+}
+
+
 export const sendftmsg = async (args)=>{
     const json = await fetch('/api/airdrop/sendftmsg', {
         headers:{ 'Content-Type': 'application/json' },

@@ -56,7 +56,7 @@ export function getConfig() {
           explorerUrl: "https://testnet.nearblocks.io",
           RULE_CONTRACT: 'app.dev-nepbot.testnet',
           NFT_CONTRACT: 'nft.dev-nepbot.testnet',
-          SNAPSHOT_CONTRACT:'dev-1661250591703-95464982614704',
+          SNAPSHOT_CONTRACT:'snapshot.dev-nepbot.testnet',
           AIRDROP_CONTRACT: 'airdrop.dev-nepbot.testnet',
           OCT_CONTRACT: 'registry.test_oct.testnet',
           PARAS_CONTRACT: 'paras-token-v2.testnet',
