@@ -177,9 +177,9 @@ function AddRule(props) {
     function Token(){
         return <div>
             <Item
-            label="token address"
+            label="token contract"
             name="token_id"
-            rules={[{ required: true, message: 'Enter a token address' }]}
+            rules={[{ required: true, message: 'Enter a token contract' }]}
             >
                 <Input bordered={false}/>
             </Item>

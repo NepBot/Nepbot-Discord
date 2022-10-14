@@ -28,7 +28,7 @@ export default function Index(props) {
 
     const signIn = async (_wallet, type) => {
         if (type == "near") {
-            window.localStorage.setItem("walletType","near")
+            window.localStorage.removeItem("isSender")
             _wallet.requestSignIn(
                 config.RULE_CONTRACT, // contract requesting access
                 "nepbot", // optional

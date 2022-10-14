@@ -8,8 +8,8 @@ import load from '../../assets/images/load.gif';
 import {parseAmount} from "../../utils/util";
 import js_sha256 from "js-sha256";
 import bs58 from 'bs58'
-import { requestTransaction,executeMultipleTransactions } from '../../utils/contract';
-import {getSnapshotSign,  sendftmsg} from "../../api/api";
+import {executeMultipleTransactions } from '../../utils/contract';
+import {sendftmsg} from "../../api/api";
 
 const config = getConfig()
 
