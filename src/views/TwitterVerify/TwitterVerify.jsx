@@ -33,7 +33,7 @@ export default function Success(props) {
             const res = await twitterVerify({state:search.state,code:search.code});
             if(typeof(res) == 'object' && res.length>0){
                 let info = ''
-                if(res[0]['name'] == 'Add role success'){
+                if(res[0]['name'] == 'Add role success' || res[0]['name'] == 'Already in role'){
                     localStorage.setItem('twitterVerifyInfo',res[0]['value'])
                     history.push({pathname: `/success`,search:'from=twitterverify'})
                 }else{
