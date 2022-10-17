@@ -33,7 +33,7 @@ function Success(props) {
             return (<div className={'twitter'}>
                 <div className={'head'}>Twitter connected.</div>
                 <div className={'text'}>
-                    <pre>{info}</pre>
+                    <div dangerouslySetInnerHTML = {{ __html:  info}}></div>
                 </div>
             </div>)
         }else{

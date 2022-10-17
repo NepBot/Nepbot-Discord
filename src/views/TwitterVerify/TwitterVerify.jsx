@@ -38,7 +38,23 @@ export default function Success(props) {
                     history.push({pathname: `/success`,search:'from=twitterverify'})
                 }else{
                     res.forEach(item=>{
-                        info = info + item.value + '/\n\n'
+                        if(item.value.indexOf('https://')>-1){
+                            const infoArr = item.value.split("https://");
+                            const url = `https://${infoArr[1]}`
+                            if(infoArr[0].indexOf('Must:')>-1){
+                                const txtArr = infoArr[0].split("Must:");
+                                info += `${txtArr[0]} <br/> Must:${txtArr[1]} <a href="${url}" target="_blank">${url}</a> <br/><br/>`
+                            }else{
+                                info += `${infoArr[0]} <a href="${url}" target="_blank">${url}</a> <br/><br/>`
+                            }
+                        }else{
+                            if(item.value.indexOf('Must:')>-1){
+                                const txtArr = item.value.split("Must:");
+                                info += `${txtArr[0]} <br/> Must:${txtArr[1]} <br/><br/>`
+                            }else{
+                                info += `${item.value} <br/><br/>`
+                            }
+                        }
                     })
                     localStorage.setItem('twitterVerifyInfo',info)
                     history.push({pathname: `/failure`,search:'from=twitterverify&status=1'})

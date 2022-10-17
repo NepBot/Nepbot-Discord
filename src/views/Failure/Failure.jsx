@@ -41,10 +41,10 @@ function Failure(props) {
         }else if(type === 'twitterverify'){
             if(status==1){
                 return (
-                <div class="twitter">
+                <div className={"twitter"}>
                     <div className={'head'}>Twitter is connected, but ... </div>
                     <div className={'text '}>
-                        <div><pre>{info}</pre></div>
+                        <div dangerouslySetInnerHTML = {{ __html:  info}}></div>
                     </div>
                 </div>
                 )
