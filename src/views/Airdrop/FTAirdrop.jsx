@@ -50,7 +50,7 @@ export default function Success(props) {
                 return
             }
 
-            const metadata = await account.viewFunction(search.token_id, 'ft_metadata', {})
+            const metadata = await account.viewFunction(search.token_contract, 'ft_metadata', {})
 
 
             if(!window.localStorage.getItem("isSender") && search.transactionHashes){
@@ -60,7 +60,7 @@ export default function Success(props) {
                 const args = {
                     claim_amount: parseAmount(search.amount_per_share, metadata.decimals),
                     deposit:{
-                        FT:[search.token_id,parseAmount(search.total_amount, metadata.decimals)]
+                        FT:[search.token_contract,parseAmount(search.total_amount, metadata.decimals)]
                     },
                     end_time: String(new Date(search.end_time).getTime() * 1000000),
                     guild_id: search.guild_id,
@@ -69,12 +69,12 @@ export default function Success(props) {
                 }
                 const hash = bs58.encode(js_sha256.array(Buffer.from(JSON.stringify(args))));
                 localStorage.setItem(`nepbot_airdrop_${search.user_id}`,hash);
-                const isRegistered = await account.viewFunction(search.token_id, 'storage_balance_of', {account_id: config.AIRDROP_CONTRACT})
+                const isRegistered = await account.viewFunction(search.token_contract, 'storage_balance_of', {account_id: config.AIRDROP_CONTRACT})
 
                 let txs = [];
                 if(!isRegistered){
                     txs = [{
-                        receiverId: search.token_id,
+                        receiverId: search.token_contract,
                         actions: [{
                             methodName: "storage_deposit",
                             args: {
@@ -99,7 +99,7 @@ export default function Success(props) {
                         methodName: "add_campaign"
                     }]
                 },{
-                    receiverId:search.token_id,
+                    receiverId:search.token_contract,
                     actions:[{
                         args: {
                             receiver_id:config.AIRDROP_CONTRACT,
