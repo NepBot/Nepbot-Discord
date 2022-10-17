@@ -28,7 +28,7 @@ export default function Success(props) {
                     guild_id:search.guild_id,
                     channel_id:search.channel_id,
                     role_id:search.role_id,
-                    token_id:search.token_id,
+                    token_contract:search.token_contract,
                     total_amount: search.total_amount, 
                     amount_per_share:search.amount_per_share,
                     end_time:search.end_time,
