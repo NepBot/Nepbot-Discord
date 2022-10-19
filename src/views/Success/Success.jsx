@@ -38,7 +38,7 @@ function Success(props) {
             </div>)
         }else{
             return (<div>
-                <div className={'head'}>Well done!</div>
+                <div className={'head'}>✅ Well done!</div>
                 <div className={'text'}>
                     Wallet is connected.<br/>
                     Please go back to Discord and check your roles! :)

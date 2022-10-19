@@ -41,7 +41,8 @@ export default function Success(props) {
                 sign: signature 
             })
             if (result == true) {
-                window.open('https://discord.com/channels/','_self')
+                history.push({pathname: `/success`})
+                // window.open('https://discord.com/channels/','_self')
             } else {
                 history.push({pathname: `/failure`})
             }
