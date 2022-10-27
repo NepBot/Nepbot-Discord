@@ -75,7 +75,6 @@ function AddCollection(props) {
             const wallet = new WalletConnection(near,"nepbot");
             const account = wallet.account() 
             const outerCollectionId = `${values.name.replace(/\s+/g, "-")}-guild-${props.server.name.replace(/\s+/g, "-")}-by-${config.NFT_CONTRACT.replaceAll(".", "")}`.toLowerCase().replaceAll(".", "");
-            console.log(outerCollectionId)
             let res = null;
             const collection = await getCollection(outerCollectionId);
             if (!collection || collection.results.length > 0 || parasCreatedList.indexOf(values.name)>-1) {
@@ -114,10 +113,8 @@ function AddCollection(props) {
                 formData.append('files',values['cover'][0]['originFileObj'])
                 formData.append('args', JSON.stringify(params))
                 
-
                 //paras - collection
                 res = await createCollection(formData);
-                //{"status":1,"data":{"collection":{"_id":"6280b224692d163b193d09de","collection_id":"fff-by-bhc22testnet","blurhash":"UE3UQdpLQ8VWksZ}Z~ksL#Z}pfkXVWp0kXVq","collection":"fff","cover":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","createdAt":1652601380975,"creator_id":"bhc22.testnet","description":"fff","media":"bafybeiclmwhd77y7u4cos4zkt5ahfvo3il2hw3tt5uxweovk5bsnpe2kma","socialMedia":{"twitter":"","discord":"","website":""},"updatedAt":1652601380975}}}
                 if(res.collection_id){
                     setParasCreatedList([...parasCreatedList,values.name])
                 }

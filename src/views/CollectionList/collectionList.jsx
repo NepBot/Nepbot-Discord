@@ -4,7 +4,8 @@ import {message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
 import AddCollection from "./addCollection";
-import './collection.css'
+import SelectPlatform from "./selectPlatform";
+import './collection.scss'
 import qs from "qs";
 import store from "../../store/discordInfo";
 import {formatAmount, sign} from "../../utils/util";
@@ -22,6 +23,8 @@ function Collection(props) {
     const [isLoading, setIsLoading] = useState(true);
     const [collectionList, setCollectionList] = useState([]);
     const [addDialogStatus, setAddDialogStatus] = useState(false);
+    const [selectStatus, setSelectStatus] = useState(false);
+    const [platform, setPlatform] = useState('');
     const [operationSign, setOperationSign] = useState("")
     const [server, setServer] = useState({});
     const [roleList, setRoleList] = useState([]);
@@ -95,6 +98,7 @@ function Collection(props) {
             setRoleList(roles.filter(item=>item.name!=="@everyone"))
             //setCollectionList
             const collections = await account.viewFunction(config.NFT_CONTRACT, "get_collections_by_guild", {guild_id: info.guild_id})
+            
             let wrappedCollections = []
             for (let collection of collections) {
                 const collectionData = await getCollection(collection.outer_collection_id)
@@ -119,9 +123,25 @@ function Collection(props) {
                 }
             }
             setCollectionList(wrappedCollections)
+            handleData2(wrappedCollections)
         } catch(e) {}
         setIsLoading(false);
         return data;
+    }
+
+    const handleData2 = async (list) => {
+        const result = [];
+        for(let i = 0;i<list.length;i++){
+            const item = list[i];
+            const collection_id = item['inner_collection_id'];
+            const collectionInfo = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id:collection_id})
+            item.creator = collectionInfo.creator_id;
+            item.minted_count = collectionInfo.minted_count;
+            item.total_copies = collectionInfo.total_copies;
+            item.updated = true;
+            result.push(item);
+        }
+        setCollectionList(result)
     }
 
     function Roles(props){
@@ -138,19 +158,21 @@ function Collection(props) {
         }
     }
 
+    const getPlatform = useCallback(async (platform) => {
+        setPlatform(platform);
+        handleSelectStatus();
+        handleAddStatus();
+    }, [selectStatus]);
+    const handleSelectStatus = useCallback(async () => {
+        setSelectStatus(!selectStatus)
+    }, [selectStatus]);
     const handleAddStatus = useCallback(async () => {
-        // if (!addDialogStatus) {
-            
-        // }else{
-        //     message.info('Success');
-        // }
         setAddDialogStatus(!addDialogStatus)
     }, [addDialogStatus]);
 
     const handleSeriesList = (collection) => {
         history.push({pathname: `/serieslist/${collection.inner_collection_id}`,search:props.location.search})
     }
-
 
     function CollectionList(){
         if(collectionList.length>0){
@@ -163,19 +185,36 @@ function Collection(props) {
                             <div className={'user-info'}>
                                 <div className={'name txt-wrap'}>{item.collection.split("-guild-")[0].replaceAll("-", " ")}</div>
                                 <div className={'account txt-wrap'}>{server.name}</div>
+                                <div className={['creator txt-wrap',item.creator?'':'loading'].join(' ')}>Created by &nbsp;
+                                    <span className={'dotting'}></span>
+                                    {item.creator}
+                                </div>
                             </div>
                         </div>
                         <div className={'desc txt-wrap'}>{item.description}</div>
                         <Roles roles={item.mintable_roles}></Roles>
                         <div className={'bottom-info'}>
                             <div className={'mod price'}>
-                                Price
                                 <div className="val">{formatAmount(item.price,24,4)}</div>
+                                Price
                             </div>
-                            <div className={'line'}></div>
                             <div className={'mod royality'}>
-                                Royality
                                 <div className="val">{item.royaltyTotal}%</div>
+                                Royality
+                            </div>
+                            <div className={'mod copies'}>
+                                <div className={['val',item.updated?'':'loading'].join(' ')}>
+                                    <span className={'dotting'}></span>
+                                    <span className={'count'}>{item.total_copies}</span>
+                                </div>
+                                Total Copies
+                            </div>
+                            <div className={'mod minted'}>
+                                <div className={['val',item.updated?'':'loading'].join(' ')}>
+                                    <span className={'dotting'}></span>
+                                    <span className={'count'}>{item.minted_count}</span>
+                                </div>
+                                Total Minted
                             </div>
                         </div>
                     </div>
@@ -204,13 +243,15 @@ function Collection(props) {
             <div className={'page-bg'}></div>
             <div className={'page-header'}>
                 <div className={"title"}>Collections</div>
-                <div className={'add-btn'} onClick={handleAddStatus}>
+                <div className={'add-btn'} onClick={handleSelectStatus}>
                     <img className={"add-icon"} src={add}/>
                     Add
                 </div>
             </div>
             <CollectionList/>
-            <AddCollection  visible={addDialogStatus} server={server} roleList={roleList}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
+            
+            <SelectPlatform visible={selectStatus} getPlatform={getPlatform}/>
+            <AddCollection  visible={addDialogStatus} platform={platform} server={server} roleList={roleList}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
         </div>
     );
 }

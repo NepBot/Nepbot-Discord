@@ -6,11 +6,21 @@ import React,{useState} from 'react';
 import './selectPlatform.scss'
 
 function SelectPlatform(props) {
-    return <div className="select-platform">
-        <div className="select-content">
-
-        </div>
-    </div>;
+    const { getPlatform } = props;
+    // const [count, setCount] = useState<number>(0);
+    const selectPlatform = (platform) => {
+        getPlatform(platform);
+    }
+    if(props.visible){
+        return <div className="select-platform">
+            <div className="select-content">
+                <div className="platform-item" onClick={() => selectPlatform('paras')}>Paras</div>
+                <div className="platform-item" onClick={() => selectPlatform('mintbase')}>Mintbase</div>
+            </div>
+        </div>;
+    }else{
+        return "";
+    }
 }
 
 export default SelectPlatform;

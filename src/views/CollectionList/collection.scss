@@ -8,7 +8,7 @@
 }
 .collection-item{
     width:326px;
-    height:436px;
+    height:476px;
     background: rgba(78,81,112,0.24);
     border-radius: 16px;
     margin:30px 30px 0 0; 
@@ -40,23 +40,38 @@
 }
 .collection-item .user-info{
     width:210px;
+    .name{
+        font-family: Gilroy-Bold;
+        font-size: 18px;
+        color: #FFFFFF;
+        font-weight: 700;
+        line-height:22px;
+    }
+    .account{
+        margin-top:6px;
+        opacity: 0.6;
+        font-family: Gilroy-Regular;
+        font-size: 14px;
+        color: #FFFFFF;
+        font-weight: 400;
+        line-height:16px;
+    }
+    .creator{
+        margin-top:6px;
+        opacity: 0.6;
+        font-family: Gilroy-Regular;
+        font-size: 14px;
+        color: #FFFFFF;
+        font-weight: 400;
+        line-height:16px;
+        &.loading{
+            .dotting{
+                display:inline-block;
+            }
+        }
+    }
 }
-.collection-item .user-info .name{
-    font-family: Gilroy-Bold;
-    font-size: 18px;
-    color: #FFFFFF;
-    font-weight: 700;
-    line-height:22px;
-}
-.collection-item .user-info .account{
-    margin-top:6px;
-    opacity: 0.6;
-    font-family: Gilroy-Regular;
-    font-size: 14px;
-    color: #FFFFFF;
-    font-weight: 400;
-    line-height:16px;
-}
+
 .collection-item .desc{
     margin-top:20px;
     font-family: Gilroy-Regular;
@@ -90,43 +105,47 @@
 .collection-item .bottom-info{
     margin-top:20px;
     width:286px;
-    height:80px;
+    height:120px;
     border: 1px solid rgba(255,255,255,0.12);
     border-radius: 8px;
     display: flex;
     align-items: center;
-}
-.collection-item .bottom-info .mod{
-    width:140px;
-    font-family: Gilroy-Regular;
-    font-size: 14px;
-    color: rgba(255,255,255,0.4);
-    font-weight: 400;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.collection-item .bottom-info .mod .val{
-    margin-top:3px;
-    font-family: Gilroy-Bold;
-    font-size: 16px;
-    color: #FFFFFF;
-    text-align: center;
-    font-weight: 700;
-    line-height:19px;
-}
-.collection-item .bottom-info .mod.price .val{
-    
-    width:auto;
-    padding-right:16px;
-    background:url('../../assets/images/icon-price.png') no-repeat right center;
-    background-size:12px;
-}
-.collection-item .bottom-info .line{
-    width:1px;
-    height:30px;
-    opacity: 0.12;
-    background: #FFFFFF;
+    flex-wrap: wrap;
+    .mod{
+        width:140px;
+        font-family: Gilroy-Regular;
+        font-size: 14px;
+        color: rgba(255,255,255,0.4);
+        font-weight: 400;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .val{
+            margin-top:3px;
+            font-family: Gilroy-Bold;
+            font-size: 16px;
+            color: #FFFFFF;
+            text-align: center;
+            font-weight: 700;
+            line-height:19px;
+            &.loading{
+                .dotting{
+                    display:inline-block;
+                }
+                .count{
+                    display: none;
+                }
+            }
+        }
+        &.price{
+            .val{
+                width:auto;
+                padding-right:16px;
+                background:url('../../assets/images/icon-price.png') no-repeat right center;
+                background-size:12px;
+            }
+        }
+    }
 }
 
 
@@ -334,5 +353,32 @@
 }
 
 
+
+
+.dotting {
+    display: none; 
+    width: 10px; 
+    min-height: 2px;
+    padding-right: 2px;
+    border-left: 2px solid rgba(255,255,255,0.4); border-right: 2px solid rgba(255,255,255,0.4);
+    background-color: rgba(255,255,255,0.4); background-clip: content-box;
+    box-sizing: border-box;
+    -webkit-animation: dot 1.6s infinite step-start both;
+    animation: dot 1.6s infinite step-start both;
+}
+.dotting:before { content: '...'; }
+.dotting::before { content: ''; }
+:root .dotting { margin-left: 2px; padding-left: 2px; }
+
+@-webkit-keyframes dot {
+    25% { border-color: transparent; background-color: transparent; }
+    50% { border-right-color: transparent; background-color: transparent; }
+    75% { border-right-color: transparent; }
+}
+@keyframes dot {
+    25% { border-color: transparent; background-color: transparent; }
+    50% { border-right-color: transparent; background-color: transparent; }
+    75% { border-right-color: transparent; }
+}
 
 
