@@ -1,0 +1,18 @@
+.select-platform{
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right:0;
+    min-width:1038px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:url('../../assets/images/bg.png') no-repeat center center;
+    background-size:cover;
+    .select-content{
+        width:500px;
+        height:600px;
+        background-color: #000;
+    }
+}

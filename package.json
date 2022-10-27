@@ -160,5 +160,8 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "sass": "^1.55.0"
   }
 }
