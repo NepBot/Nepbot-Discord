@@ -28,6 +28,8 @@ import reboot from '../../assets/images/index/logo-reboot.png';
 import ape from '../../assets/images/index/logo-ape.png';
 import tandao from '../../assets/images/index/logo-tandao.png';
 import tomorrow_citizen from '../../assets/images/index/logo-tomorrow-citizen.png';
+import Mintbase from '../../utils/mintbase'
+import {connect, WalletConnection, keyStores, KeyPair} from 'near-api-js';
 
 import near_small from '../../assets/images/index/logo-near-small.png';
 import awesomenear_small from '../../assets/images/index/logo-awesomenear-small.png';
