@@ -20,16 +20,19 @@ const config = getConfig()
 
 function Series(props) {
     let account = {}
-    const [searchStr] =  useState("");
     const [showList, setShowList] = useState([]);
     const [seriesList, setSeriesList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [addDialogStatus, setAddDialogStatus] = useState(false);
-    const [collectionId, setCollectionId] = useState("")
-    const [collectionName, setCollectionName] = useState("")
+    const [collectionInfo, setCollectionInfo] = useState({
+        collection_id : props.match.params.id,
+        creator : '',
+        minted_count : 0,
+        total_copies : 0,
+        name : props.match.params.id.split(":")[1].split("-guild-")[0].replaceAll("-", " ")
+
+    })
     const history = useHistory()
-    // const [roleList, setRoleList] = useState([]);
-    const [collectionDetail, setCollectionDetail] =  useState({});
 
     useEffect(() => {
         (async () => {
@@ -40,9 +43,6 @@ function Series(props) {
             if (!info || !wallet.isSignedIn() || !operationSign) {
                 history.push({pathname: '/linkexpired', })
             }
-            const collectionId = props.match.params.id
-            setCollectionId(collectionId)
-            setCollectionName(collectionId.split(":")[1].split("-guild-")[0].replaceAll("-", " "))
             account = wallet.account()
             handleData()
         })();
@@ -53,10 +53,24 @@ function Series(props) {
     const handleData = async (data) => {
         //get_token_metadata
         try{
+            const search =  qs.parse(props.location.search.slice(1));
             setIsLoading(true);
             const near = await connect(config);
             const wallet = new WalletConnection(near, 'nepbot');
             account = wallet.account()
+            const collectionInfo = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id:props.match.params.id})
+            console.log(collectionInfo,'---collectionInfo---');
+            const server = await getServer(search.guild_id);
+            setCollectionInfo({
+                collection_id : props.mach.params.id,
+                creator : collectionInfo.creator_id,
+                minted_count : collectionInfo.minted_count,
+                total_copies : collectionInfo.total_copies,
+                name : props.match.params.id.split(":")[1].split("-guild-")[0].replaceAll("-", " "),
+                server : server.name,
+            })
+            
+
             const res = await account.viewFunction(config.NFT_CONTRACT, 'get_token_metadata', {collection_id: props.match.params.id})
             setSeriesList(res)
             setShowList(res)
@@ -139,7 +153,7 @@ function Series(props) {
             <div className={'page-bg'}></div>
             <div className={'page-header series-page-header'}>
                 <div className={'back-collection-list'} onClick={backCollectionList}></div>
-                <div className={"title"}>Collection Name : {collectionName}</div>
+                <div className={"title"}>Collection Name : {collectionInfo.name}</div>
                 <Input.Search onSearch={handleSearch} className={'search-input'} bordered={false} placeholder="Enter a token ID to search" /> 
                 <div className={'add-btn'} onClick={handleAddStatus}>
                     <img className={"add-icon"} src={add}/>
@@ -147,7 +161,7 @@ function Series(props) {
                 </div>
             </div>
             <SeriesList/>
-            <AddSeries collectionId={collectionId} collectionName={collectionName} visible={addDialogStatus}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
+            <AddSeries collectionId={collectionInfo.collection_id} collectionName={collectionInfo.name} visible={addDialogStatus}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
         </div>
     );
 }

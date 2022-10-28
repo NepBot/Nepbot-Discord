@@ -76,49 +76,53 @@ function AddCollection(props) {
             const account = wallet.account() 
             const outerCollectionId = `${values.name.replace(/\s+/g, "-")}-guild-${props.server.name.replace(/\s+/g, "-")}-by-${config.NFT_CONTRACT.replaceAll(".", "")}`.toLowerCase().replaceAll(".", "");
             let res = null;
-            const collection = await getCollection(outerCollectionId);
-            if (!collection || collection.results.length > 0 || parasCreatedList.indexOf(values.name)>-1) {
-                try{
-                    const check_res = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id: `paras:${outerCollectionId}`})
-                    setConfirmLoading(false);
-                    setConfrimModalStatus(false)
-                    message.error("Collection name has already been taken");
-                    return;
-                }catch(e){
-                    res = {
-                        collection_id : outerCollectionId,
+            // if(props.platform == 'paras'){
+                const collection = await getCollection(outerCollectionId);
+                if (!collection || collection.results.length > 0 || parasCreatedList.indexOf(values.name)>-1) {
+                    try{
+                        const check_res = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id: `paras:${outerCollectionId}`})
+                        setConfirmLoading(false);
+                        setConfrimModalStatus(false)
+                        message.error("Collection name has already been taken");
+                        return;
+                    }catch(e){
+                        res = {
+                            collection_id : outerCollectionId,
+                        }
+                    }
+                }else{
+                    //formData
+                    let params = {
+                        args: {
+                            args: {
+                                collection: `${values.name.replace(/\s+/g, "-")}-guild-${props.server.name.replace(/\s+/g, "-")}`,
+                                description:values.description,
+                                creator_id: config.NFT_CONTRACT,
+                                twitter: "",
+                                website: "",
+                                discord: "",
+                            },
+                            sign: operationSign,
+                            user_id: info.user_id,
+                            guild_id: info.guild_id
+                        },
+                        account_id: account.accountId,
+                    }
+                    params.sign = await sign(account, params.args)
+                    const formData = new FormData();
+                    formData.append('files',values['logo'][0]['originFileObj'])
+                    formData.append('files',values['cover'][0]['originFileObj'])
+                    formData.append('args', JSON.stringify(params))
+                    
+                    //paras - collection
+                    res = await createCollection(formData);
+                    if(res.collection_id){
+                        setParasCreatedList([...parasCreatedList,values.name])
                     }
                 }
-            }else{
-                //formData
-                let params = {
-                    args: {
-                        args: {
-                            collection: `${values.name.replace(/\s+/g, "-")}-guild-${props.server.name.replace(/\s+/g, "-")}`,
-                            description:values.description,
-                            creator_id: config.NFT_CONTRACT,
-                            twitter: "",
-                            website: "",
-                            discord: "",
-                        },
-                        sign: operationSign,
-                        user_id: info.user_id,
-                        guild_id: info.guild_id
-                    },
-                    account_id: account.accountId,
-                }
-                params.sign = await sign(account, params.args)
-                const formData = new FormData();
-                formData.append('files',values['logo'][0]['originFileObj'])
-                formData.append('files',values['cover'][0]['originFileObj'])
-                formData.append('args', JSON.stringify(params))
-                
-                //paras - collection
-                res = await createCollection(formData);
-                if(res.collection_id){
-                    setParasCreatedList([...parasCreatedList,values.name])
-                }
-            }
+            // }else if(props.platform == 'mintbase'){
+
+            // }
 
             const args = {
                 sign: operationSign,
@@ -139,7 +143,7 @@ function AddCollection(props) {
             //contract request
             const contract_args = {
                 outer_collection_id: res.collection_id,
-                contract_type: "paras",
+                contract_type: props.platform,//'paras'
                 guild_id: info.guild_id,
                 royalty:royalty,
                 mintable_roles: values.role_id,
