@@ -9,11 +9,13 @@ import './collection.scss'
 import qs from "qs";
 import store from "../../store/discordInfo";
 import {formatAmount, sign} from "../../utils/util";
-import {getRoleList, getServer, getUser, signRule, getOperationSign, getCollection} from "../../api/api";
+import {getRoleList, getServer, getUser, signRule, getOperationSign, getCollection, getMintbaseCollection} from "../../api/api";
 import logo from '../../assets/images/index/logo.png';
 import add from '../../assets/images/setRule/add.png';
 import no_data from '../../assets/images/no-data.png';
 import loading from '../../assets/images/loading.png';
+import logo_paras from '../../assets/images/collection/logo-paras.png';
+import logo_mintbase from '../../assets/images/collection/logo-mintbase.png';
 
 const config = getConfig()
 
@@ -33,7 +35,6 @@ function Collection(props) {
 
     useEffect(() => {
         (async () => {
-            console.log(props.location.search,'--props.location.search--');
             const search =  qs.parse(props.location.search.slice(1));
             store.set("info", {
                 guild_id: search.guild_id,
@@ -101,26 +102,37 @@ function Collection(props) {
             
             let wrappedCollections = []
             for (let collection of collections) {
-                const collectionData = await getCollection(collection.outer_collection_id)
-                if (collectionData && collectionData.results.length > 0) {
-                    // const userInfo = await getUser(info.guild_id, info.user_id)
-                    let royaltyTotal = 0;
-                    if(collection.royalty){
-                        Object.keys(collection.royalty).forEach(key=>{
-                            royaltyTotal += Number(collection.royalty[key]);
-                        })
-                    }
-                    
-                    wrappedCollections.push({
-                        // avatar:userInfo.displayAvatarURL,
-                        royaltyTotal:royaltyTotal/100,
-                        // collection_id: collection.collection_id,
-                        inner_collection_id: collection.collection_id,
-                        outer_collection_id: collection.outer_collection_id,
-                        ...collection,
-                        ...collectionData.results[0]
+                let royaltyTotal = 0;
+                if(collection.royalty){
+                    Object.keys(collection.royalty).forEach(key=>{
+                        royaltyTotal += Number(collection.royalty[key]);
                     })
                 }
+                if(collection.contract_type == 'paras'){
+                    const collectionData = await getCollection(collection.outer_collection_id)
+                    if (collectionData && collectionData.results.length > 0) {
+                        wrappedCollections.push({
+                            royaltyTotal:royaltyTotal/100,
+                            inner_collection_id: collection.collection_id,
+                            outer_collection_id: collection.outer_collection_id,
+                            ...collection,
+                            ...collectionData.results[0]
+                        })
+                    }
+                }else if(collection.contract_type == 'mintbase'){
+                    const collectionData = await getMintbaseCollection(collection.outer_collection_id)
+                    console.log(collectionData);
+                    if (collectionData) {
+                        wrappedCollections.push({
+                            royaltyTotal:royaltyTotal/100,
+                            inner_collection_id: collection.collection_id,
+                            outer_collection_id: collection.outer_collection_id,
+                            ...collection,
+                            ...collectionData
+                        })
+                    }
+                }
+                
             }
             setCollectionList(wrappedCollections)
             handleData2(wrappedCollections)
@@ -174,23 +186,52 @@ function Collection(props) {
         history.push({pathname: `/serieslist/${collection.inner_collection_id}`,search:props.location.search})
     }
 
+    function CollectionItem(props){
+        if(props.item.contract_type=='paras'){
+            return <div>
+                <img className={'cover'} alt="cover" src={config.IPFS + props.item.cover}/>
+                <div className={'user'}>
+                    <div className={'media-box'}>
+                        <img className={'media'} alt="media" src={config.IPFS + props.item.media}/>
+                        <img className={'platform-logo'} alt="paras" src={logo_paras}/>
+                    </div> 
+                    <div className={'user-info'}>
+                        <div className={'name txt-wrap'}>{props.item.collection.split("-guild-")[0].replaceAll("-", " ")}</div>
+                        <div className={'account txt-wrap'}>{server.name}</div>
+                        <div className={['creator txt-wrap',props.item.creator?'':'loading'].join(' ')} onClick={(e)=>{e.stopPropagation()}}>Created by &nbsp;
+                            <span className={'dotting'}></span>
+                            <a href={config.NEARBLOCKS+props.item.creator} target="_blank">{props.item.creator}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }else if(props.item.contract_type=='mintbase'){
+            return <div>
+                <img className={'cover'} alt="cover" src={props.item.background}/>
+                <div className={'user'}>
+                    <div className={'media-box'}>
+                        <img className={'media'} alt="media" src={props.item.logo}/>
+                        <img className={'platform-logo'} alt="mintbase" src={logo_mintbase}/>
+                    </div>
+                    <div className={'user-info'}>
+                        <div className={'name txt-wrap'}>{props.item.name}</div>
+                        <div className={'account txt-wrap'}>{server.name}</div>
+                        <div className={['creator txt-wrap',props.item.creator?'':'loading'].join(' ')}>Created by &nbsp;
+                            <span className={'dotting'}></span>
+                            {props.item.creator}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
     function CollectionList(){
         if(collectionList.length>0){
             const collectionItems = collectionList.map((item,index) => 
                 <div className={['collection-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()} onClick={() => handleSeriesList(item)}>
-                    <img className={'cover'} alt="cover" src={'https://ipfs.fleek.co/ipfs/'+item.cover}/>
+                    <CollectionItem item={item}/>
                     <div className={'info'}>
-                        <div className={'user'}>
-                            <img className={'media'} alt="media" src={'https://ipfs.fleek.co/ipfs/'+item.media}/>
-                            <div className={'user-info'}>
-                                <div className={'name txt-wrap'}>{item.collection.split("-guild-")[0].replaceAll("-", " ")}</div>
-                                <div className={'account txt-wrap'}>{server.name}</div>
-                                <div className={['creator txt-wrap',item.creator?'':'loading'].join(' ')}>Created by &nbsp;
-                                    <span className={'dotting'}></span>
-                                    {item.creator}
-                                </div>
-                            </div>
-                        </div>
                         <div className={'desc txt-wrap'}>{item.description}</div>
                         <Roles roles={item.mintable_roles}></Roles>
                         <div className={'bottom-info'}>
@@ -250,7 +291,7 @@ function Collection(props) {
             </div>
             <CollectionList/>
             
-            <SelectPlatform visible={selectStatus} getPlatform={getPlatform}/>
+            <SelectPlatform visible={selectStatus} server={server} getPlatform={getPlatform} />
             <AddCollection  visible={addDialogStatus} platform={platform} server={server} roleList={roleList}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
         </div>
     );

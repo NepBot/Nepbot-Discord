@@ -21,10 +21,14 @@ export function getConfig() {
           AIRDROP_CONTRACT: 'airdrop.nepbot.near',
           OCT_CONTRACT: 'octopus-registry.near',
           PARAS_CONTRACT: 'x.paras.near',
+          MINTBASE_CONTRACT: '',
           APPLICATION_ID: '958997413803196476',
           PARAS_API: "https://api-v2-mainnet.paras.id",
+          AEWEAVE_API: "https://arweave.net",
           PARAS: "https://paras.id",
-          ASTRO:"https://app.astrodao.com/"
+          ASTRO:"https://app.astrodao.com/",
+          IPFS:"https://ipfs.fleek.co/ipfs/",
+          NEARBLOCKS:"https://nearblocks.io/address/"
         }
       case 'development':
       case 'testnet':
@@ -41,10 +45,14 @@ export function getConfig() {
           AIRDROP_CONTRACT: 'airdrop.nepbot.testnet',
           OCT_CONTRACT: 'registry.test_oct.testnet',
           PARAS_CONTRACT: 'paras-token-v2.testnet',
+          MINTBASE_CONTRACT: '',
           APPLICATION_ID: '928559137179172874',
           PARAS_API: "https://api-v3-marketplace-testnet.paras.id",
+          AEWEAVE_API: "https://arweave.net",
           PARAS: "https://testnet.paras.id",
-          ASTRO:"https://testnet.app.astrodao.com/"
+          ASTRO:"https://testnet.app.astrodao.com/",
+          IPFS:"https://ipfs.fleek.co/ipfs/",
+          NEARBLOCKS:"https://testnet.nearblocks.io/address/"
         }
       case 'dev-testnet':
         return {
@@ -60,10 +68,14 @@ export function getConfig() {
           AIRDROP_CONTRACT: 'airdrop.dev-nepbot.testnet',
           OCT_CONTRACT: 'registry.test_oct.testnet',
           PARAS_CONTRACT: 'paras-token-v2.testnet',
+          MINTBASE_CONTRACT: 'devnepbot.mintspace2.testnet',
           APPLICATION_ID: '967009211823304744',
           PARAS_API: "https://api-v3-marketplace-testnet.paras.id",
+          AEWEAVE_API: "https://arweave.net",
           PARAS: "https://testnet.paras.id",
-          ASTRO:"https://testnet.app.astrodao.com/"
+          ASTRO:"https://testnet.app.astrodao.com/",
+          IPFS:"https://ipfs.fleek.co/ipfs/",
+          NEARBLOCKS:"https://testnet.nearblocks.io/address/"
         }
       case 'betanet':
         return {

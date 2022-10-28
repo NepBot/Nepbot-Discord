@@ -4,9 +4,9 @@ import {Input,message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
 import AddSeries from "./addSeries";
-import './series.css'
+import './series.scss'
 
-import {getRoleList, getServer, signRule, getCollection} from "../../api/api";
+import {getRoleList, getServer, signRule, getCollection, getMintbaseCollection} from "../../api/api";
 import qs from "qs";
 import store from "../../store/discordInfo";
 import {formatAmount, sign} from "../../utils/util";
@@ -58,19 +58,38 @@ function Series(props) {
             const near = await connect(config);
             const wallet = new WalletConnection(near, 'nepbot');
             account = wallet.account()
-            const collectionInfo = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id:props.match.params.id})
-            console.log(collectionInfo,'---collectionInfo---');
-            const server = await getServer(search.guild_id);
-            setCollectionInfo({
-                collection_id : props.mach.params.id,
-                creator : collectionInfo.creator_id,
-                minted_count : collectionInfo.minted_count,
-                total_copies : collectionInfo.total_copies,
-                name : props.match.params.id.split(":")[1].split("-guild-")[0].replaceAll("-", " "),
-                server : server.name,
-            })
-            
 
+            const collection = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id:props.match.params.id})
+            const server = await getServer(search.guild_id);
+
+            const info = {
+                collection_id : props.match.params.id,
+                creator : collection.creator_id,
+                minted_count : collection.minted_count,
+                total_copies : collection.total_copies,
+                serverName : server.name,
+                serverIcon : server.iconURL,
+            }
+            if(collection.contract_type =='paras'){
+                const collectionData = await getCollection(collection.outer_collection_id)
+                info.name = props.match.params.id.split(":")[1].split("-guild-")[0].replaceAll("-", " ");
+                info.cover = config.IPFS + collectionData.results[0]['cover'];
+                info.logo = config.IPFS + collectionData.results[0]['media'];
+                info.contract = config.PARAS_CONTRACT;
+                info.description = collectionData.results[0]['description'];
+            }else if(collection.contract_type == 'mintbase'){
+                info.contract = config.MINTBASE_CONTRACT;
+                const collectionData = await getMintbaseCollection(collection.outer_collection_id)
+                if (collectionData) {
+                    info.name = collectionData.name;
+                    info.description = collectionData.description;
+                    info.cover = collectionData.background;
+                    info.logo = collectionData.logo;
+                }
+            }
+            console.log(info);
+            setCollectionInfo(info)
+            
             const res = await account.viewFunction(config.NFT_CONTRACT, 'get_token_metadata', {collection_id: props.match.params.id})
             setSeriesList(res)
             setShowList(res)
@@ -136,12 +155,12 @@ function Series(props) {
             </div>)
         }
         else if(isLoading){
-            return (<div className={'no-data'}>
+            return (<div className={'no-result'}>
                 <img className={"page-loading"}  src={loading}/>
             </div>)
         }
         else{
-            return (<div className={'no-data'}>
+            return (<div className={'no-result'}>
                 <img  src={no_data}/>
                 <div className={'tip'}>No data, please add a new item.</div>
             </div>)
@@ -153,11 +172,28 @@ function Series(props) {
             <div className={'page-bg'}></div>
             <div className={'page-header series-page-header'}>
                 <div className={'back-collection-list'} onClick={backCollectionList}></div>
-                <div className={"title"}>Collection Name : {collectionInfo.name}</div>
                 <Input.Search onSearch={handleSearch} className={'search-input'} bordered={false} placeholder="Enter a token ID to search" /> 
                 <div className={'add-btn'} onClick={handleAddStatus}>
                     <img className={"add-icon"} src={add}/>
                     Add
+                </div>
+            </div>
+            <div className={'collection-info'}>
+                <img className={"cover"} alt="cover" src={collectionInfo.cover}/>
+                <div className={"info"}>
+                    <img className={"logo"} alt="logo" src={collectionInfo.logo}/>
+                    <div className={"server"}>
+                        <img className={"server-icon"} alt="" src={collectionInfo.serverIcon}/>
+                        <div className={"server-name"}>{collectionInfo.serverName}</div>
+                    </div>
+                    <div className={"title"}>{collectionInfo.name}</div>
+                    <div className={"creator"}>Created by  : <a className={'val'} href={config.NEARBLOCKS+collectionInfo.creator} target="_blank">{collectionInfo.creator}</a></div>
+                    <div className={"contract"}>Contract  : <a className={'val'} href={config.NEARBLOCKS+collectionInfo.contract} target="_blank">{collectionInfo.contract}</a></div>
+                    <div className={"count"}>
+                        <div className={"count-item"}><span className={'val'}>{collectionInfo.total_copies}</span>Total Copies</div>
+                        <div className={"count-item"}><span className={'val'}>{collectionInfo.minted_count}</span>Total Minted</div>
+                    </div>
+                    <div className={"description"}>{collectionInfo.description}</div>
                 </div>
             </div>
             <SeriesList/>

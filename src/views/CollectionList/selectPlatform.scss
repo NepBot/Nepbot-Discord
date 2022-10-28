@@ -4,6 +4,7 @@
     left: 0;
     bottom: 0;
     right:0;
+    z-index: 101;
     min-width:1038px;
     display: flex;
     align-items: center;
@@ -11,11 +12,99 @@
     background:url('../../assets/images/bg.png') no-repeat center center;
     background-size:cover;
     .select-content{
-        width:500px;
-        height:600px;
-        background-color: #000;
-        .platform-item{
-            color:#FFF;
+        width:410px;
+        height:428px;
+        background: rgba(48,51,77,0.70);
+        border-radius: 30px;
+        padding: 60px 30px 30px;
+        .title{
+            font-family: Gilroy-Bold;
+            font-size: 20px;
+            color: #FFFFFF;
+            text-align: center;
+            font-weight: 700;
+            line-height:24px;
         }
+        .tip{
+            margin-top:8px;
+            opacity: 0.6;
+            font-family: Gilroy-Regular;
+            font-size: 14px;
+            color: #FFFFFF;
+            text-align: center;
+            font-weight: 400;
+            line-height:16px;
+        }
+        .server{
+            margin-top:30px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            .server-icon{
+                width:30px;
+                height:30px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+            .server-name{
+                margin-left:10px;
+                font-family: Gilroy-Regular;
+                font-size: 16px;
+                color: #FFFFFF;
+                text-align: right;
+                font-weight: 400;
+            }
+        }
+        .platform{
+            margin-top:40px;
+            display:flex;
+            justify-content:space-between;
+            .platform-item{
+                width:160px;
+                height:180px;
+                padding:10px;
+                border: 2px solid rgba(255,255,255,0.1);
+                border-radius: 8px;
+                display:flex;
+                flex-direction: column;
+                align-items:center;
+                justify-content:center;
+                cursor: pointer;
+                &:hover{
+                    border: 2px solid #FFFFFF;
+                }
+                .platform-logo{
+                    width:50px;
+                    height:50px;
+                    border-radius:50%;
+                }
+                .platform-name{
+                    margin-top:12px;
+                    font-family: Gilroy-Bold;
+                    font-size: 18px;
+                    color: #FFFFFF;
+                    text-align: center;
+                    font-weight: 700;
+                    line-height:22px;
+                }
+                .contract{
+                    max-width: 140px;
+                    margin-top:4px;
+                    opacity: 0.6;
+                    font-family: Gilroy-Regular;
+                    font-size: 14px;
+                    color: #FFFFFF;
+                    text-align: center;
+                    font-weight: 400;
+                    line-height:16px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    word-break: break-word;
+                }
+            }
+
+        }
+
     }
 }

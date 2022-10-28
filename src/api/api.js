@@ -128,6 +128,17 @@ export const getCollection = async (collectionId) => {
     return false
 }
 
+export const getMintbaseCollection = async (collectionId) => {
+    const result = await axios.request({
+        method:"get",
+        url:`${config.AEWEAVE_API}/${collectionId}`,
+    })
+    if (result.data.metadata) {
+        return result.data.metadata
+    }
+    return false
+}
+
 export const getOperationSign = async (args) => {
     const json = await fetch('/api/getOperationSign', {
         headers:{ 'Content-Type': 'application/json' },

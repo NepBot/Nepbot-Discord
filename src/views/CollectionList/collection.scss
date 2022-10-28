@@ -8,68 +8,81 @@
 }
 .collection-item{
     width:326px;
-    height:476px;
+    height:494px;
     background: rgba(78,81,112,0.24);
     border-radius: 16px;
     margin:30px 30px 0 0; 
     overflow: hidden;
     cursor: pointer;
-}
-.collection-item.mr0{
-    margin-right:0;
-}
-.collection-item .cover{
-    width:326px;
-    height:150px;
-    object-fit: cover;
-}
-.collection-item .info{
-    padding:20px;
-}
-.collection-item .user{
-    display: flex;
-    align-items: center;
-    height:60px;
-}
-.collection-item .user .media{
-    width:60px;
-    height:60px;
-    border-radius:50%;
-    margin-right:16px;
-    object-fit: cover;
-}
-.collection-item .user-info{
-    width:210px;
-    .name{
-        font-family: Gilroy-Bold;
-        font-size: 18px;
-        color: #FFFFFF;
-        font-weight: 700;
-        line-height:22px;
+    .cover{
+        width:326px;
+        height:150px;
+        object-fit: cover;
     }
-    .account{
-        margin-top:6px;
-        opacity: 0.6;
-        font-family: Gilroy-Regular;
-        font-size: 14px;
-        color: #FFFFFF;
-        font-weight: 400;
-        line-height:16px;
-    }
-    .creator{
-        margin-top:6px;
-        opacity: 0.6;
-        font-family: Gilroy-Regular;
-        font-size: 14px;
-        color: #FFFFFF;
-        font-weight: 400;
-        line-height:16px;
-        &.loading{
-            .dotting{
-                display:inline-block;
+    .user{
+        padding:20px 20px 0;
+        display: flex;
+        align-items: center;
+        height:80px;
+        .media-box{
+            margin-right:16px;
+            position: relative;
+            .media{
+                width:60px;
+                height:60px;
+                border-radius:16px;
+                object-fit: cover;
+            }
+            .platform-logo{
+                position:absolute;
+                bottom:-7px;
+                right:-7px;
+                width:24px;
+                height:24px;
+            }
+        }
+        .user-info{
+            width:210px;
+            .name{
+                font-family: Gilroy-Bold;
+                font-size: 16px;
+                color: #FFFFFF;
+                font-weight: 700;
+                line-height:20px;
+            }
+            .account{
+                margin-top:4px;
+                opacity: 0.6;
+                font-family: Gilroy-Regular;
+                font-size: 14px;
+                color: #FFFFFF;
+                font-weight: 400;
+                line-height:16px;
+            }
+            .creator{
+                margin-top:4px;
+                font-family: Gilroy-Regular;
+                font-size: 14px;
+                color: rgba(255,255,255,0.6);
+                font-weight: 400;
+                line-height:16px;
+                a{
+                    color: rgba(255,255,255,0.6);
+                }
+                &.loading{
+                    .dotting{
+                        display:inline-block;
+                    }
+                }
             }
         }
     }
+    .info{
+        padding:0 20px 20px;
+    }
+}
+.collection-item.mr0{
+    margin-right:0;
 }
 
 .collection-item .desc{
@@ -105,7 +118,7 @@
 .collection-item .bottom-info{
     margin-top:20px;
     width:286px;
-    height:120px;
+    height:138px;
     border: 1px solid rgba(255,255,255,0.12);
     border-radius: 8px;
     display: flex;

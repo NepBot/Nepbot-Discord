@@ -5,6 +5,7 @@ import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
 import {signRule,createCollection, getCollection} from "../../api/api";
 import {contract, parseAmount, sign} from "../../utils/util";
+import Mintbase from '../../utils/mintbase'
 import store from "../../store/discordInfo";
 import js_sha256 from "js-sha256";
 import icon_upload from '../../assets/images/icon-upload.png';
@@ -76,7 +77,7 @@ function AddCollection(props) {
             const account = wallet.account() 
             const outerCollectionId = `${values.name.replace(/\s+/g, "-")}-guild-${props.server.name.replace(/\s+/g, "-")}-by-${config.NFT_CONTRACT.replaceAll(".", "")}`.toLowerCase().replaceAll(".", "");
             let res = null;
-            // if(props.platform == 'paras'){
+            if(props.platform == 'paras'){
                 const collection = await getCollection(outerCollectionId);
                 if (!collection || collection.results.length > 0 || parasCreatedList.indexOf(values.name)>-1) {
                     try{
@@ -120,9 +121,19 @@ function AddCollection(props) {
                         setParasCreatedList([...parasCreatedList,values.name])
                     }
                 }
-            // }else if(props.platform == 'mintbase'){
-
-            // }
+            }else if(props.platform == 'mintbase'){
+                const minter = await Mintbase()
+                const logo_res = await minter.upload(values['logo'][0]['originFileObj'])
+                const cover_res = await minter.upload(values['cover'][0]['originFileObj'])
+                await minter.setMetadata({metadata: {
+                    name:values.name.trim(),
+                    description:values.description,
+                    logo:logo_res.data.uri,
+                    background: cover_res.data.uri,
+                }})
+                const result = await minter.getMetadataId();
+                res = {collection_id:result.data}
+            }
 
             const args = {
                 sign: operationSign,
