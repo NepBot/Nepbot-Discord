@@ -13,6 +13,7 @@ import store from "../../store/discordInfo";
 import { setInfo, getServer, getUser, getConnectedAccount, disconnectAccount } from '../../api/api';
 import { useHistory } from 'react-router-dom';
 import icon_connected from '../../assets/images/icon-connected.png';
+import WalletSelector from '../../utils/walletSelector';
 
 const config = getConfig()
 
@@ -60,6 +61,8 @@ export default function Index(props) {
 
     const handleConnect = useCallback(async (type) => {
         await signIn(wallet, type); 
+        // const walletSelector = await WalletSelector.new({callbackUrl: `${window.location.origin}/wait`})
+        // walletSelector.modal.show()
     }, [near,wallet])
 
     const handleDisconnect = useCallback(async () => {
