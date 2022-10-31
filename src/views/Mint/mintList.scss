@@ -1,0 +1,200 @@
+.mintlist{
+    .list{
+        padding:100px 0;
+        position: relative;
+        width:1038px;
+        margin:0 auto;
+        .mod-title{
+            margin-top:60px;
+            font-family: Gilroy-Bold;
+            font-size: 20px;
+            color: #FFFFFF;
+            letter-spacing: 0;
+            font-weight: 700;
+            padding-left:36px;
+            &.hide{
+                display:none;
+            }
+            &.access{
+                background:url("../../assets/images/collection/icon-right.png") no-repeat left center;
+                background-size:24px;
+            }
+            &.no-access{
+                background:url("../../assets/images/collection/icon-error.png") no-repeat left center;
+                background-size:24px;
+            }
+            &.minted-out{
+                background:url("../../assets/images/collection/icon-out.png") no-repeat left center;
+                background-size:24px;
+            }
+        }
+        .collection-list{
+            width:1038px;
+            margin:0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            position: relative;
+            .collection-item{
+                width:326px;
+                height:494px;
+                background: rgba(78,81,112,0.24);
+                border-radius: 16px;
+                margin:30px 30px 0 0; 
+                overflow: hidden;
+                cursor: pointer;
+                &.mr0{
+                    margin-right:0;
+                }
+                .cover{
+                    width:326px;
+                    height:150px;
+                    object-fit: cover;
+                }
+                .user{
+                    padding:20px 20px 0;
+                    display: flex;
+                    align-items: center;
+                    height:80px;
+                    .media-box{
+                        margin-right:16px;
+                        position: relative;
+                        .media{
+                            width:60px;
+                            height:60px;
+                            border-radius:16px;
+                            object-fit: cover;
+                        }
+                        .platform-logo{
+                            position:absolute;
+                            bottom:-7px;
+                            right:-7px;
+                            width:24px;
+                            height:24px;
+                        }
+                    }
+                    .user-info{
+                        width:210px;
+                        .name{
+                            font-family: Gilroy-Bold;
+                            font-size: 16px;
+                            color: #FFFFFF;
+                            font-weight: 700;
+                            line-height:20px;
+                        }
+                        .account{
+                            margin-top:4px;
+                            opacity: 0.6;
+                            font-family: Gilroy-Regular;
+                            font-size: 14px;
+                            color: #FFFFFF;
+                            font-weight: 400;
+                            line-height:16px;
+                        }
+                        .creator{
+                            margin-top:4px;
+                            font-family: Gilroy-Regular;
+                            font-size: 14px;
+                            color: rgba(255,255,255,0.6);
+                            font-weight: 400;
+                            line-height:16px;
+                            a{
+                                color: rgba(255,255,255,0.6);
+                            }
+                            &.loading{
+                                .dotting{
+                                    display:inline-block;
+                                }
+                            }
+                        }
+                    }
+                }
+                .info{
+                    padding:0 20px 20px;
+                    .desc{
+                        margin-top:20px;
+                        font-family: Gilroy-Regular;
+                        font-size: 14px;
+                        color: #FFFFFF;
+                        font-weight: 400;
+                        line-height:16px;
+                    }
+                    .roles{
+                        height:30px;
+                        margin-top:20px;
+                        display: flex;
+                        overflow: hidden;
+                        .item{
+                            height:30px;
+                            padding:0 10px;
+                            margin-right:12px;
+                            background: rgba(78,81,112,0.24);
+                            border-radius: 4px;
+                            font-family: Gilroy-Regular;
+                            font-size: 12px;
+                            color: #FFFFFF;
+                            text-align: center;
+                            font-weight: 400;
+                            line-height:30px;
+                            &:last-child{
+                                margin-right: 0;
+                            }
+                        }
+                    }
+                    .bottom-info{
+                        margin-top:20px;
+                        width:286px;
+                        height:138px;
+                        border: 1px solid rgba(255,255,255,0.12);
+                        border-radius: 8px;
+                        display: flex;
+                        align-items: center;
+                        flex-wrap: wrap;
+                        .mod{
+                            width:140px;
+                            font-family: Gilroy-Regular;
+                            font-size: 14px;
+                            color: rgba(255,255,255,0.4);
+                            font-weight: 400;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            .val{
+                                margin-top:3px;
+                                font-family: Gilroy-Bold;
+                                font-size: 16px;
+                                color: #FFFFFF;
+                                text-align: center;
+                                font-weight: 700;
+                                line-height:19px;
+                                &.loading{
+                                    .dotting{
+                                        display:inline-block;
+                                    }
+                                    .count{
+                                        display: none;
+                                    }
+                                }
+                            }
+                            &.price{
+                                .val{
+                                    width:auto;
+                                    padding-right:16px;
+                                    background:url('../../assets/images/icon-price.png') no-repeat right center;
+                                    background-size:12px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .no-result{
+            margin-top:80px;
+        }
+    }
+}
+
+
+
+
+

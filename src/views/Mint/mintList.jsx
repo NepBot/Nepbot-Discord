@@ -1,17 +1,12 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom'
-import {message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
-import AddCollection from "./addCollection";
-import SelectPlatform from "./selectPlatform";
-import './collection.scss'
+import './mintList.scss'
 import qs from "qs";
 import store from "../../store/discordInfo";
 import {formatAmount, sign} from "../../utils/util";
-import {getRoleList, getServer, getUser, signRule, getOperationSign, getCollection, getMintbaseCollection} from "../../api/api";
-import logo from '../../assets/images/index/logo.png';
-import add from '../../assets/images/setRule/add.png';
+import {getRoleList, getServer, getUser, getOperationSign, getCollection, getMintbaseCollection} from "../../api/api";
 import no_data from '../../assets/images/no-data.png';
 import loading from '../../assets/images/loading.png';
 import logo_paras from '../../assets/images/collection/logo-paras.png';
@@ -19,40 +14,38 @@ import logo_mintbase from '../../assets/images/collection/logo-mintbase.png';
 
 const config = getConfig()
 
-function Collection(props) {
+function MintList(props) {
     let account = {}
-    const guildData = qs.parse(props.location.search.slice(1));
     const [isLoading, setIsLoading] = useState(true);
-    const [collectionList, setCollectionList] = useState([]);
-    const [addDialogStatus, setAddDialogStatus] = useState(false);
-    const [selectStatus, setSelectStatus] = useState(false);
-    const [platform, setPlatform] = useState('');
-    const [operationSign, setOperationSign] = useState("")
+    // const [collectionList, setCollectionList] = useState([]);
+    const [accessList,setAccessList] = useState([]);
+    const [noAccessList,setNoAccessList] = useState([]);
+    const [mintedOutList,setMintedOutList] = useState([]);
+    // const [operationSign, setOperationSign] = useState("")
     const [server, setServer] = useState({});
-    const [roleList, setRoleList] = useState([]);
+    // const [roleList, setRoleList] = useState([]);
     const [roleMap, setRoleMap] = useState([]);
     const history = useHistory()
 
     useEffect(() => {
         (async () => {
+            const near = await connect(config);
+            const wallet = new WalletConnection(near, 'nepbot');
+            try {
+                await wallet._completeSignInWithAccessKey()
+            } catch {}
+            if (!wallet.isSignedIn()) {
+                wallet.requestSignIn(config.RULE_CONTRACT, "nepbot")
+                return
+            }
+            
+            //operationSign
             const search =  qs.parse(props.location.search.slice(1));
             store.set("info", {
                 guild_id: search.guild_id,
                 user_id: search.user_id,
                 sign: search.sign
             }, { expires: 1 });
-
-            const near = await connect(config);
-            const wallet = new WalletConnection(near, 'nepbot');
-
-            try {
-                await wallet._completeSignInWithAccessKey()
-            } catch {}
-
-            if (!wallet.isSignedIn()) {
-                wallet.requestSignIn(config.RULE_CONTRACT, "nepbot")
-                return
-            }
             const accountId = wallet.getAccountId()
             let operationSign = store.get("operationSign")
             const args = {
@@ -72,88 +65,128 @@ function Collection(props) {
                 history.push({pathname: '/linkexpired', })
                 return
             }
-            setOperationSign(operationSign)
             store.set("operationSign", operationSign, { expires: 1 })
+            //server
             const server = await getServer(search.guild_id);
             setServer(server);
+            //formatdata
             account = wallet.account()
             handleData();
         })();
         return () => {
         }
-    }, [addDialogStatus]);
+    }, []);
 
     const handleData = async (data) => {
-        const info = store.get("info")
-        setIsLoading(true);
-        try {
-            //setRoleList
-            const roles = await getRoleList(store.get("info").guild_id);
-            const roleMap = {};
-            roles.forEach(role =>{
-                if(role.name!=="@everyone"){
-                    roleMap[role.id] = role.name;
-                }
+        const search =  qs.parse(props.location.search.slice(1));
+        const roleList = [];
+        const userInfo = await getUser(search.guild_id, search.user_id, search.sign)
+        console.log(userInfo,'-------');
+        if(userInfo && userInfo.data){
+            userInfo.data.forEach(role=>{
+                roleList.push(role.id);
             })
-            setRoleMap(roleMap);
-            setRoleList(roles.filter(item=>item.name!=="@everyone"))
+        }
+        // const roleList = userInfo.roles;
+        //setRoleMap
+        const roles = await getRoleList(store.get("info").guild_id);
+        const roleMap = {};
+        roles.forEach(role =>{
+            if(role.name!=="@everyone"){
+                roleMap[role.id] = role.name;
+            }
+        })
+        setRoleMap(roleMap);
+        // setRoleList(roles.filter(item=>item.name!=="@everyone"))
+        //
+        // const info = store.get("info")
+        setIsLoading(true);
+        // try {
+            const access = [];
+            const noAccess = [];
+            const mintedOut = [];
             //setCollectionList
-            const collections = await account.viewFunction(config.NFT_CONTRACT, "get_collections_by_guild", {guild_id: info.guild_id})
-            
-            let wrappedCollections = []
+
+            const collections = await account.viewFunction(config.NFT_CONTRACT, "get_collections_by_guild", {guild_id: search.guild_id})
             for (let collection of collections) {
+                //royaltyTotal
                 let royaltyTotal = 0;
                 if(collection.royalty){
                     Object.keys(collection.royalty).forEach(key=>{
                         royaltyTotal += Number(collection.royalty[key]);
                     })
                 }
+                // console.log("11111111",collection);
+                //
+                let item = {};
                 if(collection.contract_type == 'paras'){
                     const collectionData = await getCollection(collection.outer_collection_id)
                     if (collectionData && collectionData.results.length > 0) {
-                        wrappedCollections.push({
+                        item = {
                             royaltyTotal:royaltyTotal/100,
                             inner_collection_id: collection.collection_id,
                             outer_collection_id: collection.outer_collection_id,
                             ...collection,
                             ...collectionData.results[0]
-                        })
+                        }
                     }
                 }else if(collection.contract_type == 'mintbase'){
                     const collectionData = await getMintbaseCollection(collection.outer_collection_id)
                     if (collectionData) {
-                        wrappedCollections.push({
+                        item = {
                             royaltyTotal:royaltyTotal/100,
                             inner_collection_id: collection.collection_id,
                             outer_collection_id: collection.outer_collection_id,
                             ...collection,
                             ...collectionData
-                        })
+                        }
                     }
                 }
+                // console.log("2222222",item);
+                //get_collection
+                const collectionInfo = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id:collection.collection_id})
+                // console.log("333333",collectionInfo);
+                item = {
+                    ...item,
+                    creator : collectionInfo.creator_id,
+                    minted_count : collectionInfo.minted_count,
+                    total_copies : collectionInfo.total_copies,
+                }
                 
+                if(item.minted_count >= item.total_copies){
+                    mintedOut.push(item)
+                }else if(item.mintable_roles && Array.from(new Set([...item.mintable_roles,...roleList])).length < item.mintable_roles.length + roleList.length){
+                    access.push(item)
+                }else{
+                    noAccess.push(item)
+                }
             }
-            setCollectionList(wrappedCollections)
-            handleData2(wrappedCollections)
-        } catch(e) {}
+
+            
+            setAccessList(access)
+            setNoAccessList(noAccess)
+            setMintedOutList(mintedOut)
+            console.log(access,noAccess,mintedOut);
+            // handleData2(wrappedCollections)
+        // } catch(e) {}
         setIsLoading(false);
         return data;
     }
 
-    const handleData2 = async (list) => {
-        const result = [];
-        for(let i = 0;i<list.length;i++){
-            const item = list[i];
-            const collection_id = item['inner_collection_id'];
-            const collectionInfo = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id:collection_id})
-            item.creator = collectionInfo.creator_id;
-            item.minted_count = collectionInfo.minted_count;
-            item.total_copies = collectionInfo.total_copies;
-            item.updated = true;
-            result.push(item);
-        }
-        setCollectionList(result)
-    }
+    // const handleData2 = async (list) => {
+    //     const result = [];
+    //     for(let i = 0;i<list.length;i++){
+    //         const item = list[i];
+    //         const collection_id = item['inner_collection_id'];
+    //         const collectionInfo = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id:collection_id})
+    //         item.creator = collectionInfo.creator_id;
+    //         item.minted_count = collectionInfo.minted_count;
+    //         item.total_copies = collectionInfo.total_copies;
+    //         item.updated = true;
+    //         result.push(item);
+    //     }
+    //     setCollectionList(result)
+    // }
 
     function Roles(props){
         if(props.roles && props.roles.length>0){
@@ -169,21 +202,6 @@ function Collection(props) {
         }
     }
 
-    const getPlatform = useCallback(async (platform) => {
-        setPlatform(platform);
-        handleSelectStatus();
-        handleAddStatus();
-    }, [selectStatus]);
-    const handleSelectStatus = useCallback(async () => {
-        setSelectStatus(!selectStatus)
-    }, [selectStatus]);
-    const handleAddStatus = useCallback(async () => {
-        setAddDialogStatus(!addDialogStatus)
-    }, [addDialogStatus]);
-
-    const handleSeriesList = (collection) => {
-        history.push({pathname: `/serieslist/${collection.inner_collection_id}`,search:props.location.search})
-    }
 
     function CollectionItem(props){
         if(props.item.contract_type=='paras'){
@@ -222,20 +240,22 @@ function Collection(props) {
                     </div>
                 </div>
             </div>
+        }else{
+            return '';
         }
     }
 
-    function CollectionList(){
-        if(collectionList.length>0){
-            const collectionItems = collectionList.map((item,index) => 
-                <div className={['collection-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()} onClick={() => handleSeriesList(item)}>
+    function CollectionList(props){
+        if(props.data.length>0){
+            const collectionItems = props.data.map((item,index) => 
+                <div className={['collection-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()}>
                     <CollectionItem item={item}/>
                     <div className={'info'}>
                         <div className={'desc txt-wrap'}>{item.description}</div>
                         <Roles roles={item.mintable_roles}></Roles>
                         <div className={'bottom-info'}>
                             <div className={'mod price'}>
-                                <div className="val">{formatAmount(item.price,24,4)}</div>
+                                <div className="val">{item.price && formatAmount(item.price,24,4)}</div>
                                 Price
                             </div>
                             <div className={'mod royality'}>
@@ -243,15 +263,13 @@ function Collection(props) {
                                 Royality
                             </div>
                             <div className={'mod copies'}>
-                                <div className={['val',item.updated?'':'loading'].join(' ')}>
-                                    <span className={'dotting'}></span>
+                                <div className={'val'}>
                                     <span className={'count'}>{item.total_copies}</span>
                                 </div>
                                 Total Copies
                             </div>
                             <div className={'mod minted'}>
-                                <div className={['val',item.updated?'':'loading'].join(' ')}>
-                                    <span className={'dotting'}></span>
+                                <div className={'val'}>
                                     <span className={'count'}>{item.minted_count}</span>
                                 </div>
                                 Total Minted
@@ -265,35 +283,36 @@ function Collection(props) {
                 {collectionItems}
             </div>)
         }
-        else if(isLoading){
-            return (<div className={'no-data'}>
+        else if(isLoading && props.mod=='access'){
+            return (<div className={'no-result'}>
                 <img className={"page-loading"}  src={loading}/>
             </div>)
-        }
-        else{
-            return (<div className={'no-data'}>
+        }else if(props.data.length==0 && props.mod=='access'){
+            return (<div className={'no-result'}>
                 <img src={no_data}/>
-                <div className={'tip'}>No data, please add a new collection.</div>
+                <div className={'tip'}>Sorry, there’s no collection currently available to mint.</div>
             </div>)
+        }else{
+            return "";
         }
     }
 
     return (
-        <div className={'page-box collection-list-page'}>
+        <div className={'page-box mintlist'}>
             <div className={'page-bg'}></div>
             <div className={'page-header'}>
                 <div className={"title"}>Collections</div>
-                <div className={'add-btn'} onClick={handleSelectStatus}>
-                    <img className={"add-icon"} src={add}/>
-                    Add
-                </div>
             </div>
-            <CollectionList/>
-            
-            <SelectPlatform visible={selectStatus} server={server} getPlatform={getPlatform} />
-            <AddCollection  visible={addDialogStatus} platform={platform} server={server} roleList={roleList}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
+            <div className={'list'}>
+                <div className={'mod-title access'}>You Have Access</div>
+                <CollectionList data={accessList} mod={'access'}/>
+                <div className={['mod-title no-access',noAccessList.length>0?'':'hide'].join(' ')}>No Access</div>
+                <CollectionList data={noAccessList} mod={'noAccess'}/>
+                <div className={['mod-title minted-out',mintedOutList.length>0?'':'hide'].join(' ')}>Minted Out</div>
+                <CollectionList data={mintedOutList} mod={'mintedOut'}/>
+            </div>
         </div>
     );
 }
 
-export default Collection;
+export default MintList;
