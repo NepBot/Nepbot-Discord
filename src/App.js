@@ -10,6 +10,7 @@ import SetRule from "./views/SetRule/SetRule";
 import CollectionList from "./views/CollectionList/collectionList";
 import SeriesList from "./views/SeriesList/seriesList";
 import Mint from "./views/Mint/Mint";
+import MintSuccess from "./views/Mint/Success";
 import Vote from "./views/Vote/Vote";
 import TwitterVerify from "./views/TwitterVerify/TwitterVerify";
 import CreateSnapshot from "./views/Snapshot/CreateSnapshot";
@@ -31,6 +32,7 @@ function App() {
             <KeepaliveRoute path={'/collectionlist'} component={ CollectionList } scroll={true}/>
             <Route path='/serieslist/:id' exact component={SeriesList} />
             <Route path='/mint' exact component={Mint} />
+            <Route path='/mintsuccess' exact component={MintSuccess} />
             <Route path='/vote' exact component={Vote} />
             <Route path='/twitterverify' exact component={TwitterVerify} />
             <Route path='/createsnapshot' exact component={CreateSnapshot} />

@@ -87,7 +87,6 @@ function Series(props) {
                     info.logo = collectionData.logo;
                 }
             }
-            console.log(info);
             setCollectionInfo(info)
             
             const res = await account.viewFunction(config.NFT_CONTRACT, 'get_token_metadata', {collection_id: props.match.params.id})

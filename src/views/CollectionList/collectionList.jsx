@@ -121,7 +121,6 @@ function Collection(props) {
                     }
                 }else if(collection.contract_type == 'mintbase'){
                     const collectionData = await getMintbaseCollection(collection.outer_collection_id)
-                    console.log(collectionData);
                     if (collectionData) {
                         wrappedCollections.push({
                             royaltyTotal:royaltyTotal/100,

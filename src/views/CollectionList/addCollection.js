@@ -481,7 +481,7 @@ function AddCollection(props) {
                             <Item
                                 label="Minting Limit Per Wallet"
                             >
-                                <div className={'role-intro'}>The upper limit of number of NFTs can be minted from this collection per wallet.</div>
+                                <div className={'role-intro'}>The maximum number of NFTs that can be minted per wallet.</div>
                                 <Item
                                     name="mintLimit"
                                     rules={[
