@@ -19,7 +19,7 @@ export default function Mint(props) {
     const history = useHistory()
     const [checkStatus, setCheckStatus] = useState(0);
     const [mintStatus, setMintStatus] = useState(false);
-    const [mintCount, setMintCount] = useState(1);
+    // const [mintCount, setMintCount] = useState(1);
 
     const mint = async () => {
         if(checkStatus==1 || checkStatus==2){
@@ -50,7 +50,7 @@ export default function Mint(props) {
             history.push({pathname: '/linkexpired', })
             return
         }
-        const price = new BN(parseAmount((formatAmount(props.collectionInfo.price) * mintCount).toString())).add(new BN('20000000000000000000000'));
+        const price = new BN(parseAmount((formatAmount(props.collectionInfo.price)).toString())).add(new BN('20000000000000000000000'));
         const res = await requestTransaction(
             account,
             config.NFT_CONTRACT,
@@ -66,20 +66,20 @@ export default function Mint(props) {
         setMintStatus(false);
     }
 
-    const onChange = (val) => {
-        if(props.collectionInfo.mint_count_limit && val>props.collectionInfo.mint_count_limit){
-            setCheckStatus(1);
-        }else if(val>props.collectionInfo.total_copies - props.collectionInfo.minted_count){
-            setCheckStatus(2);
-        }else{
-            setCheckStatus(0);
-            setMintCount(val);
-        }
-    }
+    // const onChange = (val) => {
+    //     if(props.collectionInfo.mint_count_limit && val>props.collectionInfo.mint_count_limit){
+    //         setCheckStatus(1);
+    //     }else if(val>props.collectionInfo.total_copies - props.collectionInfo.minted_count){
+    //         setCheckStatus(2);
+    //     }else{
+    //         setCheckStatus(0);
+    //         setMintCount(val);
+    //     }
+    // }
 
     const cancle = () => {
         setCheckStatus(0);
-        setMintCount(1);
+        // setMintCount(1);
         setCheckStatus(false);
         props.onCancle();
     }
@@ -95,10 +95,10 @@ export default function Mint(props) {
                     <div className={'name'}>{props.collectionInfo.name}</div>
                     <div className={'count'}>{(props.collectionInfo.total_copies - props.collectionInfo.minted_count)}/{props.collectionInfo.total_copies} Available</div>
 
-                    <div className={'mint-number'}>
+                    {/* <div className={'mint-number'}>
                         <InputNumber bordered={false} onChange={onChange} min={1} placeholder="Enter a number to mint" type="number"/>
-                    </div>
-                    <div className={['limit-check',checkStatus===2?'show':''].join(' ')}>Exceeds available amount</div>
+                    </div> */}
+                    {/* <div className={['limit-check',checkStatus===2?'show':''].join(' ')}>Exceeds available amount</div> */}
                     <div className={['limit',props.collectionInfo.mint_count_limit?'':'hide',checkStatus===1?'error':''].join(' ')}>
                         Minting Limit: {props.collectionInfo.mint_count_limit}
                         <div  className={'tip-box'}>

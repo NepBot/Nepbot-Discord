@@ -19,14 +19,14 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        &.mint-content-mintbase{
-            .mint-number{
-                display: block;
-            }
-            .limit{
-                margin-top:12px;
-            }
-        }
+        // &.mint-content-mintbase{
+        //     .mint-number{
+        //         display: block;
+        //     }
+        //     .limit{
+        //         margin-top:12px;
+        //     }
+        // }
         .close-btn{
             position: absolute;
             top:23px;
@@ -62,17 +62,17 @@
             line-height:16px;
             height:16px;
         }
-        .limit-check{
-            display: none;
-            font-family: Gilroy-Regular;
-            font-size: 14px;
-            color: #FF7A7A;
-            text-align: center;
-            font-weight: 400;
-            &.show{
-                display:block;
-            }
-        }
+        // .limit-check{
+        //     display: none;
+        //     font-family: Gilroy-Regular;
+        //     font-size: 14px;
+        //     color: #FF7A7A;
+        //     text-align: center;
+        //     font-weight: 400;
+        //     &.show{
+        //         display:block;
+        //     }
+        // }
         .limit{
             margin-top:40px;
             font-family: Gilroy-Regular;
