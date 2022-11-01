@@ -44,10 +44,12 @@ function AddCollection(props) {
     const onCheck = async () => {
         const values = await form.getFieldValue();
         const royalty_list = {};
+        let royaltyCount = 0;
         let isAccess = true;
         values.royaltyList.forEach((royalty,index)=>{
             if(royalty.account && royalty.amount){
                 royalty_list[royalty.account] = royalty.amount * 100;
+                royaltyCount += 1;
             }else if((royalty.account && !royalty.amount) || (!royalty.account && royalty.amount)){
                 if(!royalty.account){
                     document.getElementsByClassName("royalty-account-tip"+index)[0].style.display = "block";
@@ -60,7 +62,7 @@ function AddCollection(props) {
         })
         await form.validateFields();
         if(!isAccess){return}
-        setRoyalty(royalty_list)
+        setRoyalty(royaltyCount ? royalty_list : null)
         setConfrimModalStatus(true);
     }
     const submitForm= async () => {

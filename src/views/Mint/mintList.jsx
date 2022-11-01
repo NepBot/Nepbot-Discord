@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom'
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
+import Mint from "./Mint";
 import './mintList.scss'
 import qs from "qs";
 import store from "../../store/discordInfo";
@@ -17,14 +18,14 @@ const config = getConfig()
 function MintList(props) {
     let account = {}
     const [isLoading, setIsLoading] = useState(true);
-    // const [collectionList, setCollectionList] = useState([]);
     const [accessList,setAccessList] = useState([]);
     const [noAccessList,setNoAccessList] = useState([]);
     const [mintedOutList,setMintedOutList] = useState([]);
-    // const [operationSign, setOperationSign] = useState("")
+    const [operationSign, setOperationSign] = useState("")
     const [server, setServer] = useState({});
-    // const [roleList, setRoleList] = useState([]);
     const [roleMap, setRoleMap] = useState([]);
+    const [mintDialogStatus, setMintDialogStatus] = useState(false);
+    const [selectedCollection, setSelectedCollection] =  useState({});
     const history = useHistory()
 
     useEffect(() => {
@@ -39,55 +40,58 @@ function MintList(props) {
                 return
             }
             
-            //operationSign
+            
+            //getUser roleList
+            let roleList = []
             const search =  qs.parse(props.location.search.slice(1));
             store.set("info", {
                 guild_id: search.guild_id,
                 user_id: search.user_id,
                 sign: search.sign
             }, { expires: 1 });
+            const userInfo = await getUser(search.guild_id, search.user_id, search.sign)
+            if(userInfo){
+                roleList = userInfo.roles;
+            }else{
+                history.push({pathname: '/linkexpired', })
+                return
+            }
+
+            //operationSign
+            
             const accountId = wallet.getAccountId()
-            let operationSign = store.get("operationSign")
+            let _operationSign = store.get("operationSign")
             const args = {
                 account_id: accountId, 
                 user_id: search.user_id,
                 guild_id: search.guild_id,
                 sign: search.sign,
-                operationSign: operationSign
+                operationSign: _operationSign
             }
             const signature = await sign(wallet.account(), args)
-            operationSign = await getOperationSign({
+            _operationSign = await getOperationSign({
                 args: args,
                 account_id: accountId,
                 sign: signature 
             })
-            if (!operationSign) {
+            if (!_operationSign) {
                 history.push({pathname: '/linkexpired', })
                 return
             }
-            store.set("operationSign", operationSign, { expires: 1 })
+            setOperationSign(_operationSign);
+            store.set("operationSign", _operationSign, { expires: 1 })
             //server
             const server = await getServer(search.guild_id);
             setServer(server);
             //formatdata
             account = wallet.account()
-            handleData();
+            handleData(roleList);
         })();
         return () => {
         }
     }, []);
 
-    const handleData = async (data) => {
-        const search =  qs.parse(props.location.search.slice(1));
-        const roleList = [];
-        const userInfo = await getUser(search.guild_id, search.user_id, search.sign)
-        console.log(userInfo,'-------');
-        if(userInfo && userInfo.data){
-            userInfo.data.forEach(role=>{
-                roleList.push(role.id);
-            })
-        }
-        // const roleList = userInfo.roles;
+    const handleData = async (roleList) => {
         //setRoleMap
         const roles = await getRoleList(store.get("info").guild_id);
         const roleMap = {};
@@ -97,18 +101,19 @@ function MintList(props) {
             }
         })
         setRoleMap(roleMap);
-        // setRoleList(roles.filter(item=>item.name!=="@everyone"))
-        //
-        // const info = store.get("info")
-        setIsLoading(true);
-        // try {
-            const access = [];
-            const noAccess = [];
-            const mintedOut = [];
-            //setCollectionList
 
-            const collections = await account.viewFunction(config.NFT_CONTRACT, "get_collections_by_guild", {guild_id: search.guild_id})
-            for (let collection of collections) {
+        //setCollectionList
+        setIsLoading(true);
+        const access = [];
+        const noAccess = [];
+        const mintedOut = [];
+        let collections = []
+        try {
+            collections = await account.viewFunction(config.NFT_CONTRACT, "get_collections_by_guild", {guild_id: store.get("info").guild_id})
+        } catch(e) {}
+
+        for (let collection of collections) {
+            try {
                 //royaltyTotal
                 let royaltyTotal = 0;
                 if(collection.royalty){
@@ -116,13 +121,16 @@ function MintList(props) {
                         royaltyTotal += Number(collection.royalty[key]);
                     })
                 }
-                // console.log("11111111",collection);
                 //
                 let item = {};
                 if(collection.contract_type == 'paras'){
                     const collectionData = await getCollection(collection.outer_collection_id)
                     if (collectionData && collectionData.results.length > 0) {
                         item = {
+                            name : collection.collection_id.split(":")[1].split("-guild-")[0].replaceAll("-", " "),
+                            _cover : config.IPFS + collectionData.results[0]['cover'],
+                            _media : config.IPFS + collectionData.results[0]['media'],
+                            contract : config.PARAS_CONTRACT,
                             royaltyTotal:royaltyTotal/100,
                             inner_collection_id: collection.collection_id,
                             outer_collection_id: collection.outer_collection_id,
@@ -137,15 +145,16 @@ function MintList(props) {
                             royaltyTotal:royaltyTotal/100,
                             inner_collection_id: collection.collection_id,
                             outer_collection_id: collection.outer_collection_id,
+                            _media:collectionData.logo,
+                            _cover:collectionData.background,
                             ...collection,
-                            ...collectionData
+                            ...collectionData,
+
                         }
                     }
                 }
-                // console.log("2222222",item);
                 //get_collection
                 const collectionInfo = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id:collection.collection_id})
-                // console.log("333333",collectionInfo);
                 item = {
                     ...item,
                     creator : collectionInfo.creator_id,
@@ -155,38 +164,35 @@ function MintList(props) {
                 
                 if(item.minted_count >= item.total_copies){
                     mintedOut.push(item)
-                }else if(item.mintable_roles && Array.from(new Set([...item.mintable_roles,...roleList])).length < item.mintable_roles.length + roleList.length){
+                }else if(!item.mintable_roles || (item.mintable_roles && Array.from(new Set([...item.mintable_roles,...roleList])).length < item.mintable_roles.length + roleList.length)){
                     access.push(item)
                 }else{
                     noAccess.push(item)
                 }
+            } catch(e) {
+                continue;
             }
+        }
 
-            
-            setAccessList(access)
-            setNoAccessList(noAccess)
-            setMintedOutList(mintedOut)
-            console.log(access,noAccess,mintedOut);
-            // handleData2(wrappedCollections)
-        // } catch(e) {}
+        setAccessList(access)
+        setNoAccessList(noAccess)
+        setMintedOutList(mintedOut)
         setIsLoading(false);
-        return data;
     }
 
-    // const handleData2 = async (list) => {
-    //     const result = [];
-    //     for(let i = 0;i<list.length;i++){
-    //         const item = list[i];
-    //         const collection_id = item['inner_collection_id'];
-    //         const collectionInfo = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id:collection_id})
-    //         item.creator = collectionInfo.creator_id;
-    //         item.minted_count = collectionInfo.minted_count;
-    //         item.total_copies = collectionInfo.total_copies;
-    //         item.updated = true;
-    //         result.push(item);
-    //     }
-    //     setCollectionList(result)
-    // }
+
+    const mint = useCallback(async (mod,item) => {
+        if(mod != 'access'){return}
+        setSelectedCollection(item);
+        setMintDialogStatus(!mintDialogStatus)
+        document.getElementsByTagName('body')[0].classList.add("fixed");
+    }, [mintDialogStatus]);
+
+    const onCancle = useCallback(async () => {
+        document.getElementsByTagName('body')[0].classList.remove("fixed");
+        setMintDialogStatus(!mintDialogStatus)
+    }, [mintDialogStatus]);
+
 
     function Roles(props){
         if(props.roles && props.roles.length>0){
@@ -206,14 +212,14 @@ function MintList(props) {
     function CollectionItem(props){
         if(props.item.contract_type=='paras'){
             return <div>
-                <img className={'cover'} alt="cover" src={config.IPFS + props.item.cover}/>
+                <img className={'cover'} alt="cover" src={props.item._cover}/>
                 <div className={'user'}>
                     <div className={'media-box'}>
-                        <img className={'media'} alt="media" src={config.IPFS + props.item.media}/>
+                        <img className={'media'} alt="media" src={props.item._media}/>
                         <img className={'platform-logo'} alt="paras" src={logo_paras}/>
                     </div> 
                     <div className={'user-info'}>
-                        <div className={'name txt-wrap'}>{props.item.collection.split("-guild-")[0].replaceAll("-", " ")}</div>
+                        <div className={'name txt-wrap'}>{props.item.name}</div>
                         <div className={'account txt-wrap'}>{server.name}</div>
                         <div className={['creator txt-wrap',props.item.creator?'':'loading'].join(' ')} onClick={(e)=>{e.stopPropagation()}}>Created by &nbsp;
                             <span className={'dotting'}></span>
@@ -224,10 +230,10 @@ function MintList(props) {
             </div>
         }else if(props.item.contract_type=='mintbase'){
             return <div>
-                <img className={'cover'} alt="cover" src={props.item.background}/>
+                <img className={'cover'} alt="cover" src={props.item._cover}/>
                 <div className={'user'}>
                     <div className={'media-box'}>
-                        <img className={'media'} alt="media" src={props.item.logo}/>
+                        <img className={'media'} alt="media" src={props.item._media}/>
                         <img className={'platform-logo'} alt="mintbase" src={logo_mintbase}/>
                     </div>
                     <div className={'user-info'}>
@@ -248,7 +254,7 @@ function MintList(props) {
     function CollectionList(props){
         if(props.data.length>0){
             const collectionItems = props.data.map((item,index) => 
-                <div className={['collection-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()}>
+                <div className={['collection-item', `collection-${props.mod}-item`,(index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()} onClick={()=>mint(props.mod,item)}>
                     <CollectionItem item={item}/>
                     <div className={'info'}>
                         <div className={'desc txt-wrap'}>{item.description}</div>
@@ -307,10 +313,11 @@ function MintList(props) {
                 <div className={'mod-title access'}>You Have Access</div>
                 <CollectionList data={accessList} mod={'access'}/>
                 <div className={['mod-title no-access',noAccessList.length>0?'':'hide'].join(' ')}>No Access</div>
-                <CollectionList data={noAccessList} mod={'noAccess'}/>
+                <CollectionList data={noAccessList} mod={'noaccess'}/>
                 <div className={['mod-title minted-out',mintedOutList.length>0?'':'hide'].join(' ')}>Minted Out</div>
-                <CollectionList data={mintedOutList} mod={'mintedOut'}/>
+                <CollectionList data={mintedOutList} mod={'mintedout'}/>
             </div>
+            <Mint visible={mintDialogStatus} collectionInfo={selectedCollection} sign={operationSign} onCancle={onCancle}/>
         </div>
     );
 }

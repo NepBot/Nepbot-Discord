@@ -16,6 +16,7 @@
                 display:none;
             }
             &.access{
+                margin-top:26px;
                 background:url("../../assets/images/collection/icon-right.png") no-repeat left center;
                 background-size:24px;
             }
@@ -41,9 +42,26 @@
                 border-radius: 16px;
                 margin:30px 30px 0 0; 
                 overflow: hidden;
-                cursor: pointer;
+                position: relative;
+                overflow: hidden;
+                border: 1px solid transparent;
                 &.mr0{
                     margin-right:0;
+                }
+                &.collection-access-item{
+                    cursor: pointer;
+                    .user{
+                        .user-info{
+                            .name{
+                                color: #FFFFFF;
+                            }
+                        }
+                    }
+                    &:hover{
+                        background: rgba(78,81,112,0.24);
+                        border: 1px solid rgba(255,255,255,1);
+                        transform: translateY(-10px);
+                    }
                 }
                 .cover{
                     width:326px;
@@ -77,7 +95,7 @@
                         .name{
                             font-family: Gilroy-Bold;
                             font-size: 16px;
-                            color: #FFFFFF;
+                            color: rgba(255,255,255,0.5);
                             font-weight: 700;
                             line-height:20px;
                         }

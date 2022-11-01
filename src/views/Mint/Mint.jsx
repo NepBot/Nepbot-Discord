@@ -3,104 +3,41 @@ import {useHistory} from 'react-router-dom'
 import {InputNumber} from "antd";
 import {getMintSign, setInfo, getCollection, getMintbaseCollection} from "../../api/api";
 import store from "../../store/discordInfo";
-import {sign} from "../../utils/util";
+import {formatAmount, parseAmount,sign} from "../../utils/util";
 import {connect, WalletConnection} from "near-api-js";
 import {getConfig} from "../../config";
 import qs from "qs";
 import './Mint.scss';
-import load from '../../assets/images/load.gif';
+import loading from '../../assets/images/loading.png';
 import BN from 'bn.js'
 import { requestTransaction } from '../../utils/contract';
 import icon_tip from '../../assets/images/icon-i.png';
 
 const config = getConfig()
 
-export default function Success(props) {
+export default function Mint(props) {
     const history = useHistory()
     const [checkStatus, setCheckStatus] = useState(0);
     const [mintStatus, setMintStatus] = useState(false);
     const [mintCount, setMintCount] = useState(1);
-    const [collectionInfo, setCollectionInfo] = useState(null)
-    useEffect(()=>{
-        (async ()=>{
-            const search =  qs.parse(props.location.search.slice(1));
-            store.set("info", {
-                guild_id: search.guild_id,
-                user_id: search.user_id,
-                collection_id: search.collection_id,
-                sign: search.sign
-            }, { expires: 1 });
-
-            const near = await connect(config);
-            const wallet = new WalletConnection(near, 'nepbot');
-            const account = wallet.account(); 
-
-            try {
-                await wallet._completeSignInWithAccessKey()
-            } catch {}
-
-            if (!wallet.isSignedIn()) {
-                wallet.requestSignIn(config.RULE_CONTRACT, "nepbot")
-                return
-            }
-            
-            let collection = null;
-            try{
-                collection = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id: search.collection_id})
-                const info = {
-                    price:collection.price,
-                    contract_type : collection.contract_type,
-                    minted_count : collection.minted_count,
-                    total_copies : collection.total_copies,
-                    limit : collection.mint_count_limit,
-                }
-                if(collection.contract_type =='paras'){
-                    const collectionData = await getCollection(collection.outer_collection_id)
-                    info.name = collection.collection_id.split(":")[1].split("-guild-")[0].replaceAll("-", " ");
-                    info.cover = config.IPFS + collectionData.results[0]['cover'];
-                    info.logo = config.IPFS + collectionData.results[0]['media'];
-                    info.contract = config.PARAS_CONTRACT;
-                    info.description = collectionData.results[0]['description'];
-                }else if(collection.contract_type == 'mintbase'){
-                    info.contract = config.MINTBASE_CONTRACT;
-                    const collectionData = await getMintbaseCollection(collection.outer_collection_id)
-                    if (collectionData) {
-                        info.name = collectionData.name;
-                        info.description = collectionData.description;
-                        info.cover = collectionData.background;
-                        info.logo = collectionData.logo;
-                    }
-                }
-                console.log(collection,info,'---collection--');
-                setCollectionInfo(info);
-            }catch(e){
-                console.log(e);
-                // history.push({pathname: `/failure`})
-            }
-                
-        })();
-        return ()=>{
-
-        }
-    },[props, props.history, props.location.search])
 
     const mint = async () => {
         if(checkStatus==1 || checkStatus==2){
             return;
         }
-        // setMintStatus(true);
+        setMintStatus(true);
 
         const near = await connect(config);
         const wallet = new WalletConnection(near, 'nepbot');
         const account = wallet.account(); 
         
-        const search =  qs.parse(props.location.search.slice(1));
+        const info = store.get("info")
         const accountId = wallet.getAccountId()
         const args = {
-            user_id: search.user_id,
-            guild_id: search.guild_id,
-            collection_id: search.collection_id,
-            sign: search.sign
+            user_id: info.user_id,
+            guild_id: info.guild_id,
+            collection_id: props.collectionInfo.inner_collection_id,
+            sign: props.sign
         }
 
         const signature = await sign(wallet.account(), args)
@@ -113,73 +50,71 @@ export default function Success(props) {
             history.push({pathname: '/linkexpired', })
             return
         }
-
-        const price = new BN(collectionInfo.price * mintCount).add(new BN('20000000000000000000000'))
-        console.log(account,config.NFT_CONTRACT,search.collection_id,_sign,price.toString());
+        const price = new BN(parseAmount((formatAmount(props.collectionInfo.price) * mintCount).toString())).add(new BN('20000000000000000000000'));
         const res = await requestTransaction(
             account,
             config.NFT_CONTRACT,
             "nft_mint",
             {
-                collection_id: search.collection_id,
+                collection_id: props.collectionInfo.inner_collection_id,
                 ..._sign
             },
             '300000000000000',
             price.toString(),
             `${window.location.origin}/mintsuccess`
         )
+        setMintStatus(false);
     }
 
     const onChange = (val) => {
-        if(collectionInfo.limit && val>collectionInfo.limit){
+        if(props.collectionInfo.mint_count_limit && val>props.collectionInfo.mint_count_limit){
             setCheckStatus(1);
-        }else if(val>collectionInfo.total_copies - collectionInfo.minted_count){
+        }else if(val>props.collectionInfo.total_copies - props.collectionInfo.minted_count){
             setCheckStatus(2);
         }else{
             setCheckStatus(0);
             setMintCount(val);
         }
-        
     }
 
-    // const handleDiscord = useCallback(()=>{
-    //     window.open('https://discord.com/channels/','_self')
-    // },[])
-
+    const cancle = () => {
+        setCheckStatus(0);
+        setMintCount(1);
+        setCheckStatus(false);
+        props.onCancle();
+    }
 
     
-    if(!mintStatus && collectionInfo){
+    if(props.visible){
         return (
             <div className={'mint-box'}>
-                <div className={['mint-content','mint-content'+collectionInfo.contract_type].join(' ')}>
-                    <img className={'media'} src={collectionInfo.logo}/>
-                    <div className={'name'}>{collectionInfo.name}</div>
-                    <div className={'count'}>{(collectionInfo.total_copies - collectionInfo.minted_count)}/{collectionInfo.total_copies} Available</div>
+                <div className={['mint-content','mint-content-'+props.collectionInfo.contract_type].join(' ')}>
+                    <div className={'close-btn'} onClick={cancle}></div>
+
+                    <img className={'media'} src={props.collectionInfo._media}/>
+                    <div className={'name'}>{props.collectionInfo.name}</div>
+                    <div className={'count'}>{(props.collectionInfo.total_copies - props.collectionInfo.minted_count)}/{props.collectionInfo.total_copies} Available</div>
 
                     <div className={'mint-number'}>
                         <InputNumber bordered={false} onChange={onChange} min={1} placeholder="Enter a number to mint" type="number"/>
                     </div>
                     <div className={['limit-check',checkStatus===2?'show':''].join(' ')}>Exceeds available amount</div>
-                    <div className={['limit',collectionInfo.limit?'':'hide',checkStatus===1?'error':''].join(' ')}>
-                        Minting Limit: {collectionInfo.limit}
+                    <div className={['limit',props.collectionInfo.mint_count_limit?'':'hide',checkStatus===1?'error':''].join(' ')}>
+                        Minting Limit: {props.collectionInfo.mint_count_limit}
                         <div  className={'tip-box'}>
                             <img className={'tip-icon'} src={icon_tip}/>
                             <div className={'tip'}>The maximum number of NFTs that can be minted per wallet.</div>
                         </div>
                     </div>
-                    <div className={['mint-btn',(checkStatus == 1 || checkStatus == 2) ? 'disabled' : ''].join(' ')} onClick={mint}>Mint</div>
+                    <div className={['mint-btn',mintStatus?'loading':'',(checkStatus == 1 || checkStatus == 2) ? 'disabled' : ''].join(' ')} onClick={mint}>
+                        <span>Mint</span>
+                        <img src={loading}/>
+                    </div>
                     
                 </div>
             </div>
         )
     }else{
-        return (
-            <div className={'loading-box'}>
-                <div className={'loading-content'}>
-                    <img src={load}/>
-                    <div className={'text'}>Loading…</div>
-                </div>
-            </div>
-        )
+        return ''
     }
 }

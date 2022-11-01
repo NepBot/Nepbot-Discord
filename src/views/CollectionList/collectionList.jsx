@@ -88,7 +88,7 @@ function Collection(props) {
         setIsLoading(true);
         try {
             //setRoleList
-            const roles = await getRoleList(store.get("info").guild_id);
+            const roles = await getRoleList(info.guild_id);
             const roleMap = {};
             roles.forEach(role =>{
                 if(role.name!=="@everyone"){

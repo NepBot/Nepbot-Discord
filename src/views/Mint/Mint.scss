@@ -1,37 +1,12 @@
-.loading-box{
-    position: relative;
-    width:100vw;
-    height:100vh;
-    background:url('../../assets/images/bg-connect-wallet.png') no-repeat center center;
-    background-size:cover;
-    .loading-content{
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%,-50%);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        img{
-            width:111px;
-        }
-        .text{
-            margin-top:15px;
-            font-family: Gilroy-Regular;
-            font-size: 16px;
-            color: #FFFFFF;
-            text-align: center;
-            font-weight: 400;
-        }
-    }
-}
-
 .mint-box{
-    position: relative;
+    position: fixed;
+    top: 0;
+    left:0;
     width:100vw;
     height:100vh;
     background:url('../../assets/images/bg-connect-wallet.png') no-repeat center center;
     background-size:cover;
+    z-index: 99;
     .mint-content{
         width:360px;
         padding:60px 50px;
@@ -52,6 +27,15 @@
                 margin-top:12px;
             }
         }
+        .close-btn{
+            position: absolute;
+            top:23px;
+            right:23px;
+            width:30px;
+            height:30px;
+            background:url("../../assets/images/collection/icon-close.png") no-repeat center center;
+            background-size:16px;
+        }
         .media{
             width:60px;
             height:60px;
@@ -64,7 +48,7 @@
             font-size: 18px;
             color: #FFFFFF;
             text-align: center;
-            height: 30px;
+            min-height: 30px;
             line-height: 30px;
             font-weight: 700;
         }
@@ -183,10 +167,29 @@
             text-align: center;
             font-weight: 400;
             cursor: pointer;
+            span{
+                display: block;
+            }
+            img{
+                display: none;
+                width:18px;
+                height:18px;
+                -webkit-animation:whiteLoadingRotate 1.1s linear infinite;
+                animation:whiteLoadingRotate 1.1s linear infinite;
+                
+            }
             &.disabled{
                 // color:rgba(255,255,255,0.4);
                 opacity: 0.3;
                 cursor: not-allowed;
+            }
+            &.loading{
+                img{
+                    display: block;
+                }
+                span{
+                    display: none;
+                }
             }
         }
     }
