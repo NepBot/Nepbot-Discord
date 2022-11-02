@@ -162,6 +162,10 @@ function Series(props) {
             return (<div className={'no-result'}>
                 <img  src={no_data}/>
                 <div className={'tip'}>No data, please add a new item.</div>
+                <div className={'add-btn'} onClick={handleAddStatus}>
+                    <img className={"add-icon"} src={add}/>
+                    Add
+                </div>
             </div>)
         }
     }

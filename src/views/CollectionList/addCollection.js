@@ -66,6 +66,7 @@ function AddCollection(props) {
         setConfrimModalStatus(true);
     }
     const submitForm= async () => {
+        
         if(confirmLoading){
             return;
         }
@@ -166,13 +167,20 @@ function AddCollection(props) {
             if(values.mintLimit){
                 contract_args.mint_count_limit = parseInt(values.mintLimit)
             }
+            let callbackUrl = ""
+            if(props.platform == 'paras'){
+                callbackUrl = `${window.location.origin}/serieslist/paras:${outerCollectionId}${props.search}`
+            }else if(props.platform == 'mintbase'){
+                callbackUrl = `${window.location.origin}/serieslist/mintbase:${res.collection_id}${props.search}`
+            }
             const data = await requestTransaction(
                 account,
                 config.NFT_CONTRACT,
                 "create_collection",
                 contract_args,
                 '300000000000000',
-                '20000000000000000000000'
+                '20000000000000000000000',
+                callbackUrl
             )
             setTimeout(()=>{
                 if(data){

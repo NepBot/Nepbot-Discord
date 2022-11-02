@@ -77,11 +77,11 @@ export default function Mint(props) {
     //     }
     // }
 
-    const cancle = () => {
+    const cancel = () => {
         setCheckStatus(0);
         // setMintCount(1);
         setCheckStatus(false);
-        props.onCancle();
+        props.onCancel();
     }
 
     
@@ -89,7 +89,7 @@ export default function Mint(props) {
         return (
             <div className={'mint-box'}>
                 <div className={['mint-content','mint-content-'+props.collectionInfo.contract_type].join(' ')}>
-                    <div className={'close-btn'} onClick={cancle}></div>
+                    <div className={'close-btn'} onClick={cancel}></div>
 
                     <img className={'media'} src={props.collectionInfo._media}/>
                     <div className={'name'}>{props.collectionInfo.name}</div>

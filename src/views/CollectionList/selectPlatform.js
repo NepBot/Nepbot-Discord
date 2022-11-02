@@ -14,6 +14,8 @@ function SelectPlatform(props) {
     if(props.visible){
         return <div className="select-platform">
             <div className="select-content">
+                <div className={'close-btn'} onClick={props.onCancel}></div>
+
                 <div className="title">Select a Platform</div>
                 <div className="tip">To create an NFT collection</div>
                 <div className={"server"}>

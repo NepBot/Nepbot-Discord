@@ -139,6 +139,7 @@ function MintList(props) {
                         }
                     }
                 }else if(collection.contract_type == 'mintbase'){
+                    console.log('mintbase');
                     const collectionData = await getMintbaseCollection(collection.outer_collection_id)
                     if (collectionData) {
                         item = {
@@ -188,7 +189,7 @@ function MintList(props) {
         document.getElementsByTagName('body')[0].classList.add("fixed");
     }, [mintDialogStatus]);
 
-    const onCancle = useCallback(async () => {
+    const onCancel = useCallback(async () => {
         document.getElementsByTagName('body')[0].classList.remove("fixed");
         setMintDialogStatus(!mintDialogStatus)
     }, [mintDialogStatus]);
@@ -317,7 +318,7 @@ function MintList(props) {
                 <div className={['mod-title minted-out',mintedOutList.length>0?'':'hide'].join(' ')}>Minted Out</div>
                 <CollectionList data={mintedOutList} mod={'mintedout'}/>
             </div>
-            <Mint visible={mintDialogStatus} collectionInfo={selectedCollection} sign={operationSign} onCancle={onCancle}/>
+            <Mint visible={mintDialogStatus} collectionInfo={selectedCollection} sign={operationSign} onCancel={onCancel}/>
         </div>
     );
 }

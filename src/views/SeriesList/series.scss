@@ -222,7 +222,7 @@
     align-items: center;
     position: relative;
     z-index: 2;
-    img{
+    >img{
         width: 120px;
     }
     .tip{
@@ -240,6 +240,32 @@
         height:18px;
         -webkit-animation:whiteLoadingRotate 1.1s linear infinite;
         animation:whiteLoadingRotate 1.1s linear infinite;
+    }
+    .add-btn{
+        margin-top:20px;
+        width:120px;
+        height:44px;
+        background-image: linear-gradient(-83deg, #9D7DFF 0%, #8C97FF 43%, #9FD0FF 100%);
+        border-radius: 8px; 
+        color:#ffffff;
+        font-family: Gilroy-Regular;
+        font-size: 14px;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        font-weight: 400;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content:center;
+        z-index:100;
+        &:hover{
+            background-image: linear-gradient(-88deg, #812BFF 0%, #6A79FF 41%, #4D85FF 100%);
+        }
+        img{
+            width:16px;
+            height:16px;
+            margin-right:4px;
+        }
     }
 }
 

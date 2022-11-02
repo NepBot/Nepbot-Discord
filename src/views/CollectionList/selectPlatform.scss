@@ -17,6 +17,17 @@
         background: rgba(48,51,77,0.70);
         border-radius: 30px;
         padding: 60px 30px 30px;
+        position: relative;
+        .close-btn{
+            position: absolute;
+            top:23px;
+            right:23px;
+            width:30px;
+            height:30px;
+            background:url("../../assets/images/collection/icon-close.png") no-repeat center center;
+            background-size:16px;
+            cursor: pointer;
+        }
         .title{
             font-family: Gilroy-Bold;
             font-size: 20px;

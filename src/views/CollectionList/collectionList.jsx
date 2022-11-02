@@ -99,7 +99,7 @@ function Collection(props) {
             setRoleList(roles.filter(item=>item.name!=="@everyone"))
             //setCollectionList
             const collections = await account.viewFunction(config.NFT_CONTRACT, "get_collections_by_guild", {guild_id: info.guild_id})
-            
+            console.log(collections,'---collections--');
             let wrappedCollections = []
             for (let collection of collections) {
                 let royaltyTotal = 0;
@@ -290,8 +290,8 @@ function Collection(props) {
             </div>
             <CollectionList/>
             
-            <SelectPlatform visible={selectStatus} server={server} getPlatform={getPlatform} />
-            <AddCollection  visible={addDialogStatus} platform={platform} server={server} roleList={roleList}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
+            <SelectPlatform visible={selectStatus} server={server} getPlatform={getPlatform} onCancel={handleSelectStatus}/>
+            <AddCollection  visible={addDialogStatus} platform={platform} search={props.location.search} server={server} roleList={roleList}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
         </div>
     );
 }
