@@ -3,6 +3,7 @@ import React,{useState} from 'react';
 import './selectPlatform.scss'
 import logo_paras_large from '../../assets/images/collection/logo-paras-large.png';
 import logo_mintbase_large from '../../assets/images/collection/logo-mintbase-large.png';
+import discordIcon from '../../assets/images/collection/discord.png';
 import {getConfig} from "../../config";
 const config = getConfig()
 function SelectPlatform(props) {
@@ -19,7 +20,7 @@ function SelectPlatform(props) {
                 <div className="title">Select a Platform</div>
                 <div className="tip">To create an NFT collection</div>
                 <div className={"server"}>
-                    <img className={"server-icon"} alt={props.server.name} src={props.server.iconURL}/>
+                    <img className={"server-icon"} alt={props.server.name} src={props.server.iconURL || discordIcon}/>
                     <div className={"server-name"}>{props.server.name}</div>
                 </div>
                 <div className="platform">

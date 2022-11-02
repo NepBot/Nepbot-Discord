@@ -15,6 +15,7 @@ import logo from '../../assets/images/index/logo.png';
 import add from '../../assets/images/setRule/add.png';
 import no_data from '../../assets/images/no-data.png';
 import loading from '../../assets/images/loading.png';
+import discordIcon from '../../assets/images/collection/discord.png';
 
 const config = getConfig()
 
@@ -68,7 +69,7 @@ function Series(props) {
                 minted_count : collection.minted_count,
                 total_copies : collection.total_copies,
                 serverName : server.name,
-                serverIcon : server.iconURL,
+                serverIcon : server.iconURL || discordIcon,
             }
             if(collection.contract_type =='paras'){
                 const collectionData = await getCollection(collection.outer_collection_id)
