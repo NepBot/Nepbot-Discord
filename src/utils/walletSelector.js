@@ -2,6 +2,9 @@ import { setupWalletSelector } from "@near-wallet-selector/core";
 // import { setupDefaultWallets } from "@near-wallet-selector/default-wallets";
 import { setupModal } from "@near-wallet-selector/modal-ui-js";
 import { setupNearWallet } from "@near-wallet-selector/near-wallet";
+import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
+import { setupSender } from "@near-wallet-selector/sender";
+import { setupHereWallet } from "@near-wallet-selector/here-wallet";
 import {getConfig} from "../config";
 const config = getConfig()
 
@@ -20,7 +23,9 @@ export default class WalletSelector {
             modules: [
               //...(await setupDefaultWallets()),
               setupNearWallet(options),
-              //setupMyNearWallet(),
+              setupMyNearWallet(options),
+              setupSender(),
+              setupHereWallet()
               //setupSender(),
               //setupHereWallet(),
             ],

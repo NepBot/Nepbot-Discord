@@ -18,7 +18,7 @@ import WalletSelector from '../../utils/walletSelector';
 const config = getConfig()
 
 export default function Index(props) {
-    const [near,setNear] = useState({})
+    const [walletSelector,setWalletSelector] = useState({})
     const [wallet,setWallet] = useState({})
     const [serverName,setServerName] = useState('')
     const [displayName,setDisplayName] = useState('')
@@ -59,23 +59,19 @@ export default function Index(props) {
         // }  
     };
 
-    const handleConnect = useCallback(async (type) => {
-        await signIn(wallet, type); 
-        // const walletSelector = await WalletSelector.new({callbackUrl: `${window.location.origin}/wait`})
-        // walletSelector.modal.show()
-    }, [near,wallet])
+    const onSignedIn = async (signedIn) => {
+        console.log(signedIn)
+    }
+
+    const handleConnect = useCallback(async () => {
+        //await signIn(wallet, type); 
+        console.log(walletSelector)
+        walletSelector.modal.show()
+    }, [])
 
     const handleDisconnect = useCallback(async () => {
         if(localAccount){
-            if (typeof window.near !== 'undefined' && window.near.isSender && window.near.isSignedIn()) {
-                const res = await window.near.signOut()
-                if (res != true) {
-                    return
-                } 
-                window.localStorage.removeItem("isSender")
-            } else {
-                await wallet.signOut()
-            }
+            await wallet.signOut()
         }
         const search =  qs.parse(props.location.search.slice(1));
         const res = await disconnectAccount({
@@ -92,10 +88,20 @@ export default function Index(props) {
     })
 
     useEffect(async ()=>{
-        const _near = await connect(config);
-        const _wallet = new WalletConnection(_near,"nepbot");
-        setNear(_near);
-        setWallet(_wallet);
+        const walletSelector = await WalletSelector.new({
+            successUrl: `${window.location.origin}/wait`,
+        })
+        walletSelector.selector.on("signedIn", onSignedIn)
+        // const _near = await connect(config);
+        // const _wallet = new WalletConnection(_near,"nepbot");
+        // setNear(_near);
+        let account
+        if (walletSelector.selector.isSignedIn()) {
+            const wallet = await walletSelector.selector.wallet()
+            setWallet(wallet);
+            account = (await wallet.getAccounts())[0];
+        }
+        setWalletSelector(walletSelector)
         const search =  qs.parse(props.location.search.slice(1));
         store.set("info", {
             guild_id: search.guild_id,
@@ -110,7 +116,6 @@ export default function Index(props) {
 
         const accountId = await getConnectedAccount(search.guild_id, search.user_id)
         const serverInfo = await getServer(search.guild_id)
-        const account = await _wallet.account();
         
         
         
@@ -154,9 +159,7 @@ export default function Index(props) {
                     <img className={'avatar'} src={avatarURL} alt={displayName} hidden={avatarURL == ''}/>
                     <div className={'name'}>{displayName}</div>
                     <div className={'server-name'}>{serverName}</div>
-                    <div className={'connect-btn-box'}><div className={'connect-btn near-btn'} onClick={() => {handleConnect(("near"))}}>Near Wallet</div></div>
-                    <div className={'connect-btn-box'}><div className={'connect-btn sw-btn'} onClick={() => {handleConnect(("sender"))}}>Sender Wallet</div></div>
-                    {/* <div className={'connect-btn-box'}><div className={'connect-btn hw-btn'} onClick={() => {handleConnect(("here"))}}>HERE Wallet</div></div> */}
+                    <div className={'connect-btn-box'}><div className={'connect-btn near-btn'} onClick={() => {handleConnect()}}>Near Wallet</div></div>
                     <div className={'tip'}>Connect to your wallet</div>
                 </div>
             }
