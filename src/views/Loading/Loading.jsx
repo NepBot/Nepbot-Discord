@@ -8,6 +8,7 @@ import './Loading.css';
 import load from '../../assets/images/load.gif';
 import { useHistory } from 'react-router-dom'
 import qs from 'qs';
+import WalletSelector from '../../utils/walletSelector';
 
 const config = getConfig()
 
@@ -17,9 +18,13 @@ export default function Success(props) {
 
         (async ()=>{
             const search =  qs.parse(props.location.search.slice(1));
-            if (search.account_id) {
-                localStorage.removeItem("nepbot_wallet_auth_key")
-            }
+            // if (search.account_id) {
+            //     localStorage.removeItem("nepbot_wallet_auth_key")
+            // }
+            const walletSelector = await WalletSelector.new()
+            // if (walletSelector.selector.isSignedIn()) {
+            //     const wallet = await walletSelector.selector.wallet()
+            // }
             const near = await connect(config);
             const wallet = new WalletConnection(near,"nepbot");
             try {

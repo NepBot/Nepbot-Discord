@@ -18,56 +18,54 @@ import WalletSelector from '../../utils/walletSelector';
 const config = getConfig()
 
 export default function Index(props) {
-    const [walletSelector,setWalletSelector] = useState({})
-    const [wallet,setWallet] = useState({})
     const [serverName,setServerName] = useState('')
     const [displayName,setDisplayName] = useState('')
     const [accountId, setAccountId] = useState('')
     const [localAccount,setLocalAccount] = useState('');
     const [avatarURL,setAvatarURL] = useState('')
+    const [walletSelector, setWalletSelector] = useState({})
+    const [wallet, setWallet] = useState({})
     const history = useHistory()
 
-    const signIn = async (_wallet, type) => {
-        if (type == "near") {
-            window.localStorage.removeItem("isSender")
-            _wallet.requestSignIn(
-                config.RULE_CONTRACT, // contract requesting access
-                "nepbot", // optional
-                `${window.location.origin}/wait`, // optional
-            );
-        } else if (type == "sender") {
-            if (typeof window.near == 'undefined' || !window.near.isSender) {
-                window.open("https://senderwallet.io/")
-                return
-            }
-            const res = await window.near.requestSignIn({
-                contractId: config.RULE_CONTRACT, 
-            })
-            if (res && res.accessKey) {
-                window.localStorage.setItem(`near-api-js:keystore:pending_key${res.accessKey.publicKey}:${config.networkId}`, res.accessKey.secretKey)
-                window.localStorage.setItem("isSender", true)
-                history.push({pathname: `/wait`, search: `account_id=${window.near.accountId}&public_key=${encodeURIComponent(res.accessKey.publicKey)}&all_keys=${encodeURIComponent(res.accessKey.publicKey)}`})
-            }
-        }  
-        // else if (type == "here") {
-        //     runHereWallet({ near:nearAPI })
-        //     _wallet.requestSignIn(
-        //         config.RULE_CONTRACT, // contract requesting access
-        //         "nepbot", // optional
-        //         `${window.location.origin}/wait`, // optional
-        //     );
-        // }  
-    };
 
-    const onSignedIn = async (signedIn) => {
-        console.log(signedIn)
-    }
+    // const signIn = async (_wallet, type) => {
+    //     if (type == "near") {
+    //         _wallet.requestSignIn(
+    //             config.RULE_CONTRACT, // contract requesting access
+    //             "nepbot", // optional
+    //             `${window.location.origin}/wait`, // optional
+    //         );
+    //     } else if (type == "sender") {
+    //         if (typeof window.near == 'undefined' || !window.near.isSender) {
+    //             window.open("https://senderwallet.io/")
+    //             return
+    //         }
+    //         const res = await window.near.requestSignIn({
+    //             contractId: config.RULE_CONTRACT, 
+    //         })
+    //         if (res && res.accessKey) {
+    //             window.localStorage.setItem(`near-api-js:keystore:pending_key${res.accessKey.publicKey}:${config.networkId}`, res.accessKey.secretKey)
+    //             window.localStorage.setItem("isSender", true)
+    //             history.push({pathname: `/wait`, search: `account_id=${window.near.accountId}&public_key=${encodeURIComponent(res.accessKey.publicKey)}&all_keys=${encodeURIComponent(res.accessKey.publicKey)}`})
+    //         }
+    //     }  
+    //     // else if (type == "here") {
+    //     //     runHereWallet({ near:nearAPI })
+    //     //     _wallet.requestSignIn(
+    //     //         config.RULE_CONTRACT, // contract requesting access
+    //     //         "nepbot", // optional
+    //     //         `${window.location.origin}/wait`, // optional
+    //     //     );
+    //     // }  
+    // };
+
+    // const onSignedIn = async (signedIn) => {
+    //     console.log(signedIn)
+    // }
 
     const handleConnect = useCallback(async () => {
-        //await signIn(wallet, type); 
-        console.log(walletSelector)
         walletSelector.modal.show()
-    }, [])
+    }, [walletSelector])
 
     const handleDisconnect = useCallback(async () => {
         if(localAccount){
@@ -81,7 +79,7 @@ export default function Index(props) {
         });
         setAccountId()
         setLocalAccount()
-    })
+    }, [wallet, localAccount])
 
     const connectWallet = useCallback(async () => {
         history.push({pathname: `/wait`})
@@ -91,17 +89,16 @@ export default function Index(props) {
         const walletSelector = await WalletSelector.new({
             successUrl: `${window.location.origin}/wait`,
         })
-        walletSelector.selector.on("signedIn", onSignedIn)
-        // const _near = await connect(config);
-        // const _wallet = new WalletConnection(_near,"nepbot");
-        // setNear(_near);
-        let account
+        // walletSelector.selector.on("signedIn", onSignedIn)
+        setWalletSelector(walletSelector)
+        let localAccountId
         if (walletSelector.selector.isSignedIn()) {
             const wallet = await walletSelector.selector.wallet()
-            setWallet(wallet);
-            account = (await wallet.getAccounts())[0];
+            setWallet(wallet)
+            localAccountId = (await wallet.getAccounts())[0].accountId;
+            setLocalAccount(localAccountId);
+            console.log(localAccountId)
         }
-        setWalletSelector(walletSelector)
         const search =  qs.parse(props.location.search.slice(1));
         store.set("info", {
             guild_id: search.guild_id,
@@ -117,13 +114,11 @@ export default function Index(props) {
         const accountId = await getConnectedAccount(search.guild_id, search.user_id)
         const serverInfo = await getServer(search.guild_id)
         
-        
-        
         setServerName(serverInfo.name)
         setDisplayName(userInfo.displayName)
         setAvatarURL(userInfo.displayAvatarURL)
         setAccountId(accountId)
-        setLocalAccount(account.accountId);
+        
 
         //avatarURL, displayName 
         

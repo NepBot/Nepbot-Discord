@@ -35,7 +35,7 @@ export function getConfig() {
         return {
           networkId: 'testnet',
           keyStore: key,
-          nodeUrl: 'https://rpc.testnet.nepbot.org',
+          nodeUrl: 'https://rpc.testnet.near.org',
           walletUrl: 'https://wallet.testnet.near.org',
           helperUrl: 'https://helper.testnet.near.org',
           explorerUrl: "https://testnet.nearblocks.io",
@@ -58,7 +58,7 @@ export function getConfig() {
         return {
           networkId: 'testnet',
           keyStore: key,
-          nodeUrl: 'https://rpc.testnet.nepbot.org',
+          nodeUrl: 'https://rpc.testnet.near.org',
           walletUrl: 'https://wallet.testnet.near.org',
           helperUrl: 'https://helper.testnet.near.org',
           explorerUrl: "https://testnet.nearblocks.io",
