@@ -2,7 +2,7 @@
 import store from "../../store/discordInfo";
 import React, {useCallback, useEffect, useState} from 'react';
 import {Select} from "antd";
-import './Index.css';
+import './Index.scss';
 import {getConfig} from '../../config.js';
 
 

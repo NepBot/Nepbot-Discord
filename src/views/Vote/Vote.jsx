@@ -1,5 +1,6 @@
 import React, { useEffect} from 'react';
 import {connect, WalletConnection} from "near-api-js";
+import WalletSelector from '../../utils/walletSelector';
 import {getConfig} from "../../config";
 import qs from "qs";
 import './Vote.css';
@@ -17,12 +18,12 @@ export default function Success(props) {
             const wallet = new WalletConnection(near, 'nepbot');
             const account = wallet.account(); 
 
-            try {
-                await wallet._completeSignInWithAccessKey()
-            } catch {}
-
-            if (!wallet.isSignedIn()) {
-                wallet.requestSignIn(config.RULE_CONTRACT, "nepbot")
+            const walletSelector = await WalletSelector.new({})
+            if (!walletSelector.selector.isSignedIn()) {
+                const selector = document.getElementById("near-wallet-selector-modal");
+                walletSelector.modal.show();
+                selector.getElementsByClassName('nws-modal-overlay')[0].style.display= 'none';
+                selector.getElementsByClassName('close-button')[0].style.display= 'none';
                 return
             }
             

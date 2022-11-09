@@ -107,27 +107,29 @@
     background-image: linear-gradient(-88deg, #812BFF 0%, #6A79FF 41%, #4D85FF 100%);
 }
 /*content*/
-.content{
-    width:1040px;
-    margin:0 auto;
-    text-align: center;
-}
-.content>.title{
-    font-family: Gilroy-SemiBold;
-    font-size: 40px;
-    color: #FFFFFF;
-    letter-spacing: 0;
-    text-align: center;
-    line-height: 53px;
-    font-weight: 600;
-}
-.content>.intro{
-    font-family: Gilroy-Regular;
-    font-size: 18px;
-    color: #FFFFFF;
-    letter-spacing: 0.56px;
-    text-align: center;
-    font-weight: 400;
+.main{
+    .content{
+        width:1040px;
+        margin:0 auto;
+        text-align: center;
+    }
+    >.title{
+        font-family: Gilroy-SemiBold;
+        font-size: 40px;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        text-align: center;
+        line-height: 53px;
+        font-weight: 600;
+    }
+    >.intro{
+        font-family: Gilroy-Regular;
+        font-size: 18px;
+        color: #FFFFFF;
+        letter-spacing: 0.56px;
+        text-align: center;
+        font-weight: 400;
+    }
 }
 .content .feature-box{
     margin-top:58px;

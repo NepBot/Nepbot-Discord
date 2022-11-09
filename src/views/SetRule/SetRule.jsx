@@ -11,6 +11,7 @@ import store from "../../store/discordInfo";
 import {formatAmount, sign} from "../../utils/util";
 import test_icon from '../../assets/imgs/test_icon.png';
 import astro_icon from '../../assets/images/setRule/astro-icon.svg';
+import WalletSelector from '../../utils/walletSelector';
 
 
 import logo from '../../assets/images/index/logo.png';
@@ -115,16 +116,16 @@ function SetRule(props) {
                 sign: search.sign
             }, { expires: 1 });
 
-            const near = await connect(config);
-            const wallet = new WalletConnection(near, 'nepbot');
-            try {
-                await wallet._completeSignInWithAccessKey()
-            } catch {}
-
-            if (!wallet.isSignedIn()) {
-                wallet.requestSignIn(config.RULE_CONTRACT, "nepbot")
+            const walletSelector = await WalletSelector.new({})
+            if (!walletSelector.selector.isSignedIn()) {
+                const selector = document.getElementById("near-wallet-selector-modal");
+                walletSelector.modal.show();
+                selector.getElementsByClassName('nws-modal-overlay')[0].style.display= 'none';
+                selector.getElementsByClassName('close-button')[0].style.display= 'none';
                 return
             }
+            const near = await connect(config);
+            const wallet = new WalletConnection(near, 'nepbot');
             const accountId = wallet.getAccountId()
             let operationSign = store.get("operationSign")
             const args = {
@@ -378,6 +379,7 @@ function SetRule(props) {
             <SetRuleList/>
             {/* <Table loading={tableStatus} columns={columns} dataSource={dataSource} rowKey={(record)=>`rest${record.key*Math.random()}`}/> */}
             <AddRule title="Basic Modal" appchainIds={appchainIds} roleList={roleList} server={server} visible={addDialogStatus}  onOk={handleAddStatus} onCancel={handleCancelStatus}/>
+            <div id="ruleLogin"></div>
         </div>
     );
 }

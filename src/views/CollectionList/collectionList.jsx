@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom'
 import {message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
+import WalletSelector from '../../utils/walletSelector';
 import {getConfig} from "../../config";
 import AddCollection from "./addCollection";
 import SelectPlatform from "./selectPlatform";
@@ -42,17 +43,17 @@ function Collection(props) {
                 sign: search.sign
             }, { expires: 1 });
 
-            const near = await connect(config);
-            const wallet = new WalletConnection(near, 'nepbot');
-
-            try {
-                await wallet._completeSignInWithAccessKey()
-            } catch {}
-
-            if (!wallet.isSignedIn()) {
-                wallet.requestSignIn(config.RULE_CONTRACT, "nepbot")
+            const walletSelector = await WalletSelector.new({})
+            if (!walletSelector.selector.isSignedIn()) {
+                const selector = document.getElementById("near-wallet-selector-modal");
+                walletSelector.modal.show();
+                selector.getElementsByClassName('nws-modal-overlay')[0].style.display= 'none';
+                selector.getElementsByClassName('close-button')[0].style.display= 'none';
                 return
             }
+
+            const near = await connect(config);
+            const wallet = new WalletConnection(near, 'nepbot');
             const accountId = wallet.getAccountId()
             let operationSign = store.get("operationSign")
             const args = {

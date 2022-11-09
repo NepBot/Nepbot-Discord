@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom'
 import {Input,message} from "antd";
 import {connect, WalletConnection} from "near-api-js";
+import WalletSelector from '../../utils/walletSelector';
 import {getConfig} from "../../config";
 import AddSeries from "./addSeries";
 import './series.scss'
@@ -41,7 +42,8 @@ function Series(props) {
             const operationSign = store.get("operationSign")
             const near = await connect(config);
             const wallet = new WalletConnection(near, 'nepbot');
-            if (!info || !wallet.isSignedIn() || !operationSign) {
+            const walletSelector = await WalletSelector.new({})
+            if (!info || !walletSelector.selector.isSignedIn() || !operationSign) {
                 history.push({pathname: '/linkexpired', })
             }
             account = wallet.account()

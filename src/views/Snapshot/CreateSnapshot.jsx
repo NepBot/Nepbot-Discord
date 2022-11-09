@@ -1,6 +1,7 @@
 import React, { useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
 import {connect, WalletConnection} from "near-api-js";
+import WalletSelector from '../../utils/walletSelector';
 import * as nearAPI from 'near-api-js';
 import {getConfig} from "../../config";
 import {Base64} from 'js-base64';
@@ -37,17 +38,17 @@ export default function Success(props) {
                 }
             }
 
-            try {
-                await wallet._completeSignInWithAccessKey()
-            } catch {}
-
-            if (!wallet.isSignedIn()) {
-                wallet.requestSignIn(config.RULE_CONTRACT, "nepbot")
+            const walletSelector = await WalletSelector.new({})
+            if (!walletSelector.selector.isSignedIn()) {
+                const selector = document.getElementById("near-wallet-selector-modal");
+                walletSelector.modal.show();
+                selector.getElementsByClassName('nws-modal-overlay')[0].style.display= 'none';
+                selector.getElementsByClassName('close-button')[0].style.display= 'none';
                 return
             }
 
-            
-            if(!window.localStorage.getItem("isSender") && search.transactionHashes){
+            // !window.localStorage.getItem("isSender") && 
+            if(search.transactionHashes){
                 await checkResult();
                 return;
             }else{
@@ -80,7 +81,8 @@ export default function Success(props) {
                     '0',
                     ''
                 )
-                if(window.localStorage.getItem("isSender") && res){
+                // window.localStorage.getItem("isSender") && 
+                if(res){
                     await checkResult();
                 }
             }
