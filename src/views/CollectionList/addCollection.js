@@ -76,7 +76,7 @@ function AddCollection(props) {
             const operationSign = store.get("operationSign")
             setConfirmLoading(true);
             const near = await connect(config);
-            const wallet = new WalletConnection(near,"nepbot");
+            const wallet = new WalletConnection(near,"near_app");
             const account = wallet.account() 
             const outerCollectionId = `${values.name.replace(/\s+/g, "-")}-guild-${props.server.name.replace(/\s+/g, "-")}-by-${config.NFT_CONTRACT.replaceAll(".", "")}`.toLowerCase().replaceAll(".", "");
             let res = null;

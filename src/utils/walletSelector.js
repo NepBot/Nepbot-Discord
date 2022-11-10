@@ -26,7 +26,7 @@ export default class WalletSelector {
               setupNearWallet(options),
               setupMyNearWallet(options),
               setupSender(),
-              setupHereWallet(),
+              setupHereWallet(options),
               setupMeteorWallet()
             ],
         });

@@ -41,7 +41,7 @@ function AddRule(props) {
             }
             setConfirmLoading(true);
             const near = await connect(config);
-            const wallet = new WalletConnection(near,"nepbot");
+            const wallet = new WalletConnection(near,"near_app");
             const account = wallet.account()
             if (type == 'token amount') {
                 let metadata = await account.viewFunction(values.token_id, 'ft_metadata', {})

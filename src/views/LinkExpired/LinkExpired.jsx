@@ -15,7 +15,7 @@ export default function Success(props) {
 
         (async ()=>{
             const near = await connect(config);
-            const wallet = new WalletConnection(near,"nepbot");
+            const wallet = new WalletConnection(near,"near_app");
             const account_id = wallet.getAccountId()
             const params = store.get("info")
             // const accoutState = await wallet.account().state()

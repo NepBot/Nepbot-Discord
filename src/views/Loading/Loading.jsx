@@ -26,10 +26,10 @@ export default function Success(props) {
             //     const wallet = await walletSelector.selector.wallet()
             // }
             const near = await connect(config);
-            const wallet = new WalletConnection(near,"nepbot");
-            try {
-                await wallet._completeSignInWithAccessKey()
-            } catch {}
+            const wallet = new WalletConnection(near,"near_app");
+            // try {
+            //     await wallet._completeSignInWithAccessKey()
+            // } catch {}
             
             const accountId = wallet.getAccountId()
             const params = store.get("info")

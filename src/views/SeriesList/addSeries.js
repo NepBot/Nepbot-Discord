@@ -63,7 +63,7 @@ function AddSeries(props) {
             // }
             setConfirmLoading(true);
             const near = await connect(config);
-            const wallet = new WalletConnection(near,"nepbot");
+            const wallet = new WalletConnection(near,"near_app");
             const account = wallet.account() 
             
             const collection_id = props.collectionId
