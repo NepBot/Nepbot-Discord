@@ -5,6 +5,7 @@ import { setupNearWallet } from "@near-wallet-selector/near-wallet";
 import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
 import { setupSender } from "@near-wallet-selector/sender";
 import { setupHereWallet } from "@near-wallet-selector/here-wallet";
+import { setupMeteorWallet } from "@near-wallet-selector/meteor-wallet";
 import {getConfig} from "../config";
 const config = getConfig()
 
@@ -25,9 +26,8 @@ export default class WalletSelector {
               setupNearWallet(options),
               setupMyNearWallet(options),
               setupSender(),
-              setupHereWallet()
-              //setupSender(),
-              //setupHereWallet(),
+              setupHereWallet(),
+              setupMeteorWallet()
             ],
         });
           
