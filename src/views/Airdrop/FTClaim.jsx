@@ -1,6 +1,6 @@
 import React, { useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
-import {connect, WalletConnection} from "near-api-js";
+import {connect, WalletConnection, keyStores} from "near-api-js";
 import WalletSelector from '../../utils/walletSelector';
 import {getConfig} from "../../config";
 import qs from "qs";
@@ -20,9 +20,9 @@ export default function Success(props) {
 
         (async ()=>{
             const search =  qs.parse(props.location.search.slice(1));
-            const near = await connect(config);
-            const wallet = new WalletConnection(near, 'nepbot');
-            const account = wallet.account(); 
+            // const near = await connect(config);
+            // const wallet = new WalletConnection(near, 'nepbot');
+            // const account = wallet.account(); 
 
             const walletSelector = await WalletSelector.new({})
             if (!walletSelector.selector.isSignedIn()) {
@@ -32,9 +32,18 @@ export default function Success(props) {
                 selector.getElementsByClassName('close-button')[0].style.display= 'none';
                 return
             }
+            const wallet = await walletSelector.selector.wallet()
+            const accountId = (await wallet.getAccounts())[0].accountId
+            const privateKey = await walletSelector.getPrivateKey(accountId)
+            const keyStore = new keyStores.InMemoryKeyStore();
+            const near = await connect({
+                keyStore,
+                ...config,
+            });
+            const account = await near.account();
             
 
-            const accountId = wallet.getAccountId()
+            // const accountId = wallet.getAccountId()
             const args = {
                 user_id: search.user_id,
                 guild_id: search.guild_id,
@@ -42,7 +51,7 @@ export default function Success(props) {
                 sign: search.sign
             }
            
-            const signature = await sign(wallet.account(), args)
+            const signature = await sign(privateKey, args)
             const _sign = await getAirdropFTSign({
                 args: args,
                 account_id: accountId,

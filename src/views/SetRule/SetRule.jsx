@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom'
 import {Button, Input, Table, Row, Col,Space,message} from "antd";
-import {connect, WalletConnection} from "near-api-js";
+import {connect, WalletConnection, keyStores} from "near-api-js";
 import {getConfig} from "../../config";
 import AddRule from "./addRule";
 import {getRoleList, getServer,getTransactionList, signRule, getOperationSign} from "../../api/api";
@@ -23,6 +23,8 @@ const config = getConfig()
 
 function SetRule(props) {
     let account = {}
+    let accountId = ''
+    let privateKey = ''
     const [roleList, setRoleList] = useState([]);
     const [addDialogStatus, setAddDialogStatus] = useState(false);
     const [server, setServer] = useState({});
@@ -125,8 +127,15 @@ function SetRule(props) {
                 return
             }
             const wallet = await walletSelector.selector.wallet()
-            const accountId = (await wallet.getAccounts())[0].accountId
-            const privateKey = await walletSelector.getPrivateKey(accountId)
+            accountId = (await wallet.getAccounts())[0].accountId
+            privateKey = await walletSelector.getPrivateKey(accountId)
+            const keyStore = new keyStores.InMemoryKeyStore();
+            const near = await connect({
+                keyStore,
+                ...config,
+            });
+            account = await near.account();
+
             let operationSign = store.get("operationSign")
             const args = {
                 account_id: accountId, 
@@ -149,7 +158,7 @@ function SetRule(props) {
             store.set("operationSign", operationSign, { expires: 1 })
             const server = await getServer(search.guild_id);
             setServer(server);
-            account = await wallet.account();
+            // account = await wallet.account();
             const appchainIds = await account.viewFunction(config.OCT_CONTRACT, 'get_appchain_ids', {})
             setAppchainIds(appchainIds)
 
@@ -176,9 +185,6 @@ function SetRule(props) {
     }, [addDialogStatus]);
 
     const handleDelete = async (record) =>{
-        const near = await connect(config);
-        const wallet = new WalletConnection(near, 'nepbot');
-        account = await wallet.account();
         const obj = {
             guild_id: record.guild_id,
             role_id: record.role_id,
@@ -193,8 +199,8 @@ function SetRule(props) {
         }
         const msg = {
             args: args,
-            sign: await sign(account, args),
-            account_id: account.accountId
+            sign: await sign(privateKey, args),
+            account_id: accountId
         }
         const _sign = await signRule(msg);
         if (!_sign) {
@@ -231,9 +237,6 @@ function SetRule(props) {
     // }, [server.name, tokenId])
 
     const handleReload = async () => {
-        const near = await connect(config);
-        const wallet = new WalletConnection(near, 'nepbot');
-        account = await wallet.account();
         const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: store.get("info").guild_id})
         const _data = await handleData(data)
         setDataSource(_data);

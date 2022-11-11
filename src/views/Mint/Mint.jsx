@@ -4,7 +4,8 @@ import {InputNumber} from "antd";
 import {getMintSign, setInfo, getCollection, getMintbaseCollection} from "../../api/api";
 import store from "../../store/discordInfo";
 import {formatAmount, parseAmount,sign} from "../../utils/util";
-import {connect, WalletConnection} from "near-api-js";
+import {connect, WalletConnection, keyStores} from "near-api-js";
+import WalletSelector from '../../utils/walletSelector';
 import {getConfig} from "../../config";
 import qs from "qs";
 import './Mint.scss';
@@ -27,12 +28,22 @@ export default function Mint(props) {
         }
         setMintStatus(true);
 
-        const near = await connect(config);
-        const wallet = new WalletConnection(near, 'nepbot');
-        const account = wallet.account(); 
+        // const near = await connect(config);
+        // const wallet = new WalletConnection(near, 'nepbot');
+        // const accountId = wallet.getAccountId()
+        // const account = wallet.account(); 
+        const walletSelector = await WalletSelector.new({})
+        const wallet = await walletSelector.selector.wallet()
+        const accountId = (await wallet.getAccounts())[0].accountId
+        const privateKey = await walletSelector.getPrivateKey(accountId)
+        const keyStore = new keyStores.InMemoryKeyStore();
+        const near = await connect({
+            keyStore,
+            ...config,
+        });
+        const account = await near.account();
         
         const info = store.get("info")
-        const accountId = wallet.getAccountId()
         const args = {
             user_id: info.user_id,
             guild_id: info.guild_id,
@@ -40,7 +51,7 @@ export default function Mint(props) {
             sign: props.sign
         }
 
-        const signature = await sign(wallet.account(), args)
+        const signature = await sign(privateKey, args)
         const _sign = await getMintSign({
             args: args,
             account_id: accountId,

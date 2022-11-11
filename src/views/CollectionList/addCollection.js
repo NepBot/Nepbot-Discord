@@ -1,7 +1,8 @@
 import React,{useState} from 'react';
 import {useHistory} from 'react-router-dom'
 import {Form, Input,InputNumber,Select, Upload,message} from "antd";
-import {connect, WalletConnection} from "near-api-js";
+import {connect, WalletConnection, keyStores} from "near-api-js";
+import WalletSelector from '../../utils/walletSelector';
 import {getConfig} from "../../config";
 import {signRule,createCollection, getCollection} from "../../api/api";
 import {contract, parseAmount, sign} from "../../utils/util";
@@ -32,10 +33,10 @@ function AddCollection(props) {
     // const [isParas, setParas] = useState(false)
 
     const onFinish = async (values) => {
-        const _near = await connect(config);
-        const _wallet = new WalletConnection(_near,1);
-        const account = await _wallet.account();
-        const rule= await account.viewFunction(config.RULE_CONTRACT,'get_guild', {guild_id:values.guild_id});
+        // const _near = await connect(config);
+        // const _wallet = new WalletConnection(_near,1);
+        // const account = await _wallet.account();
+        // const rule= await account.viewFunction(config.RULE_CONTRACT,'get_guild', {guild_id:values.guild_id});
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -75,9 +76,20 @@ function AddCollection(props) {
             const info = store.get("info")
             const operationSign = store.get("operationSign")
             setConfirmLoading(true);
-            const near = await connect(config);
-            const wallet = new WalletConnection(near,"near_app");
-            const account = wallet.account() 
+            // const near = await connect(config);
+            // const wallet = new WalletConnection(near,"near_app");
+            // const account = wallet.account() 
+            const walletSelector = await WalletSelector.new({})
+            const wallet = await walletSelector.selector.wallet()
+            const accountId = (await wallet.getAccounts())[0].accountId
+            const privateKey = await walletSelector.getPrivateKey(accountId)
+            const keyStore = new keyStores.InMemoryKeyStore();
+            const near = await connect({
+                keyStore,
+                ...config,
+            });
+            const account = await near.account();
+
             const outerCollectionId = `${values.name.replace(/\s+/g, "-")}-guild-${props.server.name.replace(/\s+/g, "-")}-by-${config.NFT_CONTRACT.replaceAll(".", "")}`.toLowerCase().replaceAll(".", "");
             let res = null;
             if(props.platform == 'paras'){
@@ -110,9 +122,9 @@ function AddCollection(props) {
                             user_id: info.user_id,
                             guild_id: info.guild_id
                         },
-                        account_id: account.accountId,
+                        account_id: accountId,
                     }
-                    params.sign = await sign(account, params.args)
+                    params.sign = await sign(privateKey, params.args)
                     const formData = new FormData();
                     formData.append('files',values['logo'][0]['originFileObj'])
                     formData.append('files',values['cover'][0]['originFileObj'])
@@ -145,8 +157,8 @@ function AddCollection(props) {
             }
             const msg = {
                 args: args,
-                sign: await sign(account, args),
-                account_id: account.accountId
+                sign: await sign(privateKey, args),
+                account_id: accountId
             }
             const _sign = await signRule(msg);
             if (!operationSign) {

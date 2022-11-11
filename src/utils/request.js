@@ -1,13 +1,23 @@
-import {connect, WalletConnection} from "near-api-js";
+import {connect, WalletConnection, keyStores} from "near-api-js";
+import WalletSelector from './walletSelector';
 import {Base64} from 'js-base64';
 import {getConfig} from "../config";
 const config = getConfig();
 
 export async function generateToken() {
-    const _near = await connect(config);
-    const _wallet = new WalletConnection(_near,"nepbot");
-    const account = await _wallet.account();
-    const accountId = account.accountId;
+    // const _near = await connect(config);
+    // const _wallet = new WalletConnection(_near,"nepbot");
+    // const account = await _wallet.account();
+    // const accountId = account.accountId;
+    const walletSelector = await WalletSelector.new({})
+    const wallet = await walletSelector.selector.wallet()
+    const accountId = (await wallet.getAccounts())[0].accountId
+    const keyStore = new keyStores.InMemoryKeyStore();
+    const near = await connect({
+        keyStore,
+        ...config,
+    });
+    const account = await near.account();
 
     const arr = new Array(accountId)
     for (var i = 0; i < accountId.length; i++) {

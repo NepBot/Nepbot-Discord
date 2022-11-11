@@ -81,8 +81,24 @@ export async function executeMultipleTransactions(account, transactions, walletC
     if (walletSelector.selector.isSignedIn()) {
         wallet = await walletSelector.selector.wallet()
     }
-
-    await wallet.signAndSendTransactions(transactions)
+    
+    const txs = [];
+    transactions.forEach(tx => {
+        const actions = [];
+        tx.actions.forEach(action => {
+            actions.push({
+                type: "FunctionCall",
+                params: {
+                    ...action
+                }
+            })
+        })
+        txs.push({
+            receiverId:tx.receiverId,
+            actions:actions,
+        })
+    })
+    await wallet.signAndSendTransactions({ transactions:txs, callbackUrl:walletCallbackUrl })
 
     if (walletCallbackUrl) {
         window.open(walletCallbackUrl,'_self')

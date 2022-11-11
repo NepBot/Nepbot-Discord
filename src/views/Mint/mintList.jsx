@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom'
-import {connect, WalletConnection} from "near-api-js";
+import {connect, WalletConnection, keyStores} from "near-api-js";
 import WalletSelector from '../../utils/walletSelector';
 import {getConfig} from "../../config";
 import Mint from "./Mint";
@@ -31,8 +31,8 @@ function MintList(props) {
 
     useEffect(() => {
         (async () => {
-            const near = await connect(config);
-            const wallet = new WalletConnection(near, 'nepbot');
+            // const near = await connect(config);
+            // const wallet = new WalletConnection(near, 'nepbot');
             const walletSelector = await WalletSelector.new({})
             if (!walletSelector.selector.isSignedIn()) {
                 const selector = document.getElementById("near-wallet-selector-modal");
@@ -41,7 +41,15 @@ function MintList(props) {
                 selector.getElementsByClassName('close-button')[0].style.display= 'none';
                 return
             }
-            
+            const wallet = await walletSelector.selector.wallet()
+            const accountId = (await wallet.getAccounts())[0].accountId
+            const privateKey = await walletSelector.getPrivateKey(accountId)
+            const keyStore = new keyStores.InMemoryKeyStore();
+            const near = await connect({
+                keyStore,
+                ...config,
+            });
+            account = await near.account();
             
             //getUser roleList
             let roleList = []
@@ -60,8 +68,6 @@ function MintList(props) {
             }
 
             //operationSign
-            
-            const accountId = wallet.getAccountId()
             let _operationSign = store.get("operationSign")
             const args = {
                 account_id: accountId, 
@@ -70,7 +76,7 @@ function MintList(props) {
                 sign: search.sign,
                 operationSign: _operationSign
             }
-            const signature = await sign(wallet.account(), args)
+            const signature = await sign(privateKey, args)
             _operationSign = await getOperationSign({
                 args: args,
                 account_id: accountId,
@@ -86,7 +92,7 @@ function MintList(props) {
             const server = await getServer(search.guild_id);
             setServer(server);
             //formatdata
-            account = wallet.account()
+            // account = wallet.account()
             handleData(roleList);
         })();
         return () => {

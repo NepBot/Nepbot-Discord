@@ -1,6 +1,6 @@
 import React, { useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
-import {connect, WalletConnection} from "near-api-js";
+import {connect, WalletConnection, keyStores} from "near-api-js";
 import WalletSelector from '../../utils/walletSelector';
 import {getConfig} from "../../config";
 import qs from "qs";
@@ -19,9 +19,25 @@ export default function Success(props) {
     useEffect(()=>{
         (async ()=>{
             const search =  qs.parse(props.location.search.slice(1));
-            const near = await connect(config);
-            const wallet = new WalletConnection(near, 'nepbot');
-            const account = wallet.account(); 
+            // const near = await connect(config);
+            // const wallet = new WalletConnection(near, 'nepbot');
+            // const account = wallet.account(); 
+
+            const walletSelector = await WalletSelector.new({})
+            if (!walletSelector.selector.isSignedIn()) {
+                const selector = document.getElementById("near-wallet-selector-modal");
+                walletSelector.modal.show();
+                selector.getElementsByClassName('nws-modal-overlay')[0].style.display= 'none';
+                selector.getElementsByClassName('close-button')[0].style.display= 'none';
+                return
+            }
+            // const wallet = await walletSelector.selector.wallet()
+            const keyStore = new keyStores.InMemoryKeyStore();
+            const near = await connect({
+                keyStore,
+                ...config,
+            });
+            const account = await near.account();
 
             const checkResult = async () => {
                 const hash = localStorage.getItem(`nepbot_airdrop_${search.user_id}`);
@@ -40,15 +56,6 @@ export default function Success(props) {
                 }else{
                     history.push({pathname: `/failure`,search:'from=airdrop'})
                 }
-            }
-
-            const walletSelector = await WalletSelector.new({})
-            if (!walletSelector.selector.isSignedIn()) {
-                const selector = document.getElementById("near-wallet-selector-modal");
-                walletSelector.modal.show();
-                selector.getElementsByClassName('nws-modal-overlay')[0].style.display= 'none';
-                selector.getElementsByClassName('close-button')[0].style.display= 'none';
-                return
             }
 
             const metadata = await account.viewFunction(search.token_contract, 'ft_metadata', {})
@@ -96,7 +103,7 @@ export default function Success(props) {
                         },
                         deposit: "8000000000000000000000",
                         gas: "100000000000000",
-                        kind: "functionCall",
+                        // kind: "functionCall",
                         methodName: "add_campaign"
                     }]
                 },{
@@ -109,13 +116,13 @@ export default function Success(props) {
                         },
                         deposit: "1",
                         gas: "100000000000000",
-                        kind: "functionCall",
+                        // kind: "functionCall",
                         methodName: "ft_transfer_call"
                     }]
                 }])
                 
                 // console.log(txs); return;
-                const result = await executeMultipleTransactions(account,wallet,txs);
+                const result = await executeMultipleTransactions(account,txs);
                 // window.localStorage.getItem("isSender") && 
                 if(result){
                     await checkResult();

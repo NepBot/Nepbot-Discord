@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom'
 import {message} from "antd";
-import {connect, WalletConnection} from "near-api-js";
+import {connect, WalletConnection, keyStores} from "near-api-js";
 import WalletSelector from '../../utils/walletSelector';
 import {getConfig} from "../../config";
 import AddCollection from "./addCollection";
@@ -52,10 +52,20 @@ function Collection(props) {
                 return
             }
 
-            const near = await connect(config);
-            const wallet = new WalletConnection(near, 'nepbot');
-            const accountId = wallet.getAccountId()
+            // const near = await connect(config);
+            // const wallet = new WalletConnection(near, 'nepbot');
+            // const accountId = wallet.getAccountId()
+            const wallet = await walletSelector.selector.wallet()
+            const accountId = (await wallet.getAccounts())[0].accountId
+            const privateKey = await walletSelector.getPrivateKey(accountId)
+            const keyStore = new keyStores.InMemoryKeyStore();
+            const near = await connect({
+                keyStore,
+                ...config,
+            });
+            account = await near.account();
             let operationSign = store.get("operationSign")
+
             const args = {
                 account_id: accountId, 
                 user_id: search.user_id,
@@ -63,7 +73,7 @@ function Collection(props) {
                 sign: search.sign,
                 operationSign: operationSign
             }
-            const signature = await sign(wallet.account(), args)
+            const signature = await sign(privateKey, args)
             operationSign = await getOperationSign({
                 args: args,
                 account_id: accountId,
@@ -77,7 +87,7 @@ function Collection(props) {
             store.set("operationSign", operationSign, { expires: 1 })
             const server = await getServer(search.guild_id);
             setServer(server);
-            account = wallet.account()
+            // account = wallet.account()
             handleData();
         })();
         return () => {
@@ -99,6 +109,7 @@ function Collection(props) {
             setRoleMap(roleMap);
             setRoleList(roles.filter(item=>item.name!=="@everyone"))
             //setCollectionList
+            console.log(account);
             const collections = await account.viewFunction(config.NFT_CONTRACT, "get_collections_by_guild", {guild_id: info.guild_id})
             console.log(collections,'---collections--');
             let wrappedCollections = []

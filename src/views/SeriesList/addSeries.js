@@ -1,7 +1,8 @@
 import React,{useState} from 'react';
 import {useHistory} from 'react-router-dom'
 import {Form, Input, Upload,message} from "antd";
-import {connect, WalletConnection} from "near-api-js";
+import {connect, WalletConnection, keyStores} from "near-api-js";
+import WalletSelector from '../../utils/walletSelector';
 import {getConfig} from "../../config";
 import {signRule,createSeries} from "../../api/api";
 import {contract, parseAmount, sign, encodeImageToBlurhash} from "../../utils/util";
@@ -62,9 +63,19 @@ function AddSeries(props) {
             //     role_id: values.role_id,
             // }
             setConfirmLoading(true);
-            const near = await connect(config);
-            const wallet = new WalletConnection(near,"near_app");
-            const account = wallet.account() 
+            // const near = await connect(config);
+            // const wallet = new WalletConnection(near,"nepbot");
+            // const account = wallet.account() 
+            const walletSelector = await WalletSelector.new({})
+            const wallet = await walletSelector.selector.wallet()
+            const accountId = (await wallet.getAccounts())[0].accountId
+            const privateKey = await walletSelector.getPrivateKey(accountId)
+            const keyStore = new keyStores.InMemoryKeyStore();
+            const near = await connect({
+                keyStore,
+                ...config,
+            });
+           const account = await near.account();
             
             const collection_id = props.collectionId
             const outer_collection_id = collection_id.split(":")[1]
@@ -74,7 +85,7 @@ function AddSeries(props) {
             const params = {
                 collection: props.collectionName.replaceAll("-", " "), 
                 description:values.description,
-                creator_id: account.accountId,
+                creator_id: accountId,
                 collection_id: outer_collection_id,
                 attributes:attribute_list,
                 mime_type: values.image[0].type,
@@ -96,8 +107,8 @@ function AddSeries(props) {
             }
             const msg = {
                 args: args,
-                sign: await sign(account, args),
-                account_id: account.accountId
+                sign: await sign(privateKey, args),
+                account_id: accountId
             }
             const _sign = await signRule(msg);
             if (!operationSign) {

@@ -196,6 +196,11 @@ img{
   flex-flow:column wrap;
   margin-bottom:60px;
 }
+.my-modal-content .ant-form-item .ant-form-item-row{
+  display: flex;
+  flex-flow:column wrap;
+  /* margin-bottom:60px; */
+}
 /* label */
 .my-modal-content .ant-form-item-label{
   text-align: left;

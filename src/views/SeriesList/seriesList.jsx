@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom'
 import {Input,message} from "antd";
-import {connect, WalletConnection} from "near-api-js";
+import {connect, WalletConnection, keyStores} from "near-api-js";
 import WalletSelector from '../../utils/walletSelector';
 import {getConfig} from "../../config";
 import AddSeries from "./addSeries";
@@ -40,13 +40,19 @@ function Series(props) {
         (async () => {
             const info = store.get("info")
             const operationSign = store.get("operationSign")
-            const near = await connect(config);
-            const wallet = new WalletConnection(near, 'nepbot');
+            // const near = await connect(config);
+            // const wallet = new WalletConnection(near, 'nepbot');
+            // account = wallet.account()
             const walletSelector = await WalletSelector.new({})
             if (!info || !walletSelector.selector.isSignedIn() || !operationSign) {
                 history.push({pathname: '/linkexpired', })
             }
-            account = wallet.account()
+            const keyStore = new keyStores.InMemoryKeyStore();
+            const near = await connect({
+                keyStore,
+                ...config,
+            });
+            account = await near.account();
             handleData()
         })();
         return () => {
@@ -58,9 +64,9 @@ function Series(props) {
         try{
             const search =  qs.parse(props.location.search.slice(1));
             setIsLoading(true);
-            const near = await connect(config);
-            const wallet = new WalletConnection(near, 'nepbot');
-            account = wallet.account()
+            // const near = await connect(config);
+            // const wallet = new WalletConnection(near, 'nepbot');
+            // account = wallet.account()
 
             const collection = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id:props.match.params.id})
             const server = await getServer(search.guild_id);

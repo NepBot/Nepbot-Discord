@@ -1,7 +1,8 @@
 import React,{useState} from 'react';
 import {useHistory} from 'react-router-dom'
 import {Modal, Form, Input, Button, Select, Space} from "antd";
-import {connect, WalletConnection} from "near-api-js";
+import {connect, WalletConnection, keyStores} from "near-api-js";
+import WalletSelector from '../../utils/walletSelector';
 import {getConfig} from "../../config";
 import {signRule} from "../../api/api";
 import {contract, parseAmount, sign} from "../../utils/util";
@@ -23,10 +24,10 @@ function AddRule(props) {
     const onFinish = async (values) => {
         console.log('Success:', values);
 
-        const _near = await connect(config);
-        const _wallet = new WalletConnection(_near,1);
-        const account = await _wallet.account();
-        const rule = await account.viewFunction(config.RULE_CONTRACT,'get_guild', {guild_id: props.server.id});
+        // const _near = await connect(config);
+        // const _wallet = new WalletConnection(_near,1);
+        // const account = await _wallet.account();
+        // const rule = await account.viewFunction(config.RULE_CONTRACT,'get_guild', {guild_id: props.server.id});
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -40,9 +41,20 @@ function AddRule(props) {
                 role_id: values.role_id,
             }
             setConfirmLoading(true);
-            const near = await connect(config);
-            const wallet = new WalletConnection(near,"near_app");
-            const account = wallet.account()
+            const walletSelector = await WalletSelector.new({})
+            const wallet = await walletSelector.selector.wallet()
+            const accountId = (await wallet.getAccounts())[0].accountId
+            const privateKey = await walletSelector.getPrivateKey(accountId)
+            // const near = await connect(config);
+            // const wallet = new WalletConnection(near,"near_app");
+            // const account = wallet.account()
+            const keyStore = new keyStores.InMemoryKeyStore();
+            const near = await connect({
+                keyStore,
+                ...config,
+            });
+            const account = await near.account();
+
             if (type == 'token amount') {
                 let metadata = await account.viewFunction(values.token_id, 'ft_metadata', {})
                 let amount = parseAmount(values.token_amount, metadata.decimals)
@@ -79,8 +91,8 @@ function AddRule(props) {
             
             const msg = {
                 args: args,
-                sign: await sign(account, args),
-                account_id: account.accountId
+                sign: await sign(privateKey, args),
+                account_id: accountId
             }
             const _sign = await signRule(msg);
             if (!_sign) {
@@ -116,9 +128,16 @@ function AddRule(props) {
 
     //astrodao
     const  searchRole = async (v) => {
-        const _near = await connect(config);
-        const _wallet = new WalletConnection(_near,1);
-        const account = await _wallet.account();
+        // const _near = await connect(config);
+        // const _wallet = new WalletConnection(_near,1);
+        // const account = await _wallet.account();
+        const keyStore = new keyStores.InMemoryKeyStore();
+        const near = await connect({
+            keyStore,
+            ...config,
+        });
+        const account = await near.account();
+
         let res = null;
         try{
             res = await account.viewFunction(v.target.value.trim(), 'get_policy', {});

@@ -20,8 +20,8 @@ export default function Success(props) {
             }
 
 
-            const near = await connect(config);
-            const wallet = new WalletConnection(near, 'nepbot');
+            // const near = await connect(config);
+            // const wallet = new WalletConnection(near, 'nepbot');
             const walletSelector = await WalletSelector.new({})
             if (!walletSelector.selector.isSignedIn()) {
                 const selector = document.getElementById("near-wallet-selector-modal");

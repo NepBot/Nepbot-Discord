@@ -1,6 +1,6 @@
 import React, { useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
-import {connect, WalletConnection} from "near-api-js";
+import {connect, WalletConnection, keyStores} from "near-api-js";
 import WalletSelector from '../../utils/walletSelector';
 import * as nearAPI from 'near-api-js';
 import {getConfig} from "../../config";
@@ -19,13 +19,30 @@ export default function Success(props) {
     useEffect(()=>{
         (async ()=>{
             const search =  qs.parse(props.location.search.slice(1));
-            const near = await connect(config);
-            const wallet = new WalletConnection(near, 'nepbot');
-            const account = wallet.account(); 
+            // const near = await connect(config);
+            // const wallet = new WalletConnection(near, 'nepbot');
+            // const account = wallet.account(); 
+            const walletSelector = await WalletSelector.new({})
+            if (!walletSelector.selector.isSignedIn()) {
+                const selector = document.getElementById("near-wallet-selector-modal");
+                walletSelector.modal.show();
+                selector.getElementsByClassName('nws-modal-overlay')[0].style.display= 'none';
+                selector.getElementsByClassName('close-button')[0].style.display= 'none';
+                return
+            }
+            const wallet = await walletSelector.selector.wallet()
+            const accountId = (await wallet.getAccounts())[0].accountId
+            const privateKey = await walletSelector.getPrivateKey(accountId)
+            const keyStore = new keyStores.InMemoryKeyStore();
+            const near = await connect({
+                keyStore,
+                ...config,
+            });
+            const account = await near.account();
 
             const checkResult = async () => {
                 const provider = new nearAPI.providers.JsonRpcProvider(config.nodeUrl)
-                const txRes = await provider.txStatus(search.transactionHashes, wallet.getAccountId())
+                const txRes = await provider.txStatus(search.transactionHashes, accountId)
                 const res = await sendmsgSnapshot({
                     guild_id: search.guild_id,
                     channel_id:search.channel_id,
@@ -38,28 +55,18 @@ export default function Success(props) {
                 }
             }
 
-            const walletSelector = await WalletSelector.new({})
-            if (!walletSelector.selector.isSignedIn()) {
-                const selector = document.getElementById("near-wallet-selector-modal");
-                walletSelector.modal.show();
-                selector.getElementsByClassName('nws-modal-overlay')[0].style.display= 'none';
-                selector.getElementsByClassName('close-button')[0].style.display= 'none';
-                return
-            }
-
             // !window.localStorage.getItem("isSender") && 
             if(search.transactionHashes){
                 await checkResult();
                 return;
             }else{
-                const accountId = wallet.getAccountId()
                 const args = {
                     user_id: search.user_id,
                     guild_id: search.guild_id,
                     contract_address: search.contract_address,
                     sign: search.sign
                 }
-                const signature = await sign(wallet.account(), args)
+                const signature = await sign(privateKey, args)
                 const _sign = await getSnapshotSign({
                     args: args,
                     account_id: accountId,

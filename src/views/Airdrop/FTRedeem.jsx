@@ -1,6 +1,6 @@
 import React, { useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
-import {connect, WalletConnection} from "near-api-js";
+import {connect, WalletConnection, keyStores} from "near-api-js";
 import WalletSelector from '../../utils/walletSelector';
 import {getConfig} from "../../config";
 import qs from "qs";
@@ -16,9 +16,9 @@ export default function Success(props) {
 
         (async ()=>{
             const search =  qs.parse(props.location.search.slice(1));
-            const near = await connect(config);
-            const wallet = new WalletConnection(near, 'nepbot');
-            const account = wallet.account(); 
+            // const near = await connect(config);
+            // const wallet = new WalletConnection(near, 'nepbot');
+            // const account = wallet.account(); 
 
             const walletSelector = await WalletSelector.new({})
             if (!walletSelector.selector.isSignedIn()) {
@@ -28,6 +28,13 @@ export default function Success(props) {
                 selector.getElementsByClassName('close-button')[0].style.display= 'none';
                 return
             }
+            const keyStore = new keyStores.InMemoryKeyStore();
+            const near = await connect({
+                keyStore,
+                ...config,
+            });
+            const account = await near.account();
+
 
             const res = await requestTransaction(
                 account,

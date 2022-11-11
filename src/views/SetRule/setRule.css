@@ -128,6 +128,10 @@
     flex-direction: column;
     margin-bottom:30px;
 }
+.rule-modal .ant-modal-body .ant-form-item .ant-form-item-row{
+    display:flex;
+    flex-direction: column;
+}
 .rule-modal .ant-form-item-explain{
     margin-top:10px;
 }
