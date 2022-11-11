@@ -47,12 +47,6 @@ function Series(props) {
             if (!info || !walletSelector.selector.isSignedIn() || !operationSign) {
                 history.push({pathname: '/linkexpired', })
             }
-            const keyStore = new keyStores.InMemoryKeyStore();
-            const near = await connect({
-                keyStore,
-                ...config,
-            });
-            account = await near.account();
             handleData()
         })();
         return () => {
@@ -67,6 +61,12 @@ function Series(props) {
             // const near = await connect(config);
             // const wallet = new WalletConnection(near, 'nepbot');
             // account = wallet.account()
+            const keyStore = new keyStores.InMemoryKeyStore();
+            const near = await connect({
+                keyStore,
+                ...config,
+            });
+            account = await near.account();
 
             const collection = await account.viewFunction(config.NFT_CONTRACT, "get_collection", {collection_id:props.match.params.id})
             const server = await getServer(search.guild_id);
@@ -111,7 +111,7 @@ function Series(props) {
 
     const handleAddStatus = useCallback(async () => {
         if (!addDialogStatus) {
-            
+
         }else{
             handleData();
             // message.info('Success');

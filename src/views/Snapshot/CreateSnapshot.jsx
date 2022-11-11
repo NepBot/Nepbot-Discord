@@ -40,9 +40,9 @@ export default function Success(props) {
             });
             const account = await near.account();
 
-            const checkResult = async () => {
+            const checkResult = async (result) => {
                 const provider = new nearAPI.providers.JsonRpcProvider(config.nodeUrl)
-                const txRes = await provider.txStatus(search.transactionHashes, accountId)
+                const txRes = search.transactionHashes ? await provider.txStatus(search.transactionHashes) : result;
                 const res = await sendmsgSnapshot({
                     guild_id: search.guild_id,
                     channel_id:search.channel_id,
@@ -57,7 +57,7 @@ export default function Success(props) {
 
             // !window.localStorage.getItem("isSender") && 
             if(search.transactionHashes){
-                await checkResult();
+                await checkResult('');
                 return;
             }else{
                 const args = {
@@ -90,7 +90,7 @@ export default function Success(props) {
                 )
                 // window.localStorage.getItem("isSender") && 
                 if(res){
-                    await checkResult();
+                    await checkResult(res);
                 }
             }
                 

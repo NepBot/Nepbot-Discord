@@ -59,10 +59,6 @@ export default function Index(props) {
     //     // }  
     // };
 
-    const onSignedIn = async (signedIn) => {
-        history.push({pathname: `/wait`})
-    }
-
     const handleConnect = useCallback(async () => {
         walletSelector.modal.show()
     }, [walletSelector])
@@ -89,7 +85,6 @@ export default function Index(props) {
         const walletSelector = await WalletSelector.new({
             successUrl: `${window.location.origin}/wait`,
         })
-        walletSelector.selector.on("signedIn", onSignedIn)
         setWalletSelector(walletSelector)
         let localAccountId
         if (walletSelector.selector.isSignedIn()) {
@@ -97,7 +92,6 @@ export default function Index(props) {
             setWallet(wallet)
             localAccountId = (await wallet.getAccounts())[0].accountId;
             setLocalAccount(localAccountId);
-            console.log(localAccountId)
         }
         const search =  qs.parse(props.location.search.slice(1));
         store.set("info", {

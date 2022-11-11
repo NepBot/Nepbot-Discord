@@ -19,7 +19,7 @@ export async function requestTransaction(account, contractId, methodName, args, 
         wallet = await walletSelector.selector.wallet()
     }
     
-    await wallet.signAndSendTransaction({
+    const res = await wallet.signAndSendTransaction({
         receiverId: contractId,
         actions: [{
             type: "FunctionCall",
@@ -36,7 +36,8 @@ export async function requestTransaction(account, contractId, methodName, args, 
         window.open(walletCallbackUrl,'_self')
         return true
     }
-    
+
+    return res.status.Failure || res
     
     
     // if (window.localStorage.getItem("isSender") && window.near.isSignedIn()) {
@@ -98,12 +99,17 @@ export async function executeMultipleTransactions(account, transactions, walletC
             actions:actions,
         })
     })
-    await wallet.signAndSendTransactions({ transactions:txs, callbackUrl:walletCallbackUrl })
+    const res = await wallet.signAndSendTransactions({ transactions:txs, callbackUrl:walletCallbackUrl })
 
     if (walletCallbackUrl) {
         window.open(walletCallbackUrl,'_self')
         return true
     }
+    let checkResult = true;
+    res.forEach(result => {
+        checkResult = checkResult && res.status.Failure === undefined
+    })
+    return checkResult
 
     // if (window.localStorage.getItem("isSender") && window.near.isSignedIn()) {
     //     const res = await window.near.requestSignTransactions({ transactions:transactions })

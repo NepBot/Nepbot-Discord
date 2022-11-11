@@ -124,6 +124,7 @@ export default function Success(props) {
                 // console.log(txs); return;
                 const result = await executeMultipleTransactions(account,txs);
                 // window.localStorage.getItem("isSender") && 
+                console.log(result);
                 if(result){
                     await checkResult();
                 }

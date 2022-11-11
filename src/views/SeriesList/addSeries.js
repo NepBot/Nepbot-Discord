@@ -133,6 +133,7 @@ function AddSeries(props) {
                 '300000000000000',
                 '20000000000000000000000'
             )
+            console.log(data);
             if(data){
                 setConfirmLoading(false);
                 form.resetFields();
