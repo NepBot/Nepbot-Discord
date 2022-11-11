@@ -37,4 +37,9 @@ export default class WalletSelector {
         });
         return new WalletSelector(selector, modal)
     }
+
+    async getPrivateKey(accountId) {
+        const privateKey = window.localStorage.getItem(`near-api-js:keystore:${accountId}:${config.networkId}`)
+        return privateKey
+    }
 }

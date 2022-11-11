@@ -1,4 +1,4 @@
-import {connect, KeyPair, keyStores, utils, WalletConnection} from "near-api-js";
+import {connect, KeyPair, keyStores, utils} from "near-api-js";
 import {getConfig} from "../config";
 import bs58 from 'bs58';
 import BN from 'bn.js';
@@ -53,8 +53,9 @@ export function formatAmount(balance, decimals=24, fracDigits=2) {
     return trimTrailingZeroes(`${formatWithCommas(wholeStr)}.${fractionStr}`);
 }
 
-export async function sign(account, obj) {
-    const keyPair = await account.connection.signer.keyStore.getKey(config.networkId, account.accountId);
+export async function sign(key, obj) {
+    // const keyPair = await account.connection.signer.keyStore.getKey(config.networkId, account.accountId);
+    const keyPair = KeyPair.fromString(key)
     const data_buffer = Buffer.from(JSON.stringify(obj));
     const { signature } = keyPair.sign(data_buffer);
     let sign = bs58.encode(signature);

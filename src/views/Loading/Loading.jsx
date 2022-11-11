@@ -22,16 +22,18 @@ export default function Success(props) {
             //     localStorage.removeItem("nepbot_wallet_auth_key")
             // }
             const walletSelector = await WalletSelector.new()
+            const wallet = await walletSelector.selector.wallet()
+            const accountId = (await wallet.getAccounts())[0].accountId
+            const privateKey = await walletSelector.getPrivateKey(accountId)
             // if (walletSelector.selector.isSignedIn()) {
             //     const wallet = await walletSelector.selector.wallet()
             // }
-            const near = await connect(config);
-            const wallet = new WalletConnection(near,"near_app");
+            // const near = await connect(config);
+            // const wallet = new WalletConnection(near,"near_app");
             // try {
             //     await wallet._completeSignInWithAccessKey()
             // } catch {}
             
-            const accountId = wallet.getAccountId()
             const params = store.get("info")
             const args = {
                 account_id: accountId, 
@@ -39,7 +41,7 @@ export default function Success(props) {
                 guild_id: params.guild_id,
                 sign: params.sign
             }
-            const signature = await sign(wallet.account(), args)
+            const signature = await sign(privateKey, args)
             let result = await setInfo({
                 args: args,
                 account_id: accountId,

@@ -124,9 +124,9 @@ function SetRule(props) {
                 selector.getElementsByClassName('close-button')[0].style.display= 'none';
                 return
             }
-            const near = await connect(config);
-            const wallet = new WalletConnection(near, 'nepbot');
-            const accountId = wallet.getAccountId()
+            const wallet = await walletSelector.selector.wallet()
+            const accountId = (await wallet.getAccounts())[0].accountId
+            const privateKey = await walletSelector.getPrivateKey(accountId)
             let operationSign = store.get("operationSign")
             const args = {
                 account_id: accountId, 
@@ -135,7 +135,7 @@ function SetRule(props) {
                 sign: search.sign,
                 operationSign: operationSign
             }
-            const signature = await sign(wallet.account(), args)
+            const signature = await sign(privateKey, args)
             operationSign = await getOperationSign({
                 args: args,
                 account_id: accountId,
