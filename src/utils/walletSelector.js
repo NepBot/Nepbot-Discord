@@ -35,6 +35,25 @@ export default class WalletSelector {
             theme: "dark",
             contractId: config.RULE_CONTRACT
         });
+
+        const onSignedIn = async (signedIn) => {
+            if (signedIn.walletId == 'sender') {
+                const accountId = signedIn.accounts[0].accountId
+                console.log(signedIn.accounts)
+                window.localStorage.setItem(`near-api-js:keystore:${accountId}:${config.networkId}`, window.near.authData.accessKey.secretKey)
+                await new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve()
+                    }, 1000)
+                })
+                if (options.successUrl) {
+                    window.location.replace(options.successUrl)
+                }
+            }
+        }
+
+        selector.on("signedIn", onSignedIn)
+
         return new WalletSelector(selector, modal)
     }
 
