@@ -63,6 +63,11 @@ export default function Index(props) {
         walletSelector.modal.show()
     }, [walletSelector])
 
+    const otherWallet = useCallback(async () => {
+        await handleDisconnect();
+        await handleConnect();
+    }, [wallet, localAccount])
+
     const handleDisconnect = useCallback(async () => {
         if(localAccount){
             await wallet.signOut()
@@ -140,8 +145,8 @@ export default function Index(props) {
                     <div className={'name'}>{displayName}</div>
                     <div className={'server-name'}>{serverName}</div>
                     <div className={'connect-btn-box'}><div className={'connect-btn'} onClick={() => {connectWallet()}}>{localAccount}</div></div>
-                    <div className={'disconnect-btn other-btn'} onClick={handleDisconnect}>Other Wallets</div>
-                    <div className={'tip'}>Connect to your wallet</div>
+                    <div className={'disconnect-btn other-btn'} onClick={otherWallet}>Other Wallets</div>
+                    <div className={'tip'}>Verify with your wallet</div>
                 </div>
             }else{
                 return <div className={'verify-info'}>
@@ -149,7 +154,7 @@ export default function Index(props) {
                     <div className={'name'}>{displayName}</div>
                     <div className={'server-name'}>{serverName}</div>
                     <div className={'connect-btn-box'}><div className={'connect-btn near-btn'} onClick={() => {handleConnect()}}>Near Wallet</div></div>
-                    <div className={'tip'}>Connect to your wallet</div>
+                    <div className={'tip'}>Verify with your wallet</div>
                 </div>
             }
         } 
