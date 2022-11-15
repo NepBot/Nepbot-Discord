@@ -153,7 +153,7 @@ export default function Index(props) {
                     <img className={'avatar'} src={avatarURL} alt={displayName} hidden={avatarURL == ''}/>
                     <div className={'name'}>{displayName}</div>
                     <div className={'server-name'}>{serverName}</div>
-                    <div className={'connect-btn-box'}><div className={'connect-btn near-btn'} onClick={() => {handleConnect()}}>Near Wallet</div></div>
+                    <div className={'connect-btn-box'}><div className={'connect-btn'} onClick={() => {handleConnect()}}>Connect Wallet</div></div>
                     <div className={'tip'}>Verify with your wallet</div>
                 </div>
             }
