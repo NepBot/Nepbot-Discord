@@ -134,7 +134,7 @@ export default function Index(props) {
                     <img className={'icon-connected'} src={icon_connected} alt=""/>
                 </div>
                 <div className={'name'}>{displayName}</div>
-                <div className={'account-name'}>{accountId}</div>
+                <div className={'account-name txt-wrap'}>{accountId}</div>
                 <div className={'server-name'}>{serverName}</div>
                 <div className={'disconnect-btn'} onClick={handleDisconnect}>Disconnect</div>
             </div>
@@ -143,8 +143,8 @@ export default function Index(props) {
                 return <div className={'verify-info'}>
                     <img className={'avatar'} src={avatarURL} alt={displayName} hidden={avatarURL == ''}/>
                     <div className={'name'}>{displayName}</div>
-                    <div className={'server-name'}>{serverName}</div>
-                    <div className={'connect-btn-box'}><div className={'connect-btn'} onClick={() => {connectWallet()}}>{localAccount}</div></div>
+                    <div className={'server-name'}>{serverName}</div> 
+                    <div className={'connect-btn-box'}><div className={'connect-btn txt-wrap'} onClick={() => {connectWallet()}}>{localAccount}</div></div>
                     <div className={'disconnect-btn other-btn'} onClick={otherWallet}>Other Wallets</div>
                     <div className={'tip'}>Verify with your wallet</div>
                 </div>
