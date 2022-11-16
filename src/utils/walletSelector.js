@@ -39,7 +39,7 @@ export default class WalletSelector {
         const onSignedIn = async (signedIn) => {
             if (signedIn.walletId == 'sender') {
                 const accountId = signedIn.accounts[0].accountId
-                console.log(signedIn.accounts)
+                console.log(signedIn,window.near.authData)
                 window.localStorage.setItem(`near-api-js:keystore:${accountId}:${config.networkId}`, window.near.authData.accessKey.secretKey)
                 await new Promise((resolve, reject) => {
                     setTimeout(() => {
@@ -62,7 +62,13 @@ export default class WalletSelector {
     }
 
     async getPrivateKey(accountId) {
-        const privateKey = window.localStorage.getItem(`near-api-js:keystore:${accountId}:${config.networkId}`)
+        let privateKey = ''
+        if(localStorage.getItem("near-wallet-selector:selectedWalletId").replaceAll('"','') == 'meteor-wallet'){
+            privateKey = window.localStorage.getItem(`_meteor_wallet${accountId}:${config.networkId}`)
+        }else{
+            privateKey = window.localStorage.getItem(`near-api-js:keystore:${accountId}:${config.networkId}`)
+
+        }
         return privateKey
     }
 }
