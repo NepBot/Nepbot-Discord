@@ -3,6 +3,7 @@ import {useHistory} from 'react-router-dom'
 import {Form, Input, Upload,message} from "antd";
 import {connect, WalletConnection, keyStores} from "near-api-js";
 import WalletSelector from '../../utils/walletSelector';
+import Mintbase from '../../utils/mintbase'
 import {getConfig} from "../../config";
 import {signRule,createSeries} from "../../api/api";
 import {contract, parseAmount, sign, encodeImageToBlurhash} from "../../utils/util";
@@ -91,12 +92,26 @@ function AddSeries(props) {
                 mime_type: values.image[0].type,
                 blurhash: "UE3UQdpLQ8VWksZ}Z~ksL#Z}pfkXVWp0kXVq"
             }
-            const formData = new FormData();
-            formData.append('files',values.image[0]['originFileObj'])
-            formData.append('files',new Blob([JSON.stringify(params)], {type: 'application/json'}))
 
-            //paras - collection
-            const res = await createSeries(formData);
+            let media = '';
+            let reference = '';
+            if(props.contractType == 'paras'){
+                const formData = new FormData();
+                formData.append('files',values.image[0]['originFileObj'])
+                formData.append('files',new Blob([JSON.stringify(params)], {type: 'application/json'}))
+                //paras - collection
+                const res = await createSeries(formData);
+                media = res[0].replace("ipfs://", "");
+                reference = res[1].replace("ipfs://", "");
+                console.log("paras");
+            }else{
+                const minter = await Mintbase()
+                const res = await minter.upload(values.image[0]['originFileObj'])
+                media = res.data.uri;
+                reference = res.data.uri;
+            }
+            console.log(media,reference); 
+            
 
             const info = store.get("info")
             const operationSign = store.get("operationSign")
@@ -124,8 +139,8 @@ function AddSeries(props) {
                     token_metadata: {
                         title: values.name,
                         description: values.description,
-                        media: res[0].replace("ipfs://", ""),
-                        reference: res[1].replace("ipfs://", ""),
+                        media: media,
+                        reference: reference,
                         copies:Number(values.copies)
                     },
                     ..._sign
@@ -269,7 +284,7 @@ function AddSeries(props) {
                                     <UploadImageContent/>
                                 </Dragger>
                             </Item>
-                            <div className={'upload-tip'}>JPG/JPEG/PNG/GIF/SVG. Max size:1MB.</div>
+                            <div className={'upload-tip'}>JPG/JPEG/PNG/GIF/SVG. Max size:10MB.</div>
                         </div>
 
                         <Item

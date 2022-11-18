@@ -50,6 +50,9 @@ export default class WalletSelector {
                     window.location.replace(options.successUrl)
                 }
             }else if(signedIn.walletId == 'meteor-wallet'){
+                const accountId = signedIn.accounts[0].accountId
+                const privateKey = window.localStorage.getItem(`_meteor_wallet${accountId}:${config.networkId}`)
+                window.localStorage.setItem(`near-api-js:keystore:${accountId}:${config.networkId}`, privateKey)
                 if (options.successUrl) {
                     window.location.replace(options.successUrl)
                 }

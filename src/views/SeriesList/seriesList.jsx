@@ -78,8 +78,9 @@ function Series(props) {
                 total_copies : collection.total_copies,
                 serverName : server.name,
                 serverIcon : server.iconURL || discordIcon,
+                contract_type : collection.contract_type,
             }
-            if(collection.contract_type =='paras'){
+            if(collection.contract_type == 'paras'){
                 const collectionData = await getCollection(collection.outer_collection_id)
                 info.name = props.match.params.id.split(":")[1].split("-guild-")[0].replaceAll("-", " ");
                 info.cover = config.IPFS + collectionData.results[0]['cover'];
@@ -139,13 +140,20 @@ function Series(props) {
         // history.go(-1);
     }
 
-
+    function Cover(props){
+        if(collectionInfo.contract_type == 'paras' && props.media.indexOf("http")<0){
+            return (<img className={'cover'} alt="cover" src={config.IPFS+props.media}/>)
+        }else{
+            return (<img className={'cover'} alt="cover" src={props.media}/>)
+        }
+    }
 
     function SeriesList(){
         if(showList.length>0){
             const seriesItems = showList.map((item,index) => 
                 <div className={['series-item', (index%3===2) ? 'mr0' : ''].join(' ')} key={Math.random()} onClick={() => handleSeries(item.token_series_id)}>
-                    <img className={'cover'} alt="cover" src={'https://ipfs.fleek.co/ipfs/'+item.metadata.media}/>
+                    <Cover media={item.metadata.media}/>
+                    {/* <img className={'cover'} alt="cover" src={config.IPFS+item.metadata.media}/> */}
                     <div className={'info'}>
                         <div className={'name txt-wrap'}>{item.metadata.title}</div>
                         <div className={'account txt-wrap'}>{item.metadata.description}</div>
@@ -209,7 +217,7 @@ function Series(props) {
                 </div>
             </div>
             <SeriesList/>
-            <AddSeries collectionId={collectionInfo.collection_id} collectionName={collectionInfo.name} visible={addDialogStatus}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
+            <AddSeries contractType={collectionInfo.contract_type} collectionId={collectionInfo.collection_id} collectionName={collectionInfo.name} visible={addDialogStatus}  onOk={handleAddStatus} onCancel={handleAddStatus}/>
         </div>
     );
 }
