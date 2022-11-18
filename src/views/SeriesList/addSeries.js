@@ -154,11 +154,11 @@ function AddSeries(props) {
         if (!isAllowType) {
             message.error('Image must be a file of type: jpeg, jpg, png, gif, svg.');
         }
-        const isLt1M = file.size / 1024 / 1024 < 1;
-        if (!isLt1M) {
-            message.error('File size exceeded（maximum is 1MB）');
+        const isLt10M = file.size / 1024 / 1024 < 10;
+        if (!isLt10M) {
+            message.error('File size exceeded（maximum is 10MB）');
         }
-        return isAllowType && isLt1M;
+        return isAllowType && isLt10M;
     }
 
     function getBase64(img, callback) {
