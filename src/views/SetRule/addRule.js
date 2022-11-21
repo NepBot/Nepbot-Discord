@@ -19,6 +19,7 @@ function AddRule(props) {
     const [type, setType] = useState('');
     const [isParas, setParas] = useState(false)
     const [astroRoleList,setAstroRoleList] = useState([]);
+    const [gatingRule, setGatingRule] = useState('');
     const history = useHistory()
     // const [checkNick, setCheckNick] = useState(false);
     const onFinish = async (values) => {
@@ -80,7 +81,12 @@ function AddRule(props) {
             } else if(type == 'AstroDAO roles'){
                 arg.key_field = ['astrodao_id', values.astrodao_id]
                 arg.fields = {astrodao_role: values.astrodao_role}
+            } else if(type == 'Paras'){
+                // console.log(values.gating_rule,values.loyalty_level);
+                arg.key_field = ['gating_rule', values.gating_rule]
+                arg.fields = {loyalty_level: values.loyalty_level}
             }
+
             const params = store.get("info")
             const operationSign = store.get("operationSign")
             const args = {
@@ -188,6 +194,8 @@ function AddRule(props) {
             return <NftAmount />
         }else if(type === 'AstroDAO roles'){
             return <AstroDao />
+        }else if(type === 'Paras'){
+            return <Paras />
         }else {
             return <div/>
         }
@@ -223,7 +231,7 @@ function AddRule(props) {
                 name="appchain_id"
                 rules={[{ required: true, message: 'Please choose a appchain' }]}
             >
-                <Select dropdownClassName={"dropdown"}>
+                <Select popupClassName={"dropdown"}>
                     {appchainIds}
                 </Select>
             </Item>
@@ -232,7 +240,7 @@ function AddRule(props) {
                 name="oct_role"
                 rules={[{ required: true, message: 'Please choose an oct role' }]}
             >
-                <Select dropdownClassName={"dropdown"}>
+                <Select popupClassName={"dropdown"}>
                     <Option value='delegator'>delegator</Option>
                     <Option value='validator'>validator</Option>
                 </Select>
@@ -310,7 +318,7 @@ function AddRule(props) {
                 name="astrodao_role"
                 rules={[{ required: true, message: 'Please choose an astrodao role' }]}
             >
-                <Select defaultValue={'everyone'} dropdownClassName={"dropdown"}>
+                <Select defaultValue={'everyone'} popupClassName={"dropdown"}>
                     <Option value='everyone'>everyone</Option>
                     {astroRoleList.map((item,index) => 
                         <Option  value={item.name} key={item.name}>{item.name}</Option>
@@ -320,6 +328,47 @@ function AddRule(props) {
     
         </div>
     }
+
+    function Paras(){
+        return <div>
+            <Item
+                label="Gating Rule"
+                name="gating_rule"
+                rules={[{ required: true, message: '' }]}
+            >
+                <Select popupClassName={"dropdown"} onChange={(v)=>{setGatingRule(v)}}>
+                    <Option value='Loyalty Level' key='Loyalty Level'>Loyalty Level</Option>
+                    {/* <Option value='XX' key='XX'>XX</Option> */}
+                </Select>
+            </Item>
+            <GatingRule/>
+        </div>
+    }
+
+    function GatingRule(){
+        console.log(gatingRule);
+        if(gatingRule == 'Loyalty Level'){
+            return <div>
+                <Item
+                    label="Loyalty Level"
+                    name="loyalty_level"
+                    rules={[{ required: true, message: '' }]}
+                >
+                    <Select popupClassName={"dropdown"}>
+                        <Option value='Bronze'>Bronze</Option>
+                        <Option value='Silver'>Silver</Option>
+                        <Option value='Gold'>Gold</Option>
+                        <Option value='Platinum'>Platinum</Option>
+                        <Option value='All'>All</Option>
+                    </Select>
+                </Item>
+        
+            </div>
+        }else{
+            return '';
+        }
+    }
+
 
     return (
         <div className={'modal-box'}>
@@ -358,7 +407,7 @@ function AddRule(props) {
                         name="role_id"
                         rules={[{ required: true, message: 'Please choose a role' }]}
                     >
-                        <Select allowClear showSearch optionFilterProp="children" onSearch={onSearch} dropdownClassName={"dropdown"}>
+                        <Select allowClear showSearch optionFilterProp="children" onSearch={onSearch} popupClassName={"dropdown"}>
                             {roleList}
                         </Select>
                     </Item>
@@ -367,12 +416,13 @@ function AddRule(props) {
                         name="type"
                         rules={[{ required: true, message: 'Please choose a type' }]}
                     >
-                        <Select dropdownClassName={"dropdown"} onChange={(v)=>{handleChangeType(v)}}>
+                        <Select popupClassName={"dropdown"} onChange={(v)=>{handleChangeType(v)}}>
                             <Option value='token amount'>Token amount</Option>
                             <Option value='oct roles'>OCT roles</Option>
                             <Option value='near balance'>Near balance</Option>
                             <Option value='nft amount'>NFT</Option>
                             <Option value='AstroDAO roles'>AstroDAO roles</Option>
+                            <Option value='Paras'>Paras</Option>
                         </Select>
                     </Item>
                     <TypeDetail type={type} appchainIds={props.appchainIds}/>
