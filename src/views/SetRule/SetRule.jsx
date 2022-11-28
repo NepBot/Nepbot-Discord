@@ -363,18 +363,32 @@ function SetRule(props) {
                     <div>{`role: ${props.item.fields.oct_role}`}</div> */}
                 </div>)
             } else if (props.item.key_field[0] == "gating_rule") {
-                return (<div className={'file-list'}>
-                    <div className={'file-item'}>
-                        <div className={'name'}>Gating Rule:</div>
-                        <div className={'info'}>{props.item.key_field[1]}</div>
-                    </div>
-                    <div className={'file-item'}>
-                        <div className={'name'}>Loyalty Level:</div>
-                        <div className={'info'}>{props.item.fields.loyalty_level}</div>
-                    </div>
-                    {/* <div>{`appchain: ${props.item.key_field[1]}`}</div>
-                    <div>{`role: ${props.item.fields.oct_role}`}</div> */}
-                </div>)
+                if(props.item.key_field[1]=='Loyalty Level'){
+                    return (<div className={'file-list'}>
+                        <div className={'file-item'}>
+                            <div className={'name'}>Gating Rule:</div>
+                            <div className={'info'}>{props.item.key_field[1]}</div>
+                        </div>
+                        <div className={'file-item'}>
+                            <div className={'name'}>Loyalty Level:</div>
+                            <div className={'info'}>{props.item.fields.loyalty_level}</div>
+                        </div>
+                    </div>)
+                }else if(props.item.key_field[1] == 'Paras Staking'){
+                    return (<div className={'file-list'}>
+                        <div className={'file-item'}>
+                            <div className={'name'}>Gating Rule:</div>
+                            <div className={'info'}>{props.item.key_field[1]}</div>
+                        </div>
+                        <div className={'file-item'}>
+                            <div className={'name'}>Paras Staking:</div>
+                            <div className={'info'}>{props.item.fields.paras_staking}</div>
+                        </div>
+                    </div>)
+                }else {
+                    return '';
+                }
+                
             }
             
         }else{

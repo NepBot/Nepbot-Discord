@@ -84,7 +84,12 @@ function AddRule(props) {
             } else if(type == 'Paras'){
                 // console.log(values.gating_rule,values.loyalty_level);
                 arg.key_field = ['gating_rule', values.gating_rule]
-                arg.fields = {loyalty_level: values.loyalty_level}
+                if(values.gating_rule == 'Loyalty Level'){
+                    arg.fields = {loyalty_level: values.loyalty_level}
+                }else if(values.gating_rule == 'Paras Staking'){
+                    arg.fields = {paras_staking: values.paras_staking}
+                }
+                
             }
 
             const params = store.get("info")
@@ -338,7 +343,7 @@ function AddRule(props) {
             >
                 <Select popupClassName={"dropdown"} onChange={(v)=>{setGatingRule(v)}}>
                     <Option value='Loyalty Level' key='Loyalty Level'>Loyalty Level</Option>
-                    {/* <Option value='XX' key='XX'>XX</Option> */}
+                    <Option value='Paras Staking' key='Paras Staking'>Paras Staking</Option>
                 </Select>
             </Item>
             <GatingRule/>
@@ -360,6 +365,20 @@ function AddRule(props) {
                         <Option value='Gold'>Gold</Option>
                         <Option value='Platinum'>Platinum</Option>
                         <Option value='All'>All</Option>
+                    </Select>
+                </Item>
+        
+            </div>
+        }else if(gatingRule == 'Paras Staking'){
+            return <div>
+                <Item
+                    label="Paras Staking"
+                    name="paras_staking"
+                    rules={[{ required: true, message: '' }]}
+                >
+                    <Select popupClassName={"dropdown"}>
+                        <Option value='Amount'>Amount</Option>
+                        <Option value='Duration'>Duration</Option>
                     </Select>
                 </Item>
         
