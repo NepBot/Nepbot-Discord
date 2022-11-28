@@ -87,7 +87,10 @@ function AddRule(props) {
                 if(values.gating_rule == 'Loyalty Level'){
                     arg.fields = {loyalty_level: values.loyalty_level}
                 }else if(values.gating_rule == 'Paras Staking'){
-                    arg.fields = {paras_staking: values.paras_staking}
+                    arg.fields = {
+                        paras_staking_amount: values.paras_staking_amount,
+                        paras_staking_duration: values.paras_staking_duration
+                    }
                 }
                 
             }
@@ -372,6 +375,43 @@ function AddRule(props) {
         }else if(gatingRule == 'Paras Staking'){
             return <div>
                 <Item
+                    label="Amount"
+                    name="paras_staking_amount"
+                    rules={[
+                        { required: true, message: '' },
+                        () => ({
+                            validator(_, val) {
+                                if(val && val>0 && val%1 == 0) {
+                                    return Promise.resolve();
+                                }
+                                return Promise.reject('Amount must be an integer greater than 0');
+                            }
+                        })
+                    ]}
+                >
+                    <Input type="number" bordered={false} />
+                </Item>
+
+                <Item
+                    label="Duration"
+                    name="paras_staking_duration"
+                    className={'paras-staking-duration'}
+                    rules={[
+                        { required: true, message: '' },
+                        () => ({
+                            validator(_, val) {
+                                if(val && val>=0 && val%1 == 0) {
+                                    return Promise.resolve();
+                                }
+                                return Promise.reject('Duration must be an integer greater than or equal to 0');
+                            }
+                        })
+                    ]}
+                >
+                    <Input type="number" bordered={false} />
+                </Item>
+
+                {/* <Item
                     label="Paras Staking"
                     name="paras_staking"
                     rules={[{ required: true, message: '' }]}
@@ -380,7 +420,7 @@ function AddRule(props) {
                         <Option value='Amount'>Amount</Option>
                         <Option value='Duration'>Duration</Option>
                     </Select>
-                </Item>
+                </Item> */}
         
             </div>
         }else{
@@ -391,7 +431,7 @@ function AddRule(props) {
 
     return (
         <div className={'modal-box'}>
-            <Modal title="Add Rule" wrapClassName="rule-modal" maskClosable={false}  visible={props.visible} onOk={props.onOk}
+            <Modal title="Add Rule" wrapClassName="rule-modal my-modal-content" maskClosable={false}  visible={props.visible} onOk={props.onOk}
                 footer={[
                     <Button key="back" onClick={()=>{ form.resetFields();props.onCancel(); }}>
                         cancel

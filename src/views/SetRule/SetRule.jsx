@@ -5,7 +5,7 @@ import {connect, WalletConnection, keyStores} from "near-api-js";
 import {getConfig} from "../../config";
 import AddRule from "./addRule";
 import {getRoleList, getServer,getTransactionList, signRule, getOperationSign} from "../../api/api";
-import './setRule.css'
+import './setRule.scss'
 import qs from "qs";
 import store from "../../store/discordInfo";
 import {formatAmount, sign} from "../../utils/util";
@@ -381,8 +381,12 @@ function SetRule(props) {
                             <div className={'info'}>{props.item.key_field[1]}</div>
                         </div>
                         <div className={'file-item'}>
-                            <div className={'name'}>Paras Staking:</div>
-                            <div className={'info'}>{props.item.fields.paras_staking}</div>
+                            <div className={'name'}>Amount:</div>
+                            <div className={'info'}>{props.item.fields.paras_staking_amount}</div>
+                        </div>
+                        <div className={'file-item'}>
+                            <div className={'name'}>Duration:</div>
+                            <div className={'info'}>{props.item.fields.paras_staking_duration} days</div>
                         </div>
                     </div>)
                 }else {

@@ -133,7 +133,7 @@
     flex-direction: column;
 }
 .rule-modal .ant-form-item-explain{
-    margin-top:10px;
+    /* margin-top:10px; */
 }
 .rule-modal .ant-form-item-label{
     text-align:left;
@@ -155,6 +155,12 @@
     height:44px!important;
     line-height:44px!important;
 }
+.rule-modal .ant-form-item-control>div{
+    width:360px!important;
+}
+.rule-modal input[type="number"]{
+  -moz-appearance: textfield;
+}
 .rule-modal .ant-select .ant-select-selector,.rule-modal .ant-input{
     width:360px!important;
     height:44px!important;
@@ -163,6 +169,27 @@
     border-radius: 8px!important;
     background: transparent!important;
 }
+
+.rule-modal .paras-staking-duration .ant-form-item-control-input-content{
+    position: relative;
+    .ant-input{
+        width:315px!important;
+    }
+    &::after{
+        display:block;
+        content:"days";
+        position: absolute;
+        right:0;
+        top:0;
+        opacity: .6;
+        font-family: Gilroy-Regular;
+        font-size: 14px;
+        color: #fff;
+        letter-spacing: 0;
+        font-weight: 400;
+    }
+}
+
 .rule-modal .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector{
     box-shadow: none!important;
     border: 1px solid rgba(255,255,255,1)!important;
