@@ -158,6 +158,10 @@
 .rule-modal .ant-form-item-control>div{
     width:360px!important;
 }
+.rule-modal input::-webkit-outer-spin-button,
+.rule-modal input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
 .rule-modal input[type="number"]{
   -moz-appearance: textfield;
 }
