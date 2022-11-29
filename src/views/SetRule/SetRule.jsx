@@ -9,6 +9,7 @@ import './setRule.scss'
 import qs from "qs";
 import store from "../../store/discordInfo";
 import {formatAmount, sign} from "../../utils/util";
+import { requestTransaction } from '../../utils/contract';
 import test_icon from '../../assets/imgs/test_icon.png';
 import astro_icon from '../../assets/images/setRule/astro-icon.svg';
 import WalletSelector from '../../utils/walletSelector';
@@ -147,6 +148,7 @@ function SetRule(props) {
                 sign: search.sign,
                 operationSign: operationSign
             }
+            
             const signature = await sign(privateKey, args)
             operationSign = await getOperationSign({
                 args: args,
@@ -200,6 +202,19 @@ function SetRule(props) {
             user_id: params.user_id,
             guild_id: params.guild_id,
         }
+
+        const walletSelector = await WalletSelector.new({})
+        const wallet = await walletSelector.selector.wallet()
+        accountId = (await wallet.getAccounts())[0].accountId
+        privateKey = await walletSelector.getPrivateKey(accountId)
+        const keyStore = new keyStores.InMemoryKeyStore();
+        const near = await connect({
+            keyStore,
+            ...config,
+        });
+        const account = await near.account();
+
+
         const msg = {
             args: args,
             sign: await sign(privateKey, args),
@@ -210,12 +225,21 @@ function SetRule(props) {
             history.push({pathname: '/linkexpired', })
             return
         }
-        const delRule = await account.functionCall(
+        // const delRule = await account.functionCall(
+        //     config.RULE_CONTRACT,
+        //     'del_roles',
+        //     {roles:[obj], ..._sign},
+        //     '300000000000000'
+        // );
+
+        const delRule = await requestTransaction(
+            account,
             config.RULE_CONTRACT,
-            'del_roles',
+            "del_roles",
             {roles:[obj], ..._sign},
-            '300000000000000'
-        );
+            '300000000000000',
+            '0',
+        )
         setTimeout(async ()=>{
             if(delRule){
                 await handleReload()
@@ -240,6 +264,12 @@ function SetRule(props) {
     // }, [server.name, tokenId])
 
     const handleReload = async () => {
+        const keyStore = new keyStores.InMemoryKeyStore();
+        const near = await connect({
+            keyStore,
+            ...config,
+        });
+        const account = await near.account();
         const data = await account.viewFunction(config.RULE_CONTRACT, 'get_guild', {guild_id: store.get("info").guild_id})
         const _data = await handleData(data)
         setDataSource(_data);
