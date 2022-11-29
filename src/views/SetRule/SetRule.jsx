@@ -382,7 +382,7 @@ function SetRule(props) {
                         </div>
                         <div className={'file-item'}>
                             <div className={'name'}>Amount:</div>
-                            <div className={'info'}>{formatAmount(props.item.fields.paras_staking_amount  || '')}</div>
+                            <div className={'info'}>{formatAmount(props.item.fields.paras_staking_amount  || '', 18)}</div>
                         </div>
                         <div className={'file-item'}>
                             <div className={'name'}>Duration:</div>

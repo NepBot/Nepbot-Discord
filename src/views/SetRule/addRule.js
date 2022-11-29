@@ -88,7 +88,7 @@ function AddRule(props) {
                     arg.fields = {loyalty_level: values.loyalty_level}
                 }else if(values.gating_rule == 'Paras Staking'){
                     arg.fields = {
-                        paras_staking_amount: parseAmount(values.paras_staking_amount),
+                        paras_staking_amount: parseAmount(values.paras_staking_amount, 18),
                         paras_staking_duration: values.paras_staking_duration
                     }
                 }
