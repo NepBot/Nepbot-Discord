@@ -20,6 +20,7 @@ import add from '../../assets/images/setRule/add.png';
 import jump from '../../assets/images/setRule/icon-jump.png';
 import no_data from '../../assets/images/no-data.png';
 import paras_logo from '../../assets/images/paras.json';
+import h00kd_logo from '../../assets/images/setRule/h00kd.png';
 
 const config = getConfig()
 
@@ -76,6 +77,17 @@ function SetRule(props) {
             } else if (it.key_field[0] === config.PARAS_CONTRACT) {
                 it.icon = paras_logo
                 it.name = it.key_field[1]
+            } else if (it.key_field[0] === config.H00KD_CONTRACT) {
+                let name = ''
+                try{
+                    let eventdata = await account.viewFunction(config.H00KD_CONTRACT, "get_event_data", {event_id:it.key_field[1]})
+                    name = eventdata.title;
+                }catch(e){
+                    console.log(e);
+                }
+
+                it.name = name;
+                it.icon = h00kd_logo;
             } else if (it.key_field[0] === 'astrodao_id') { 
                 it.icon = astro_icon
             } else if (it.key_field[0] === 'gating_rule') { 
@@ -353,20 +365,7 @@ function SetRule(props) {
                     </div>
                     {/* <div>{`near balance: ${formatAmount(props.item.fields.balance)}`}</div> */}
                 </div>)
-            } else if (props.item.key_field[0] == "nft_contract_id"  || props.item.key_field[0] == config.H00KD_CONTRACT) {
-                return (<div className={'file-list'}>
-                    <div className={'file-item'}>
-                        <div className={'name'}>NFT:</div>
-                        <div className={'info'}>{props.item.name}</div>
-                    </div>
-                    <div className={'file-item'}>
-                        <div className={'name'}>amount:</div>
-                        <div className={'info'}>{props.item.fields.token_amount}</div>
-                    </div>
-                    {/* <div>{`NFT: ${props.item.name}`}</div>
-                    <div>{`amount: ${props.item.fields.token_amount}`}</div> */}
-                </div>)
-            } else if (props.item.key_field[0] == config.PARAS_CONTRACT) {
+            } else if (props.item.key_field[0] == "nft_contract_id" || props.item.key_field[0] == config.PARAS_CONTRACT  || props.item.key_field[0] == config.H00KD_CONTRACT) {
                 return (<div className={'file-list'}>
                     <div className={'file-item'}>
                         <div className={'name'}>NFT:</div>
