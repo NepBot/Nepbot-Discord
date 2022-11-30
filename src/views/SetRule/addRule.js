@@ -18,6 +18,7 @@ function AddRule(props) {
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [type, setType] = useState('');
     const [isParas, setParas] = useState(false)
+    const [isH00kd, setH00kd] = useState(false)
     const [astroRoleList,setAstroRoleList] = useState([]);
     const [gatingRule, setGatingRule] = useState('');
     const history = useHistory()
@@ -68,10 +69,13 @@ function AddRule(props) {
                 arg.key_field = ['near', 'balance']
                 arg.fields = {balance: parseAmount(values.balance)}
             } else if (type == 'nft amount') {
-                if (values.contract_id == config.PARAS_CONTRACT) {
+                if (values.contract_id == config.PARAS_CONTRACT && values.collection_url && values.collection_url.trim().length>0) {
                     const fractions = values.collection_url.split("/")
                     const lastFraction = fractions[fractions.length - 1].split("?")
                     arg.key_field = [config.PARAS_CONTRACT, lastFraction[0]]
+                    arg.fields = {token_amount: values.token_amount}
+                } else if (values.contract_id == config.H00KD_CONTRACT && values.event_id && values.event_id.trim().length>0) {
+                    arg.key_field = [config.H00KD_CONTRACT, values.event_id]
                     arg.fields = {token_amount: values.token_amount}
                 } else {
                     await account.viewFunction(values.contract_id, 'nft_metadata', {})
@@ -138,6 +142,7 @@ function AddRule(props) {
     }
     const handleInputChange = async (v) => {
         setParas(v.target.value == config.PARAS_CONTRACT)
+        setH00kd(v.target.value == config.H00KD_CONTRACT)
     }
 
     //astrodao
@@ -286,6 +291,16 @@ function AddRule(props) {
                     name="collection_url"
                     rules={[{ required: false, message: 'Please input collection id' }]}
                     hidden={!isParas}
+                >
+                    <Input bordered={false} />
+                </Item>
+            </div>
+            <div className={['event-id', (isH00kd) ? 'show' : ''].join(' ')}>
+                <Item
+                    label="event id"
+                    name="event_id"
+                    rules={[{ required: false, message: 'Please input event id' }]}
+                    hidden={!isH00kd}
                 >
                     <Input bordered={false} />
                 </Item>

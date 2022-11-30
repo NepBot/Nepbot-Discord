@@ -353,7 +353,7 @@ function SetRule(props) {
                     </div>
                     {/* <div>{`near balance: ${formatAmount(props.item.fields.balance)}`}</div> */}
                 </div>)
-            } else if (props.item.key_field[0] == "nft_contract_id") {
+            } else if (props.item.key_field[0] == "nft_contract_id"  || props.item.key_field[0] == config.H00KD_CONTRACT) {
                 return (<div className={'file-list'}>
                     <div className={'file-item'}>
                         <div className={'name'}>NFT:</div>

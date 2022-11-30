@@ -280,10 +280,10 @@
 }
 
 
-.rule-modal .collection-url{
+.rule-modal .collection-url,.rule-modal .event-id{
     display: none;
 }
-.rule-modal .collection-url.show{
+.rule-modal .collection-url.show,.rule-modal .event-id.show{
     display: block;
 }
 
