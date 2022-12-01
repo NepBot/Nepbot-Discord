@@ -74,10 +74,12 @@ function AddRule(props) {
                     const lastFraction = fractions[fractions.length - 1].split("?")
                     arg.key_field = [config.PARAS_CONTRACT, lastFraction[0]]
                     arg.fields = {token_amount: values.token_amount}
-                } else if (values.contract_id == config.H00KD_CONTRACT && values.event_id && values.event_id.trim().length>0) {
-                    arg.key_field = [config.H00KD_CONTRACT, values.event_id]
-                    arg.fields = {token_amount: values.token_amount}
-                } else {
+                } 
+                // else if (values.contract_id == config.H00KD_CONTRACT && values.event_id && values.event_id.trim().length>0) {
+                //     arg.key_field = [config.H00KD_CONTRACT, values.event_id]
+                //     arg.fields = {token_amount: values.token_amount}
+                // } 
+                else {
                     await account.viewFunction(values.contract_id, 'nft_metadata', {})
                     arg.key_field = ['nft_contract_id', values.contract_id]
                     arg.fields = {token_amount: values.token_amount}
@@ -142,7 +144,7 @@ function AddRule(props) {
     }
     const handleInputChange = async (v) => {
         setParas(v.target.value == config.PARAS_CONTRACT)
-        setH00kd(v.target.value == config.H00KD_CONTRACT)
+        // setH00kd(v.target.value == config.H00KD_CONTRACT)
     }
 
     //astrodao
@@ -295,7 +297,7 @@ function AddRule(props) {
                     <Input bordered={false} />
                 </Item>
             </div>
-            <div className={['event-id', (isH00kd) ? 'show' : ''].join(' ')}>
+            {/* <div className={['event-id', (isH00kd) ? 'show' : ''].join(' ')}>
                 <Item
                     label="event id"
                     name="event_id"
@@ -304,7 +306,7 @@ function AddRule(props) {
                 >
                     <Input bordered={false} />
                 </Item>
-            </div>
+            </div> */}
             <Item
                 label="amount"
                 name="token_amount"
