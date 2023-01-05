@@ -62,12 +62,13 @@ export default function Success(props) {
                 return
             }
             
-            // const isRegistered = true;
-            const isRegistered = await account.viewFunction("nepbottest.token3.bhc8521.testnet", 'storage_balance_of', {account_id: accountId})
-            let txs = [];//search.token_contract
+            const campaignInfo = await account.viewFunction(config.AIRDROP_CONTRACT, "get_campaign", {hash: search.hash})
+            const contractId = campaignInfo.deposit.FT.contract_id
+            const isRegistered = await account.viewFunction(contractId, 'storage_balance_of', {account_id: accountId})
+            let txs = [];
             if(!isRegistered){
                 txs.push({
-                    receiverId: "nepbottest.token3.bhc8521.testnet",
+                    receiverId: contractId,
                     actions: [{
                         methodName: "storage_deposit",
                         args: {

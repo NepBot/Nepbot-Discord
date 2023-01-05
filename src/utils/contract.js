@@ -33,7 +33,7 @@ export async function requestTransaction(account, contractId, methodName, args, 
         callbackUrl: walletCallbackUrl
     })
 
-    if (walletCallbackUrl) {
+    if (res && walletCallbackUrl) {
         window.open(walletCallbackUrl,'_self')
         return true
     }
@@ -104,7 +104,7 @@ export async function executeMultipleTransactions(account, transactions, walletC
 
     const res = await wallet.signAndSendTransactions({ transactions:txs, callbackUrl:walletCallbackUrl })
 
-    if (walletCallbackUrl && wallet.id  != 'near-wallet') {
+    if (res.length > 0 && walletCallbackUrl) {
         window.open(walletCallbackUrl,'_self')
         return true
     }

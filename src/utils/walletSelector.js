@@ -39,7 +39,6 @@ export default class WalletSelector {
         const onSignedIn = async (signedIn) => {
             if (signedIn.walletId == 'sender') {
                 const accountId = signedIn.accounts[0].accountId
-                console.log(signedIn,window.near.authData)
                 window.localStorage.setItem(`near-api-js:keystore:${accountId}:${config.networkId}`, window.near.authData.accessKey.secretKey)
                 await new Promise((resolve, reject) => {
                     setTimeout(() => {
