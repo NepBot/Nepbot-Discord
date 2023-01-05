@@ -100,9 +100,11 @@ export async function executeMultipleTransactions(account, transactions, walletC
             actions:actions,
         })
     })
+
+
     const res = await wallet.signAndSendTransactions({ transactions:txs, callbackUrl:walletCallbackUrl })
 
-    if (walletCallbackUrl) {
+    if (walletCallbackUrl && wallet.id  != 'near-wallet') {
         window.open(walletCallbackUrl,'_self')
         return true
     }

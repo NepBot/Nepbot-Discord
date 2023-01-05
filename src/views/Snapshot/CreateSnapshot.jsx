@@ -42,7 +42,7 @@ export default function Success(props) {
 
             const checkResult = async (result) => {
                 const provider = new nearAPI.providers.JsonRpcProvider(config.nodeUrl)
-                const txRes = search.transactionHashes ? await provider.txStatus(search.transactionHashes) : result;
+                const txRes = search.transactionHashes ? await provider.txStatus(search.transactionHashes,accountId) : result;
                 const res = await sendmsgSnapshot({
                     guild_id: search.guild_id,
                     channel_id:search.channel_id,

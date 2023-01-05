@@ -7,7 +7,7 @@ import qs from "qs";
 import './Airdrop.css';
 import load from '../../assets/images/load.gif';
 import {sign} from "../../utils/util";
-import { requestTransaction } from '../../utils/contract';
+import { requestTransaction, executeMultipleTransactions } from '../../utils/contract';
 import {getAirdropFTSign} from "../../api/api";
 import js_sha256 from "js-sha256";
 import bs58 from 'bs58'
@@ -62,24 +62,51 @@ export default function Success(props) {
                 return
             }
             
-            // console.log(Buffer.from(JSON.stringify(search.hash+search.user_id+_sign.timestamp)));
-            // return;
-            
+            // const isRegistered = true;
+            const isRegistered = await account.viewFunction("nepbottest.token3.bhc8521.testnet", 'storage_balance_of', {account_id: accountId})
+            let txs = [];//search.token_contract
+            if(!isRegistered){
+                txs.push({
+                    receiverId: "nepbottest.token3.bhc8521.testnet",
+                    actions: [{
+                        methodName: "storage_deposit",
+                        args: {
+                            account_id:accountId
+                        },
+                        deposit: '12500000000000000000000',
+                        gas: '300000000000000'
+                    }]
+                })
+            }
+            txs.push({
+                receiverId:config.AIRDROP_CONTRACT,
+                actions:[{
+                    methodName: "claim",
+                    args: {
+                        hash:search.hash,
+                        user_id: search.user_id,
+                        ..._sign
+                    },
+                    deposit: "0",
+                    gas: "300000000000000",
+                }]
+            })
+            const res= await executeMultipleTransactions(account,txs,'https://discord.com/channels/');
 
-            const res = await requestTransaction(
-                account,
-                config.AIRDROP_CONTRACT,
-                "claim",
-                {
-                    hash:search.hash,
-                    user_id: search.user_id,
-                    ..._sign
-                },
-                '300000000000000',
-                '0',
-                'https://discord.com/channels/'
-            )
-            // window.localStorage.getItem("isSender") && 
+            // const res = await requestTransaction(
+            //     account,
+            //     config.AIRDROP_CONTRACT,
+            //     "claim",
+            //     {
+            //         hash:search.hash,
+            //         user_id: search.user_id,
+            //         ..._sign
+            //     },
+            //     '300000000000000',
+            //     '0',
+            //     'https://discord.com/channels/'
+            // )
+
             if(!res){
                 history.push({pathname: `/failure`,search:'from=airdrop'})
             }
