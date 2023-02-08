@@ -2,6 +2,150 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 02:53:41
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-08 02:53:44
+ * @ Modified time: 2023-02-08 21:30:02
  * @ Description: i@rua.moe
  */
+
+.headerContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    padding: 20px;
+
+    .logoContainer {
+      display: flex;
+      flex: 1;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+
+      .logoImage {
+        width: 100%;
+        cursor: pointer;
+      }
+    }
+
+    .middleContainer {
+      display: flex;
+      flex: 4.5;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+
+      .navContainer {
+        display: flex;
+        flex: 1;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+
+        .navItem {
+          color: #fff;
+          font-weight: 400;
+          font-size: 16px;
+          font-family: Gilroy-Regular;
+          line-height: 16px;
+          letter-spacing: 0;
+          text-align: center;
+          cursor: pointer;
+          opacity: 0.6;
+          transition: all 0.3s ease-in-out;
+
+          &:not(:last-child) {
+            margin-right: 40px;
+          }
+
+          &:hover {
+            opacity: 1;
+          }
+        }
+
+        .navItemActive {
+          color: #fff;
+          font-weight: 900;
+          font-family: Gilroy-ExtraBold;
+          opacity: 1;
+        }
+      }
+
+      .socialContainer {
+        display: flex;
+        flex: 1;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+
+        .socialItem {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          padding: 5px;
+          color: #fff;
+          cursor: pointer;
+          transition: all 0.3s ease-in-out;
+
+          &:not(:last-child) {
+            margin-right: 16px;
+          }
+
+          &:hover {
+            opacity: 0.6;
+          }
+        }
+      }
+    }
+
+    .accountContainer {
+      display: flex;
+      flex: 1.5;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-end;
+
+      .buttonItem {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 36px;
+        color: #ffffff;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: Gilroy-Regular;
+        line-height: 18px;
+        letter-spacing: 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 22px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+
+        &:not(:last-child) {
+          margin-right: 16px;
+        }
+
+        &:hover {
+          border: 1px solid rgba(255, 255, 255, 1);
+        }
+
+        .buttonItemIcon {
+          width: 8px;
+          height: 8px;
+          margin-right: 10px;
+          background: #49ffa5;
+          border-radius: 100%;
+        }
+      }
+    }
+  }
+}

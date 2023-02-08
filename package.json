@@ -1,20 +1,60 @@
 {
+  "name": "nepbot",
+  "version": "1.0.0",
   "private": true,
   "author": "Hikaru Chang <i@rua.moe>",
   "scripts": {
-    "dev": "umi dev",
-    "build": "umi build",
-    "postinstall": "umi setup",
-    "setup": "umi setup",
+    "dev": "max dev",
+    "build": "max build",
+    "format": "prettier --cache --write .",
+    "postinstall": "max setup",
+    "setup": "max setup",
     "start": "npm run dev"
   },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 10"
+  ],
   "dependencies": {
+    "@ant-design/icons": "^5.0.1",
     "@ant-design/pro-components": "^2.3.52",
-    "@umijs/max": "^4.0.50"
+    "@umijs/max": "^4.0.50",
+    "@walletconnect/auth-client": "^2.0.2",
+    "@walletconnect/core": "^2.3.3",
+    "@walletconnect/ethereum-provider": "^2.3.3",
+    "@walletconnect/jsonrpc-types": "^1.0.2",
+    "@walletconnect/push-client": "^0.5.0",
+    "@walletconnect/sign-client": "^2.3.3",
+    "@walletconnect/types": "^2.3.3",
+    "@walletconnect/universal-provider": "^2.3.3",
+    "@web3modal/ethereum": "^2.1.1",
+    "@web3modal/react": "^2.1.1",
+    "@web3modal/standalone": "^2.1.1",
+    "antd": "^5.2.0",
+    "classnames": "^2.3.2",
+    "copy-to-clipboard": "^3.3.3",
+    "crypto-js": "^4.1.1",
+    "ethers": "^6",
+    "ethers-multisend": "^2.4.0",
+    "moment": "^2.29.4",
+    "react-icons": "^4.7.1",
+    "uuid": "^9.0.0",
+    "wagmi": "^0.11.5"
   },
   "devDependencies": {
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "typescript": "^4.1.2"
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "lint-staged": "^13.1.1",
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.5",
+    "stylelint": "^14.16.1",
+    "prettier-plugin-organize-imports": "^3",
+    "prettier-plugin-packagejson": "^2",
+    "umi-presets-pro": "^2.0.2",
+    "gh-pages": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=12.0.0"
   }
 }
