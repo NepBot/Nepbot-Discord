@@ -1,0 +1,148 @@
+/**
+ * @ Author: Hikaru
+ * @ Create Time: 2023-02-08 23:18:33
+ * @ Modified by: Hikaru
+ * @ Modified time: 2023-02-10 03:14:54
+ * @ Description: i@rua.moe
+ */
+
+.homeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100vh;
+  padding-top: 100px;
+  background-color: #000;
+
+  .screen1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 100vh;
+
+    .screen1Content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      padding-left: 15vw;
+
+      .screen1Title {
+        margin-bottom: 20px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 70px;
+        font-family: Gilroy-SemiBold;
+        line-height: 90px;
+        letter-spacing: -0.02em;
+        white-space: pre-line;
+      }
+
+      .screen1Desc {
+        margin-bottom: 70px;
+        color: #fff;
+        font-weight: 400;
+        font-size: 20px;
+        font-family: Gilroy-Regular;
+        line-height: 36px;
+        white-space: pre-line;
+        opacity: 0.8;
+
+        .screen1DescBold {
+          color: #fff;
+          font-weight: 900;
+          font-size: 20px;
+          font-family: Gilroy-ExtraBold;
+          line-height: 36px;
+          opacity: 0.8;
+        }
+
+        .screen1DescLink {
+          color: #fff;
+          font-weight: 400;
+          font-size: 20px;
+          font-family: Gilroy-Regular;
+          line-height: 36px;
+          text-decoration: underline;
+          cursor: pointer;
+          opacity: 0.8;
+        }
+      }
+
+      .screen1Button {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 8px;
+        background: #fff;
+        border-radius: 45px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+
+        .screen1ButtonLeft {
+          padding-right: 30px;
+          padding-left: 30px;
+          color: #000;
+          font-weight: 400;
+          font-size: 20px;
+          font-family: Gilroy-Regular;
+          line-height: 22px;
+          letter-spacing: 0;
+          text-transform: uppercase;
+        }
+
+        .screen1ButtonRight {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 27px 39px;
+          background: #000;
+          border-radius: 35px;
+        }
+
+        &:hover {
+          padding-left: 20px;
+        }
+      }
+    }
+
+    .screen1Bar {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 30px;
+      background-color: rgba(255, 255, 255, 0.06);
+
+      .screen1BarItem {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin-right: 30px;
+        margin-left: 30px;
+        color: rgba(255, 255, 255, 0.5);
+        font-weight: 400;
+        font-size: 16px;
+        font-family: Gilroy-Regular;
+        line-height: 16px;
+
+        .screen1BarItemIcon {
+          height: 16px;
+          margin-left: 8px;
+        }
+      }
+    }
+  }
+}

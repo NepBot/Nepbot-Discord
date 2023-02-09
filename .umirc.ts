@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-08 16:52:34
+ * @ Modified time: 2023-02-08 23:27:40
  * @ Description: i@rua.moe
  */
 
@@ -22,11 +22,7 @@ export default defineConfig({
   routes: [
     {
       path: "/",
-      component: "index",
-    },
-    {
-      path: "/docs",
-      component: "docs",
+      component: "Home",
     },
   ],
   ignoreMomentLocale: true,
