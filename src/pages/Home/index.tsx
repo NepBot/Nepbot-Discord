@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:15:45
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-10 17:25:07
+ * @ Modified time: 2023-02-10 22:30:00
  * @ Description: i@rua.moe
  */
 
@@ -66,6 +66,9 @@ const Home: React.FC = () => {
         </div>
       </div>
       <div className={styles.screen2}>
+        <div className={styles.screen2Content}>
+
+        </div>
       </div>
     </div>
   )
