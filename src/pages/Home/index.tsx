@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:15:45
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-10 22:30:00
+ * @ Modified time: 2023-02-12 15:23:17
  * @ Description: i@rua.moe
  */
 
@@ -67,7 +67,26 @@ const Home: React.FC = () => {
       </div>
       <div className={styles.screen2}>
         <div className={styles.screen2Content}>
+          <div className={styles.screen2Left}>
+            <div className={styles.screen2LeftTitle}>
+              {intl.formatMessage({
+                id: 'home.screen2.title'
+              })}
+            </div>
+            <div className={styles.screen2LeftDesc}>
+              {intl.formatMessage({
+                id: 'home.screen2.desc'
+              })}
+            </div>
+            <div className={styles.screen2LeftButton}>
+              {intl.formatMessage({
+                id: 'home.screen2.button'
+              })}
+            </div>
+          </div>
+          <div className={styles.screen2Right}>
 
+          </div>
         </div>
       </div>
     </div>
