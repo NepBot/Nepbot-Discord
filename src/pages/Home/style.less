@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:18:33
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-12 15:24:32
+ * @ Modified time: 2023-02-13 04:16:28
  * @ Description: i@rua.moe
  */
 
@@ -35,13 +35,15 @@
       width: 100%;
       max-width: 1440px;
       height: 100%;
+      padding-right: 3%;
+      padding-left: 3%;
 
       .screen1Title {
         margin-bottom: 20px;
         color: #fff;
         font-weight: 600;
         font-size: 70px;
-        font-family: Gilroy-SemiBold;
+        font-family: Gilroy;
         line-height: 90px;
         letter-spacing: -0.02em;
         white-space: pre-line;
@@ -52,7 +54,7 @@
         color: #fff;
         font-weight: 400;
         font-size: 20px;
-        font-family: Gilroy-Regular;
+        font-family: Gilroy;
         line-height: 36px;
         white-space: pre-line;
         opacity: 0.8;
@@ -61,7 +63,7 @@
           color: #fff;
           font-weight: 900;
           font-size: 20px;
-          font-family: Gilroy-ExtraBold;
+          font-family: Gilroy;
           line-height: 36px;
           opacity: 0.8;
         }
@@ -70,7 +72,7 @@
           color: #fff;
           font-weight: 400;
           font-size: 20px;
-          font-family: Gilroy-Regular;
+          font-family: Gilroy;
           line-height: 36px;
           text-decoration: underline;
           cursor: pointer;
@@ -94,7 +96,7 @@
           color: #000;
           font-weight: 400;
           font-size: 20px;
-          font-family: Gilroy-Regular;
+          font-family: Gilroy;
           line-height: 22px;
           letter-spacing: 0;
           text-transform: uppercase;
@@ -137,7 +139,7 @@
         color: rgba(255, 255, 255, 0.5);
         font-weight: 400;
         font-size: 16px;
-        font-family: Gilroy-Regular;
+        font-family: Gilroy;
         line-height: 16px;
 
         .screen1BarItemIcon {
@@ -155,6 +157,7 @@
     justify-content: flex-start;
     width: 100%;
     height: 100vh;
+    overflow: hidden;
     background: url('@/assets/bg-screen2.webp') no-repeat center center;
     background-size: cover;
 
@@ -166,6 +169,8 @@
       width: 100%;
       max-width: 1440px;
       height: 100%;
+      padding-right: 3%;
+      padding-left: 3%;
 
       .screen2Left {
         display: flex;
@@ -180,7 +185,7 @@
           color: #fff;
           font-weight: 600;
           font-size: 42px;
-          font-family: Gilroy-SemiBold;
+          font-family: Gilroy;
           line-height: 54px;
           white-space: pre-line;
         }
@@ -190,7 +195,7 @@
           color: #ffffff;
           font-weight: 400;
           font-size: 18px;
-          font-family: Gilroy-Regular;
+          font-family: Gilroy;
           line-height: 28px;
           white-space: pre-line;
           opacity: 0.7;
@@ -201,11 +206,117 @@
           color: #ffffff;
           font-weight: 400;
           font-size: 20px;
-          font-family: Gilroy-Regular;
+          font-family: Gilroy;
           line-height: 22px;
           letter-spacing: 0;
           border: 1px solid rgba(255, 255, 255, 1);
           border-radius: 32px;
+          cursor: pointer;
+          transition: all 0.3s ease-in-out;
+
+          &:hover {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+          }
+        }
+      }
+
+      .screen2Right {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+        margin-left: 50px;
+
+        .screen2RightItem {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          width: 468px;
+          height: 270px;
+          overflow: hidden;
+          background: rgba(150, 166, 217, 0.16);
+          border: 0.9px solid rgba(255, 255, 255, 0.13);
+          border-radius: 45px;
+
+          .screen2RightItemContent {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 48px 0 48px 48px;
+
+            .screen2RightItemContentTitle {
+              margin-bottom: 10.6px;
+              color: #fff;
+              font-weight: 700;
+              font-size: 25.2px;
+              font-family: Gilroy;
+              line-height: 28.8px;
+            }
+
+            .screen2RightItemContentDesc {
+              color: #fff;
+              font-weight: 400;
+              font-size: 14.4px;
+              font-family: Gilroy;
+              line-height: 21.6px;
+              opacity: 0.7;
+            }
+
+            .screen2RightItemContentList {
+              margin-top: 15px;
+
+              ul {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+
+                li {
+                  display: flex;
+                  flex: 1;
+                  flex-direction: row;
+                  align-items: center;
+                  justify-content: flex-start;
+                  color: #fff;
+                  font-weight: 400;
+                  font-size: 13px;
+                  font-family: Gilroy;
+                  line-height: 18px;
+                  opacity: 0.7;
+
+                  &:before {
+                    display: inline-block;
+                    width: 4px;
+                    height: 4px;
+                    margin-right: 10px;
+                    background: #fff;
+                    border-radius: 100%;
+                    opacity: 0.3;
+                    content: '';
+                  }
+
+                  &:not(:last-child) {
+                    margin-bottom: 5px;
+                  }
+                }
+              }
+            }
+          }
+
+          .screen2RightItemIcon {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+
+            .screen2RightItemIconImg {
+              width: 100%;
+            }
+          }
         }
       }
     }

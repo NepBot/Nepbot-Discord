@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:15:45
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-12 15:23:17
+ * @ Modified time: 2023-02-13 04:17:12
  * @ Description: i@rua.moe
  */
 
@@ -85,7 +85,31 @@ const Home: React.FC = () => {
             </div>
           </div>
           <div className={styles.screen2Right}>
-
+            <div className={styles.screen2RightItem}>
+              <div className={styles.screen2RightItemContent}>
+                <div className={styles.screen2RightItemContentTitle}>
+                  Special Support
+                </div>
+                <div className={styles.screen2RightItemContentDesc}>
+                  Verify on-chain assets and status on NEAR Blockchain, including
+                </div>
+                <div className={styles.screen2RightItemContentList}>
+                  <ul>
+                    <li>Paras Loyalty Progra</li>
+                    <li>Castle Overlord Whitelist</li>
+                    <li>verification</li>
+                    <li>vSelf verification</li>
+                  </ul>
+                </div>
+              </div>
+              <div className={styles.screen2RightItemIcon}>
+                <img
+                  src={require('@/assets/ic/ic-DAOVote.webp')}
+                  alt="DAO Vote"
+                  className={styles.screen2RightItemIconImg}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
