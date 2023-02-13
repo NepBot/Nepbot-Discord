@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:18:33
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-13 04:16:28
+ * @ Modified time: 2023-02-14 04:39:10
  * @ Description: i@rua.moe
  */
 
@@ -222,11 +222,17 @@
 
       .screen2Right {
         display: flex;
-        flex: 1;
         flex-direction: column;
         align-items: flex-end;
         justify-content: center;
+        width: 50%;
         margin-left: 50px;
+
+        .screen2RightMarquee {
+          flex-direction: column !important;
+          height: 100% !important;
+          overflow-y: hidden !important;
+        }
 
         .screen2RightItem {
           display: flex;
@@ -235,10 +241,13 @@
           justify-content: center;
           width: 468px;
           height: 270px;
+          margin-top: 25px;
+          margin-bottom: 25px;
           overflow: hidden;
           background: rgba(150, 166, 217, 0.16);
           border: 0.9px solid rgba(255, 255, 255, 0.13);
           border-radius: 45px;
+          transition: all 0.3s ease-in-out;
 
           .screen2RightItemContent {
             display: flex;
@@ -318,7 +327,26 @@
             }
           }
         }
+
+        .screen2RightItemMiddle {
+          transform: scale(1.1);
+        }
       }
     }
+  }
+}
+
+:global(.marquee) {
+  flex-direction: column !important;
+  min-height: 100% !important;
+  animation: scrollY var(--duration) linear var(--delay) var(--iteration-count) !important;
+}
+
+@keyframes scrollY {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-100%);
   }
 }

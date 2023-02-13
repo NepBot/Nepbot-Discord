@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:15:45
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-13 04:17:12
+ * @ Modified time: 2023-02-14 04:40:10
  * @ Description: i@rua.moe
  */
 
@@ -13,6 +13,13 @@ import TopBackground from './components/TopBackground';
 import { ReactComponent as RightArrow } from '@/assets/icon/right-arrow.svg';
 import { ReactComponent as NearLogoWhite } from '@/assets/brand/near_logo_wht.svg';
 import { ReactComponent as PopulaLogoWhite } from '@/assets/brand/popula_logo_wht.svg'
+import { LIST } from '@/constants/screen2';
+import classNames from 'classnames';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper";
+import Marquee from "react-fast-marquee";
+import "swiper/css";
+import "swiper/css/pagination";
 
 const Home: React.FC = () => {
   const intl = useIntl();
@@ -85,31 +92,67 @@ const Home: React.FC = () => {
             </div>
           </div>
           <div className={styles.screen2Right}>
-            <div className={styles.screen2RightItem}>
-              <div className={styles.screen2RightItemContent}>
-                <div className={styles.screen2RightItemContentTitle}>
-                  Special Support
-                </div>
-                <div className={styles.screen2RightItemContentDesc}>
-                  Verify on-chain assets and status on NEAR Blockchain, including
-                </div>
-                <div className={styles.screen2RightItemContentList}>
-                  <ul>
-                    <li>Paras Loyalty Progra</li>
-                    <li>Castle Overlord Whitelist</li>
-                    <li>verification</li>
-                    <li>vSelf verification</li>
-                  </ul>
-                </div>
-              </div>
-              <div className={styles.screen2RightItemIcon}>
-                <img
-                  src={require('@/assets/ic/ic-DAOVote.webp')}
-                  alt="DAO Vote"
-                  className={styles.screen2RightItemIconImg}
-                />
-              </div>
-            </div>
+            <Marquee
+              gradient={false}
+              speed={20}
+              direction='left'
+              className={styles.screen2RightMarquee}
+            >
+              {LIST.map((item: any, index: number) => {
+                return (
+                  <div
+                    className={classNames(styles.screen2RightItem)}
+                    key={index}
+                  >
+                    <div className={styles.screen2RightItemContent}>
+                      <div className={styles.screen2RightItemContentTitle}>
+                        {item?.title}
+                      </div>
+                      <div className={styles.screen2RightItemContentDesc}>
+                        {item?.content}
+                      </div>
+                      {item?.list.length > 0 && (
+                        <div className={styles.screen2RightItemContentList}>
+                          <ul>
+                            {item?.list.map((listItem: any, listIndex: any) => {
+                              return (
+                                <li key={listIndex}>
+                                  {listItem}
+                                </li>
+                              )
+                            })}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                    <div className={styles.screen2RightItemIcon}>
+                      <img
+                        src={require(`@/assets/ic/${item.icon}`)}
+                        alt="DAO Vote"
+                        className={styles.screen2RightItemIconImg}
+                      />
+                    </div>
+                  </div>
+                )
+              })}
+            </Marquee>
+            {/* <Swiper
+              slidesPerView={"auto"}
+              centeredSlides={true}
+              spaceBetween={30}
+              modules={[Autoplay]}
+              pagination={{
+                clickable: false,
+              }}
+              direction='vertical'
+              autoplay={{
+                delay: 2500,
+                disableOnInteraction: false,
+              }}
+              className={styles.screen2RightSwiper}
+            > */}
+
+            {/* </Swiper> */}
           </div>
         </div>
       </div>
