@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 46 56" version="1.1" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic-Free</title>
+    <defs>
+        <linearGradient x1="50%" y1="100%" x2="50%" y2="0%" id="linearGradient-1">
+            <stop stop-color="#9D7DFF" offset="0%"></stop>
+            <stop stop-color="#9FD0FF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-1199.000000, -3433.000000)">
+            <g transform="translate(1192.000000, 3430.000000)">
+                <rect opacity="0.100000001" x="0" y="0" width="60" height="60"></rect>
+                <path
+                    d="M47,23 C48.3807119,23 49.6307119,23.5596441 50.5355339,24.4644661 C51.4403559,25.3692881 52,26.6192881 52,28 L52,53 C52,54.3807119 51.4403559,55.6307119 50.5355339,56.5355339 C49.6307119,57.4403559 48.3807119,58 47,58 L13,58 C11.6192881,58 10.3692881,57.4403559 9.46446609,56.5355339 C8.55964406,55.6307119 8,54.3807119 8,53 L8,28 C8,26.6192881 8.55964406,25.3692881 9.46446609,24.4644661 C10.3692881,23.5596441 11.6192881,23 13,23 Z"
+                    stroke="#FFFFFF" stroke-width="2"></path>
+                <rect fill="url(#linearGradient-1)" x="29" y="35" width="2" height="11"></rect>
+                <path
+                    d="M23,23 L23,11 C23,7.13400675 26.1340068,4 30,4 C33.8659932,4 37,7.13400675 37,11 L37,13.7647059 L37,13.7647059"
+                    stroke="#FFFFFF" stroke-width="2"></path>
+            </g>
+        </g>
+    </g>
+</svg>

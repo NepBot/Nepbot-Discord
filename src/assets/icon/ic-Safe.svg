@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 48 60" version="1.1" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic-Safe</title>
+    <defs>
+        <linearGradient x1="82.9720243%" y1="64.9069285%" x2="34.9996449%" y2="34.9641348%"
+            id="linearGradient-1">
+            <stop stop-color="#9D7DFF" offset="0%"></stop>
+            <stop stop-color="#9FD0FF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-366.000000, -3430.000000)">
+            <g transform="translate(360.000000, 3430.000000)">
+                <rect fill="#D8D8D8" opacity="0" x="0" y="0" width="60" height="60"></rect>
+                <path
+                    d="M30,1.8830865 L53,13.3253444 L53,30.9652906 C53,36.0971974 51.4904575,40.9889712 48.80913,45.1202137 C46.1278025,49.2514562 42.27469,52.6221674 37.5875501,54.7119489 L30,58.0948909 L22.4124499,54.7119489 C17.72531,52.6221674 13.8721975,49.2514562 11.19087,45.1202137 C8.50954251,40.9889712 7,36.0971974 7,30.9652906 L7,13.3253444 L30,1.8830865 Z"
+                    stroke="#FFFFFF" stroke-width="2"></path>
+                <polygon fill="url(#linearGradient-1)"
+                    transform="translate(30.338835, 28.753048) rotate(-45.000000) translate(-30.338835, -28.753048) "
+                    points="24.8388348 23.7530483 24.838 31.753 37.8388348 31.7530483 37.8388348 33.7530483 22.8388348 33.7530483 22.8388348 23.7530483"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

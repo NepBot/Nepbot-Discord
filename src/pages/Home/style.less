@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:18:33
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-15 03:39:17
+ * @ Modified time: 2023-02-15 03:55:07
  * @ Description: i@rua.moe
  */
 
@@ -542,6 +542,52 @@
           position: absolute;
           left: 0;
           justify-content: flex-start;
+        }
+      }
+
+      .feature {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 240px;
+        margin-bottom: 240px;
+
+        .featureItem {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: flex-start;
+          width: 33%;
+
+          .featureItemIcon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 30px;
+
+            svg {
+              width: 100%;
+              height: 100%;
+            }
+          }
+
+          .featureItemTitle {
+            margin-bottom: 12px;
+            color: #fff;
+            font-weight: 400;
+            font-size: 28px;
+            font-family: Gilroy;
+          }
+
+          .featureItemContent {
+            color: #fff;
+            font-weight: 400;
+            font-size: 16px;
+            font-family: Gilroy;
+            line-height: 28px;
+            opacity: 0.6;
+          }
         }
       }
     }

@@ -1,3 +1,11 @@
+/**
+ * @ Author: Hikaru
+ * @ Create Time: 2023-02-15 03:22:13
+ * @ Modified by: Hikaru
+ * @ Modified time: 2023-02-15 03:45:27
+ * @ Description: i@rua.moe
+ */
+
 export const SWIPER = [
   {
     title: 'Permissionless, free, and open-source',

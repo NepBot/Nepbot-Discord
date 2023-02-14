@@ -1,3 +1,11 @@
+/**
+ * @ Author: Hikaru
+ * @ Create Time: 2023-02-13 04:12:37
+ * @ Modified by: Hikaru
+ * @ Modified time: 2023-02-15 03:45:25
+ * @ Description: i@rua.moe
+ */
+
 export const LIST = [
   {
     title: 'Verify',

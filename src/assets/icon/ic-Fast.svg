@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 52 52" version="1.1" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic-Fast</title>
+    <defs>
+        <linearGradient x1="63.9393633%" y1="83.5405891%" x2="43.6583997%" y2="16.1693034%"
+            id="linearGradient-1">
+            <stop stop-color="#9D7DFF" offset="0%"></stop>
+            <stop stop-color="#9FD0FF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-780.000000, -3434.000000)">
+            <g id="ic-Fast" transform="translate(776.000000, 3430.000000)">
+                <rect opacity="0.100000001" x="0" y="0" width="60" height="60"></rect>
+                <circle stroke="#FFFFFF" stroke-width="2" cx="30" cy="30" r="25"></circle>
+                <polygon fill="url(#linearGradient-1)"
+                    points="30.7832529 19.4481589 32.4511515 20.5518411 26.859 29 36.8608339 29 29.2167471 40.5518411 27.5488485 39.4481589 33.139 31 23.1391661 31"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

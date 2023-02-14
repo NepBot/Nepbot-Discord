@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:15:45
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-15 03:37:27
+ * @ Modified time: 2023-02-15 03:55:57
  * @ Description: i@rua.moe
  */
 
@@ -12,11 +12,12 @@ import { useIntl } from '@umijs/max';
 import TopBackground from './components/TopBackground';
 import { ReactComponent as RightArrow } from '@/assets/icon/right-arrow.svg';
 import { ReactComponent as NearLogoWhite } from '@/assets/brand/near_logo_wht.svg';
-import { ReactComponent as PopulaLogoWhite } from '@/assets/brand/popula_logo_wht.svg'
+import { ReactComponent as PopulaLogoWhite } from '@/assets/brand/popula_logo_wht.svg';
+import { ReactComponent as Safe } from '@/assets/icon/ic-Safe.svg';
+import { ReactComponent as Fast } from '@/assets/icon/ic-Fast.svg';
+import { ReactComponent as Free } from '@/assets/icon/ic-Free.svg';
 import { LIST } from '@/constants/screen2';
 import classNames from 'classnames';
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper";
 import Marquee from "react-fast-marquee";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -182,6 +183,7 @@ const Home: React.FC = () => {
           <div className={styles.carousel}>
             <Carousel
               autoplay
+              effect="fade"
             >
               {SWIPER.map((item: any, index: number) => {
                 return (
@@ -213,6 +215,53 @@ const Home: React.FC = () => {
                 )
               })}
             </Carousel>
+          </div>
+          <div className={styles.feature}>
+            <div className={styles.featureItem}>
+              <div className={styles.featureItemIcon}>
+                <Safe />
+              </div>
+              <div className={styles.featureItemTitle}>
+                {intl.formatMessage({
+                  id: 'home.screen3.featureItem1'
+                })}
+              </div>
+              <div className={styles.featureItemContent}>
+                {intl.formatMessage({
+                  id: 'home.screen3.featureItem1.content'
+                })}
+              </div>
+            </div>
+            <div className={styles.featureItem}>
+              <div className={styles.featureItemIcon}>
+                <Fast />
+              </div>
+              <div className={styles.featureItemTitle}>
+                {intl.formatMessage({
+                  id: 'home.screen3.featureItem2'
+                })}
+              </div>
+              <div className={styles.featureItemContent}>
+                {intl.formatMessage({
+                  id: 'home.screen3.featureItem2.content'
+                })}
+              </div>
+            </div>
+            <div className={styles.featureItem}>
+              <div className={styles.featureItemIcon}>
+                <Free />
+              </div>
+              <div className={styles.featureItemTitle}>
+                {intl.formatMessage({
+                  id: 'home.screen3.featureItem3'
+                })}
+              </div>
+              <div className={styles.featureItemContent}>
+                {intl.formatMessage({
+                  id: 'home.screen3.featureItem3.content'
+                })}
+              </div>
+            </div>
           </div>
         </div>
       </div>
