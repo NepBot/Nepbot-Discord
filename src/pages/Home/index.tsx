@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:15:45
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-14 23:12:37
+ * @ Modified time: 2023-02-15 03:37:27
  * @ Description: i@rua.moe
  */
 
@@ -20,6 +20,8 @@ import { Autoplay } from "swiper";
 import Marquee from "react-fast-marquee";
 import "swiper/css";
 import "swiper/css/pagination";
+import { Carousel } from 'antd';
+import { SWIPER } from '@/constants/screen3';
 
 const Home: React.FC = () => {
   const intl = useIntl();
@@ -136,23 +138,81 @@ const Home: React.FC = () => {
                 )
               })}
             </Marquee>
-            {/* <Swiper
-              slidesPerView={"auto"}
-              centeredSlides={true}
-              spaceBetween={30}
-              modules={[Autoplay]}
-              pagination={{
-                clickable: false,
-              }}
-              direction='vertical'
-              autoplay={{
-                delay: 2500,
-                disableOnInteraction: false,
-              }}
-              className={styles.screen2RightSwiper}
-            > */}
-
-            {/* </Swiper> */}
+          </div>
+        </div>
+      </div>
+      <div className={styles.screen3}>
+        <div className={styles.screen3background}>
+          <div className={styles.screen3backgroundLeft} />
+          <div className={styles.screen3backgroundRight} />
+        </div>
+        <div className={styles.screen3content}>
+          <div className={styles.statistics}>
+            <div className={styles.statisticsItem}>
+              <div className={styles.statisticsItemValue}>
+                136
+              </div>
+              <div className={styles.statisticsItemDesc}>
+                {intl.formatMessage({
+                  id: 'home.screen3.statisticsItem1'
+                })}
+              </div>
+            </div>
+            <div className={styles.statisticsItem}>
+              <div className={styles.statisticsItemValue}>
+                1500
+              </div>
+              <div className={styles.statisticsItemDesc}>
+                {intl.formatMessage({
+                  id: 'home.screen3.statisticsItem2'
+                })}
+              </div>
+            </div>
+            <div className={styles.statisticsItem}>
+              <div className={styles.statisticsItemValue}>
+                10
+              </div>
+              <div className={styles.statisticsItemDesc}>
+                {intl.formatMessage({
+                  id: 'home.screen3.statisticsItem3'
+                })}
+              </div>
+            </div>
+          </div>
+          <div className={styles.carousel}>
+            <Carousel
+              autoplay
+            >
+              {SWIPER.map((item: any, index: number) => {
+                return (
+                  <div
+                    className={styles.carouselItem}
+                    key={index}
+                  >
+                    <div className={styles.carouselItemInfo}>
+                      <div className={styles.carouselItemInfoTitleDesc}>
+                        <div className={styles.carouselItemInfoTitle}>
+                          {item.title}
+                        </div>
+                        <div className={styles.carouselItemInfoDesc}>
+                          {item.desc}
+                        </div>
+                      </div>
+                      <div className={styles.carouselItemInfoButton}>
+                        {item.button}
+                      </div>
+                    </div>
+                    <div className={styles.carouselItemCard}>
+                      <img
+                        className={styles.carouselItemCardImg}
+                        src={require(`@/assets/swiper/${item.image}`)}
+                        alt={item.title}
+                      />
+                    </div>
+                  </div>
+                )
+              })}
+            </Carousel>
           </div>
         </div>
       </div>
