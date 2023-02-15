@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:15:45
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-15 03:55:57
+ * @ Modified time: 2023-02-16 04:12:41
  * @ Description: i@rua.moe
  */
 
@@ -19,10 +19,10 @@ import { ReactComponent as Free } from '@/assets/icon/ic-Free.svg';
 import { LIST } from '@/constants/screen2';
 import classNames from 'classnames';
 import Marquee from "react-fast-marquee";
-import "swiper/css";
-import "swiper/css/pagination";
 import { Carousel } from 'antd';
 import { SWIPER } from '@/constants/screen3';
+import { PARTNERS, TRUSTED } from '@/constants/screen4';
+import BottomBackground from './components/BottomBackground';
 
 const Home: React.FC = () => {
   const intl = useIntl();
@@ -261,6 +261,100 @@ const Home: React.FC = () => {
                   id: 'home.screen3.featureItem3.content'
                 })}
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className={styles.screen4}>
+        <div className={styles.screen4content}>
+          <div className={styles.partners}>
+            <div className={styles.partnersTitle}>
+              {intl.formatMessage({
+                id: 'home.screen4.partnersTitle'
+              })}
+            </div>
+            <div className={styles.partnersContent}>
+              {PARTNERS.map((item: any) => {
+                return (
+                  <div
+                    className={styles.partnersContentItem}
+                    key={item.name}
+                  >
+                    <item.logo
+                      className={styles.partnersItemImg}
+                    />
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+        <div className={styles.trusted}>
+          <div className={styles.trustedTitle}>
+            {intl.formatMessage({
+              id: 'home.screen4.trustedTitle'
+            })}
+          </div>
+          <div className={styles.trustedRow}>
+            <Marquee
+              direction='left'
+              gradient={false}
+              speed={30}
+              className={styles.trustedRowMarquee}
+            >
+              {TRUSTED.map((item: any) => {
+                return (
+                  <div
+                    className={styles.trustedRowItem}
+                    key={item.name}
+                  >
+                    <item.logo
+                      className={styles.trustedItemImg}
+                    />
+                  </div>
+                )
+              })}
+            </Marquee>
+          </div>
+          <div className={styles.trustedRow}>
+            <Marquee
+              direction='right'
+              gradient={false}
+              speed={30}
+              className={styles.trustedRowMarquee}
+            >
+              {TRUSTED.map((item: any) => {
+                return (
+                  <div
+                    className={styles.trustedRowItem}
+                    key={item.name}
+                  >
+                    <item.logo
+                      className={styles.trustedItemImg}
+                    />
+                  </div>
+                )
+              })}
+            </Marquee>
+          </div>
+        </div>
+      </div>
+      <div className={styles.screen5}>
+        <BottomBackground />
+        <div className={styles.screen5content}>
+          <div className={styles.screen5Title}>
+            {intl.formatMessage({
+              id: 'home.screen5.title'
+            })}
+          </div>
+          <div className={styles.screen5Button}>
+            <div className={styles.screen5ButtonLeft}>
+              {intl.formatMessage({
+                id: 'home.screen5.button'
+              })}
+            </div>
+            <div className={styles.screen5ButtonRight}>
+              <RightArrow />
             </div>
           </div>
         </div>

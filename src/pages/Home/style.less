@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:18:33
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-15 04:03:11
+ * @ Modified time: 2023-02-16 04:15:35
  * @ Description: i@rua.moe
  */
 
@@ -231,6 +231,14 @@
           flex-direction: column !important;
           height: 100vh !important;
           overflow-y: hidden !important;
+
+          :global(.marquee) {
+            flex: 1 0 auto !important;
+            flex-direction: column !important;
+            min-height: 100% !important;
+            animation: scrollY var(--duration) linear var(--delay)
+              var(--iteration-count) !important;
+          }
         }
 
         .screen2RightItem {
@@ -620,7 +628,8 @@
         margin-bottom: 250px;
 
         .partnersTitle {
-          color: #ffffff;
+          margin-bottom: 30px;
+          color: #fff;
           font-weight: 600;
           font-size: 42px;
           font-family: Gilroy;
@@ -633,17 +642,160 @@
           align-items: center;
           justify-content: space-between;
           width: 100%;
+
+          .partnersContentItem {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 25%;
+            height: 140px;
+            margin-top: 50px;
+            margin-right: 18px;
+            margin-bottom: 50px;
+            margin-left: 18px;
+            padding: 30px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+
+            .partnersItemImg {
+              width: 100%;
+              height: 100%;
+            }
+
+            &:hover {
+              background: #14151b;
+            }
+          }
+        }
+      }
+    }
+
+    .trusted {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 250px;
+
+      .trustedTitle {
+        margin-bottom: 30px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 42px;
+        font-family: Gilroy;
+        text-align: center;
+      }
+
+      .trustedRow {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 24px;
+        margin-bottom: 24px;
+
+        .trustedRowMarquee {
+          width: 100%;
+        }
+
+        .trustedRowItem {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 370px;
+          height: 200px;
+          margin-right: 24px;
+          margin-left: 24px;
+          padding: 60px 50px;
+          background: #14151b;
+          border: 1px solid rgba(255, 255, 255, 0.07);
+          border-radius: 40px;
+
+          .trustedItemImg {
+            width: 100%;
+            height: 100%;
+          }
         }
       }
     }
   }
-}
 
-:global(.marquee) {
-  flex: 1 0 auto !important;
-  flex-direction: column !important;
-  min-height: 100% !important;
-  animation: scrollY var(--duration) linear var(--delay) var(--iteration-count) !important;
+  .screen5 {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+
+    .screen5content {
+      position: absolute;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      max-width: 1440px;
+      height: 100vh;
+      padding-right: 3%;
+      padding-left: 3%;
+
+      .screen5Title {
+        color: #fff;
+        font-weight: 600;
+        font-size: 60px;
+        font-family: Gilroy;
+        line-height: 76px;
+        white-space: pre-line;
+        text-align: center;
+      }
+
+      .screen5Button {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 70px;
+        padding: 10px 8px;
+        background: #fff;
+        border-radius: 45px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+
+        .screen5ButtonLeft {
+          padding-right: 30px;
+          padding-left: 30px;
+          color: #000;
+          font-weight: 400;
+          font-size: 20px;
+          font-family: Gilroy;
+          line-height: 22px;
+          letter-spacing: 0;
+          text-transform: uppercase;
+        }
+
+        .screen5ButtonRight {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 27px 39px;
+          background: #000;
+          border-radius: 35px;
+        }
+
+        &:hover {
+          padding-left: 20px;
+        }
+      }
+    }
+  }
 }
 
 @keyframes scrollY {

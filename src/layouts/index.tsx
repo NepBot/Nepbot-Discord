@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-08 18:11:36
+ * @ Modified time: 2023-02-16 04:22:44
  * @ Description: i@rua.moe
  */
 
@@ -12,6 +12,7 @@ import { WaterMark } from '@ant-design/pro-components';
 import styles from './index.less';
 import { expDate } from '@/constants/config';
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const Layout: React.FC = () => {
   const date = new Date().getTime();
@@ -28,6 +29,7 @@ const Layout: React.FC = () => {
         <div className={styles.contentContainer}>
           <Outlet />
         </div>
+        <Footer />
       </div>
     </WaterMark>
   );

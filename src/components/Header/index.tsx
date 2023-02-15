@@ -2,11 +2,11 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 02:53:11
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-08 21:16:01
+ * @ Modified time: 2023-02-16 04:31:54
  * @ Description: i@rua.moe
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { history, useIntl } from '@umijs/max';
 import classNames from 'classnames';
 import styles from './style.less';
@@ -107,20 +107,22 @@ const Header: React.FC = () => {
             </div>
           </div>
           <div className={styles.socialContainer}>
-            <div className={styles.socialItem}>
-              <Popula />
+            <div
+              className={styles.socialItem}
+            >
+              <Popula className={styles.socialItemImg} />
             </div>
             <div className={styles.socialItem}>
-              <Twitter />
+              <Twitter className={styles.socialItemImg} />
             </div>
             <div className={styles.socialItem}>
-              <Facebook />
+              <Facebook className={styles.socialItemImg} />
             </div>
             <div className={styles.socialItem}>
-              <Instagram />
+              <Instagram className={styles.socialItemImg} />
             </div>
             <div className={styles.socialItem}>
-              <SiPinterest />
+              <SiPinterest className={styles.socialItemImg} />
             </div>
           </div>
         </div>

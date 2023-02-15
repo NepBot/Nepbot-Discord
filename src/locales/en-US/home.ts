@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-09 03:09:07
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-15 03:50:59
+ * @ Modified time: 2023-02-16 04:15:52
  * @ Description: i@rua.moe
  */
 
@@ -24,4 +24,8 @@ export default {
   'home.screen3.featureItem1.content': 'Special security design to ensure the safety of your assets and data when connecting wallets with Nepbot',
   'home.screen3.featureItem2.content': 'Real time role update within minutes, operating with our own indexer based on NEAR-lake-framework',
   'home.screen3.featureItem3.content': 'Proud to be open-source, permissionless and free.\nAvaliable for anyone with smooth user experience.',
+  'home.screen4.partnersTitle': 'Partners',
+  'home.screen4.trustedTitle': 'Trusted by 130+ servers',
+  'home.screen5.title': 'Start boosting\nyour Discord server within minutes.',
+  'home.screen5.button': 'Add to Discord',
 }
