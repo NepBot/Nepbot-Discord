@@ -2,10 +2,22 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 16:31:20
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-08 16:31:24
+ * @ Modified time: 2023-03-08 03:31:53
  * @ Description: i@rua.moe
  */
 
+import { matchRoutes } from '@umijs/max';
+import { SITE_CONFIG } from './constants/config';
+
 export async function getInitialState(): Promise<{ name: string }> {
   return { name: '@umijs/max' };
+}
+
+export function onRouteChange({ clientRoutes, location }: any) {
+  const route: any = matchRoutes(clientRoutes, location.pathname)?.pop()?.route;
+  if (route) {
+    document.title = route.title
+      ? `${route.title} | ${SITE_CONFIG.abbr}`
+      : SITE_CONFIG.title;
+  }
 }

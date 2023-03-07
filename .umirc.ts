@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-08 23:27:40
+ * @ Modified time: 2023-03-08 03:40:20
  * @ Description: i@rua.moe
  */
 
@@ -21,8 +21,20 @@ export default defineConfig({
   },
   routes: [
     {
-      path: "/",
-      component: "Home",
+      path: '/',
+      component: 'Home',
+    },
+    {
+      title: 'Connect',
+      path: '/connect',
+      component: 'Connect',
+      layout: false,
+    },
+    {
+      title: 'Role',
+      path: '/role',
+      component: 'Role',
+      layout: false,
     },
   ],
   ignoreMomentLocale: true,

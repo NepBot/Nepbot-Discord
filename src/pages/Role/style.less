@@ -1,0 +1,128 @@
+/**
+ * @ Author: Hikaru
+ * @ Create Time: 2023-03-08 03:38:52
+ * @ Modified by: Hikaru
+ * @ Modified time: 2023-03-08 04:11:52
+ * @ Description: i@rua.moe
+ */
+
+.roleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  background-color: #1e2025;
+
+  .wrapper {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1440px;
+    height: 100%;
+    padding-right: 3%;
+    padding-left: 3%;
+
+    .headerContainer {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding-top: 28px;
+      padding-bottom: 28px;
+
+      .searchContainer {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 8px 20px;
+        color: #fff;
+        font-weight: 400;
+        font-size: 14px;
+        font-family: Gilroy;
+        letter-spacing: 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 22px;
+        opacity: 0.5;
+
+        .searchIcon {
+          width: 16px;
+          height: 16px;
+          margin-right: 12px;
+        }
+
+        .searchInput {
+          width: 100%;
+          min-width: 360px;
+          color: #fff;
+          font-weight: 400;
+          font-size: 14px;
+          font-family: Gilroy;
+          letter-spacing: 0;
+
+          &::placeholder {
+            color: #fff;
+            font-weight: 400;
+            font-size: 14px;
+            font-family: Gilroy;
+            letter-spacing: 0;
+            opacity: 0.9;
+          }
+        }
+      }
+
+      .buttonsContainer {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+
+        .button {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          padding: 14px 35px;
+          color: #fff;
+          color: #ffffff;
+          font-weight: 400;
+          font-size: 14px;
+          font-family: Gilroy;
+          letter-spacing: 0;
+          text-align: center;
+          background-image: linear-gradient(
+            -83deg,
+            #9d7dff 0%,
+            #8c97ff 43%,
+            #9fd0ff 100%
+          );
+          border-radius: 22px;
+          cursor: pointer;
+          transition: all 0.3s ease-in-out;
+
+          &:hover {
+            box-shadow: 0 0 20px 0 rgba(255, 255, 255, 0.5);
+          }
+
+          .buttonIcon {
+            width: 16px;
+            height: 16px;
+            margin-right: 12px;
+          }
+        }
+      }
+    }
+
+    .contentContainer {
+      width: 100%;
+    }
+  }
+}
