@@ -2,14 +2,14 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:15:45
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-16 04:12:41
+ * @ Modified time: 2023-03-08 16:00:26
  * @ Description: i@rua.moe
  */
 
 import React from 'react';
 import styles from './style.less';
 import { useIntl } from '@umijs/max';
-import TopBackground from './components/TopBackground';
+import TopBackground from '@/components/TopBackground';
 import { ReactComponent as RightArrow } from '@/assets/icon/right-arrow.svg';
 import { ReactComponent as NearLogoWhite } from '@/assets/brand/near_logo_wht.svg';
 import { ReactComponent as PopulaLogoWhite } from '@/assets/brand/popula_logo_wht.svg';
@@ -22,7 +22,7 @@ import Marquee from "react-fast-marquee";
 import { Carousel } from 'antd';
 import { SWIPER } from '@/constants/screen3';
 import { PARTNERS, TRUSTED } from '@/constants/screen4';
-import BottomBackground from './components/BottomBackground';
+import BottomBackground from '@/components/BottomBackground';
 
 const Home: React.FC = () => {
   const intl = useIntl();

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 03:45:34
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-08 04:19:48
+ * @ Modified time: 2023-03-08 21:25:05
  * @ Description: i@rua.moe
  */
 
@@ -15,4 +15,6 @@ export default {
   'role.item.title.tokenId': 'Token ID:',
   'role.item.title.tokenSymbol': 'Token Symbol:',
   'role.item.title.minAmount': 'Min Amount:',
+  'role.modal.button.cancel': 'Cancel',
+  'role.modal.button.ok': 'OK',
 };

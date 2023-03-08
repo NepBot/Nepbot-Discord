@@ -2,19 +2,22 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 03:35:39
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-08 04:23:40
+ * @ Modified time: 2023-03-08 18:12:51
  * @ Description: i@rua.moe
  */
 
 
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './style.less';
 import { useIntl } from 'umi';
 import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai';
 import { Col, Input, Row } from 'antd';
-import ItemCard from './components';
+import ItemCard from './components/ItemCard';
+import CreateModal from './components/CreateModal';
 
 const Role: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
   const intl = useIntl();
 
   return (
@@ -34,7 +37,10 @@ const Role: React.FC = () => {
             />
           </div>
           <div className={styles.buttonsContainer}>
-            <div className={styles.button}>
+            <div
+              className={styles.button}
+              onClick={() => setIsModalOpen(true)}
+            >
               <AiOutlinePlus
                 className={styles.buttonIcon}
               />
@@ -58,6 +64,10 @@ const Role: React.FC = () => {
           </Row>
         </div>
       </div>
+      <CreateModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+      />
     </div>
   )
 };

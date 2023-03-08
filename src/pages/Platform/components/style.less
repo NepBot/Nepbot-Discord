@@ -1,0 +1,55 @@
+/**
+ * @ Author: Hikaru
+ * @ Create Time: 2023-03-09 03:32:33
+ * @ Modified by: Hikaru
+ * @ Modified time: 2023-03-09 03:46:20
+ * @ Description: i@rua.moe
+ */
+
+.itemContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 40px 30px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    border: 2px solid rgba(255, 255, 255, 1);
+  }
+
+  .itemIcon {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+
+    .itemImg {
+      width: 100%;
+      height: 100%;
+      border-radius: 100%;
+    }
+  }
+
+  .itemName {
+    margin-top: 15px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 18px;
+    font-family: Gilroy;
+    text-align: center;
+  }
+
+  .itemDesc {
+    margin-top: 5px;
+    color: #fff;
+    font-weight: 400;
+    font-size: 14px;
+    font-family: Gilroy;
+    text-align: center;
+    opacity: 0.6;
+  }
+}

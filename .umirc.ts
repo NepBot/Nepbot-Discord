@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-08 03:40:20
+ * @ Modified time: 2023-03-09 03:17:32
  * @ Description: i@rua.moe
  */
 
@@ -34,6 +34,18 @@ export default defineConfig({
       title: 'Role',
       path: '/role',
       component: 'Role',
+      layout: false,
+    },
+    {
+      title: 'Mint',
+      path: '/mint',
+      component: 'Mint',
+      layout: false,
+    },
+    {
+      title: 'Select Platform',
+      path: '/platform',
+      component: 'Platform',
       layout: false,
     },
   ],

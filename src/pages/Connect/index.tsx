@@ -2,14 +2,14 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 02:53:34
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-08 03:37:13
+ * @ Modified time: 2023-03-08 16:01:09
  * @ Description: i@rua.moe
  */
 
 import React from 'react';
 import styles from './style.less';
 import { useIntl } from 'umi';
-import Background from './components/Background';
+import Background from '@/components/TopBackground';
 
 const Connect: React.FC = () => {
   const intl = useIntl();

@@ -1,0 +1,167 @@
+/**
+ * @ Author: Hikaru
+ * @ Create Time: 2023-03-08 16:18:59
+ * @ Modified by: Hikaru
+ * @ Modified time: 2023-03-09 00:25:12
+ * @ Description: i@rua.moe
+ */
+
+.createModalContainer {
+  display: flex;
+  padding-top: 50px !important;
+  padding-right: 50px !important;
+  padding-bottom: 50px !important;
+  padding-left: 50px !important;
+  background: #22252f;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 30px;
+
+  :global(.ant-modal-content) {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
+  .contentContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+
+    .item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 30px;
+
+      .itemTitle {
+        margin-bottom: 12px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
+        font-family: Gilroy;
+      }
+
+      .itemContent {
+        width: 100%;
+
+        .select {
+          width: 100%;
+          color: #fff !important;
+          font-weight: 400;
+          font-size: 14px;
+          font-family: Gilroy;
+          letter-spacing: 0;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 22px;
+          transition: all 0.3s ease-in-out;
+
+          :global(.ant-select-selection-item) {
+            padding-left: 10px;
+            color: #fff !important;
+          }
+
+          :global(.ant-select-arrow) {
+            color: #fff;
+          }
+
+          &:global(.ant-select-open) {
+            border: 1px solid rgba(255, 255, 255, 1);
+          }
+        }
+      }
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+
+      .button {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        width: 40%;
+        padding: 16px;
+        color: #fff;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: Gilroy;
+        letter-spacing: 0;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+          box-shadow: 0 0 20px 0 rgba(255, 255, 255, 0.5);
+        }
+      }
+
+      .buttonPrimary {
+        background-image: linear-gradient(
+          -83deg,
+          #9d7dff 0%,
+          #8c97ff 43%,
+          #9fd0ff 100%
+        );
+        border-radius: 25px;
+      }
+
+      .loadingIcon {
+        color: #fff;
+      }
+    }
+  }
+}
+
+.selectPopup {
+  padding: 10px;
+  color: #fff;
+  font-weight: 400;
+  font-size: 14px;
+  font-family: Gilroy;
+  letter-spacing: 0;
+  background: #0d0d16;
+  border-radius: 8px;
+  box-shadow: 0px 12px 20px 0px rgba(0, 0, 0, 0.15);
+
+  :global(.ant-select-item-option-content) {
+    padding: 6px;
+    color: #fff;
+    font-weight: 400;
+    font-size: 14px;
+    font-family: Gilroy;
+    letter-spacing: 0;
+  }
+
+  :global(
+      .ant-select-item-option-selected:not(.ant-select-item-option-disabled)
+    ) {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+  }
+}
+
+.message {
+  :global(.ant-message-notice-content) {
+    padding: 22px 40px;
+    color: #fff;
+    font-weight: 400;
+    font-size: 14px;
+    font-family: Gilroy;
+    letter-spacing: 0;
+    text-align: center;
+    background: #000;
+    border-radius: 16px;
+  }
+}
