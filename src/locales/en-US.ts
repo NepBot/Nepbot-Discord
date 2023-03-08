@@ -2,10 +2,11 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 16:03:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-09 03:23:15
+ * @ Modified time: 2023-03-09 03:59:27
  * @ Description: i@rua.moe
  */
 
+import collection from './en-US/collection';
 import connect from './en-US/connect';
 import header from './en-US/header';
 import home from './en-US/home';
@@ -20,4 +21,5 @@ export default {
   ...role,
   ...mint,
   ...platform,
+  ...collection,
 };

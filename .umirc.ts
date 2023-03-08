@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-09 03:17:32
+ * @ Modified time: 2023-03-09 03:59:15
  * @ Description: i@rua.moe
  */
 
@@ -47,6 +47,18 @@ export default defineConfig({
       path: '/platform',
       component: 'Platform',
       layout: false,
+    },
+    {
+      title: 'Collection',
+      path: '/collection',
+      layout: false,
+      routes: [
+        {
+          title: 'Collection',
+          path: '/collection',
+          component: 'Collection',
+        },
+      ],
     },
   ],
   ignoreMomentLocale: true,
