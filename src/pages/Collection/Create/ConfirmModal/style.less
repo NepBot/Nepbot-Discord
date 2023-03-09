@@ -1,0 +1,140 @@
+/**
+ * @ Author: Hikaru
+ * @ Create Time: 2023-03-08 16:18:59
+ * @ Modified by: Hikaru
+ * @ Modified time: 2023-03-10 03:54:00
+ * @ Description: i@rua.moe
+ */
+
+.createModalContainer {
+  display: flex;
+  padding-top: 50px !important;
+  padding-right: 50px !important;
+  padding-bottom: 50px !important;
+  padding-left: 50px !important;
+  background: #22252f;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 30px;
+
+  :global(.ant-modal-content) {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
+  .contentContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+
+    .title {
+      color: #fff;
+      font-weight: 700;
+      font-size: 20px;
+      font-family: Gilroy;
+      text-align: center;
+    }
+
+    .description {
+      margin-top: 8px;
+      color: #fff;
+      font-weight: 400;
+      font-size: 14px;
+      font-family: Gilroy;
+      text-align: center;
+      opacity: 0.6;
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 30px;
+
+      .button {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        width: 40%;
+        padding: 16px;
+        color: #fff;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: Gilroy;
+        letter-spacing: 0;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+          box-shadow: 0 0 20px 0 rgba(255, 255, 255, 0.5);
+        }
+      }
+
+      .buttonPrimary {
+        background-image: linear-gradient(
+          -83deg,
+          #9d7dff 0%,
+          #8c97ff 43%,
+          #9fd0ff 100%
+        );
+        border-radius: 25px;
+      }
+
+      .loadingIcon {
+        color: #fff;
+      }
+    }
+  }
+}
+
+.selectPopup {
+  padding: 10px;
+  color: #fff;
+  font-weight: 400;
+  font-size: 14px;
+  font-family: Gilroy;
+  letter-spacing: 0;
+  background: #0d0d16;
+  border-radius: 8px;
+  box-shadow: 0px 12px 20px 0px rgba(0, 0, 0, 0.15);
+
+  :global(.ant-select-item-option-content) {
+    padding: 6px;
+    color: #fff;
+    font-weight: 400;
+    font-size: 14px;
+    font-family: Gilroy;
+    letter-spacing: 0;
+  }
+
+  :global(
+      .ant-select-item-option-selected:not(.ant-select-item-option-disabled)
+    ) {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+  }
+}
+
+.message {
+  :global(.ant-message-notice-content) {
+    padding: 22px 40px;
+    color: #fff;
+    font-weight: 400;
+    font-size: 14px;
+    font-family: Gilroy;
+    letter-spacing: 0;
+    text-align: center;
+    background: #000;
+    border-radius: 16px;
+  }
+}

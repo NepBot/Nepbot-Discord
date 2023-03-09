@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 04:00:10
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-09 15:28:33
+ * @ Modified time: 2023-03-09 22:16:03
  * @ Description: i@rua.moe
  */
 
@@ -140,12 +140,20 @@
         width: 100%;
 
         .statisticsItemValue {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
           margin-bottom: 8px;
           color: #fff;
           font-weight: 700;
           font-size: 14px;
           font-family: Gilroy;
           text-align: center;
+
+          .statisticsItemValueIcon {
+            margin-left: 5px;
+          }
         }
 
         .statisticsItemName {

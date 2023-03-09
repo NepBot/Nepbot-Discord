@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-09 20:43:35
+ * @ Modified time: 2023-03-10 03:59:22
  * @ Description: i@rua.moe
  */
 
@@ -59,9 +59,25 @@ export default defineConfig({
           component: 'Collection',
         },
         {
+          title: 'Collection Create',
+          path: '/collection/create',
+          component: 'Collection/Create',
+        },
+        {
           title: 'Collection Detail',
           path: '/collection/:id',
-          component: 'Collection/Detail',
+          routes: [
+            {
+              title: 'Collection Detail',
+              path: '/collection/:id',
+              component: 'Collection/Detail',
+            },
+            {
+              title: 'Add Item',
+              path: '/collection/:id/add',
+              component: 'Collection/Detail/Add',
+            },
+          ],
         },
       ],
     },

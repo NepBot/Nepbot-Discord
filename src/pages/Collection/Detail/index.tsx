@@ -2,22 +2,25 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 19:42:06
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-09 21:34:10
+ * @ Modified time: 2023-03-10 04:00:50
  * @ Description: i@rua.moe
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './style.less';
-import { useIntl } from 'umi';
+import { useIntl, history } from 'umi';
 import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai';
 import { Col, Input, Row } from 'antd';
 import { SiDiscord } from 'react-icons/si';
 import ItemCard from '../components/ItemCard';
+import { useParams } from 'react-router-dom';
 
 const CollectionDetail: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
   const intl = useIntl();
+
+  const params = useParams<{
+    id: string
+  }>();
 
   return (
     <div className={styles.collectionDetailContainer}>
@@ -45,7 +48,9 @@ const CollectionDetail: React.FC = () => {
           <div className={styles.buttonsContainer}>
             <div
               className={styles.button}
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {
+                history.push(`/collection/${params.id}/add`);
+              }}
             >
               <AiOutlinePlus
                 className={styles.buttonIcon}

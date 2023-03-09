@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:59:56
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-09 04:30:57
+ * @ Modified time: 2023-03-09 22:15:06
  * @ Description: i@rua.moe
  */
 
@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import styles from "./style.less";
 import { useIntl } from "umi";
 import { Col, Row } from "antd";
+import { TbCircleLetterN } from "react-icons/tb";
 
 const ItemCard: React.FC = () => {
   const intl = useIntl();
@@ -70,7 +71,10 @@ const ItemCard: React.FC = () => {
             <Col span={12}>
               <div className={styles.statisticsItem}>
                 <div className={styles.statisticsItemValue}>
-                  0.056 N
+                  0.056
+                  <TbCircleLetterN
+                    className={styles.statisticsItemValueIcon}
+                  />
                 </div>
                 <div className={styles.statisticsItemName}>
                   Price

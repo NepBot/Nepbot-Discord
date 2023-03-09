@@ -1,0 +1,479 @@
+/**
+ * @ Author: Hikaru
+ * @ Create Time: 2023-03-09 21:36:18
+ * @ Modified by: Hikaru
+ * @ Modified time: 2023-03-10 04:09:41
+ * @ Description: i@rua.moe
+ */
+
+.createContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  background-color: #1e2025;
+
+  .wrapper {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    height: 100%;
+    padding-right: 3%;
+    padding-left: 3%;
+
+    .headerContainer {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding-top: 28px;
+      padding-bottom: 28px;
+
+      .title {
+        color: #fff;
+        font-weight: 500;
+        font-size: 24px;
+        font-family: Gilroy;
+        letter-spacing: 0;
+      }
+    }
+
+    .contentContainer {
+      width: 100%;
+      margin-top: 70px;
+
+      .formContainer {
+        width: 100%;
+        margin-bottom: 64px;
+
+        .formItemRow {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          margin-bottom: 60px;
+
+          .formItem {
+            margin-bottom: 0 !important;
+          }
+
+          .formItemLogo {
+            width: 40%;
+          }
+
+          .formItemCover {
+            width: 58%;
+          }
+        }
+
+        .formItem {
+          width: 100%;
+
+          &:not(:last-child) {
+            margin-bottom: 60px;
+          }
+
+          :global(.ant-form-item-required) {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+
+            &::before {
+              content: none;
+            }
+
+            &::after {
+              display: flex;
+              margin-left: 10px;
+              color: #ff7a7a;
+              font-weight: 600;
+              font-size: 15px;
+              font-family: Gilroy;
+              content: '✱';
+            }
+          }
+
+          .formItemInputContainer {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            margin-top: 10px;
+            padding: 8px 20px;
+            color: #fff;
+            font-weight: 400;
+            font-size: 14px;
+            font-family: Gilroy;
+            letter-spacing: 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 22px;
+            opacity: 0.5;
+            transition: all 0.3s ease-in-out;
+
+            &:hover {
+              border: 1px solid rgba(255, 255, 255, 1);
+            }
+
+            &:focus {
+              border: 1px solid rgba(255, 255, 255, 1);
+            }
+
+            .formItemInput {
+              width: 100%;
+              color: #fff;
+              font-weight: 400;
+              font-size: 14px;
+              font-family: Gilroy;
+              letter-spacing: 0;
+
+              &::placeholder {
+                color: #fff;
+                font-weight: 400;
+                font-size: 14px;
+                font-family: Gilroy;
+                letter-spacing: 0;
+                opacity: 0.9;
+              }
+
+              input {
+                color: #fff;
+
+                &::placeholder {
+                  color: #fff;
+                  font-weight: 400;
+                  font-size: 14px;
+                  font-family: Gilroy;
+                  letter-spacing: 0;
+                  opacity: 0.9;
+                }
+              }
+
+              :global(.ant-input-number-group-addon) {
+                color: #fff;
+                border: none;
+                border-left: 1px solid rgba(255, 255, 255, 0.2);
+              }
+            }
+          }
+
+          .formItemUploadContainer {
+            overflow: hidden;
+
+            :global(.ant-upload) {
+              padding: 0;
+            }
+
+            :global(.ant-upload-drag) {
+              height: 330px;
+              padding: 60px 30px;
+              background: #2d303a;
+              border: none;
+              border-radius: 30px;
+            }
+
+            :global(.ant-upload-drag-container) {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              width: 100%;
+            }
+
+            .formItemUploadIcon {
+              color: #fff;
+
+              svg {
+                width: 60px;
+                height: 60px;
+              }
+            }
+
+            .formItemUploadText {
+              margin-top: 16px;
+              margin-bottom: 16px;
+              color: #fff;
+              font-weight: 700;
+              font-size: 14px;
+              font-family: Gilroy;
+              text-align: center;
+            }
+
+            .formItemUploadOr {
+              color: #fff;
+              font-weight: 400;
+              font-size: 14px;
+              font-family: Gilroy;
+              text-align: center;
+              opacity: 0.4;
+            }
+
+            .formItemUploadButton {
+              margin-top: 16px;
+              padding: 10px 35px;
+              color: #fff;
+              font-weight: 400;
+              font-size: 14px;
+              font-family: Gilroy;
+              letter-spacing: 0;
+              text-align: center;
+              border: 1px solid rgba(255, 255, 255, 0.2);
+              border-radius: 22px;
+              cursor: pointer;
+              transition: all 0.3s ease-in-out;
+
+              &:hover {
+                border: 1px solid rgba(255, 255, 255, 1);
+              }
+            }
+          }
+
+          .formItemUploadContainerHasFile {
+            :global(.ant-upload-drag) {
+              padding: 0;
+              overflow: hidden;
+              background: #2d303a;
+              border: none;
+              border-radius: 30px;
+            }
+
+            .formItemUploadImage {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+
+          .formItemLogoTip {
+            margin-top: 10px;
+            color: #fff;
+            font-weight: 400;
+            font-size: 14px;
+            font-family: Gilroy;
+            letter-spacing: 0;
+            opacity: 0.4;
+          }
+
+          .formItemListContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            width: 100%;
+
+            .formItemSpaceContainer {
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+              justify-content: space-between;
+              width: 100%;
+              margin-top: 10px;
+
+              &:not(:last-child) {
+                margin-bottom: 20px;
+              }
+
+              .formListItem {
+                width: 48%;
+                margin-bottom: 0;
+
+                .formListItemInputContainer {
+                  margin-top: 0;
+                }
+              }
+
+              .deleteButton {
+                width: 20px;
+                height: 20px;
+                color: #fff;
+                text-align: right;
+                cursor: pointer;
+              }
+            }
+
+            .formItemAddButton {
+              width: 100%;
+            }
+          }
+        }
+
+        .formItemLabel {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-start;
+          color: #fff;
+          font-weight: 600;
+          font-size: 16px;
+          font-family: Gilroy;
+          line-height: 20px;
+
+          .formItemLabelIcon {
+            margin-left: 10px;
+            color: #fff;
+          }
+        }
+
+        .formItemLabelDescription {
+          margin-top: 10px;
+          color: #fff;
+          font-weight: 400;
+          font-size: 14px;
+          font-family: Gilroy;
+          letter-spacing: 0;
+          opacity: 0.4;
+        }
+
+        .formItemLabelDesc {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: flex-start;
+        }
+
+        .formButtons {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-end;
+          width: 100%;
+
+          .button {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            width: 165px;
+            padding: 16px;
+            color: #fff;
+            font-weight: 400;
+            font-size: 16px;
+            font-family: Gilroy;
+            letter-spacing: 0;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+
+            &:not(:last-child) {
+              margin-right: 30px;
+            }
+
+            &:hover {
+              box-shadow: 0 0 20px 0 rgba(255, 255, 255, 0.5);
+            }
+          }
+
+          .buttonPrimary {
+            background-image: linear-gradient(
+              -83deg,
+              #9d7dff 0%,
+              #8c97ff 43%,
+              #9fd0ff 100%
+            );
+            border-radius: 25px;
+          }
+
+          .loadingIcon {
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+}
+
+.select {
+  width: 100%;
+  color: #fff !important;
+  font-weight: 400;
+  font-size: 14px;
+  font-family: Gilroy;
+  letter-spacing: 0;
+  border-radius: 22px;
+  transition: all 0.3s ease-in-out;
+
+  :global(.ant-select-selection-item) {
+    padding-left: 10px;
+    color: #fff !important;
+  }
+
+  :global(.ant-select-arrow) {
+    color: #fff;
+  }
+
+  :global(.ant-select-selection-overflow-item) {
+    :global(.ant-select-selection-item) {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 400;
+      font-family: Gilroy;
+      background: rgba(78, 81, 112, 0.24);
+      border-radius: 4px;
+    }
+
+    :global(.ant-select-selection-item-remove) {
+      margin-left: 5px;
+      color: #fff;
+      font-weight: 400;
+      font-family: Gilroy;
+    }
+  }
+}
+
+.selectPopup {
+  padding: 10px;
+  color: #fff;
+  font-weight: 400;
+  font-size: 14px;
+  font-family: Gilroy;
+  letter-spacing: 0;
+  background: #0d0d16;
+  border-radius: 8px;
+  box-shadow: 0px 12px 20px 0px rgba(0, 0, 0, 0.15);
+
+  :global(.ant-select-item-option-content) {
+    padding: 6px;
+    color: #fff;
+    font-weight: 400;
+    font-size: 14px;
+    font-family: Gilroy;
+    letter-spacing: 0;
+  }
+
+  :global(
+      .ant-select-item-option-selected:not(.ant-select-item-option-disabled)
+    ) {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+  }
+}
+
+.message {
+  :global(.ant-message-notice-content) {
+    padding: 22px 40px;
+    color: #fff;
+    font-weight: 400;
+    font-size: 14px;
+    font-family: Gilroy;
+    letter-spacing: 0;
+    text-align: center;
+    background: #000;
+    border-radius: 16px;
+  }
+}

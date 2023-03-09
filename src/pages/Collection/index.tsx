@@ -2,13 +2,13 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-09 15:35:45
+ * @ Modified time: 2023-03-10 03:44:14
  * @ Description: i@rua.moe
  */
 
-import React, { useState } from "react";
+import React from "react";
 import styles from "./style.less";
-import { useIntl } from "umi";
+import { useIntl, history } from "umi";
 import { AiFillCloseCircle, AiFillCodeSandboxCircle, AiOutlinePlus } from "react-icons/ai";
 import { AiFillCheckCircle } from "react-icons/ai";
 import classNames from "classnames";
@@ -16,8 +16,6 @@ import { Col, Row } from "antd";
 import ItemCard from "./components/ItemCard";
 
 const Collection: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
   const intl = useIntl();
 
   return (
@@ -32,7 +30,9 @@ const Collection: React.FC = () => {
           <div className={styles.buttonsContainer}>
             <div
               className={styles.button}
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {
+                history.push('/collection/create');
+              }}
             >
               <AiOutlinePlus
                 className={styles.buttonIcon}
