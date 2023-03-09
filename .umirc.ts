@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-09 03:59:15
+ * @ Modified time: 2023-03-09 20:43:35
  * @ Description: i@rua.moe
  */
 
@@ -57,6 +57,11 @@ export default defineConfig({
           title: 'Collection',
           path: '/collection',
           component: 'Collection',
+        },
+        {
+          title: 'Collection Detail',
+          path: '/collection/:id',
+          component: 'Collection/Detail',
         },
       ],
     },

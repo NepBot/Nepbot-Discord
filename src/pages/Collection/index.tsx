@@ -2,14 +2,14 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-09 04:12:51
+ * @ Modified time: 2023-03-09 15:35:45
  * @ Description: i@rua.moe
  */
 
 import React, { useState } from "react";
 import styles from "./style.less";
 import { useIntl } from "umi";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiFillCloseCircle, AiFillCodeSandboxCircle, AiOutlinePlus } from "react-icons/ai";
 import { AiFillCheckCircle } from "react-icons/ai";
 import classNames from "classnames";
 import { Col, Row } from "antd";
@@ -51,6 +51,52 @@ const Collection: React.FC = () => {
               />
               {intl.formatMessage({
                 id: "collection.item.title.haveAccess"
+              })}
+            </div>
+            <div className={styles.itemContent}>
+              <Row gutter={[30, 30]}>
+                <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                  <ItemCard />
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                  <ItemCard />
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                  <ItemCard />
+                </Col>
+              </Row>
+            </div>
+          </div>
+          <div className={styles.itemContainer}>
+            <div className={styles.itemTitle}>
+              <AiFillCloseCircle
+                className={classNames(styles.itemTitleIcon, styles.itemTitleIconNoAccess)}
+              />
+              {intl.formatMessage({
+                id: "collection.item.title.noAccess"
+              })}
+            </div>
+            <div className={styles.itemContent}>
+              <Row gutter={[30, 30]}>
+                <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                  <ItemCard />
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                  <ItemCard />
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                  <ItemCard />
+                </Col>
+              </Row>
+            </div>
+          </div>
+          <div className={styles.itemContainer}>
+            <div className={styles.itemTitle}>
+              <AiFillCodeSandboxCircle
+                className={classNames(styles.itemTitleIcon, styles.itemTitleIconMintedOut)}
+              />
+              {intl.formatMessage({
+                id: "collection.item.title.mintedOut"
               })}
             </div>
             <div className={styles.itemContent}>
