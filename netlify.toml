@@ -1,8 +1,9 @@
 [build]
   command "yarn build"
   publish="/dist"
-  base "/
+  base "/"
+
 [[redirects]]
-  from "/*
+  from "/*"
   to "/index.html"
   status 200
