@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-10 14:17:20
+ * @ Modified time: 2023-03-12 02:33:51
  * @ Description: i@rua.moe
  */
 
@@ -89,4 +89,10 @@ export default defineConfig({
   fastRefresh: true,
   presets: ['umi-presets-pro'],
   npmClient: 'yarn',
+  proxy: {
+    '/api': {
+      target: 'http://13.214.203.20:6000',
+      changeOrigin: true,
+    },
+  },
 });

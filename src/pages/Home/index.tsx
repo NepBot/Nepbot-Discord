@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:15:45
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-08 16:00:26
+ * @ Modified time: 2023-03-11 20:39:17
  * @ Description: i@rua.moe
  */
 
@@ -16,12 +16,12 @@ import { ReactComponent as PopulaLogoWhite } from '@/assets/brand/popula_logo_wh
 import { ReactComponent as Safe } from '@/assets/icon/ic-Safe.svg';
 import { ReactComponent as Fast } from '@/assets/icon/ic-Fast.svg';
 import { ReactComponent as Free } from '@/assets/icon/ic-Free.svg';
-import { LIST } from '@/constants/screen2';
+import { LIST } from '@/constants/home/screen2';
 import classNames from 'classnames';
 import Marquee from "react-fast-marquee";
 import { Carousel } from 'antd';
-import { SWIPER } from '@/constants/screen3';
-import { PARTNERS, TRUSTED } from '@/constants/screen4';
+import { SWIPER } from '@/constants/home/screen3';
+import { PARTNERS, TRUSTED } from '@/constants/home/screen4';
 import BottomBackground from '@/components/BottomBackground';
 
 const Home: React.FC = () => {
