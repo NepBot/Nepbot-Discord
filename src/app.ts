@@ -2,15 +2,17 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 16:31:20
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-10 04:14:29
+ * @ Modified time: 2023-03-12 18:37:28
  * @ Description: i@rua.moe
  */
 
 import { matchRoutes } from '@umijs/max';
+import * as dotenv from 'dotenv';
 import JavaScriptObfuscator from 'javascript-obfuscator';
 import { SITE_CONFIG } from './constants/config';
 
 export async function getInitialState(): Promise<{ name: string }> {
+  dotenv.config();
   return { name: '@umijs/max' };
 }
 
