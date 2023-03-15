@@ -2,12 +2,12 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 02:50:33
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-14 03:16:25
+ * @ Modified time: 2023-03-15 02:43:54
  * @ Description: i@rua.moe
  */
 
 import { keyStores } from 'near-api-js';
-import { arbitrum, goerli, mainnet, polygon } from 'wagmi/chains';
+import { ENV_NETWORK } from './env';
 
 const key = new keyStores.BrowserLocalStorageKeyStore();
 
@@ -16,41 +16,24 @@ export const SITE_CONFIG = {
   abbr: 'NEPBOT',
 };
 
-export const WALLETCONNECT = {
-  projectID: 'e955aa92a6d9db97160d53e9afc53f5d',
-  appName: 'Nepbot',
-  chains: [arbitrum, mainnet, polygon, goerli],
-  chainsID: [arbitrum.id, mainnet.id, polygon.id, goerli.id],
-  universalChains: ['eip155:80001'],
-  methods: [
-    'eth_sendTransaction',
-    'eth_signTransaction',
-    'eth_sign',
-    'personal_sign',
-    'eth_signTypedData',
-  ],
-  events: [
-    'chainChanged',
-    'accountsChanged',
-    'connect',
-    'session_event',
-    'display_uri',
-    'disconnect',
-  ],
-  metadata: {
-    name: 'Nepbot',
-    description: 'Nepbot for WalletConnect',
-    url: 'https://Nepbot.io/',
-    icons: ['https://avatars.githubusercontent.com/u/37784886'],
-  },
-  logger: 'info',
-};
-
 export const API_CONFIG = () => {
-  switch (process.env.ENV_NETWORK) {
+  switch (ENV_NETWORK) {
     case 'production':
     case 'mainnet':
       return {
+        WALLETCONNECT: {
+          projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+          appName: 'NEPBOT',
+          chainsId: 'near:mainnet',
+          metadata: {
+            name: 'Nepbot',
+            description: 'Nepbot for WalletConnect',
+            url: 'https://Nepbot.io/',
+            icons: ['https://avatars.githubusercontent.com/u/37784886'],
+          },
+          iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+          logger: 'info',
+        },
         networkId: 'mainnet',
         keyStore: key,
         nodeUrl: 'https://rpc.mainnet.near.org',
@@ -71,6 +54,19 @@ export const API_CONFIG = () => {
     case 'development':
     case 'testnet':
       return {
+        WALLETCONNECT: {
+          projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+          appName: 'NEPBOT',
+          chainsId: 'near:testnet',
+          metadata: {
+            name: 'Nepbot',
+            description: 'Nepbot for WalletConnect',
+            url: 'https://Nepbot.io/',
+            icons: ['https://avatars.githubusercontent.com/u/37784886'],
+          },
+          iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+          logger: 'info',
+        },
         networkId: 'testnet',
         keyStore: key,
         nodeUrl: 'https://rpc.testnet.near.org',
@@ -90,6 +86,19 @@ export const API_CONFIG = () => {
       };
     case 'dev-testnet':
       return {
+        WALLETCONNECT: {
+          projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+          appName: 'NEPBOT',
+          chainsId: 'near:testnet',
+          metadata: {
+            name: 'Nepbot',
+            description: 'Nepbot for WalletConnect',
+            url: 'https://Nepbot.io/',
+            icons: ['https://avatars.githubusercontent.com/u/37784886'],
+          },
+          iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+          logger: 'info',
+        },
         networkId: 'testnet',
         keyStore: key,
         nodeUrl: 'https://rpc.testnet.near.org',
@@ -109,6 +118,19 @@ export const API_CONFIG = () => {
       };
     case 'betanet':
       return {
+        WALLETCONNECT: {
+          projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+          appName: 'NEPBOT',
+          chainsId: 'near:betanet',
+          metadata: {
+            name: 'Nepbot',
+            description: 'Nepbot for WalletConnect',
+            url: 'https://Nepbot.io/',
+            icons: ['https://avatars.githubusercontent.com/u/37784886'],
+          },
+          iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+          logger: 'info',
+        },
         networkId: 'betanet',
         keyStore: key,
         nodeUrl: 'https://rpc.betanet.near.org',
@@ -117,6 +139,19 @@ export const API_CONFIG = () => {
       };
     case 'local':
       return {
+        WALLETCONNECT: {
+          projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+          appName: 'NEPBOT',
+          chainsId: 'near:local',
+          metadata: {
+            name: 'Nepbot',
+            description: 'Nepbot for WalletConnect',
+            url: 'https://Nepbot.io/',
+            icons: ['https://avatars.githubusercontent.com/u/37784886'],
+          },
+          iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+          logger: 'info',
+        },
         networkId: 'local',
         keyStore: key,
         nodeUrl: 'http://localhost:3030',
@@ -126,6 +161,19 @@ export const API_CONFIG = () => {
     case 'test':
     case 'ci':
       return {
+        WALLETCONNECT: {
+          projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+          appName: 'NEPBOT',
+          chainsId: 'near:shared-test',
+          metadata: {
+            name: 'Nepbot',
+            description: 'Nepbot for WalletConnect',
+            url: 'https://Nepbot.io/',
+            icons: ['https://avatars.githubusercontent.com/u/37784886'],
+          },
+          iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+          logger: 'info',
+        },
         networkId: 'shared-test',
         keyStore: key,
         nodeUrl: 'https://rpc.ci-testnet.near.org',
@@ -133,6 +181,19 @@ export const API_CONFIG = () => {
       };
     case 'ci-betanet':
       return {
+        WALLETCONNECT: {
+          projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+          appName: 'NEPBOT',
+          chainsId: 'near:shared-test-staging',
+          metadata: {
+            name: 'Nepbot',
+            description: 'Nepbot for WalletConnect',
+            url: 'https://Nepbot.io/',
+            icons: ['https://avatars.githubusercontent.com/u/37784886'],
+          },
+          iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+          logger: 'info',
+        },
         networkId: 'shared-test-staging',
         keyStore: key,
         nodeUrl: 'https://rpc.ci-betanet.near.org',

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-12 02:33:51
+ * @ Modified time: 2023-03-15 00:22:17
  * @ Description: i@rua.moe
  */
 
@@ -25,9 +25,9 @@ export default defineConfig({
       component: 'Home',
     },
     {
-      title: 'Connect',
-      path: '/connect',
-      component: 'Connect',
+      title: 'Verify',
+      path: '/verify',
+      component: 'Verify',
       layout: false,
     },
     {

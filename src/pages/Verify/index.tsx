@@ -2,16 +2,18 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 02:53:34
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-08 16:01:09
+ * @ Modified time: 2023-03-15 02:54:22
  * @ Description: i@rua.moe
  */
 
 import React from 'react';
 import styles from './style.less';
-import { useIntl } from 'umi';
+import { useIntl, useModel } from '@umijs/max';
 import Background from '@/components/TopBackground';
 
-const Connect: React.FC = () => {
+const Verify: React.FC = () => {
+  const { modal, walletSelector, InitializeWalletConnect } = useModel('near');
+
   const intl = useIntl();
 
   return (
@@ -35,7 +37,12 @@ const Connect: React.FC = () => {
             </div>
           </div>
           <div className={styles.buttonContainer}>
-            <div className={styles.button}>
+            <div
+              className={styles.button}
+              onClick={async () => {
+                await InitializeWalletConnect();
+              }}
+            >
               {intl.formatMessage({
                 id: 'connect.button'
               })}
@@ -52,4 +59,4 @@ const Connect: React.FC = () => {
   )
 };
 
-export default Connect;
+export default Verify;
