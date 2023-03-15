@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-15 00:22:17
+ * @ Modified time: 2023-03-15 23:19:44
  * @ Description: i@rua.moe
  */
 
@@ -91,7 +91,7 @@ export default defineConfig({
   npmClient: 'yarn',
   proxy: {
     '/api': {
-      target: 'http://13.214.203.20:6000',
+      target: 'https://testnet.nepbot.org',
       changeOrigin: true,
     },
   },

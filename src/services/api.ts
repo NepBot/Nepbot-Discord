@@ -3,7 +3,7 @@ import { API_CONFIG } from '@/constants/config';
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:47
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-14 23:00:13
+ * @ Modified time: 2023-03-15 23:05:39
  * @ Description: i@rua.moe
  */
 
@@ -41,10 +41,12 @@ export const GetOwnerSign = async (
 };
 
 export const GetRole = async (
-  guild_id: string,
+  path: {
+    guild_id: string;
+  },
   options?: { [key: string]: any },
 ) => {
-  return request<Resp.GetRole | Resp.Error>(`/api/getRole/${guild_id}`, {
+  return request<Resp.GetRole | Resp.Error>(`/api/getRole/${path.guild_id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -55,25 +57,32 @@ export const GetRole = async (
 };
 
 export const GetServer = async (
-  guild_id: string,
+  path: {
+    guild_id: string;
+  },
   options?: { [key: string]: any },
 ) => {
-  return request<Resp.GetServer | Resp.Error>(`/api/getServer/${guild_id}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
+  return request<Resp.GetServer | Resp.Error>(
+    `/api/getServer/${path.guild_id}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+      getResponse: true,
     },
-    ...(options || {}),
-    getResponse: true,
-  });
+  );
 };
 
 export const GetTxByGuild = async (
-  guild_id: string,
+  path: {
+    guild_id: string;
+  },
   options?: { [key: string]: any },
 ) => {
   return request<Resp.GetTxByGuild | Resp.Error>(
-    `/api/getTxByGuild/${guild_id}`,
+    `/api/getTxByGuild/${path.guild_id}`,
     {
       method: 'GET',
       headers: {
@@ -86,13 +95,15 @@ export const GetTxByGuild = async (
 };
 
 export const GetUser = async (
-  guild_id: string,
-  user_id: string,
-  sign: string,
+  path: {
+    guild_id: string;
+    user_id: string;
+    sign: string;
+  },
   options?: { [key: string]: any },
 ) => {
   return request<Resp.GetUser | Resp.Error>(
-    `/api/getUser/${guild_id}/${user_id}/${sign}`,
+    `/api/getUser/${path.guild_id}/${path.user_id}/${path.sign}`,
     {
       method: 'GET',
       headers: {
@@ -105,16 +116,20 @@ export const GetUser = async (
 };
 
 export const GetConnectedAccount = async (
-  guild_id: string,
-  user_id: string,
+  path: {
+    guild_id: string;
+    user_id: string;
+  },
+  options?: { [key: string]: any },
 ) => {
   return request<Resp.GetConnectedAccount | Resp.Error>(
-    `/api/getConnectedAccount/${guild_id}/${user_id}`,
+    `/api/getConnectedAccount/${path.guild_id}/${path.user_id}`,
     {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
+      ...(options || {}),
       getResponse: true,
     },
   );

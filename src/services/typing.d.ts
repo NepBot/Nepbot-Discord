@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:18
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-14 23:01:27
+ * @ Modified time: 2023-03-16 00:04:26
  * @ Description: i@rua.moe
  */
 
@@ -237,44 +237,66 @@ declare namespace Resp {
     data?: Item.Role[];
   }
 
+  interface Server {
+    id?: string;
+    name?: string;
+    icon?: string;
+    features?: string[];
+    commands?: string[];
+    members?: string[];
+    channels?: string[];
+    bans?: string[];
+    roles?: string[];
+    stageInstances?: string[];
+    invites?: string[];
+    scheduledEvents?: string[];
+    splash?: string;
+    banner?: string;
+    description?: string;
+    verificationLevel?: string;
+    vanityURLCode?: string;
+    nsfwLevel?: string;
+    discoverySplash?: string;
+    memberCount?: number;
+    large?: boolean;
+    premiumProgressBarEnabled?: boolean;
+    applicationId?: string;
+    afkTimeout?: number;
+    afkChannelId?: string;
+    systemChannelId?: string;
+    premiumTier?: string;
+    premiumSubscriptionCount?: number;
+    explicitContentFilter?: string;
+    mfaLevel?: string;
+    joinedTimestamp?: number;
+    defaultMessageNotifications?: string;
+    systemChannelFlags?: number;
+    maximumMembers?: number;
+    maximumPresences?: number;
+    approximateMemberCount?: string;
+    approximatePresenceCount?: string;
+    vanityURLUses?: string;
+    rulesChannelId?: string;
+    publicUpdatesChannelId?: string;
+    preferredLocale?: string;
+    ownerId?: string;
+    emojis?: string[];
+    stickers?: string[];
+    shardId?: number;
+    widgetEnabled?: boolean;
+    widgetChannelId?: string;
+    createdTimestamp?: number;
+    nameAcronym?: string;
+    iconURL?: string;
+    splashURL?: string;
+    discoverySplashURL?: string;
+    bannerURL?: string;
+  }
+
   interface GetServer extends Body {
+    code?: number;
     success?: boolean;
-    data?: {
-      id?: string;
-      name?: string;
-      icon?: string;
-      description?: string;
-      splash?: string;
-      discovery_splash?: string;
-      approximate_member_count?: number;
-      approximate_presence_count?: number;
-      features?: string[];
-      emojis?: Item.Emoji[];
-      banner?: string;
-      owner_id?: string;
-      application_id?: string;
-      region?: string;
-      afk_channel_id?: string;
-      afk_timeout?: number;
-      system_channel_id?: string;
-      widget_enabled?: boolean;
-      widget_channel_id?: string;
-      verification_level?: number;
-      roles?: Item.Role[];
-      default_message_notifications?: number;
-      mfa_level?: number;
-      explicit_content_filter?: number;
-      max_presences?: number;
-      max_members?: number;
-      max_video_channel_users?: number;
-      vanity_url_code?: string;
-      premium_tier?: number;
-      premium_subscription_count?: number;
-      system_channel_flags?: number;
-      preferred_locale?: string;
-      rules_channel_id?: string;
-      public_updates_channel_id?: string;
-    };
+    data?: Server;
   }
 
   interface GetTxByGuild extends Body {
@@ -284,22 +306,28 @@ declare namespace Resp {
     }[];
   }
 
+  interface User {
+    userId?: string;
+    nickname?: string;
+    avatar?: string;
+    avatarURL?: string;
+    displayAvatarURL?: string;
+    displayName?: string;
+    roles?: string[];
+    joinedTimestamp?: string;
+    premiumSinceTimestamp?: string;
+    deaf?: boolean;
+    mute?: boolean;
+    flags?: number;
+    pending?: boolean;
+    permissions?: string;
+    communicationDisabledUntilTimestamp?: string;
+  }
+
   interface GetUser extends Body {
+    code?: number;
     success?: boolean;
-    data?: {
-      user?: Item.User;
-      nick?: string;
-      avatar?: string;
-      roles?: string[];
-      joined_at?: string;
-      premium_since?: string;
-      deaf?: boolean;
-      mute?: boolean;
-      flags?: number;
-      pending?: boolean;
-      permissions?: string;
-      communication_disabled_until?: string;
-    };
+    data?: User;
   }
 
   interface GetConnectedAccount extends Body {
