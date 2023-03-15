@@ -12,7 +12,7 @@ import { useCallback, useState } from 'react';
 export default () => {
   const [discordUser, setDiscordUser] = useState<Resp.User>();
   const [discordServer, setDiscordServer] = useState<Resp.Server>();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const GetUserInfo = useCallback(
     async ({
@@ -31,13 +31,13 @@ export default () => {
         sign,
       });
 
-      if (res?.response?.status === 200 && res?.data?.code === 200) {
+      if (res?.response?.status === 200 && res?.data?.success) {
         setDiscordUser((res?.data as Resp.GetUser)?.data);
       } else {
         setDiscordUser(undefined);
         notification.error({
           message: 'Error',
-          description: (res?.data as Error)?.message,
+          description: (res?.data as Resp.Error)?.message || 'Unknown error',
         });
       }
       setLoading(false);
@@ -52,13 +52,13 @@ export default () => {
         guild_id,
       });
 
-      if (res?.response?.status === 200 && res?.data?.code === 200) {
+      if (res?.response?.status === 200 && res?.data?.success) {
         setDiscordServer((res?.data as Resp.GetServer)?.data);
       } else {
         setDiscordUser(undefined);
         notification.error({
           message: 'Error',
-          description: (res?.data as Error)?.message,
+          description: (res?.data as Resp.Error)?.message || 'Unknown error',
         });
       }
       setLoading(false);

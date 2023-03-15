@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-15 23:19:44
+ * @ Modified time: 2023-03-16 02:42:49
  * @ Description: i@rua.moe
  */
 
@@ -78,6 +78,18 @@ export default defineConfig({
               component: 'Collection/Detail/Add',
             },
           ],
+        },
+      ],
+    },
+    {
+      title: 'FT',
+      path: '/ft',
+      layout: false,
+      routes: [
+        {
+          title: 'FT AirDrop',
+          path: '/ft/airdrop',
+          component: 'FT/Airdrop',
         },
       ],
     },

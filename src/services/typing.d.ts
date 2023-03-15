@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:18
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-16 00:04:26
+ * @ Modified time: 2023-03-16 02:54:31
  * @ Description: i@rua.moe
  */
 
@@ -171,7 +171,7 @@ declare namespace API {
     guild_id?: string;
     channel_id?: string;
     role_id?: string;
-    token_id?: string;
+    token_contract?: string;
     total_amount?: string;
     amount_per_share?: string;
     end_time?: string;

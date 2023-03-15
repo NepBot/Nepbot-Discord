@@ -3,11 +3,11 @@ import { useCallback, useEffect } from 'react';
  * @ Author: Hikaru
  * @ Create Time: 2023-03-15 02:13:40
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-15 22:54:07
+ * @ Modified time: 2023-03-16 04:40:03
  * @ Description: i@rua.moe
  */
 
-import { API_CONFIG } from '@/constants/config';
+import { API_CONFIG, WALLETCONNECT_CONFIG } from '@/constants/config';
 import { setupCoin98Wallet } from '@near-wallet-selector/coin98-wallet';
 import { setupWalletSelector, Wallet } from '@near-wallet-selector/core';
 import type { WalletSelector } from '@near-wallet-selector/core/lib/wallet-selector.types';
@@ -36,6 +36,7 @@ import walletConnectIconUrl from '@near-wallet-selector/wallet-connect/assets/wa
 import { setupWelldoneWallet } from '@near-wallet-selector/welldone-wallet';
 import { setupXDEFI } from '@near-wallet-selector/xdefi';
 import { notification } from 'antd';
+import { connect, keyStores } from 'near-api-js';
 import { useState } from 'react';
 
 interface WalletInfo {
@@ -52,6 +53,9 @@ export default () => {
   const [walletList, setWalletList] = useState<Map<string, WalletInfo>>(
     new Map(),
   );
+
+  const localKeyStore = new keyStores.BrowserLocalStorageKeyStore();
+  const memKeyStore = new keyStores.InMemoryKeyStore();
 
   // Init Wallet Selector
   useEffect(() => {
@@ -76,18 +80,18 @@ export default () => {
         setupNeth(),
         setupXDEFI(),
         setupWalletConnect({
-          projectId: API_CONFIG().WALLETCONNECT.projectID,
-          metadata: API_CONFIG().WALLETCONNECT.metadata,
-          chainId: API_CONFIG().WALLETCONNECT.chainsId,
+          projectId: WALLETCONNECT_CONFIG().projectID,
+          metadata: WALLETCONNECT_CONFIG().metadata,
+          chainId: WALLETCONNECT_CONFIG().chainsId,
           iconUrl: walletConnectIconUrl,
         }),
         setupNightlyConnect({
           url: 'wss://relay.nightly.app/app',
           appMetadata: {
             additionalInfo: '',
-            application: API_CONFIG().WALLETCONNECT.metadata.name,
-            description: API_CONFIG().WALLETCONNECT.metadata.description,
-            icon: API_CONFIG().WALLETCONNECT.metadata.icons[0],
+            application: WALLETCONNECT_CONFIG().metadata.name,
+            description: WALLETCONNECT_CONFIG().metadata.description,
+            icon: WALLETCONNECT_CONFIG().metadata.icons[0],
           },
         }),
       ],
@@ -129,10 +133,53 @@ export default () => {
                 });
 
                 localStorage.setItem(
-                  `nepbot:publicKey:${API_CONFIG().networkId}:${
-                    account.accountId
+                  `nepbot:publicKey:${account.accountId}:${
+                    API_CONFIG().networkId
                   }`,
                   account.publicKey,
+                );
+              } else {
+                localStorage.clear();
+                wallet.signOut();
+              }
+
+              var privateKey: string | null;
+              switch (wallet.id) {
+                case 'meteor-wallet':
+                  privateKey = localStorage.getItem(
+                    `_meteor_wallet${account.accountId}:${
+                      API_CONFIG().networkId
+                    }`,
+                  );
+                  break;
+                case 'sender':
+                  privateKey = `ed25519:${
+                    (window?.near as any)?.authData?.accessKey?.secretKey
+                  }`;
+                  break;
+                default:
+                  privateKey = localStorage.getItem(
+                    `near-api-js:keystore:${account.accountId}:${
+                      API_CONFIG().networkId
+                    }`,
+                  );
+                  break;
+              }
+              if (!!privateKey) {
+                setWalletList((walletList) => {
+                  walletList.set(account.accountId, {
+                    accountId: account.accountId,
+                    publicKey: account.publicKey,
+                    privateKey,
+                  });
+                  return walletList;
+                });
+
+                localStorage.setItem(
+                  `nepbot:keystore:${account.accountId}:${
+                    API_CONFIG().networkId
+                  }`,
+                  privateKey,
                 );
               }
             });
@@ -163,21 +210,31 @@ export default () => {
             });
 
             localStorage.setItem(
-              `nepbot:publicKey:${API_CONFIG().networkId}:${account.accountId}`,
+              `nepbot:publicKey:${account.accountId}:${API_CONFIG().networkId}`,
               account.publicKey,
             );
 
             var privateKey: string | null;
-            if (event.walletId === 'meteor-wallet') {
-              privateKey = window.localStorage.getItem(
-                `_meteor_wallet${account.accountId}:${API_CONFIG().networkId}`,
-              );
-            } else {
-              privateKey = window.localStorage.getItem(
-                `near-api-js:keystore:${account.accountId}:${
-                  API_CONFIG().networkId
-                }`,
-              );
+            switch (event.walletId) {
+              case 'meteor-wallet':
+                privateKey = localStorage.getItem(
+                  `_meteor_wallet${account.accountId}:${
+                    API_CONFIG().networkId
+                  }`,
+                );
+                break;
+              case 'sender':
+                privateKey = `ed25519:${
+                  (window?.near as any)?.authData?.accessKey?.secretKey
+                }`;
+                break;
+              default:
+                privateKey = localStorage.getItem(
+                  `near-api-js:keystore:${account.accountId}:${
+                    API_CONFIG().networkId
+                  }`,
+                );
+                break;
             }
             if (!!privateKey) {
               setWalletList((walletList) => {
@@ -190,8 +247,14 @@ export default () => {
               });
 
               localStorage.setItem(
-                `nepbot:privateKey:${API_CONFIG().networkId}:${
-                  account.accountId
+                `nepbot:keystore:${account.accountId}:${
+                  API_CONFIG().networkId
+                }`,
+                privateKey,
+              );
+              localStorage.setItem(
+                `near-api-js:keystore:${account.accountId}:${
+                  API_CONFIG().networkId
                 }`,
                 privateKey,
               );
@@ -202,16 +265,20 @@ export default () => {
 
       walletSelector.on('signedOut', (event) => {
         setWalletId(undefined);
-        localStorage.removeItem(`nepbot:walletId:${API_CONFIG().networkId}`);
-        localStorage.removeItem(
-          `nepbot:publicKey:${API_CONFIG().networkId}:${event.walletId}`,
-        );
-        localStorage.removeItem(
-          `nepbot:privateKey:${API_CONFIG().networkId}:${event.walletId}`,
-        );
+        localStorage.clear();
       });
     }
   }, [walletSelector]);
+
+  useEffect(() => {
+    (async () => {
+      const nearConnection = await connect({
+        ...API_CONFIG(),
+      });
+
+      console.log(localKeyStore);
+    })();
+  }, []);
 
   const OpenModalWallet = useCallback(async () => {
     if (!!walletSelector) {

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 02:50:33
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-15 02:43:54
+ * @ Modified time: 2023-03-16 04:35:31
  * @ Description: i@rua.moe
  */
 
@@ -16,24 +16,119 @@ export const SITE_CONFIG = {
   abbr: 'NEPBOT',
 };
 
+export const WALLETCONNECT_CONFIG = () => {
+  switch (ENV_NETWORK) {
+    case 'production':
+    case 'mainnet':
+      return {
+        projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+        appName: 'NEPBOT',
+        chainsId: 'near:mainnet',
+        metadata: {
+          name: 'Nepbot',
+          description: 'Nepbot for WalletConnect',
+          url: 'https://Nepbot.io/',
+          icons: ['https://avatars.githubusercontent.com/u/37784886'],
+        },
+        iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+        logger: 'info',
+      };
+    case 'development':
+    case 'testnet':
+      return {
+        projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+        appName: 'NEPBOT',
+        chainsId: 'near:testnet',
+        metadata: {
+          name: 'Nepbot',
+          description: 'Nepbot for WalletConnect',
+          url: 'https://Nepbot.io/',
+          icons: ['https://avatars.githubusercontent.com/u/37784886'],
+        },
+        iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+        logger: 'info',
+      };
+    case 'dev-testnet':
+      return {
+        projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+        appName: 'NEPBOT',
+        chainsId: 'near:testnet',
+        metadata: {
+          name: 'Nepbot',
+          description: 'Nepbot for WalletConnect',
+          url: 'https://Nepbot.io/',
+          icons: ['https://avatars.githubusercontent.com/u/37784886'],
+        },
+        iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+        logger: 'info',
+      };
+    case 'betanet':
+      return {
+        projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+        appName: 'NEPBOT',
+        chainsId: 'near:betanet',
+        metadata: {
+          name: 'Nepbot',
+          description: 'Nepbot for WalletConnect',
+          url: 'https://Nepbot.io/',
+          icons: ['https://avatars.githubusercontent.com/u/37784886'],
+        },
+        iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+        logger: 'info',
+      };
+    case 'local':
+      return {
+        projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+        appName: 'NEPBOT',
+        chainsId: 'near:local',
+        metadata: {
+          name: 'Nepbot',
+          description: 'Nepbot for WalletConnect',
+          url: 'https://Nepbot.io/',
+          icons: ['https://avatars.githubusercontent.com/u/37784886'],
+        },
+        iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+        logger: 'info',
+      };
+    case 'test':
+    case 'ci':
+      return {
+        projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+        appName: 'NEPBOT',
+        chainsId: 'near:shared-test',
+        metadata: {
+          name: 'Nepbot',
+          description: 'Nepbot for WalletConnect',
+          url: 'https://Nepbot.io/',
+          icons: ['https://avatars.githubusercontent.com/u/37784886'],
+        },
+        iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+        logger: 'info',
+      };
+    case 'ci-betanet':
+      return {
+        projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+        appName: 'NEPBOT',
+        chainsId: 'near:shared-test-staging',
+        metadata: {
+          name: 'Nepbot',
+          description: 'Nepbot for WalletConnect',
+          url: 'https://Nepbot.io/',
+          icons: ['https://avatars.githubusercontent.com/u/37784886'],
+        },
+        iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+        logger: 'info',
+      };
+    default:
+      throw Error(`Unconfigured environment '${ENV_NETWORK}'.`);
+  }
+};
+
 export const API_CONFIG = () => {
   switch (ENV_NETWORK) {
     case 'production':
     case 'mainnet':
       return {
-        WALLETCONNECT: {
-          projectID: '3d19dc4846f16221f55bc36f2e3d0197',
-          appName: 'NEPBOT',
-          chainsId: 'near:mainnet',
-          metadata: {
-            name: 'Nepbot',
-            description: 'Nepbot for WalletConnect',
-            url: 'https://Nepbot.io/',
-            icons: ['https://avatars.githubusercontent.com/u/37784886'],
-          },
-          iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
-          logger: 'info',
-        },
         networkId: 'mainnet',
         keyStore: key,
         nodeUrl: 'https://rpc.mainnet.near.org',
@@ -54,19 +149,6 @@ export const API_CONFIG = () => {
     case 'development':
     case 'testnet':
       return {
-        WALLETCONNECT: {
-          projectID: '3d19dc4846f16221f55bc36f2e3d0197',
-          appName: 'NEPBOT',
-          chainsId: 'near:testnet',
-          metadata: {
-            name: 'Nepbot',
-            description: 'Nepbot for WalletConnect',
-            url: 'https://Nepbot.io/',
-            icons: ['https://avatars.githubusercontent.com/u/37784886'],
-          },
-          iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
-          logger: 'info',
-        },
         networkId: 'testnet',
         keyStore: key,
         nodeUrl: 'https://rpc.testnet.near.org',
@@ -86,19 +168,6 @@ export const API_CONFIG = () => {
       };
     case 'dev-testnet':
       return {
-        WALLETCONNECT: {
-          projectID: '3d19dc4846f16221f55bc36f2e3d0197',
-          appName: 'NEPBOT',
-          chainsId: 'near:testnet',
-          metadata: {
-            name: 'Nepbot',
-            description: 'Nepbot for WalletConnect',
-            url: 'https://Nepbot.io/',
-            icons: ['https://avatars.githubusercontent.com/u/37784886'],
-          },
-          iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
-          logger: 'info',
-        },
         networkId: 'testnet',
         keyStore: key,
         nodeUrl: 'https://rpc.testnet.near.org',
@@ -118,19 +187,6 @@ export const API_CONFIG = () => {
       };
     case 'betanet':
       return {
-        WALLETCONNECT: {
-          projectID: '3d19dc4846f16221f55bc36f2e3d0197',
-          appName: 'NEPBOT',
-          chainsId: 'near:betanet',
-          metadata: {
-            name: 'Nepbot',
-            description: 'Nepbot for WalletConnect',
-            url: 'https://Nepbot.io/',
-            icons: ['https://avatars.githubusercontent.com/u/37784886'],
-          },
-          iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
-          logger: 'info',
-        },
         networkId: 'betanet',
         keyStore: key,
         nodeUrl: 'https://rpc.betanet.near.org',
@@ -139,19 +195,6 @@ export const API_CONFIG = () => {
       };
     case 'local':
       return {
-        WALLETCONNECT: {
-          projectID: '3d19dc4846f16221f55bc36f2e3d0197',
-          appName: 'NEPBOT',
-          chainsId: 'near:local',
-          metadata: {
-            name: 'Nepbot',
-            description: 'Nepbot for WalletConnect',
-            url: 'https://Nepbot.io/',
-            icons: ['https://avatars.githubusercontent.com/u/37784886'],
-          },
-          iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
-          logger: 'info',
-        },
         networkId: 'local',
         keyStore: key,
         nodeUrl: 'http://localhost:3030',
@@ -161,19 +204,6 @@ export const API_CONFIG = () => {
     case 'test':
     case 'ci':
       return {
-        WALLETCONNECT: {
-          projectID: '3d19dc4846f16221f55bc36f2e3d0197',
-          appName: 'NEPBOT',
-          chainsId: 'near:shared-test',
-          metadata: {
-            name: 'Nepbot',
-            description: 'Nepbot for WalletConnect',
-            url: 'https://Nepbot.io/',
-            icons: ['https://avatars.githubusercontent.com/u/37784886'],
-          },
-          iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
-          logger: 'info',
-        },
         networkId: 'shared-test',
         keyStore: key,
         nodeUrl: 'https://rpc.ci-testnet.near.org',
@@ -181,25 +211,12 @@ export const API_CONFIG = () => {
       };
     case 'ci-betanet':
       return {
-        WALLETCONNECT: {
-          projectID: '3d19dc4846f16221f55bc36f2e3d0197',
-          appName: 'NEPBOT',
-          chainsId: 'near:shared-test-staging',
-          metadata: {
-            name: 'Nepbot',
-            description: 'Nepbot for WalletConnect',
-            url: 'https://Nepbot.io/',
-            icons: ['https://avatars.githubusercontent.com/u/37784886'],
-          },
-          iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
-          logger: 'info',
-        },
         networkId: 'shared-test-staging',
         keyStore: key,
         nodeUrl: 'https://rpc.ci-betanet.near.org',
         masterAccount: 'test.near',
       };
     default:
-      throw Error(`Unconfigured environment '${process.env.ENV_NETWORK}'.`);
+      throw Error(`Unconfigured environment '${ENV_NETWORK}'.`);
   }
 };
