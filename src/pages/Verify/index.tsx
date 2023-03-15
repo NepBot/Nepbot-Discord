@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 02:53:34
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-15 02:54:22
+ * @ Modified time: 2023-03-15 18:53:49
  * @ Description: i@rua.moe
  */
 
@@ -12,7 +12,7 @@ import { useIntl, useModel } from '@umijs/max';
 import Background from '@/components/TopBackground';
 
 const Verify: React.FC = () => {
-  const { modal, walletSelector, InitializeWalletConnect } = useModel('near');
+  const { modal, walletSelector, OpenModalWallet } = useModel('near');
 
   const intl = useIntl();
 
@@ -40,7 +40,7 @@ const Verify: React.FC = () => {
             <div
               className={styles.button}
               onClick={async () => {
-                await InitializeWalletConnect();
+                await OpenModalWallet();
               }}
             >
               {intl.formatMessage({
