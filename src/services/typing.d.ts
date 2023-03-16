@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:18
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-16 02:54:31
+ * @ Modified time: 2023-03-17 03:55:10
  * @ Description: i@rua.moe
  */
 
@@ -179,7 +179,7 @@ declare namespace API {
   }
 
   interface GetAirdropFTSign {
-    args: {
+    args?: {
       user_id?: string;
       guild_id?: string;
       sign?: string;

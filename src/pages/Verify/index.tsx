@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 02:53:34
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-16 01:09:43
+ * @ Modified time: 2023-03-16 16:28:51
  * @ Description: i@rua.moe
  */
 
@@ -22,7 +22,7 @@ interface QueryParams {
 }
 
 const Verify: React.FC = () => {
-  const { nearWallet, OpenModalWallet } = useModel('near');
+  const { nearWallet, OpenModalWallet } = useModel('near.account');
   const { loading, discordUser, discordServer, GetUserInfo, GetServerInfo } = useModel('discord');
 
   const intl = useIntl();

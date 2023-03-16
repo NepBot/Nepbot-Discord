@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-16 02:42:49
+ * @ Modified time: 2023-03-17 03:33:14
  * @ Description: i@rua.moe
  */
 
@@ -90,6 +90,11 @@ export default defineConfig({
           title: 'FT AirDrop',
           path: '/ft/airdrop',
           component: 'FT/Airdrop',
+        },
+        {
+          title: 'FT Claim',
+          path: '/ft/claim',
+          component: 'FT/Claim',
         },
       ],
     },

@@ -2,16 +2,20 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-16 01:18:40
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-16 04:40:58
+ * @ Modified time: 2023-03-17 04:00:50
  * @ Description: i@rua.moe
  */
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useModel } from "@umijs/max";
 import querystring from 'query-string';
 import './style.less';
 import { SendFfMsg } from "@/services/api";
 import { notification } from "antd";
+import { base58, sha256 } from "ethers/lib/utils";
+import { ParseAmount } from "@/utils/near";
+import { API_CONFIG } from "@/constants/config";
+import { ExecuteMultipleTransactions } from "@/utils/contract";
 
 interface QueryParams {
   guild_id?: string;
@@ -22,10 +26,12 @@ interface QueryParams {
   amount_per_share?: string;
   end_time?: string;
   user_id?: string;
+  transactionHashes?: string;
 }
 
 const Airdrop: React.FC = () => {
-  const { walletList, walletSelector, OpenModalWallet } = useModel('near');
+  const { walletSelector, nearAccount, OpenModalWallet } = useModel('near.account');
+  const [errorState, setErrorState] = useState<boolean>(false);
 
   const location = useLocation();
   const search: QueryParams = querystring.parse(location.search);
@@ -52,6 +58,11 @@ const Airdrop: React.FC = () => {
           description: (res?.data as Resp.Error)?.message || 'Unknown error',
         });
       }
+    } else {
+      notification.error({
+        message: 'Error',
+        description: 'Missing parameters',
+      });
     }
   };
 
@@ -62,6 +73,99 @@ const Airdrop: React.FC = () => {
       }
     })()
   }, [walletSelector]);
+
+  useEffect(() => {
+    (async () => {
+      if (!!search?.transactionHashes) {
+        await checkResult();
+      } else if (!!walletSelector?.isSignedIn() && !!nearAccount && !!search?.token_contract) {
+        const metadata = await nearAccount?.viewFunction(search?.token_contract, 'ft_metadata', {});
+
+        if (!!search?.amount_per_share && !!search?.total_amount && !!search?.end_time && !!search?.guild_id && !!search?.role_id && !!metadata) {
+          const args = {
+            claim_amount: ParseAmount(search?.amount_per_share, metadata?.decimals),
+            deposit: {
+              FT: [search?.token_contract, ParseAmount(search?.total_amount, metadata?.decimals)]
+            },
+            end_time: String(new Date(search?.end_time)?.getTime() * 1000000),
+            guild_id: search?.guild_id,
+            role_ids: [search?.role_id],
+            start_time: String(new Date().getTime() * 1000000),
+          }
+          const hash = base58.encode(sha256(Buffer.from(JSON.stringify(args))));
+          localStorage.setItem(`nepbot:airdrop:${search?.user_id}`, hash);
+
+          const isRegistered = await nearAccount?.viewFunction(search?.token_contract, 'storage_balance_of', { account_id: API_CONFIG()?.AIRDROP_CONTRACT });
+
+          var txs: any[] = [];
+          if (!isRegistered) {
+            txs = [{
+              receiverId: search?.token_contract,
+              actions: [{
+                methodName: "storage_deposit",
+                args: {
+                  account_id: API_CONFIG()?.AIRDROP_CONTRACT
+                },
+                deposit: '12500000000000000000000',
+                gas: '300000000000000'
+              }]
+            }]
+          }
+
+          txs.push({
+            receiverId: API_CONFIG()?.AIRDROP_CONTRACT,
+            actions: [{
+              methodName: "add_campaign",
+              args: {
+                campaign: args
+              },
+              deposit: "8000000000000000000000",
+              gas: "100000000000000",
+              // kind: "functionCall",
+            }]
+          });
+
+          txs.push({
+            receiverId: search?.token_contract,
+            actions: [{
+              args: {
+                receiver_id: API_CONFIG()?.AIRDROP_CONTRACT,
+                amount: ParseAmount(search?.total_amount, metadata?.decimals),
+                msg: hash
+              },
+              deposit: "1",
+              gas: "100000000000000",
+              methodName: "ft_transfer_call"
+              // kind: "functionCall",
+            }]
+          });
+
+          const result = await ExecuteMultipleTransactions({
+            nearAccount,
+            transactions: txs,
+          });
+
+          if (!!result) {
+            await checkResult();
+          }
+        } else {
+          notification.error({
+            key: 'error.params',
+            message: 'Error',
+            description: 'Missing parameters',
+          });
+          setErrorState(true);
+        }
+      } else {
+        notification.error({
+          key: 'error.params',
+          message: 'Error',
+          description: 'Missing parameters',
+        });
+        setErrorState(true);
+      }
+    })()
+  }, [walletSelector, nearAccount, search]);
 
   return (
     <></>
