@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-17 03:33:14
+ * @ Modified time: 2023-03-17 04:20:16
  * @ Description: i@rua.moe
  */
 
@@ -95,6 +95,11 @@ export default defineConfig({
           title: 'FT Claim',
           path: '/ft/claim',
           component: 'FT/Claim',
+        },
+        {
+          title: 'FT Redeem',
+          path: '/ft/redeem',
+          component: 'FT/Redeem',
         },
       ],
     },

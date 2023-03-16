@@ -26,9 +26,9 @@ export async function RequestTransaction({
   walletCallbackUrl,
   setCallbackUrl,
 }: {
-  nearAccount: Account;
-  nearWallet: Wallet;
-  contractId: string;
+  nearAccount?: Account;
+  nearWallet?: Wallet;
+  contractId?: string;
   methodName: string;
   args?: any;
   gas?: string;
