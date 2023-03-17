@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:18
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-17 03:55:10
+ * @ Modified time: 2023-03-18 03:58:54
  * @ Description: i@rua.moe
  */
 
@@ -382,8 +382,8 @@ declare namespace Resp {
   }
 
   interface TwitterVerify extends Body {
-    success?: boolean;
-    data?: any;
+    name?: string;
+    value?: string;
   }
 
   interface SendFfMsg extends Body {

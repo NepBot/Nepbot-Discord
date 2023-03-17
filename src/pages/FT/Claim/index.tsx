@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-17 00:37:10
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-17 04:08:33
+ * @ Modified time: 2023-03-18 03:38:07
  * @ Description: i@rua.moe
  */
 
@@ -39,7 +39,7 @@ const Claim: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      if (!!search.user_id && !!search.guild_id && !!search.hash && !!search.sign && !!activeAccount) {
+      if (!!walletSelector?.isSignedIn() && !!nearAccount && !!search.user_id && !!search.guild_id && !!search.hash && !!search.sign && !!activeAccount) {
         const args = {
           user_id: search.user_id,
           guild_id: search.guild_id,

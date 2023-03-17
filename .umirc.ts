@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-17 04:20:16
+ * @ Modified time: 2023-03-18 04:26:15
  * @ Description: i@rua.moe
  */
 
@@ -103,8 +103,32 @@ export default defineConfig({
         },
       ],
     },
+    {
+      title: 'Vote',
+      path: '/vote',
+      layout: false,
+      routes: [
+        {
+          title: 'Vote',
+          path: '/vote',
+          component: 'Vote',
+        },
+      ],
+    },
+    {
+      title: 'Twitter',
+      path: '/twitter',
+      layout: false,
+      routes: [
+        {
+          title: 'Twitter Verify',
+          path: '/twitter/verify',
+          component: 'Twitter/Verify',
+        },
+      ],
+    },
   ],
-  ignoreMomentLocale: true,
+  ignoreMomentLocale: false,
   manifest: {
     basePath: '/',
   },

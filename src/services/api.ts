@@ -3,7 +3,7 @@ import { API_CONFIG } from '@/constants/config';
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:47
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-15 23:05:39
+ * @ Modified time: 2023-03-18 03:59:01
  * @ Description: i@rua.moe
  */
 
@@ -262,7 +262,7 @@ export const TwitterVerify = async (
   data: API.TwitterVerify,
   options?: { [key: string]: any },
 ) => {
-  return request<Resp.TwitterVerify | Resp.Error>('/api/twitter/callback', {
+  return request<Resp.TwitterVerify[] | Resp.Error>('/api/twitter/callback', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
