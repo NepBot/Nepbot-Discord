@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-15 22:56:35
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-16 16:54:05
+ * @ Modified time: 2023-03-22 00:34:40
  * @ Description: i@rua.moe
  */
 
@@ -34,6 +34,8 @@ export default () => {
 
       if (res?.response?.status === 200 && res?.data?.success) {
         setDiscordUser((res?.data as Resp.GetUser)?.data);
+        setLoading(false);
+        return (res?.data as Resp.GetUser)?.data;
       } else {
         setDiscordUser(undefined);
         notification.error({
@@ -55,6 +57,8 @@ export default () => {
 
       if (res?.response?.status === 200 && res?.data?.success) {
         setDiscordServer((res?.data as Resp.GetServer)?.data);
+        setLoading(false);
+        return (res?.data as Resp.GetServer)?.data;
       } else {
         setDiscordUser(undefined);
         notification.error({

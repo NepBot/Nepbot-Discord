@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:59:56
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-09 22:15:06
+ * @ Modified time: 2023-03-22 04:22:20
  * @ Description: i@rua.moe
  */
 
@@ -12,7 +12,9 @@ import { useIntl } from "umi";
 import { Col, Row } from "antd";
 import { TbCircleLetterN } from "react-icons/tb";
 
-const ItemCard: React.FC = () => {
+const ItemCard: React.FC<{
+  item: any;
+}> = ({ item }) => {
   const intl = useIntl();
 
   return (

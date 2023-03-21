@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:18
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-18 03:58:54
+ * @ Modified time: 2023-03-22 03:57:09
  * @ Description: i@rua.moe
  */
 
@@ -165,6 +165,12 @@ declare namespace API {
     };
     account_id?: string;
     sign?: string;
+  }
+
+  interface SendMsgSnapshot {
+    guild_id?: string;
+    channel_id?: string;
+    hash?: string;
   }
 
   interface SendFfMsg {
@@ -364,7 +370,11 @@ declare namespace Resp {
 
   interface CreateSeries extends Body {}
 
-  interface GetCollection extends Body {}
+  interface GetCollection extends Body {
+    results: any[];
+  }
+
+  interface GetMintbaseCollection extends Body {}
 
   interface GetOperationSign extends Body {
     success?: boolean;
@@ -373,7 +383,7 @@ declare namespace Resp {
 
   interface GetMintSign extends Body {
     success?: boolean;
-    data?: any;
+    data?: string;
   }
 
   interface GetSnapshotSign extends Body {
@@ -387,6 +397,11 @@ declare namespace Resp {
   }
 
   interface SendFfMsg extends Body {
+    success?: boolean;
+    data?: any;
+  }
+
+  interface SendMsgSnapshot extends Body {
     success?: boolean;
     data?: any;
   }

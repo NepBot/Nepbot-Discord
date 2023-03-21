@@ -3,7 +3,7 @@ import { API_CONFIG } from '@/constants/config';
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:47
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-18 03:59:01
+ * @ Modified time: 2023-03-22 03:56:50
  * @ Description: i@rua.moe
  */
 
@@ -228,6 +228,25 @@ export const GetCollection = async (
   );
 };
 
+export const GetMintbaseCollection = async (
+  params: {
+    collection_id: string;
+  },
+  options?: { [key: string]: any },
+) => {
+  return request<Resp.GetMintbaseCollection | Resp.Error>(
+    `${API_CONFIG().AEWEAVE_API}/${params.collection_id}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+      getResponse: true,
+    },
+  );
+};
+
 export const GetOperationSign = async (
   data: API.GetOperationSign,
   options?: { [key: string]: any },
@@ -278,6 +297,21 @@ export const GetSnapshotSign = async (
   options?: { [key: string]: any },
 ) => {
   return request<Resp.GetSnapshotSign | Resp.Error>('/api/getSnapshotSign', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data,
+    ...(options || {}),
+    getResponse: true,
+  });
+};
+
+export const SendMsgSnapshot = async (
+  data: API.SendMsgSnapshot,
+  options?: { [key: string]: any },
+) => {
+  return request<Resp.SendMsgSnapshot | Resp.Error>('/api/snapshot/sendmsg', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

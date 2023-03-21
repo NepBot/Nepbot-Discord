@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-16 01:18:40
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-17 04:00:50
+ * @ Modified time: 2023-03-20 23:14:13
  * @ Description: i@rua.moe
  */
 
@@ -83,9 +83,15 @@ const Airdrop: React.FC = () => {
 
         if (!!search?.amount_per_share && !!search?.total_amount && !!search?.end_time && !!search?.guild_id && !!search?.role_id && !!metadata) {
           const args = {
-            claim_amount: ParseAmount(search?.amount_per_share, metadata?.decimals),
+            claim_amount: ParseAmount({
+              amount: search?.amount_per_share,
+              decimals: metadata?.decimals,
+            }),
             deposit: {
-              FT: [search?.token_contract, ParseAmount(search?.total_amount, metadata?.decimals)]
+              FT: [search?.token_contract, ParseAmount({
+                amount: search?.total_amount,
+                decimals: metadata?.decimals,
+              })]
             },
             end_time: String(new Date(search?.end_time)?.getTime() * 1000000),
             guild_id: search?.guild_id,
@@ -130,7 +136,10 @@ const Airdrop: React.FC = () => {
             actions: [{
               args: {
                 receiver_id: API_CONFIG()?.AIRDROP_CONTRACT,
-                amount: ParseAmount(search?.total_amount, metadata?.decimals),
+                amount: ParseAmount({
+                  amount: search?.total_amount,
+                  decimals: metadata?.decimals,
+                }),
                 msg: hash
               },
               deposit: "1",

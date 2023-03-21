@@ -2,12 +2,12 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 02:50:33
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-16 04:35:31
+ * @ Modified time: 2023-03-22 03:56:01
  * @ Description: i@rua.moe
  */
 
 import { keyStores } from 'near-api-js';
-import { ENV_NETWORK } from './env';
+import { _MINTBASE_API_KEY, _NETWORK, _WALLETCONNECT_PROJECT_ID } from './env';
 
 const key = new keyStores.BrowserLocalStorageKeyStore();
 
@@ -16,12 +16,14 @@ export const SITE_CONFIG = {
   abbr: 'NEPBOT',
 };
 
+export const MINTBASE_API_KEY = _MINTBASE_API_KEY;
+
 export const WALLETCONNECT_CONFIG = () => {
-  switch (ENV_NETWORK) {
+  switch (_NETWORK) {
     case 'production':
     case 'mainnet':
       return {
-        projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+        projectID: _WALLETCONNECT_PROJECT_ID,
         appName: 'NEPBOT',
         chainsId: 'near:mainnet',
         metadata: {
@@ -36,7 +38,7 @@ export const WALLETCONNECT_CONFIG = () => {
     case 'development':
     case 'testnet':
       return {
-        projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+        projectID: _WALLETCONNECT_PROJECT_ID,
         appName: 'NEPBOT',
         chainsId: 'near:testnet',
         metadata: {
@@ -50,7 +52,7 @@ export const WALLETCONNECT_CONFIG = () => {
       };
     case 'dev-testnet':
       return {
-        projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+        projectID: _WALLETCONNECT_PROJECT_ID,
         appName: 'NEPBOT',
         chainsId: 'near:testnet',
         metadata: {
@@ -64,7 +66,7 @@ export const WALLETCONNECT_CONFIG = () => {
       };
     case 'betanet':
       return {
-        projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+        projectID: _WALLETCONNECT_PROJECT_ID,
         appName: 'NEPBOT',
         chainsId: 'near:betanet',
         metadata: {
@@ -78,7 +80,7 @@ export const WALLETCONNECT_CONFIG = () => {
       };
     case 'local':
       return {
-        projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+        projectID: _WALLETCONNECT_PROJECT_ID,
         appName: 'NEPBOT',
         chainsId: 'near:local',
         metadata: {
@@ -93,7 +95,7 @@ export const WALLETCONNECT_CONFIG = () => {
     case 'test':
     case 'ci':
       return {
-        projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+        projectID: _WALLETCONNECT_PROJECT_ID,
         appName: 'NEPBOT',
         chainsId: 'near:shared-test',
         metadata: {
@@ -107,7 +109,7 @@ export const WALLETCONNECT_CONFIG = () => {
       };
     case 'ci-betanet':
       return {
-        projectID: '3d19dc4846f16221f55bc36f2e3d0197',
+        projectID: _WALLETCONNECT_PROJECT_ID,
         appName: 'NEPBOT',
         chainsId: 'near:shared-test-staging',
         metadata: {
@@ -120,12 +122,12 @@ export const WALLETCONNECT_CONFIG = () => {
         logger: 'info',
       };
     default:
-      throw Error(`Unconfigured environment '${ENV_NETWORK}'.`);
+      throw Error(`Unconfigured environment '${_NETWORK}'.`);
   }
 };
 
 export const API_CONFIG = () => {
-  switch (ENV_NETWORK) {
+  switch (_NETWORK) {
     case 'production':
     case 'mainnet':
       return {
@@ -141,10 +143,15 @@ export const API_CONFIG = () => {
         AIRDROP_CONTRACT: 'airdrop.nepbot.near',
         OCT_CONTRACT: 'octopus-registry.near',
         PARAS_CONTRACT: 'x.paras.near',
+        H00KD_CONTRACT: 'h00kd.near',
+        MINTBASE_CONTRACT: 'nepbot.mintbase1.near',
         APPLICATION_ID: '958997413803196476',
         PARAS_API: 'https://api-v2-mainnet.paras.id',
+        AEWEAVE_API: 'https://arweave.net',
         PARAS: 'https://paras.id',
         ASTRO: 'https://app.astrodao.com/',
+        IPFS: 'https://ipfs.fleek.co/ipfs/',
+        NEARBLOCKS: 'https://nearblocks.io/address/',
       };
     case 'development':
     case 'testnet':
@@ -161,10 +168,15 @@ export const API_CONFIG = () => {
         AIRDROP_CONTRACT: 'airdrop.nepbot.testnet',
         OCT_CONTRACT: 'registry.test_oct.testnet',
         PARAS_CONTRACT: 'paras-token-v2.testnet',
+        H00KD_CONTRACT: 'h00kd.near',
+        MINTBASE_CONTRACT: 'nepbot.mintspace2.testnet',
         APPLICATION_ID: '928559137179172874',
         PARAS_API: 'https://api-v3-marketplace-testnet.paras.id',
+        AEWEAVE_API: 'https://arweave.net',
         PARAS: 'https://testnet.paras.id',
         ASTRO: 'https://testnet.app.astrodao.com/',
+        IPFS: 'https://ipfs.fleek.co/ipfs/',
+        NEARBLOCKS: 'https://testnet.nearblocks.io/address/',
       };
     case 'dev-testnet':
       return {
@@ -176,14 +188,19 @@ export const API_CONFIG = () => {
         explorerUrl: 'https://testnet.nearblocks.io',
         RULE_CONTRACT: 'app.dev-nepbot.testnet',
         NFT_CONTRACT: 'nft.dev-nepbot.testnet',
-        SNAPSHOT_CONTRACT: 'dev-1661250591703-95464982614704',
+        SNAPSHOT_CONTRACT: 'snapshot.dev-nepbot.testnet',
         AIRDROP_CONTRACT: 'airdrop.dev-nepbot.testnet',
         OCT_CONTRACT: 'registry.test_oct.testnet',
         PARAS_CONTRACT: 'paras-token-v2.testnet',
+        H00KD_CONTRACT: 'h00kd.near',
+        MINTBASE_CONTRACT: 'devnepbot.mintspace2.testnet',
         APPLICATION_ID: '967009211823304744',
         PARAS_API: 'https://api-v3-marketplace-testnet.paras.id',
+        AEWEAVE_API: 'https://arweave.net',
         PARAS: 'https://testnet.paras.id',
         ASTRO: 'https://testnet.app.astrodao.com/',
+        IPFS: 'https://ipfs.fleek.co/ipfs/',
+        NEARBLOCKS: 'https://testnet.nearblocks.io/address/',
       };
     case 'betanet':
       return {
@@ -217,6 +234,6 @@ export const API_CONFIG = () => {
         masterAccount: 'test.near',
       };
     default:
-      throw Error(`Unconfigured environment '${ENV_NETWORK}'.`);
+      throw Error(`Unconfigured environment '${_NETWORK}'.`);
   }
 };
