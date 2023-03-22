@@ -2,439 +2,699 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-22 22:18:27
+ * @ Modified time: 2023-03-23 04:10:20
  * @ Description: i@rua.moe
  */
 
 import React, { useState } from 'react';
 import styles from './style.less';
-import { useIntl } from 'umi';
-import { Button, Form, Input, InputNumber, Select, Space, Spin, Upload, message } from 'antd';
+import { useIntl, useModel, useLocation } from '@umijs/max';
+import { Button, Form, Input, InputNumber, Select, Space, Spin, Upload, message, notification } from 'antd';
 import { TbCircleLetterN } from 'react-icons/tb';
 import { Loading3QuartersOutlined, PlusOutlined } from '@ant-design/icons';
 import { FiDelete } from 'react-icons/fi';
 import classNames from 'classnames';
 import { AiOutlineCloudUpload } from 'react-icons/ai';
 import ConfirmModal from './ConfirmModal';
+import UserLayout from '@/layouts/UserLayout';
+import { API_CONFIG } from '@/constants/config';
+import { CreateParasCollection, GetCollection, GetOwnerSign } from '@/services/api';
+import { ParseAmount } from '@/utils/near';
+import { RequestTransaction } from '@/utils/contract';
 
-const CreateCollection: React.FC = () => {
+interface QueryParams {
+  guild_id?: string;
+  user_id?: string;
+  sign?: string;
+}
+
+interface RoyaltyItem {
+  accountId: string;
+  ratio: number;
+}
+
+const Create: React.FC<{
+  selectPlatform?: string;
+  urlSearch?: QueryParams;
+  roleList?: Item.Role[];
+  setErrorState?: React.Dispatch<React.SetStateAction<boolean>>;
+  onSubmit?: () => void;
+  onCancel?: () => void;
+}> = ({ selectPlatform, urlSearch, setErrorState, onSubmit, onCancel }) => {
+  const { walletSelector, nearAccount, setCallbackUrl } = useModel('near.account');
+  const { discordServer } = useModel('discord');
+  const { mintbaseWallet } = useModel('mintbase');
+  const { discordInfo, discordOperationSign } = useModel('store');
+
   const [form] = Form.useForm();
   const [logoUrl, setLogoUrl] = useState<string>();
   const [coverUrl, setCoverUrl] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [royalty, setRoyalty] = useState<Map<string, number>>(new Map());
+  const [parasCreatedList, setParasCreatedList] = useState<any[]>([]);
 
   const [messageApi, contextHolder] = message.useMessage();
 
   const intl = useIntl();
+  const location = useLocation();
 
   const { Dragger } = Upload;
 
+  const handleRoyalty = async () => {
+    await form.validateFields();
+    const values = await form.getFieldsValue();
+    values.royalty.forEach((item: RoyaltyItem) => {
+      if (!!item?.accountId && !!item?.ratio) {
+        setRoyalty((royalty) => {
+          royalty.set(item.accountId, item.ratio * 100);
+          return royalty;
+        });
+      }
+    });
+  };
+
+  const handleSubmit = async () => {
+    try {
+      await form.validateFields();
+      const values = await form.getFieldsValue();
+      setLoading(true);
+      const outerCollectionId = `${values?.name.replace(/\s+/g, "-")}-guild-${discordServer?.name?.replace(/\s+/g, "-")}-by-${API_CONFIG()?.NFT_CONTRACT?.replaceAll(".", "")}`.toLowerCase().replaceAll(".", "");
+
+      var res: any;
+      switch (selectPlatform) {
+        case 'paras':
+          const collection = await GetCollection({
+            collection_id: outerCollectionId
+          });
+          if (!collection || !(collection.data as Resp.GetCollection)?.results.length || parasCreatedList.indexOf(values?.name) > -1) {
+            try {
+              const contract = await nearAccount?.viewFunction(API_CONFIG()?.NFT_CONTRACT, 'get_collection', {
+                collection_id: `paras:${outerCollectionId}`
+              });
+              setLoading(false);
+              if (!!contract) {
+                notification.error({
+                  key: 'error.createCollection',
+                  message: "Error",
+                  description: "Collection name already exists"
+                });
+              }
+            } catch (error) {
+              res = {
+                collection_id: outerCollectionId,
+              }
+            }
+          } else {
+            var params = {
+              args: {
+                args: {
+                  collection: `${values.name.replace(/\s+/g, "-")}-guild-${discordServer?.name?.replace(/\s+/g, "-")}`,
+                  description: values.description,
+                  creator_id: API_CONFIG().NFT_CONTRACT,
+                  twitter: "",
+                  website: "",
+                  discord: "",
+                },
+                sign: discordOperationSign,
+                user_id: discordInfo?.user_id,
+                guild_id: discordInfo?.guild_id
+              },
+              account_id: nearAccount?.accountId,
+              sign: '',
+            }
+            const sign = await nearAccount?.connection.signer.signMessage(Buffer.from(JSON.stringify(params)), nearAccount?.accountId, API_CONFIG().networkId);
+            params.sign = new TextDecoder().decode(sign?.signature);
+
+            const result = await CreateParasCollection({
+              logo: values['logo'][0]['originFileObj'],
+              cover: values['cover'][0]['originFileObj'],
+              args: params
+            });
+
+            if (result?.response?.status === 200) {
+              res = result.data;
+
+              if (!!res.data.collection_id) {
+                setParasCreatedList((list) => {
+                  list.push(values?.name);
+                  return list;
+                });
+              }
+            }
+          }
+          break;
+        case 'mintbase':
+          const logoRes = await mintbaseWallet?.minter?.upload(values['logo'][0]['originFileObj']);
+          const coverRes = await mintbaseWallet?.minter?.upload(values['cover'][0]['originFileObj']);
+          await mintbaseWallet?.minter?.setMetadata({
+            metadata: {
+              name: values?.name?.trim(),
+              description: values?.description,
+              logo: logoRes?.data?.uri,
+              background: coverRes?.data?.uri,
+            }
+          });
+          const result = await mintbaseWallet?.minter?.getMetadataId();
+          res = {
+            collection_id: result?.data
+          }
+      }
+
+      const args = {
+        sign: discordOperationSign,
+        user_id: discordInfo?.user_id,
+        guild_id: discordInfo?.guild_id,
+      }
+
+      const sign = await nearAccount?.connection.signer.signMessage(Buffer.from(JSON.stringify(args)), nearAccount?.accountId, API_CONFIG().networkId);
+
+      const msg = {
+        args: args,
+        sign: new TextDecoder().decode(sign?.signature),
+        account_id: nearAccount?.accountId,
+      }
+
+      const _sign = await GetOwnerSign(msg);
+
+      if (!discordOperationSign) {
+        setErrorState?.(true);
+        return;
+      }
+
+      // Contract Request
+      const contract_args = {
+        outer_collection_id: res.collection_id,
+        contract_type: selectPlatform,
+        guild_id: discordInfo?.guild_id,
+        royalty: royalty,
+        mintable_roles: values.role_id,
+        price: ParseAmount({
+          amount: values?.mintPrice,
+        }) || "0",
+        mint_count_limit: !!values?.mintLimit && parseInt(values?.mintLimit),
+        ..._sign
+      };
+
+      var callbackUrl: string = "";
+      switch (selectPlatform) {
+        case 'paras':
+          callbackUrl = `${window.location.origin}/serieslist/paras:${outerCollectionId}${location.search}`;
+          break;
+        case 'mintbase':
+          callbackUrl = `${window.location.origin}/serieslist/mintbase:${res.collection_id}${location.search}`
+          break;
+      }
+
+      const data = await RequestTransaction({
+        nearAccount: nearAccount,
+        contractId: API_CONFIG().NFT_CONTRACT,
+        methodName: 'create_collection',
+        args: contract_args,
+        gas: '300000000000000',
+        deposit: '20000000000000000000000',
+        walletCallbackUrl: callbackUrl,
+        setCallbackUrl: setCallbackUrl,
+      });
+
+      setTimeout(() => {
+        if (!!data) {
+          setLoading(false);
+          form.resetFields();
+          setLogoUrl('');
+          setCoverUrl('');
+          onSubmit?.();
+        }
+      });
+
+    } catch (error: any) {
+      setLoading(false);
+      setErrorState?.(true);
+      notification.error({
+        key: 'error.createCollection',
+        message: "Error",
+        description: error,
+      });
+      return;
+    }
+  }
+
   return (
-    <div className={styles.createContainer}>
-      {contextHolder}
-      <div className={styles.wrapper}>
-        <div className={styles.headerContainer}>
-          <div className={styles.title}>
-            {intl.formatMessage({
-              id: "collection.create.title"
-            })}
+    <UserLayout>
+      <div className={styles.createContainer}>
+        {contextHolder}
+        <div className={styles.wrapper}>
+          <div className={styles.headerContainer}>
+            <div className={styles.title}>
+              {intl.formatMessage({
+                id: "collection.create.title"
+              })}
+            </div>
           </div>
-        </div>
-        <div className={styles.contentContainer}>
-          <Form
-            form={form}
-            name="createCollection"
-            autoComplete="off"
-            labelWrap={true}
-            layout="vertical"
-            className={styles.formContainer}
-          >
-            <div className={styles.formItemRow}>
+          <div className={styles.contentContainer}>
+            <Form
+              form={form}
+              name="createCollection"
+              autoComplete="off"
+              labelWrap={true}
+              layout="vertical"
+              className={styles.formContainer}
+            >
+              <div className={styles.formItemRow}>
+                <Form.Item
+                  label={
+                    <div className={styles.formItemLabel}>
+                      {intl.formatMessage({
+                        id: "collection.create.form.logo.label"
+                      })}
+                    </div>
+                  }
+                  name="logo"
+                  rules={[{
+                    required: true,
+                    message: intl.formatMessage({
+                      id: "collection.create.form.logo.required"
+                    })
+                  }]}
+                  className={classNames(styles.formItem, styles.formItemLogo)}
+                >
+                  <Dragger
+                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    name="logo"
+                    multiple={false}
+                    listType="picture-card"
+                    showUploadList={false}
+                    onChange={(info) => {
+                      setLogoUrl('https://avatars.githubusercontent.com/u/16264281');
+                      // if (info.file.status === 'done') {
+                      //   setLogoUrl(info.file.response.url);
+                      // }
+
+                      // if (info.file.status === 'removed') {
+                      //   setLogoUrl('');
+                      // }
+                    }}
+                    className={classNames(styles.formItemUploadContainer, logoUrl && styles.formItemUploadContainerHasFile)}
+                  >
+                    {logoUrl ? (
+                      <img
+                        src={logoUrl}
+                        alt="avatar"
+                        className={styles.formItemUploadImage}
+                      />
+                    ) : (
+                      <>
+                        <div className={styles.formItemUploadIcon}>
+                          <AiOutlineCloudUpload />
+                        </div>
+                        <div className={styles.formItemUploadText}>
+                          {intl.formatMessage({
+                            id: "collection.create.form.upload.text"
+                          })}
+                        </div>
+                        <div className={styles.formItemUploadOr}>
+                          {intl.formatMessage({
+                            id: "collection.create.form.upload.or"
+                          })}
+                        </div>
+                        <div className={styles.formItemUploadButton}>
+                          {intl.formatMessage({
+                            id: "collection.create.form.upload.button"
+                          })}
+                        </div>
+                      </>
+                    )}
+                  </Dragger>
+                  <div className={styles.formItemLogoTip}>
+                    {intl.formatMessage({
+                      id: "collection.create.form.upload.tip"
+                    })}
+                  </div>
+                </Form.Item>
+                <Form.Item
+                  label={
+                    <div className={styles.formItemLabel}>
+                      {intl.formatMessage({
+                        id: "collection.create.form.cover.label"
+                      })}
+                    </div>
+                  }
+                  name="cover"
+                  className={classNames(styles.formItem, styles.formItemCover)}
+                >
+                  <Dragger
+                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    name="cover"
+                    multiple={false}
+                    listType="picture-card"
+                    showUploadList={false}
+                    onChange={(info) => {
+                      setCoverUrl('https://avatars.githubusercontent.com/u/16264281');
+                      // if (info.file.status === 'done') {
+                      //   setCoverUrl(info.file.response.url);
+                      // }
+
+                      // if (info.file.status === 'removed') {
+                      //   setCoverUrl('');
+                      // }
+                    }}
+                    className={classNames(styles.formItemUploadContainer, coverUrl && styles.formItemUploadContainerHasFile)}
+                  >
+                    {coverUrl ? (
+                      <img
+                        src={coverUrl}
+                        alt="avatar"
+                        className={styles.formItemUploadImage}
+                      />
+                    ) : (
+                      <>
+                        <div className={styles.formItemUploadIcon}>
+                          <AiOutlineCloudUpload />
+                        </div>
+                        <div className={styles.formItemUploadText}>
+                          {intl.formatMessage({
+                            id: "collection.create.form.upload.text"
+                          })}
+                        </div>
+                        <div className={styles.formItemUploadOr}>
+                          {intl.formatMessage({
+                            id: "collection.create.form.upload.or"
+                          })}
+                        </div>
+                        <div className={styles.formItemUploadButton}>
+                          {intl.formatMessage({
+                            id: "collection.create.form.upload.button"
+                          })}
+                        </div>
+                      </>
+                    )}
+                  </Dragger>
+                  <div className={styles.formItemLogoTip}>
+                    {intl.formatMessage({
+                      id: "collection.create.form.upload.tip"
+                    })}
+                  </div>
+                </Form.Item>
+              </div>
               <Form.Item
                 label={
                   <div className={styles.formItemLabel}>
                     {intl.formatMessage({
-                      id: "collection.create.form.logo.label"
+                      id: "collection.create.form.name.label"
                     })}
                   </div>
                 }
-                name="logo"
+                name="name"
                 rules={[{
                   required: true,
                   message: intl.formatMessage({
-                    id: "collection.create.form.logo.required"
+                    id: "collection.create.form.name.required"
                   })
                 }]}
-                className={classNames(styles.formItem, styles.formItemLogo)}
+                className={styles.formItem}
               >
-                <Dragger
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  name="logo"
-                  multiple={false}
-                  listType="picture-card"
-                  showUploadList={false}
-                  onChange={(info) => {
-                    setLogoUrl('https://avatars.githubusercontent.com/u/16264281');
-                    // if (info.file.status === 'done') {
-                    //   setLogoUrl(info.file.response.url);
-                    // }
-
-                    // if (info.file.status === 'removed') {
-                    //   setLogoUrl('');
-                    // }
-                  }}
-                  className={classNames(styles.formItemUploadContainer, logoUrl && styles.formItemUploadContainerHasFile)}
-                >
-                  {logoUrl ? (
-                    <img
-                      src={logoUrl}
-                      alt="avatar"
-                      className={styles.formItemUploadImage}
-                    />
-                  ) : (
-                    <>
-                      <div className={styles.formItemUploadIcon}>
-                        <AiOutlineCloudUpload />
-                      </div>
-                      <div className={styles.formItemUploadText}>
-                        {intl.formatMessage({
-                          id: "collection.create.form.upload.text"
-                        })}
-                      </div>
-                      <div className={styles.formItemUploadOr}>
-                        {intl.formatMessage({
-                          id: "collection.create.form.upload.or"
-                        })}
-                      </div>
-                      <div className={styles.formItemUploadButton}>
-                        {intl.formatMessage({
-                          id: "collection.create.form.upload.button"
-                        })}
-                      </div>
-                    </>
-                  )}
-                </Dragger>
-                <div className={styles.formItemLogoTip}>
-                  {intl.formatMessage({
-                    id: "collection.create.form.upload.tip"
-                  })}
+                <div className={styles.formItemInputContainer}>
+                  <Input
+                    bordered={false}
+                    placeholder={intl.formatMessage({
+                      id: "collection.create.form.name.placeholder"
+                    })}
+                    className={styles.formItemInput}
+                  />
                 </div>
               </Form.Item>
               <Form.Item
                 label={
                   <div className={styles.formItemLabel}>
                     {intl.formatMessage({
-                      id: "collection.create.form.cover.label"
+                      id: "collection.create.form.description.label"
                     })}
                   </div>
                 }
-                name="cover"
-                className={classNames(styles.formItem, styles.formItemCover)}
+                name="description"
+                rules={[{
+                  required: true,
+                  message: intl.formatMessage({
+                    id: "collection.create.form.description.required"
+                  })
+                }]}
+                className={styles.formItem}
               >
-                <Dragger
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  name="cover"
-                  multiple={false}
-                  listType="picture-card"
-                  showUploadList={false}
-                  onChange={(info) => {
-                    setCoverUrl('https://avatars.githubusercontent.com/u/16264281');
-                    // if (info.file.status === 'done') {
-                    //   setCoverUrl(info.file.response.url);
-                    // }
-
-                    // if (info.file.status === 'removed') {
-                    //   setCoverUrl('');
-                    // }
-                  }}
-                  className={classNames(styles.formItemUploadContainer, coverUrl && styles.formItemUploadContainerHasFile)}
-                >
-                  {coverUrl ? (
-                    <img
-                      src={coverUrl}
-                      alt="avatar"
-                      className={styles.formItemUploadImage}
-                    />
-                  ) : (
-                    <>
-                      <div className={styles.formItemUploadIcon}>
-                        <AiOutlineCloudUpload />
-                      </div>
-                      <div className={styles.formItemUploadText}>
-                        {intl.formatMessage({
-                          id: "collection.create.form.upload.text"
-                        })}
-                      </div>
-                      <div className={styles.formItemUploadOr}>
-                        {intl.formatMessage({
-                          id: "collection.create.form.upload.or"
-                        })}
-                      </div>
-                      <div className={styles.formItemUploadButton}>
-                        {intl.formatMessage({
-                          id: "collection.create.form.upload.button"
-                        })}
-                      </div>
-                    </>
-                  )}
-                </Dragger>
-                <div className={styles.formItemLogoTip}>
-                  {intl.formatMessage({
-                    id: "collection.create.form.upload.tip"
-                  })}
+                <div className={styles.formItemInputContainer}>
+                  <Input
+                    bordered={false}
+                    placeholder={intl.formatMessage({
+                      id: "collection.create.form.description.placeholder"
+                    })}
+                    className={styles.formItemInput}
+                  />
                 </div>
               </Form.Item>
-            </div>
-            <Form.Item
-              label={
-                <div className={styles.formItemLabel}>
-                  {intl.formatMessage({
-                    id: "collection.create.form.name.label"
-                  })}
-                </div>
-              }
-              name="name"
-              rules={[{
-                required: true,
-                message: intl.formatMessage({
-                  id: "collection.create.form.name.required"
-                })
-              }]}
-              className={styles.formItem}
-            >
-              <div className={styles.formItemInputContainer}>
-                <Input
-                  bordered={false}
-                  placeholder={intl.formatMessage({
-                    id: "collection.create.form.name.placeholder"
-                  })}
-                  className={styles.formItemInput}
-                />
-              </div>
-            </Form.Item>
-            <Form.Item
-              label={
-                <div className={styles.formItemLabel}>
-                  {intl.formatMessage({
-                    id: "collection.create.form.description.label"
-                  })}
-                </div>
-              }
-              name="description"
-              rules={[{
-                required: true,
-                message: intl.formatMessage({
-                  id: "collection.create.form.description.required"
-                })
-              }]}
-              className={styles.formItem}
-            >
-              <div className={styles.formItemInputContainer}>
-                <Input
-                  bordered={false}
-                  placeholder={intl.formatMessage({
-                    id: "collection.create.form.description.placeholder"
-                  })}
-                  className={styles.formItemInput}
-                />
-              </div>
-            </Form.Item>
-            <Form.Item
-              label={
-                <div className={styles.formItemLabel}>
-                  {intl.formatMessage({
-                    id: "collection.create.form.mintPrice.label"
-                  })}
-                  <TbCircleLetterN
-                    className={styles.formItemLabelIcon}
-                  />
-                </div>
-              }
-              name="mintPrice"
-              className={styles.formItem}
-            >
-              <div className={styles.formItemInputContainer}>
-                <Input
-                  bordered={false}
-                  placeholder={intl.formatMessage({
-                    id: "collection.create.form.mintPrice.placeholder"
-                  })}
-                  className={styles.formItemInput}
-                />
-              </div>
-            </Form.Item>
-            <Form.Item
-              label={
-                <div className={styles.formItemLabel}>
-                  {intl.formatMessage({
-                    id: "collection.create.form.royalty.label"
-                  })}
-                </div>
-              }
-              className={styles.formItem}
-            >
-              <div className={styles.formItemListContainer}>
-                <Form.List
-                  name="royalty"
-                >
-                  {(fields, { add, remove }) => (
-                    <>
-                      {fields.map(({ key, name, ...restField }) => (
-                        <div
-                          key={key}
-                          className={styles.formItemSpaceContainer}
-                        >
-                          <Form.Item
-                            {...restField}
-                            name={[name, 'accountId']}
-                            className={classNames(styles.formItem, styles.formListItem, styles.formListItemAccountId)}
-                          >
-                            <div className={classNames(styles.formItemInputContainer, styles.formListItemInputContainer)}>
-                              <Input
-                                bordered={false}
-                                placeholder={intl.formatMessage({
-                                  id: "collection.create.form.royalty.accountId.placeholder"
-                                })}
-                                className={styles.formItemInput}
-                              />
-                            </div>
-                          </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, 'ratio']}
-                            className={classNames(styles.formItem, styles.formListItem, styles.formListItemRatio)}
-                          >
-                            <div className={classNames(styles.formItemInputContainer, styles.formListItemInputContainer)}>
-                              <InputNumber
-                                bordered={false}
-                                placeholder={intl.formatMessage({
-                                  id: "collection.create.form.royalty.ratio.placeholder"
-                                })}
-                                className={styles.formItemInput}
-                                addonAfter="%"
-                                controls={false}
-                                type='number'
-                              />
-                            </div>
-                          </Form.Item>
-                          <FiDelete
-                            className={styles.deleteButton}
-                            onClick={() => {
-                              remove(name)
-                            }}
-                          />
-                        </div>
-                      ))}
-                      <Form.Item
-                        className={classNames(styles.formItem, styles.formListItem)}
-                      >
-                        <Button
-                          ghost
-                          size='large'
-                          type="dashed"
-                          onClick={() => add()}
-                          block
-                          icon={<PlusOutlined />}
-                          className={styles.formItemAddButton}
-                        >
-                          Add field
-                        </Button>
-                      </Form.Item>
-                    </>
-                  )}
-                </Form.List>
-              </div>
-            </Form.Item>
-            <Form.Item
-              label={
-                <div className={styles.formItemLabelDesc}>
+              <Form.Item
+                label={
                   <div className={styles.formItemLabel}>
                     {intl.formatMessage({
-                      id: "collection.create.form.requiredRole.label"
+                      id: "collection.create.form.mintPrice.label"
                     })}
+                    <TbCircleLetterN
+                      className={styles.formItemLabelIcon}
+                    />
                   </div>
-                  <div className={styles.formItemLabelDescription}>
-                    {intl.formatMessage({
-                      id: "collection.create.form.requiredRole.description"
+                }
+                name="mintPrice"
+                className={styles.formItem}
+              >
+                <div className={styles.formItemInputContainer}>
+                  <InputNumber
+                    bordered={false}
+                    placeholder={intl.formatMessage({
+                      id: "collection.create.form.mintPrice.placeholder"
                     })}
-                  </div>
-                </div>
-              }
-              name="requiredRole"
-              className={styles.formItem}
-            >
-              <div className={styles.formItemInputContainer}>
-                <Select
-                  allowClear
-
-                  mode='multiple'
-                  size='middle'
-                  bordered={false}
-                  className={styles.select}
-                  popupClassName={styles.selectPopup}
-                  onChange={() => {
-
-                  }}
-                  options={[
-                    { value: 'eth', label: 'ETH' },
-                    { value: 'near', label: 'Near' },
-                    { value: 'oct', label: 'Oct' },
-                    { value: 'btc', label: 'BTC' },
-                  ]}
-                />
-              </div>
-            </Form.Item>
-            <div
-              className={styles.formButtons}
-            >
-              <div
-                className={styles.button}
-                onClick={() => {
-                  form.resetFields();
-                  history.back();
-                }}
-              >
-                {intl.formatMessage({
-                  id: 'collection.create.form.button.cancel'
-                })}
-              </div>
-              <div
-                className={classNames(styles.button, styles.buttonPrimary)}
-                onClick={async () => {
-                  if (await form.validateFields()) {
-                    form.submit();
-                    setIsModalOpen(true);
-                    setLoading(true);
-                  }
-                }}
-              >
-                {loading ? (
-                  <Spin
-                    indicator={
-                      <Loading3QuartersOutlined
-                        className={styles.loadingIcon}
-                        spin
-                      />
-                    }
+                    className={styles.formItemInput}
+                    controls={false}
+                    type='number'
+                    min={1}
                   />
-                ) : (
-                  intl.formatMessage({
-                    id: 'collection.create.form.button.ok'
-                  })
-                )}
+                </div>
+              </Form.Item>
+              <Form.Item
+                label={
+                  <div className={styles.formItemLabel}>
+                    {intl.formatMessage({
+                      id: "collection.create.form.royalty.label"
+                    })}
+                  </div>
+                }
+                className={styles.formItem}
+              >
+                <div className={styles.formItemListContainer}>
+                  <Form.List
+                    name="royalty"
+                  >
+                    {(fields, { add, remove }) => (
+                      <>
+                        {fields.map(({ key, name, ...restField }) => (
+                          <div
+                            key={key}
+                            className={styles.formItemSpaceContainer}
+                          >
+                            <Form.Item
+                              {...restField}
+                              name={[name, 'accountId']}
+                              className={classNames(styles.formItem, styles.formListItem, styles.formListItemAccountId)}
+                              rules={[{
+                                required: true,
+                                message: intl.formatMessage({
+                                  id: "collection.create.form.royalty.accountId.required"
+                                })
+                              }]}
+                            >
+                              <div className={classNames(styles.formItemInputContainer, styles.formListItemInputContainer)}>
+                                <Input
+                                  bordered={false}
+                                  placeholder={intl.formatMessage({
+                                    id: "collection.create.form.royalty.accountId.placeholder"
+                                  })}
+                                  className={styles.formItemInput}
+                                />
+                              </div>
+                            </Form.Item>
+                            <Form.Item
+                              {...restField}
+                              name={[name, 'ratio']}
+                              className={classNames(styles.formItem, styles.formListItem, styles.formListItemRatio)}
+                              rules={[{
+                                required: true,
+                                message: intl.formatMessage({
+                                  id: "collection.create.form.royalty.ratio.required"
+                                })
+                              }]}
+                            >
+                              <div className={classNames(styles.formItemInputContainer, styles.formListItemInputContainer)}>
+                                <InputNumber
+                                  bordered={false}
+                                  placeholder={intl.formatMessage({
+                                    id: "collection.create.form.royalty.ratio.placeholder"
+                                  })}
+                                  className={styles.formItemInput}
+                                  addonAfter="%"
+                                  controls={false}
+                                  type='number'
+                                  min={1}
+                                />
+                              </div>
+                            </Form.Item>
+                            <FiDelete
+                              className={styles.deleteButton}
+                              onClick={() => {
+                                remove(name)
+                              }}
+                            />
+                          </div>
+                        ))}
+                        <Form.Item
+                          className={classNames(styles.formItem, styles.formListItem)}
+                        >
+                          <Button
+                            ghost
+                            size='large'
+                            type="dashed"
+                            onClick={() => add()}
+                            block
+                            icon={<PlusOutlined />}
+                            className={styles.formItemAddButton}
+                          >
+                            Add field
+                          </Button>
+                        </Form.Item>
+                      </>
+                    )}
+                  </Form.List>
+                </div>
+              </Form.Item>
+              <Form.Item
+                label={
+                  <div className={styles.formItemLabelDesc}>
+                    <div className={styles.formItemLabel}>
+                      {intl.formatMessage({
+                        id: "collection.create.form.requiredRole.label"
+                      })}
+                    </div>
+                    <div className={styles.formItemLabelDescription}>
+                      {intl.formatMessage({
+                        id: "collection.create.form.requiredRole.description"
+                      })}
+                    </div>
+                  </div>
+                }
+                name="requiredRole"
+                className={styles.formItem}
+              >
+                <div className={styles.formItemInputContainer}>
+                  <Select
+                    allowClear
+
+                    mode='multiple'
+                    size='middle'
+                    bordered={false}
+                    className={styles.select}
+                    popupClassName={styles.selectPopup}
+                    onChange={() => {
+
+                    }}
+                    options={[
+                      { value: 'eth', label: 'ETH' },
+                      { value: 'near', label: 'Near' },
+                      { value: 'oct', label: 'Oct' },
+                      { value: 'btc', label: 'BTC' },
+                    ]}
+                  />
+                </div>
+              </Form.Item>
+              <Form.Item
+                label={
+                  <div className={styles.formItemLabelDesc}>
+                    <div className={styles.formItemLabel}>
+                      {intl.formatMessage({
+                        id: "collection.create.form.mintLimit.label"
+                      })}
+                    </div>
+                    <div className={styles.formItemLabelDescription}>
+                      {intl.formatMessage({
+                        id: "collection.create.form.mintLimit.description"
+                      })}
+                    </div>
+                  </div>
+                }
+                name="mintLimit"
+                className={styles.formItem}
+              >
+                <div className={styles.formItemInputContainer}>
+                  <InputNumber
+                    bordered={false}
+                    placeholder={intl.formatMessage({
+                      id: "collection.create.form.mintLimit.placeholder"
+                    })}
+                    className={styles.formItemInput}
+                    controls={false}
+                    type='number'
+                    min={1}
+                  />
+                </div>
+              </Form.Item>
+              <div
+                className={styles.formButtons}
+              >
+                <div
+                  className={styles.button}
+                  onClick={() => {
+                    form.resetFields();
+                    if (!!onCancel) {
+                      onCancel?.();
+                    }
+                  }}
+                >
+                  {intl.formatMessage({
+                    id: 'collection.create.form.button.cancel'
+                  })}
+                </div>
+                <div
+                  className={classNames(styles.button, styles.buttonPrimary)}
+                  onClick={async () => {
+                    if (await form.validateFields()) {
+                      form.submit();
+                      setIsModalOpen(true);
+                      setLoading(true);
+                    }
+                  }}
+                >
+                  {loading ? (
+                    <Spin
+                      indicator={
+                        <Loading3QuartersOutlined
+                          className={styles.loadingIcon}
+                          spin
+                        />
+                      }
+                    />
+                  ) : (
+                    intl.formatMessage({
+                      id: 'collection.create.form.button.ok'
+                    })
+                  )}
+                </div>
               </div>
-            </div>
-          </Form>
+            </Form>
+          </div>
         </div>
+        <ConfirmModal
+          form={form}
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+        />
       </div>
-      <ConfirmModal
-        form={form}
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-      />
-    </div>
+    </UserLayout>
   );
 };
 
-export default CreateCollection;
+export default Create;

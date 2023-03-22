@@ -2,14 +2,14 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-20 15:56:22
+ * @ Modified time: 2023-03-22 23:01:12
  * @ Description: i@rua.moe
  */
 
 import React from 'react';
 import { Outlet } from '@umijs/max';
 import { WaterMark } from '@ant-design/pro-components';
-import styles from './index.less';
+import styles from './style.less';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { _EXP_DATE } from '@/constants/env';

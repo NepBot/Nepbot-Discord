@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-22 22:18:33
+ * @ Modified time: 2023-03-23 03:46:33
  * @ Description: i@rua.moe
  */
 
@@ -16,7 +16,7 @@ import ItemCard from "../components/ItemCard";
 import { API_CONFIG } from "@/constants/config";
 import { GetCollection, GetMintbaseCollection, GetOperationSign, GetRole } from "@/services/api";
 import SelectPlatform from "@/components/SelectPlatform";
-import CreateCollection from "../Create";
+import Create from "../Create";
 
 interface QueryParams {
   guild_id?: string;
@@ -248,7 +248,18 @@ const Collection: React.FC = () => {
         />
       )}
       {!selectPlatformModal && addCollectionModal && (
-        <CreateCollection />
+        <Create
+          selectPlatform={selectPlatform}
+          urlSearch={search}
+          roleList={roleList}
+          setErrorState={setErrorState}
+          onSubmit={() => {
+            setAddCollectionModal(false);
+          }}
+          onCancel={() => {
+            setAddCollectionModal(false);
+          }}
+        />
       )}
     </>
   )

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:52:37
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-10 04:08:56
+ * @ Modified time: 2023-03-23 00:21:45
  * @ Description: i@rua.moe
  */
 
@@ -36,12 +36,19 @@ export default {
   'collection.create.form.mintPrice.label': 'Mint Price',
   'collection.create.form.mintPrice.placeholder': 'Price per item',
   'collection.create.form.royalty.label': 'Royalty',
+  'collection.create.form.royalty.accountId.required':
+    'Please input account ID',
   'collection.create.form.royalty.placeholder': 'Royalty per item',
   'collection.create.form.royalty.accountId.placeholder': 'Account ID',
+  'collection.create.form.royalty.ratio.required': 'Please input ratio',
   'collection.create.form.royalty.ratio.placeholder': 'Ratio',
   'collection.create.form.requiredRole.label': 'Required Role',
   'collection.create.form.requiredRole.description':
     'Items in this collection can only be minted by members with at lease one of the selected roles. This collection is open to all if no roles are selected.',
+  'collection.create.form.mintLimit.label': 'Minting Limit Per Wallet',
+  'collection.create.form.mintLimit.description':
+    'The maximum number of NFTs that can be minted per wallet.',
+  'collection.create.form.mintLimit.placeholder': 'Minting limit per wallet',
   'collection.create.form.button.cancel': 'Cancel',
   'collection.create.form.button.ok': 'OK',
   'collection.create.modal.title': 'Confirm',
