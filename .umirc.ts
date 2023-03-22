@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-18 04:26:15
+ * @ Modified time: 2023-03-22 18:00:05
  * @ Description: i@rua.moe
  */
 
@@ -43,12 +43,6 @@ export default defineConfig({
       layout: false,
     },
     {
-      title: 'Select Platform',
-      path: '/platform',
-      component: 'Platform',
-      layout: false,
-    },
-    {
       title: 'Collection',
       path: '/collection',
       layout: false,
@@ -59,9 +53,20 @@ export default defineConfig({
           component: 'Collection',
         },
         {
-          title: 'Collection Create',
-          path: '/collection/create',
-          component: 'Collection/Create',
+          title: 'Collection Console',
+          path: '/collection/console',
+          routes: [
+            {
+              title: 'Collection Console',
+              path: '/collection/console',
+              component: 'Collection/Console',
+            },
+            {
+              title: 'Collection Create',
+              path: '/collection/console/create',
+              component: 'Collection/Create',
+            },
+          ],
         },
         {
           title: 'Collection Detail',

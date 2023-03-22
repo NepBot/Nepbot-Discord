@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-16 17:20:36
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-22 04:04:37
+ * @ Modified time: 2023-03-22 16:23:14
  * @ Description: i@rua.moe
  */
 
@@ -22,5 +22,14 @@ declare namespace Contract {
     minted_count?: number;
     total_copies?: number;
     updated?: boolean;
+    contract_type?: string;
+    cover?: string;
+    background?: string;
+    media?: string;
+    logo?: string;
+    collection?: string;
+    description?: string;
+    mintable_roles?: string[];
+    price?: string;
   }
 }

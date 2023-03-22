@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-10 04:05:15
+ * @ Modified time: 2023-03-22 22:18:27
  * @ Description: i@rua.moe
  */
 
@@ -17,7 +17,7 @@ import classNames from 'classnames';
 import { AiOutlineCloudUpload } from 'react-icons/ai';
 import ConfirmModal from './ConfirmModal';
 
-const Create: React.FC = () => {
+const CreateCollection: React.FC = () => {
   const [form] = Form.useForm();
   const [logoUrl, setLogoUrl] = useState<string>();
   const [coverUrl, setCoverUrl] = useState<string>();
@@ -437,4 +437,4 @@ const Create: React.FC = () => {
   );
 };
 
-export default Create;
+export default CreateCollection;

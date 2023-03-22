@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-15 03:53:57
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-21 21:42:34
+ * @ Modified time: 2023-03-22 16:13:49
  * @ Description: i@rua.moe
  */
 
@@ -19,7 +19,7 @@ export async function Contract({ nearAccount }: { nearAccount?: Account }) {
   }
 }
 
-export async function TrimLeadingZeroes({ value }: { value: string }) {
+export function TrimLeadingZeroes({ value }: { value: string }) {
   value = value.replace(/^0+/, '');
   if (value === '') {
     return '0';
@@ -27,11 +27,11 @@ export async function TrimLeadingZeroes({ value }: { value: string }) {
   return value;
 }
 
-export async function TrimTrailingZeroes({ value }: { value: string }) {
-  return value?.replace(/\.?0*$/, '');
+export function TrimTrailingZeroes({ value }: { value: string }) {
+  return value.replace(/\.?0*$/, '');
 }
 
-export async function FormatWithCommas({ value }: { value: string }) {
+export function FormatWithCommas({ value }: { value: string }) {
   const pattern = /(-?\d+)(\d{3})/;
   while (pattern.test(value)) {
     value = value.replace(pattern, '$1,$2');
@@ -39,7 +39,7 @@ export async function FormatWithCommas({ value }: { value: string }) {
   return value;
 }
 
-export async function ParseAmount({
+export function ParseAmount({
   amount,
   decimals = 24,
 }: {
@@ -61,7 +61,7 @@ export async function ParseAmount({
   });
 }
 
-export async function FormatAmount({
+export function FormatAmount({
   amount,
   decimals = 24,
   fracDigits = 2,
@@ -81,7 +81,7 @@ export async function FormatAmount({
   });
 }
 
-export async function SignMessage({
+export function SignMessage({
   keystore,
   message,
 }: {
@@ -97,7 +97,7 @@ export async function SignMessage({
   };
 }
 
-export async function LoadImage({ src }: { src: string }) {
+export function LoadImage({ src }: { src: string }) {
   new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => resolve(img);
@@ -106,7 +106,7 @@ export async function LoadImage({ src }: { src: string }) {
   });
 }
 
-export async function GetImageData({ image }: { image: HTMLImageElement }) {
+export function GetImageData({ image }: { image: HTMLImageElement }) {
   const canvas = document.createElement('canvas');
   canvas.width = 360;
   canvas.height = 400;
@@ -123,10 +123,10 @@ export async function EncodeImageToBlurHash({
   return await encode(imageData.data, imageData.width, imageData.height, 4, 4);
 }
 
-export async function GetGas({ gas }: { gas: string }) {
+export function GetGas({ gas }: { gas: string }) {
   return gas ? new BN(gas) : new BN('300000000000000');
 }
 
-export async function GetDeposit({ amount }: { amount: string }) {
+export function GetDeposit({ amount }: { amount: string }) {
   return amount ? new BN(amount) : new BN('0');
 }

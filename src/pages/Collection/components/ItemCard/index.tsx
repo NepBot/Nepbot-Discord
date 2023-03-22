@@ -2,70 +2,107 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:59:56
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-22 04:22:20
+ * @ Modified time: 2023-03-22 21:46:20
  * @ Description: i@rua.moe
  */
 
 import React, { useState } from "react";
 import styles from "./style.less";
-import { useIntl } from "umi";
+import { useIntl, useModel } from "@umijs/max";
 import { Col, Row } from "antd";
 import { TbCircleLetterN } from "react-icons/tb";
+import { API_CONFIG } from "@/constants/config";
+import { FormatAmount } from "@/utils/near";
+import { ReactComponent as Paras } from '@/assets/collection/paras.svg';
+import { ReactComponent as Mintbase } from '@/assets/collection/mintbase.svg';
 
 const ItemCard: React.FC<{
-  item: any;
-}> = ({ item }) => {
+  item: Contract.WrappedCollections;
+  roleMap: Map<string, string>;
+}> = ({ item, roleMap }) => {
+  const { discordServer } = useModel('discord');
+
   const intl = useIntl();
 
   return (
     <div className={styles.itemContainer}>
       <div className={styles.itemCover}>
-        <img
-          src="https://avatars.githubusercontent.com/u/16264281"
-          alt="cover"
-          className={styles.itemCoverImage}
-        />
+        {item?.contract_type === 'paras' && (
+          <img
+            src={item?.cover ? API_CONFIG().IPFS + item?.cover : require('@/assets/collection/banner.webp')}
+            alt="cover"
+            className={styles.itemCoverImage}
+          />
+        )}
+        {item?.contract_type === 'mintbase' && (
+          <img
+            src={item?.background ? API_CONFIG().IPFS + item?.background : require('@/assets/collection/banner.webp')}
+            alt="cover"
+            className={styles.itemCoverImage}
+          />
+        )}
       </div>
       <div className={styles.itemContent}>
         <div className={styles.itemMeta}>
           <div className={styles.itemMetaIcon}>
+            {item?.contract_type === 'paras' && (
+              <img
+                src={item?.media ? API_CONFIG().IPFS + item?.media : require('@/assets/collection/icon.webp')}
+                alt="media"
+                className={styles.itemMetaIconImage}
+              />
+            )}
+            {item?.contract_type === 'mintbase' && (
+              <img
+                src={item?.logo ? API_CONFIG().IPFS + item?.logo : require('@/assets/collection/icon.webp')}
+                alt="media"
+                className={styles.itemMetaIconImage}
+              />
+            )}
             <img
-              src="https://avatars.githubusercontent.com/u/16264281"
-              alt="cover"
+              src={item?.logo ? API_CONFIG().IPFS + item?.logo : require('@/assets/collection/icon.webp')}
+              alt="media"
               className={styles.itemMetaIconImage}
+            />
+            <Mintbase
+              className={styles.itemMetaIconPlatform}
             />
           </div>
           <div className={styles.itemMetaInfo}>
             <div className={styles.itemMetaInfoTitle}>
-              Hikaru NFT
+              {item?.collection?.split("-guild-")[0].replaceAll("-", " ")}
             </div>
             <div className={styles.itemMetaInfoDescription}>
-              Daisy
+              {discordServer?.name}
             </div>
             <div className={styles.itemMetaInfoCreator}>
               {intl.formatMessage({
                 id: "collection.item.creator"
               }, {
-                name: 'Hikaru'
+                name: item?.creator
               })}
             </div>
           </div>
         </div>
         <div className={styles.itemDescription}>
-          Ha Ha Ha Ha Ha Ha ! ! !
+          {item?.description}
         </div>
         <div className={styles.tagsContainer}>
           <Row gutter={[10, 10]}>
-            <Col span={6}>
-              <div className={styles.tag}>
-                Near
-              </div>
-            </Col>
-            <Col span={6}>
-              <div className={styles.tag}>
-                Oct
-              </div>
-            </Col>
+            {item?.mintable_roles?.map((role: any) => {
+              if (!!role && !!role?.length) {
+                return (
+                  <Col span={6}>
+                    <div
+                      className={styles.tag}
+                      key={role}
+                    >
+                      {roleMap.get(role)}
+                    </div>
+                  </Col>
+                )
+              }
+            })}
           </Row>
         </div>
         <div className={styles.statisticsContainer}>
@@ -73,7 +110,11 @@ const ItemCard: React.FC<{
             <Col span={12}>
               <div className={styles.statisticsItem}>
                 <div className={styles.statisticsItemValue}>
-                  0.056
+                  {!!item?.price ? FormatAmount({
+                    amount: item?.price,
+                    decimals: 24,
+                    fracDigits: 4,
+                  }) : NaN}
                   <TbCircleLetterN
                     className={styles.statisticsItemValueIcon}
                   />
@@ -86,7 +127,7 @@ const ItemCard: React.FC<{
             <Col span={12}>
               <div className={styles.statisticsItem}>
                 <div className={styles.statisticsItemValue}>
-                  10%
+                  {!!item?.royaltyTotal ? item?.royaltyTotal : NaN}%
                 </div>
                 <div className={styles.statisticsItemName}>
                   Royality
@@ -96,7 +137,7 @@ const ItemCard: React.FC<{
             <Col span={12}>
               <div className={styles.statisticsItem}>
                 <div className={styles.statisticsItemValue}>
-                  3
+                  {!!item?.total_copies ? item?.total_copies : NaN}
                 </div>
                 <div className={styles.statisticsItemName}>
                   Total Copies
@@ -106,7 +147,7 @@ const ItemCard: React.FC<{
             <Col span={12}>
               <div className={styles.statisticsItem}>
                 <div className={styles.statisticsItemValue}>
-                  6
+                  {!!item?.minted_count ? item?.minted_count : NaN}
                 </div>
                 <div className={styles.statisticsItemName}>
                   Total Minted
