@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-21 23:04:45
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-23 01:26:05
+ * @ Modified time: 2023-03-24 03:59:52
  * @ Description: i@rua.moe
  */
 
@@ -13,6 +13,7 @@ interface DiscordInfo {
   guild_id?: string;
   user_id?: string;
   sign?: string;
+  expires?: number;
 }
 
 export default () => {
@@ -44,7 +45,7 @@ export default () => {
         sign: discordInfo.sign,
       },
       options: {
-        expires: 1,
+        expires: discordInfo.expires || 1,
       },
     });
   }, [discordInfo]);
