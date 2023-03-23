@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-23 03:46:33
+ * @ Modified time: 2023-03-24 02:40:49
  * @ Description: i@rua.moe
  */
 
@@ -16,7 +16,8 @@ import ItemCard from "../components/ItemCard";
 import { API_CONFIG } from "@/constants/config";
 import { GetCollection, GetMintbaseCollection, GetOperationSign, GetRole } from "@/services/api";
 import SelectPlatform from "@/components/SelectPlatform";
-import Create from "../Create";
+import Create from "./Create";
+import UserLayout from "@/layouts/UserLayout";
 
 interface QueryParams {
   guild_id?: string;
@@ -41,14 +42,6 @@ const Collection: React.FC = () => {
 
   const location = useLocation();
   const search: QueryParams = querystring.parse(location.search);
-
-  useEffect(() => {
-    (async () => {
-      if (!walletSelector?.isSignedIn()) {
-        await OpenModalWallet();
-      }
-    })()
-  }, [walletSelector]);
 
   useEffect(() => {
     (async () => {
@@ -188,7 +181,7 @@ const Collection: React.FC = () => {
   };
 
   return (
-    <>
+    <UserLayout>
       {!selectPlatformModal && !addCollectionModal && (
         <div className={styles.collectionContainer}>
           <div className={styles.wrapper}>
@@ -261,7 +254,7 @@ const Collection: React.FC = () => {
           }}
         />
       )}
-    </>
+    </UserLayout>
   )
 };
 

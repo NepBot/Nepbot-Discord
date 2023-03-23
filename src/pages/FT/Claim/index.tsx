@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-17 00:37:10
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-18 03:38:07
+ * @ Modified time: 2023-03-24 02:46:50
  * @ Description: i@rua.moe
  */
 
@@ -14,6 +14,7 @@ import { GetAirdropFTSign } from "@/services/api";
 import { notification } from "antd";
 import { API_CONFIG } from "@/constants/config";
 import { ExecuteMultipleTransactions } from "@/utils/contract";
+import UserLayout from "@/layouts/UserLayout";
 
 interface QueryParams {
   user_id?: string;
@@ -28,14 +29,6 @@ const Claim: React.FC = () => {
 
   const location = useLocation();
   const search: QueryParams = querystring.parse(location.search);
-
-  useEffect(() => {
-    (async () => {
-      if (!walletSelector?.isSignedIn()) {
-        await OpenModalWallet();
-      }
-    })()
-  }, [walletSelector]);
 
   useEffect(() => {
     (async () => {
@@ -134,8 +127,8 @@ const Claim: React.FC = () => {
   }, [walletSelector, walletList, nearAccount, activeAccount, search]);
 
   return (
-    <>
-    </>
+    <UserLayout>
+    </UserLayout>
   );
 };
 

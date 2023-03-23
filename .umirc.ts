@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-22 18:00:05
+ * @ Modified time: 2023-03-23 18:51:25
  * @ Description: i@rua.moe
  */
 
@@ -60,11 +60,6 @@ export default defineConfig({
               title: 'Collection Console',
               path: '/collection/console',
               component: 'Collection/Console',
-            },
-            {
-              title: 'Collection Create',
-              path: '/collection/console/create',
-              component: 'Collection/Create',
             },
           ],
         },

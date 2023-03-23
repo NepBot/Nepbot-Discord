@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-16 01:18:40
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-20 23:14:13
+ * @ Modified time: 2023-03-24 02:46:32
  * @ Description: i@rua.moe
  */
 
@@ -16,6 +16,7 @@ import { base58, sha256 } from "ethers/lib/utils";
 import { ParseAmount } from "@/utils/near";
 import { API_CONFIG } from "@/constants/config";
 import { ExecuteMultipleTransactions } from "@/utils/contract";
+import UserLayout from "@/layouts/UserLayout";
 
 interface QueryParams {
   guild_id?: string;
@@ -65,14 +66,6 @@ const Airdrop: React.FC = () => {
       });
     }
   };
-
-  useEffect(() => {
-    (async () => {
-      if (!walletSelector?.isSignedIn()) {
-        await OpenModalWallet();
-      }
-    })()
-  }, [walletSelector]);
 
   useEffect(() => {
     (async () => {
@@ -177,7 +170,9 @@ const Airdrop: React.FC = () => {
   }, [walletSelector, nearAccount, search]);
 
   return (
-    <></>
+    <UserLayout>
+
+    </UserLayout>
   )
 };
 

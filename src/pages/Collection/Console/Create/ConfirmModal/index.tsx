@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 16:18:09
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-10 03:57:32
+ * @ Modified time: 2023-03-24 02:36:48
  * @ Description: i@rua.moe
  */
 
@@ -14,10 +14,10 @@ import classNames from 'classnames';
 import { Loading3QuartersOutlined } from '@ant-design/icons';
 
 const ConfirmModal: React.FC<{
-  form: FormInstance<any>;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ form, isModalOpen, setIsModalOpen }) => {
+  onConfirm: () => void;
+}> = ({ isModalOpen, setIsModalOpen, onConfirm }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const [messageApi, contextHolder] = message.useMessage();
@@ -59,6 +59,7 @@ const ConfirmModal: React.FC<{
             className={classNames(styles.button, styles.buttonPrimary)}
             onClick={async () => {
               setLoading(true);
+              await onConfirm();
               messageApi.open({
                 type: 'success',
                 content: 'Success',

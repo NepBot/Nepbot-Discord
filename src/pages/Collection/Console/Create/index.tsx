@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-23 04:10:20
+ * @ Modified time: 2023-03-24 02:37:19
  * @ Description: i@rua.moe
  */
 
@@ -21,6 +21,7 @@ import { API_CONFIG } from '@/constants/config';
 import { CreateParasCollection, GetCollection, GetOwnerSign } from '@/services/api';
 import { ParseAmount } from '@/utils/near';
 import { RequestTransaction } from '@/utils/contract';
+import { RcFile } from 'antd/es/upload';
 
 interface QueryParams {
   guild_id?: string;
@@ -40,13 +41,15 @@ const Create: React.FC<{
   setErrorState?: React.Dispatch<React.SetStateAction<boolean>>;
   onSubmit?: () => void;
   onCancel?: () => void;
-}> = ({ selectPlatform, urlSearch, setErrorState, onSubmit, onCancel }) => {
+}> = ({ selectPlatform, urlSearch, roleList, setErrorState, onSubmit, onCancel }) => {
   const { walletSelector, nearAccount, setCallbackUrl } = useModel('near.account');
   const { discordServer } = useModel('discord');
   const { mintbaseWallet } = useModel('mintbase');
   const { discordInfo, discordOperationSign } = useModel('store');
 
   const [form] = Form.useForm();
+  const [logoFile, setLogoFile] = useState<RcFile>();
+  const [coverFile, setCoverFile] = useState<RcFile>();
   const [logoUrl, setLogoUrl] = useState<string>();
   const [coverUrl, setCoverUrl] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -127,8 +130,8 @@ const Create: React.FC<{
             params.sign = new TextDecoder().decode(sign?.signature);
 
             const result = await CreateParasCollection({
-              logo: values['logo'][0]['originFileObj'],
-              cover: values['cover'][0]['originFileObj'],
+              logo: logoFile as File,
+              cover: coverFile as File,
               args: params
             });
 
@@ -145,8 +148,8 @@ const Create: React.FC<{
           }
           break;
         case 'mintbase':
-          const logoRes = await mintbaseWallet?.minter?.upload(values['logo'][0]['originFileObj']);
-          const coverRes = await mintbaseWallet?.minter?.upload(values['cover'][0]['originFileObj']);
+          const logoRes = await mintbaseWallet?.minter?.upload(logoFile as File);
+          const coverRes = await mintbaseWallet?.minter?.upload(coverFile as File);
           await mintbaseWallet?.minter?.setMetadata({
             metadata: {
               name: values?.name?.trim(),
@@ -221,6 +224,8 @@ const Create: React.FC<{
         if (!!data) {
           setLoading(false);
           form.resetFields();
+          setLogoFile(undefined);
+          setCoverFile(undefined);
           setLogoUrl('');
           setCoverUrl('');
           onSubmit?.();
@@ -237,7 +242,33 @@ const Create: React.FC<{
       });
       return;
     }
-  }
+  };
+
+  const beforeUpload = (file: File) => {
+    const isAllowType = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/svg+xml';
+    if (!isAllowType) {
+      notification.error({
+        key: 'error.createCollection',
+        message: "Error",
+        description: "Only support jpg, jpeg, png, gif, svg format",
+      });
+    }
+    const isLt10M = file.size / 1024 / 1024 < 10;
+    if (!isLt10M) {
+      notification.error({
+        key: 'error.createCollection',
+        message: "Error",
+        description: "Image must smaller than 10MB!",
+      });
+    }
+    return isAllowType && isLt10M;
+  };
+
+  const getBase64 = (img: RcFile, callback: (url: string) => void) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result as string));
+    reader.readAsDataURL(img);
+  };
 
   return (
     <UserLayout>
@@ -279,20 +310,31 @@ const Create: React.FC<{
                   className={classNames(styles.formItem, styles.formItemLogo)}
                 >
                   <Dragger
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                     name="logo"
                     multiple={false}
                     listType="picture-card"
+                    beforeUpload={beforeUpload}
                     showUploadList={false}
-                    onChange={(info) => {
-                      setLogoUrl('https://avatars.githubusercontent.com/u/16264281');
-                      // if (info.file.status === 'done') {
-                      //   setLogoUrl(info.file.response.url);
-                      // }
+                    onChange={async (info) => {
+                      if (info.file.status === 'uploading') {
+                        setLoading(true);
+                        return;
+                      }
 
-                      // if (info.file.status === 'removed') {
-                      //   setLogoUrl('');
-                      // }
+                      if (info.file.status === 'done' && !!info?.file?.originFileObj) {
+                        setLogoFile(info?.file?.originFileObj);
+                        await getBase64(info?.file?.originFileObj, (url) => {
+                          setLogoUrl(url);
+                          setLoading(false);
+                        });
+                        return;
+                      }
+
+                      if (info.file.status === 'removed') {
+                        setLogoFile(undefined);
+                        setLogoUrl('');
+                        return;
+                      }
                     }}
                     className={classNames(styles.formItemUploadContainer, logoUrl && styles.formItemUploadContainerHasFile)}
                   >
@@ -343,20 +385,30 @@ const Create: React.FC<{
                   className={classNames(styles.formItem, styles.formItemCover)}
                 >
                   <Dragger
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                     name="cover"
                     multiple={false}
                     listType="picture-card"
                     showUploadList={false}
-                    onChange={(info) => {
-                      setCoverUrl('https://avatars.githubusercontent.com/u/16264281');
-                      // if (info.file.status === 'done') {
-                      //   setCoverUrl(info.file.response.url);
-                      // }
+                    onChange={async (info) => {
+                      if (info.file.status === 'uploading') {
+                        setLoading(true);
+                        return;
+                      }
 
-                      // if (info.file.status === 'removed') {
-                      //   setCoverUrl('');
-                      // }
+                      if (info.file.status === 'done' && !!info?.file?.originFileObj) {
+                        setCoverFile(info?.file?.originFileObj);
+                        await getBase64(info?.file?.originFileObj, (url) => {
+                          setCoverUrl(url);
+                          setLoading(false);
+                        });
+                        return;
+                      }
+
+                      if (info.file.status === 'removed') {
+                        setCoverFile(undefined);
+                        setCoverUrl('');
+                        return;
+                      }
                     }}
                     className={classNames(styles.formItemUploadContainer, coverUrl && styles.formItemUploadContainerHasFile)}
                   >
@@ -602,12 +654,11 @@ const Create: React.FC<{
                     onChange={() => {
 
                     }}
-                    options={[
-                      { value: 'eth', label: 'ETH' },
-                      { value: 'near', label: 'Near' },
-                      { value: 'oct', label: 'Oct' },
-                      { value: 'btc', label: 'BTC' },
-                    ]}
+                    options={(roleList || []).map((role) => ({
+                      label: role.name,
+                      value: role.id,
+                      key: role.id,
+                    }))}
                   />
                 </div>
               </Form.Item>
@@ -663,6 +714,7 @@ const Create: React.FC<{
                   onClick={async () => {
                     if (await form.validateFields()) {
                       form.submit();
+                      await handleRoyalty();
                       setIsModalOpen(true);
                       setLoading(true);
                     }
@@ -688,9 +740,9 @@ const Create: React.FC<{
           </div>
         </div>
         <ConfirmModal
-          form={form}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
+          onConfirm={handleSubmit}
         />
       </div>
     </UserLayout>

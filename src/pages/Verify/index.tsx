@@ -2,17 +2,17 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 02:53:34
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-16 16:28:51
+ * @ Modified time: 2023-03-24 02:44:52
  * @ Description: i@rua.moe
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './style.less';
 import { useIntl, useModel, useLocation } from '@umijs/max';
 import querystring from 'query-string';
 import Background from '@/components/TopBackground';
 import classNames from 'classnames';
-import { Spin } from 'antd';
+import { Spin, notification } from 'antd';
 import { Loading3QuartersOutlined } from '@ant-design/icons';
 
 interface QueryParams {
@@ -24,6 +24,7 @@ interface QueryParams {
 const Verify: React.FC = () => {
   const { nearWallet, OpenModalWallet } = useModel('near.account');
   const { loading, discordUser, discordServer, GetUserInfo, GetServerInfo } = useModel('discord');
+  const [errorState, setErrorState] = useState<boolean>(false);
 
   const intl = useIntl();
   const location = useLocation();
@@ -40,6 +41,13 @@ const Verify: React.FC = () => {
       GetServerInfo({
         guild_id: search.guild_id,
       });
+    } else {
+      notification.error({
+        key: 'error.params',
+        message: 'Error',
+        description: 'Missing parameters',
+      });
+      setErrorState(true);
     }
   }, []);
 

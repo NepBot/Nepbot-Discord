@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-20 16:06:26
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-21 21:49:22
+ * @ Modified time: 2023-03-24 02:46:00
  * @ Description: i@rua.moe
  */
 
@@ -15,6 +15,7 @@ import { API_CONFIG } from '@/constants/config';
 import { GetSnapshotSign, SendMsgSnapshot } from '@/services/api';
 import { base58 } from 'ethers/lib/utils';
 import { RequestTransaction } from '@/utils/contract';
+import UserLayout from '@/layouts/UserLayout';
 
 interface QueryParams {
   transactionHashes?: string;
@@ -50,14 +51,6 @@ const Create: React.FC = () => {
       }
     }
   };
-
-  useEffect(() => {
-    (async () => {
-      if (!walletSelector?.isSignedIn()) {
-        await OpenModalWallet();
-      }
-    })()
-  }, [walletSelector]);
 
   useEffect(() => {
     (async () => {
@@ -105,7 +98,9 @@ const Create: React.FC = () => {
   }, [walletSelector, nearAccount, search]);
 
   return (
-    <></>
+    <UserLayout>
+
+    </UserLayout>
   )
 };
 

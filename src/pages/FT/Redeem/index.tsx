@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-17 04:09:10
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-18 03:38:16
+ * @ Modified time: 2023-03-24 02:47:06
  * @ Description: i@rua.moe
  */
 
@@ -12,6 +12,7 @@ import querystring from 'query-string';
 import { RequestTransaction } from "@/utils/contract";
 import { API_CONFIG } from "@/constants/config";
 import { notification } from "antd";
+import UserLayout from "@/layouts/UserLayout";
 
 interface QueryParams {
   hash?: string;
@@ -23,14 +24,6 @@ const Redeem: React.FC = () => {
 
   const location = useLocation();
   const search: QueryParams = querystring.parse(location.search);
-
-  useEffect(() => {
-    (async () => {
-      if (!walletSelector?.isSignedIn()) {
-        await OpenModalWallet();
-      }
-    })()
-  }, [walletSelector]);
 
   useEffect(() => {
     (async () => {
@@ -67,7 +60,9 @@ const Redeem: React.FC = () => {
   }, [walletSelector, walletList, nearAccount, activeAccount, search]);
 
   return (
-    <></>
+    <UserLayout>
+
+    </UserLayout>
   )
 };
 

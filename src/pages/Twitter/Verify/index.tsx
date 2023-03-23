@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-18 03:42:43
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-18 04:20:00
+ * @ Modified time: 2023-03-24 02:45:23
  * @ Description: i@rua.moe
  */
 
@@ -13,6 +13,7 @@ import './style.less';
 import { TwitterVerify } from "@/services/api";
 import { API_CONFIG } from "@/constants/config";
 import { notification } from "antd";
+import UserLayout from "@/layouts/UserLayout";
 
 interface QueryParams {
   state?: string;
@@ -26,14 +27,6 @@ const Verify: React.FC = () => {
 
   const location = useLocation();
   const search: QueryParams = querystring.parse(location.search);
-
-  useEffect(() => {
-    (async () => {
-      if (!walletSelector?.isSignedIn()) {
-        await OpenModalWallet();
-      }
-    })()
-  }, [walletSelector]);
 
   useEffect(() => {
     (async () => {
@@ -89,7 +82,9 @@ const Verify: React.FC = () => {
   }, [walletSelector, nearAccount, search]);
 
   return (
-    <></>
+    <UserLayout>
+
+    </UserLayout>
   )
 };
 
