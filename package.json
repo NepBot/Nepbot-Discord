@@ -42,6 +42,7 @@
     "@near-wallet-selector/welldone-wallet": "^7.9.1",
     "@near-wallet-selector/xdefi": "^7.9.1",
     "@types/bn.js": "^5.1.1",
+    "@types/uuid": "^9.0.1",
     "@umijs/max": "^4.0.61",
     "@walletconnect/auth-client": "^2.0.3",
     "@walletconnect/core": "^2.5.1",

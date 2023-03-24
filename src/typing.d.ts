@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-16 17:20:36
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-22 16:23:14
+ * @ Modified time: 2023-03-25 02:20:23
  * @ Description: i@rua.moe
  */
 
@@ -15,6 +15,7 @@ declare namespace Contract {
   }
 
   interface WrappedCollections {
+    name?: string;
     royaltyTotal?: number;
     inner_collection_id?: string;
     outer_collection_id?: string;
@@ -23,6 +24,7 @@ declare namespace Contract {
     total_copies?: number;
     updated?: boolean;
     contract_type?: string;
+    contract?: string;
     cover?: string;
     background?: string;
     media?: string;

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:59:56
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-22 21:46:20
+ * @ Modified time: 2023-03-25 02:33:54
  * @ Description: i@rua.moe
  */
 
@@ -19,13 +19,17 @@ import { ReactComponent as Mintbase } from '@/assets/collection/mintbase.svg';
 const ItemCard: React.FC<{
   item: Contract.WrappedCollections;
   roleMap: Map<string, string>;
-}> = ({ item, roleMap }) => {
+  onClick?: () => void;
+}> = ({ item, roleMap, onClick }) => {
   const { discordServer } = useModel('discord');
 
   const intl = useIntl();
 
   return (
-    <div className={styles.itemContainer}>
+    <div
+      className={styles.itemContainer}
+      onClick={onClick}
+    >
       <div className={styles.itemCover}>
         {item?.contract_type === 'paras' && (
           <img

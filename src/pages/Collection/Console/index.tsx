@@ -2,16 +2,17 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-24 02:40:49
+ * @ Modified time: 2023-03-25 02:34:22
  * @ Description: i@rua.moe
  */
 
 import React, { useEffect, useState } from "react";
 import styles from "./style.less";
-import { useIntl, useLocation, useModel } from "umi";
+import { useIntl, useLocation, useModel, history } from "@umijs/max";
 import { AiOutlinePlus } from "react-icons/ai";
 import { Col, Row, notification } from "antd";
 import querystring from 'query-string';
+import { v4 as uuidv4 } from 'uuid';
 import ItemCard from "../components/ItemCard";
 import { API_CONFIG } from "@/constants/config";
 import { GetCollection, GetMintbaseCollection, GetOperationSign, GetRole } from "@/services/api";
@@ -166,8 +167,13 @@ const Collection: React.FC = () => {
           });
         }
         setCollectionList(result);
-      } catch (error) {
-        console.log(error);
+      } catch (error: any) {
+        notification.error({
+          key: 'error.fetch',
+          message: 'Error',
+          description: error,
+        });
+        setErrorState(true);
       }
       setLoading(false);
     } else {
@@ -217,6 +223,10 @@ const Collection: React.FC = () => {
                           <ItemCard
                             item={item}
                             roleMap={roleMap}
+                            key={uuidv4().toString()}
+                            onClick={() => {
+                              history.push(`/collection/${item.inner_collection_id}`);
+                            }}
                           />
                         </Col>
                       )
