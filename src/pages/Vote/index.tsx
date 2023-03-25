@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-17 18:08:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-24 02:42:28
+ * @ Modified time: 2023-03-26 00:44:00
  * @ Description: i@rua.moe
  */
 
@@ -22,7 +22,7 @@ interface QueryParams {
 }
 
 const Vote: React.FC = () => {
-  const { walletSelector, nearAccount, OpenModalWallet, setCallbackUrl } = useModel('near.account');
+  const { walletSelector, nearAccount, nearWallet, setCallbackUrl } = useModel('near.account');
   const [errorState, setErrorState] = useState<boolean>(false);
 
   const location = useLocation();
@@ -33,6 +33,7 @@ const Vote: React.FC = () => {
       if (!!walletSelector?.isSignedIn() && !!nearAccount && !!search?.contract_address && !!search?.proposal_id && !!search.action) {
         const res = await RequestTransaction({
           nearAccount: nearAccount,
+          nearWallet: nearWallet,
           contractId: search.contract_address,
           methodName: 'act_proposal',
           args: {

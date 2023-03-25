@@ -2,13 +2,13 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-25 02:56:49
+ * @ Modified time: 2023-03-26 01:05:38
  * @ Description: i@rua.moe
  */
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./style.less";
-import { useIntl, history, useLocation, useModel } from "umi";
+import { useIntl, useLocation, useModel } from "umi";
 import { AiFillCloseCircle, AiFillCodeSandboxCircle, AiOutlinePlus } from "react-icons/ai";
 import { AiFillCheckCircle } from "react-icons/ai";
 import classNames from "classnames";
@@ -20,6 +20,7 @@ import { GetCollection, GetMintbaseCollection, GetOperationSign, GetRole } from 
 import UserLayout from "@/layouts/UserLayout";
 import Mint from "./components/Mint";
 import { v4 as uuidv4 } from 'uuid';
+import { base58 } from "ethers/lib/utils";
 
 interface QueryParams {
   guild_id?: string;
@@ -28,10 +29,9 @@ interface QueryParams {
 }
 
 const Collection: React.FC = () => {
-  const { walletSelector, nearAccount, OpenModalWallet } = useModel('near.account');
-  const { GetServerInfo } = useModel('discord');
+  const { walletSelector, nearAccount } = useModel('near.account');
+  const { GetServerInfo, GetUserInfo } = useModel('discord');
   const { discordInfo, discordOperationSign, setDiscordInfo, setDiscordOperationSign } = useModel('store');
-  const { discordServer, GetUserInfo } = useModel('discord');
   const [errorState, setErrorState] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [roleMap, setRoleMap] = useState<Map<string, string>>(new Map());
@@ -39,7 +39,7 @@ const Collection: React.FC = () => {
   const [noAccessList, setNoAccessList] = useState<Contract.WrappedCollections[]>([]);
   const [mintedOutList, setMintedOutList] = useState<Contract.WrappedCollections[]>([]);
   const [selectItem, setSelectItem] = useState<Contract.WrappedCollections>();
-  const [mintModal, setMintModal] = useState<boolean>(false);
+  const [mintModal, setMintModal] = useState<boolean>(true);
 
   const intl = useIntl();
 
@@ -79,7 +79,7 @@ const Collection: React.FC = () => {
 
         const res = await GetOperationSign({
           account_id: nearAccount?.accountId,
-          sign: new TextDecoder().decode(signature?.signature),
+          sign: base58.encode(signature?.signature!),
           args: args,
         });
         if (res?.response?.status !== 200 || !(res?.data as Resp.GetOperationSign)?.data) {
@@ -308,7 +308,12 @@ const Collection: React.FC = () => {
         </div>
       )}
       {mintModal && (
-        <Mint />
+        <Mint
+          item={selectItem}
+          onCancel={() => {
+            setMintModal(false);
+          }}
+        />
       )}
     </UserLayout>
   )

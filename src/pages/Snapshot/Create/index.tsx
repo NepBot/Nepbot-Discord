@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-20 16:06:26
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-24 02:46:00
+ * @ Modified time: 2023-03-26 00:43:49
  * @ Description: i@rua.moe
  */
 
@@ -27,7 +27,7 @@ interface QueryParams {
 }
 
 const Create: React.FC = () => {
-  const { walletSelector, nearAccount, OpenModalWallet, setCallbackUrl } = useModel('near.account');
+  const { walletSelector, nearAccount, nearWallet } = useModel('near.account');
   const [errorState, setErrorState] = useState<boolean>(false);
 
   const location = useLocation();
@@ -79,6 +79,7 @@ const Create: React.FC = () => {
 
           const res = await RequestTransaction({
             nearAccount: nearAccount,
+            nearWallet: nearWallet,
             contractId: API_CONFIG().SNAPSHOT_CONTRACT,
             methodName: 'set_snapshot',
             args: {

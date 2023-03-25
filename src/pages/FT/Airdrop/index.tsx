@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-16 01:18:40
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-24 02:46:32
+ * @ Modified time: 2023-03-26 00:44:28
  * @ Description: i@rua.moe
  */
 
@@ -31,7 +31,7 @@ interface QueryParams {
 }
 
 const Airdrop: React.FC = () => {
-  const { walletSelector, nearAccount, OpenModalWallet } = useModel('near.account');
+  const { walletSelector, nearAccount, nearWallet } = useModel('near.account');
   const [errorState, setErrorState] = useState<boolean>(false);
 
   const location = useLocation();
@@ -144,6 +144,7 @@ const Airdrop: React.FC = () => {
 
           const result = await ExecuteMultipleTransactions({
             nearAccount,
+            nearWallet,
             transactions: txs,
           });
 

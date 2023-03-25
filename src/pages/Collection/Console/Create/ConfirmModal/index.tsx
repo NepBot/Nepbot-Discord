@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 16:18:09
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-24 02:36:48
+ * @ Modified time: 2023-03-26 00:19:11
  * @ Description: i@rua.moe
  */
 
@@ -58,6 +58,7 @@ const ConfirmModal: React.FC<{
           <div
             className={classNames(styles.button, styles.buttonPrimary)}
             onClick={async () => {
+              if (loading) return;
               setLoading(true);
               await onConfirm();
               messageApi.open({

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-17 00:37:10
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-24 02:46:50
+ * @ Modified time: 2023-03-26 00:44:39
  * @ Description: i@rua.moe
  */
 
@@ -24,7 +24,7 @@ interface QueryParams {
 }
 
 const Claim: React.FC = () => {
-  const { walletSelector, walletList, activeAccount, nearAccount, OpenModalWallet, setCallbackUrl } = useModel('near.account');
+  const { walletSelector, walletList, activeAccount, nearAccount, nearWallet, setCallbackUrl } = useModel('near.account');
   const [errorState, setErrorState] = useState<boolean>(false);
 
   const location = useLocation();
@@ -100,7 +100,8 @@ const Claim: React.FC = () => {
           }]
         });
         const result = await ExecuteMultipleTransactions({
-          nearAccount: nearAccount,
+          nearAccount,
+          nearWallet,
           transactions: txs,
           setCallbackUrl: setCallbackUrl,
           walletCallbackUrl: `https://discord.com/channels/${search.guild_id}`,

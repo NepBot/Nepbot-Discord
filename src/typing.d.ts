@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-16 17:20:36
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-25 02:20:23
+ * @ Modified time: 2023-03-26 00:09:19
  * @ Description: i@rua.moe
  */
 
@@ -19,6 +19,7 @@ declare namespace Contract {
     royaltyTotal?: number;
     inner_collection_id?: string;
     outer_collection_id?: string;
+    mint_count_limit?: number;
     creator?: string;
     minted_count?: number;
     total_copies?: number;

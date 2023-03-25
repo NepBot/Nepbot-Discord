@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-25 02:34:22
+ * @ Modified time: 2023-03-26 01:06:22
  * @ Description: i@rua.moe
  */
 
@@ -19,6 +19,7 @@ import { GetCollection, GetMintbaseCollection, GetOperationSign, GetRole } from 
 import SelectPlatform from "@/components/SelectPlatform";
 import Create from "./Create";
 import UserLayout from "@/layouts/UserLayout";
+import { base58 } from "ethers/lib/utils";
 
 interface QueryParams {
   guild_id?: string;
@@ -64,7 +65,7 @@ const Collection: React.FC = () => {
 
         const res = await GetOperationSign({
           account_id: nearAccount?.accountId,
-          sign: new TextDecoder().decode(signature?.signature),
+          sign: base58.encode(signature?.signature!),
           args: args,
         });
 

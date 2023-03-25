@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-16 17:16:13
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-17 00:19:58
+ * @ Modified time: 2023-03-26 00:44:16
  * @ Description: i@rua.moe
  */
 
@@ -64,8 +64,8 @@ export async function RequestTransaction({
 
 export async function ExecuteMultipleTransactions({
   nearAccount,
-  transactions,
   nearWallet,
+  transactions,
   walletCallbackUrl,
   setCallbackUrl,
 }: {

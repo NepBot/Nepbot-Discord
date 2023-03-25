@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:59:56
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-25 02:33:54
+ * @ Modified time: 2023-03-25 23:23:51
  * @ Description: i@rua.moe
  */
 
@@ -50,27 +50,29 @@ const ItemCard: React.FC<{
         <div className={styles.itemMeta}>
           <div className={styles.itemMetaIcon}>
             {item?.contract_type === 'paras' && (
-              <img
-                src={item?.media ? API_CONFIG().IPFS + item?.media : require('@/assets/collection/icon.webp')}
-                alt="media"
-                className={styles.itemMetaIconImage}
-              />
+              <>
+                <img
+                  src={item?.media ? API_CONFIG().IPFS + item?.media : require('@/assets/collection/icon.webp')}
+                  alt="media"
+                  className={styles.itemMetaIconImage}
+                />
+                <Paras
+                  className={styles.itemMetaIconPlatform}
+                />
+              </>
             )}
             {item?.contract_type === 'mintbase' && (
-              <img
-                src={item?.logo ? API_CONFIG().IPFS + item?.logo : require('@/assets/collection/icon.webp')}
-                alt="media"
-                className={styles.itemMetaIconImage}
-              />
+              <>
+                <img
+                  src={item?.logo ? API_CONFIG().IPFS + item?.logo : require('@/assets/collection/icon.webp')}
+                  alt="media"
+                  className={styles.itemMetaIconImage}
+                />
+                <Mintbase
+                  className={styles.itemMetaIconPlatform}
+                />
+              </>
             )}
-            <img
-              src={item?.logo ? API_CONFIG().IPFS + item?.logo : require('@/assets/collection/icon.webp')}
-              alt="media"
-              className={styles.itemMetaIconImage}
-            />
-            <Mintbase
-              className={styles.itemMetaIconPlatform}
-            />
           </div>
           <div className={styles.itemMetaInfo}>
             <div className={styles.itemMetaInfoTitle}>

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-24 02:37:19
+ * @ Modified time: 2023-03-26 00:42:32
  * @ Description: i@rua.moe
  */
 
@@ -42,7 +42,7 @@ const Create: React.FC<{
   onSubmit?: () => void;
   onCancel?: () => void;
 }> = ({ selectPlatform, urlSearch, roleList, setErrorState, onSubmit, onCancel }) => {
-  const { walletSelector, nearAccount, setCallbackUrl } = useModel('near.account');
+  const { nearAccount, nearWallet, setCallbackUrl } = useModel('near.account');
   const { discordServer } = useModel('discord');
   const { mintbaseWallet } = useModel('mintbase');
   const { discordInfo, discordOperationSign } = useModel('store');
@@ -56,8 +56,6 @@ const Create: React.FC<{
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [royalty, setRoyalty] = useState<Map<string, number>>(new Map());
   const [parasCreatedList, setParasCreatedList] = useState<any[]>([]);
-
-  const [messageApi, contextHolder] = message.useMessage();
 
   const intl = useIntl();
   const location = useLocation();
@@ -211,6 +209,7 @@ const Create: React.FC<{
 
       const data = await RequestTransaction({
         nearAccount: nearAccount,
+        nearWallet: nearWallet,
         contractId: API_CONFIG().NFT_CONTRACT,
         methodName: 'create_collection',
         args: contract_args,
@@ -273,7 +272,6 @@ const Create: React.FC<{
   return (
     <UserLayout>
       <div className={styles.createContainer}>
-        {contextHolder}
         <div className={styles.wrapper}>
           <div className={styles.headerContainer}>
             <div className={styles.title}>
@@ -712,6 +710,7 @@ const Create: React.FC<{
                 <div
                   className={classNames(styles.button, styles.buttonPrimary)}
                   onClick={async () => {
+                    if (loading) return;
                     if (await form.validateFields()) {
                       form.submit();
                       await handleRoyalty();

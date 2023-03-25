@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:18
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-22 03:57:09
+ * @ Modified time: 2023-03-26 00:56:06
  * @ Description: i@rua.moe
  */
 
@@ -382,6 +382,7 @@ declare namespace Resp {
   }
 
   interface GetMintSign extends Body {
+    code?: number;
     success?: boolean;
     data?: string;
   }

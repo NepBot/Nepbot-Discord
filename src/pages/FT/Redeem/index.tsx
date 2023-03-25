@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-17 04:09:10
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-24 02:47:06
+ * @ Modified time: 2023-03-26 00:43:16
  * @ Description: i@rua.moe
  */
 
@@ -19,7 +19,7 @@ interface QueryParams {
 }
 
 const Redeem: React.FC = () => {
-  const { walletSelector, walletList, activeAccount, nearAccount, OpenModalWallet, setCallbackUrl } = useModel('near.account');
+  const { walletSelector, walletList, activeAccount, nearAccount, nearWallet, setCallbackUrl } = useModel('near.account');
   const [errorState, setErrorState] = useState<boolean>(false);
 
   const location = useLocation();
@@ -30,6 +30,7 @@ const Redeem: React.FC = () => {
       if (!!walletSelector?.isSignedIn() && !!nearAccount && !!search.hash && !!activeAccount) {
         const res = await RequestTransaction({
           nearAccount: nearAccount,
+          nearWallet: nearWallet,
           contractId: API_CONFIG().AIRDROP_CONTRACT,
           methodName: 'redeem',
           args: {

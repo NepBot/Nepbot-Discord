@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-15 15:53:00
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-22 23:13:32
+ * @ Modified time: 2023-03-26 01:00:13
  * @ Description: i@rua.moe
  */
 
@@ -13,7 +13,7 @@ import { _EXP_DATE } from '@/constants/env';
 import { useEffect, useState } from 'react';
 
 const UserLayout = (props: any) => {
-  const { walletSelector, OpenModalWallet } = useModel('near.account');
+  const { walletSelector, nearAccount, nearWallet, OpenModalWallet } = useModel('near.account');
 
   const date = new Date().getTime();
 
@@ -23,7 +23,7 @@ const UserLayout = (props: any) => {
         await OpenModalWallet();
       }
     })()
-  }, [walletSelector]);
+  }, [walletSelector, nearAccount, nearWallet]);
 
   return (
     <WaterMark
