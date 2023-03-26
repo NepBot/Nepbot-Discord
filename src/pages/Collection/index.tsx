@@ -2,14 +2,14 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-26 01:05:38
+ * @ Modified time: 2023-03-26 17:06:48
  * @ Description: i@rua.moe
  */
 
 import React, { useEffect, useState } from "react";
 import styles from "./style.less";
 import { useIntl, useLocation, useModel } from "umi";
-import { AiFillCloseCircle, AiFillCodeSandboxCircle, AiOutlinePlus } from "react-icons/ai";
+import { AiFillCloseCircle, AiFillCodeSandboxCircle } from "react-icons/ai";
 import { AiFillCheckCircle } from "react-icons/ai";
 import classNames from "classnames";
 import { Col, Row, notification } from "antd";
@@ -140,7 +140,7 @@ const Collection: React.FC = () => {
               collectionData = await GetCollection({
                 collection_id: collection?.outer_collection_id,
               });
-              if (!!collectionData?.data && !!(collectionData?.data as Resp.GetCollection)?.results?.length) {
+              if (!!collectionData?.data && !!(collectionData?.data as Resp.GetCollection)?.data?.results?.length) {
                 collectionItems = {
                   name: collection?.collection_id?.split(":")[1]?.split("-guild-")[0]?.replaceAll("-", " "),
                   cover: API_CONFIG().IPFS + collectionData?.results[0]['cover'],

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:18
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-26 00:56:06
+ * @ Modified time: 2023-03-26 04:01:22
  * @ Description: i@rua.moe
  */
 
@@ -371,20 +371,38 @@ declare namespace Resp {
   interface CreateSeries extends Body {}
 
   interface GetCollection extends Body {
-    results: any[];
+    code?: number;
+    data?: {
+      results?: {
+        cover?: string;
+        media?: string;
+        description?: string;
+      }[];
+    };
+    success?: boolean;
   }
 
-  interface GetMintbaseCollection extends Body {}
+  interface GetMintbaseCollection extends Body {
+    code?: number;
+    metadata?: {
+      name?: string;
+      description?: string;
+      background?: string;
+      logo?: string;
+    };
+    success?: boolean;
+  }
 
   interface GetOperationSign extends Body {
-    success?: boolean;
+    code?: number;
     data?: string;
+    success?: boolean;
   }
 
   interface GetMintSign extends Body {
     code?: number;
-    success?: boolean;
     data?: string;
+    success?: boolean;
   }
 
   interface GetSnapshotSign extends Body {
@@ -398,22 +416,26 @@ declare namespace Resp {
   }
 
   interface SendFfMsg extends Body {
+    code?: number;
     success?: boolean;
     data?: any;
   }
 
   interface SendMsgSnapshot extends Body {
-    success?: boolean;
+    code?: number;
     data?: any;
+    success?: boolean;
   }
 
   interface GetAirdropFTSign extends Body {
-    success?: boolean;
+    code?: number;
     data?: any;
+    success?: boolean;
   }
 
   interface GetAirdropNFTSign extends Body {
-    success?: boolean;
+    code?: number;
     data?: any;
+    success?: boolean;
   }
 }

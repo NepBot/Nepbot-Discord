@@ -1,0 +1,110 @@
+/**
+ * @ Author: Hikaru
+ * @ Create Time: 2023-03-09 04:00:10
+ * @ Modified by: Hikaru
+ * @ Modified time: 2023-03-27 03:36:19
+ * @ Description: i@rua.moe
+ */
+
+.itemContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  margin-bottom: 60px;
+  overflow: hidden;
+  background: #2d303a;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    border: 2px solid rgba(255, 255, 255, 1);
+    transform: translateY(-10px);
+  }
+
+  .itemCover {
+    width: 100%;
+    height: 300px;
+
+    .itemCoverImage {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .itemContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding-top: 40px;
+    padding-right: 20px;
+    padding-bottom: 40px;
+    padding-left: 20px;
+
+    .itemMeta {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+
+      .itemMetaInfo {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+        height: 100%;
+        margin-left: 16px;
+
+        .itemMetaInfoTitle {
+          color: #fff;
+          font-weight: 700;
+          font-size: 16px;
+          font-family: Gilroy;
+        }
+
+        .itemMetaInfoDescription {
+          margin-top: 10px;
+          color: #fff;
+          font-weight: 400;
+          font-size: 14px;
+          font-family: Gilroy-Regular;
+          opacity: 0.6;
+        }
+      }
+    }
+
+    .itemDescription {
+      width: 100%;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      color: #fff;
+      font-weight: 400;
+      font-size: 14px;
+      font-family: Gilroy;
+      white-space: pre-wrap;
+      text-align: left;
+    }
+
+    .statisticsContainer {
+      width: 100%;
+      padding: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+
+      .statisticsItem {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+      }
+    }
+  }
+}

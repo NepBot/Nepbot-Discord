@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:52:37
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-23 00:21:45
+ * @ Modified time: 2023-03-27 03:28:10
  * @ Description: i@rua.moe
  */
 
@@ -71,4 +71,5 @@ export default {
   'collection.add.form.attributes.label': 'Attributes',
   'collection.add.form.attributes.type.placeholder': 'Type',
   'collection.add.form.attributes.value.placeholder': 'Value',
+  'collection.detail.itemCard.minted': 'Minted:',
 };
