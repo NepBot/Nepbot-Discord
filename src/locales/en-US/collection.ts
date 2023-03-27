@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:52:37
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-27 03:28:10
+ * @ Modified time: 2023-03-28 00:30:00
  * @ Description: i@rua.moe
  */
 
@@ -70,6 +70,8 @@ export default {
   'collection.add.form.copies.required': 'Please input number of copies',
   'collection.add.form.attributes.label': 'Attributes',
   'collection.add.form.attributes.type.placeholder': 'Type',
+  'collection.add.form.attributes.type.required': 'Please input type',
   'collection.add.form.attributes.value.placeholder': 'Value',
+  'collection.add.form.attributes.value.required': 'Please input value',
   'collection.detail.itemCard.minted': 'Minted:',
 };

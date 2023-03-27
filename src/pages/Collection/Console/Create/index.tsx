@@ -2,11 +2,11 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-26 00:42:32
+ * @ Modified time: 2023-03-27 22:09:28
  * @ Description: i@rua.moe
  */
 
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styles from './style.less';
 import { useIntl, useModel, useLocation } from '@umijs/max';
 import { Button, Form, Input, InputNumber, Select, Space, Spin, Upload, message, notification } from 'antd';
@@ -21,7 +21,7 @@ import { API_CONFIG } from '@/constants/config';
 import { CreateParasCollection, GetCollection, GetOwnerSign } from '@/services/api';
 import { ParseAmount } from '@/utils/near';
 import { RequestTransaction } from '@/utils/contract';
-import { RcFile } from 'antd/es/upload';
+import { base58 } from 'ethers/lib/utils';
 
 interface QueryParams {
   guild_id?: string;
@@ -48,8 +48,8 @@ const Create: React.FC<{
   const { discordInfo, discordOperationSign } = useModel('store');
 
   const [form] = Form.useForm();
-  const [logoFile, setLogoFile] = useState<RcFile>();
-  const [coverFile, setCoverFile] = useState<RcFile>();
+  const [logoFile, setLogoFile] = useState<File>();
+  const [coverFile, setCoverFile] = useState<File>();
   const [logoUrl, setLogoUrl] = useState<string>();
   const [coverUrl, setCoverUrl] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -75,7 +75,7 @@ const Create: React.FC<{
     });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     try {
       await form.validateFields();
       const values = await form.getFieldsValue();
@@ -88,7 +88,7 @@ const Create: React.FC<{
           const collection = await GetCollection({
             collection_id: outerCollectionId
           });
-          if (!collection || !(collection.data as Resp.GetCollection)?.results.length || parasCreatedList.indexOf(values?.name) > -1) {
+          if (!collection || !(collection.data as Resp.GetCollection)?.data?.results?.length || parasCreatedList.indexOf(values?.name) > -1) {
             try {
               const contract = await nearAccount?.viewFunction(API_CONFIG()?.NFT_CONTRACT, 'get_collection', {
                 collection_id: `paras:${outerCollectionId}`
@@ -125,11 +125,11 @@ const Create: React.FC<{
               sign: '',
             }
             const sign = await nearAccount?.connection.signer.signMessage(Buffer.from(JSON.stringify(params)), nearAccount?.accountId, API_CONFIG().networkId);
-            params.sign = new TextDecoder().decode(sign?.signature);
+            params.sign = base58.encode(sign?.signature!);
 
             const result = await CreateParasCollection({
-              logo: logoFile as File,
-              cover: coverFile as File,
+              logo: logoFile,
+              cover: coverFile,
               args: params
             });
 
@@ -146,8 +146,8 @@ const Create: React.FC<{
           }
           break;
         case 'mintbase':
-          const logoRes = await mintbaseWallet?.minter?.upload(logoFile as File);
-          const coverRes = await mintbaseWallet?.minter?.upload(coverFile as File);
+          const logoRes = await mintbaseWallet?.minter?.upload(logoFile!);
+          const coverRes = await mintbaseWallet?.minter?.upload(coverFile!);
           await mintbaseWallet?.minter?.setMetadata({
             metadata: {
               name: values?.name?.trim(),
@@ -172,7 +172,7 @@ const Create: React.FC<{
 
       const msg = {
         args: args,
-        sign: new TextDecoder().decode(sign?.signature),
+        sign: base58.encode(sign?.signature!),
         account_id: nearAccount?.accountId,
       }
 
@@ -241,7 +241,7 @@ const Create: React.FC<{
       });
       return;
     }
-  };
+  }, [nearAccount, nearWallet, discordServer, discordInfo, discordOperationSign, mintbaseWallet]);
 
   const beforeUpload = (file: File) => {
     const isAllowType = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/svg+xml';
@@ -263,7 +263,7 @@ const Create: React.FC<{
     return isAllowType && isLt10M;
   };
 
-  const getBase64 = (img: RcFile, callback: (url: string) => void) => {
+  const getBase64 = (img: File, callback: (url: string) => void) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result as string));
     reader.readAsDataURL(img);
@@ -298,13 +298,19 @@ const Create: React.FC<{
                       })}
                     </div>
                   }
+                  required
                   name="logo"
-                  rules={[{
-                    required: true,
-                    message: intl.formatMessage({
-                      id: "collection.create.form.logo.required"
-                    })
-                  }]}
+                  rules={[
+                    {
+                      validator: async () => {
+                        if (!logoFile) {
+                          throw new Error(intl.formatMessage({
+                            id: "collection.create.form.logo.required"
+                          }));
+                        }
+                      }
+                    }
+                  ]}
                   className={classNames(styles.formItem, styles.formItemLogo)}
                 >
                   <Dragger
@@ -339,7 +345,7 @@ const Create: React.FC<{
                     {logoUrl ? (
                       <img
                         src={logoUrl}
-                        alt="avatar"
+                        alt="logo"
                         className={styles.formItemUploadImage}
                       />
                     ) : (
@@ -413,7 +419,7 @@ const Create: React.FC<{
                     {coverUrl ? (
                       <img
                         src={coverUrl}
-                        alt="avatar"
+                        alt="cover"
                         className={styles.formItemUploadImage}
                       />
                     ) : (

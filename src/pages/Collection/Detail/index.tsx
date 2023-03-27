@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 19:42:06
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-27 04:35:27
+ * @ Modified time: 2023-03-27 15:53:41
  * @ Description: i@rua.moe
  */
 
@@ -19,6 +19,7 @@ import { v4 as uuidv4 } from 'uuid';
 import UserLayout from '@/layouts/UserLayout';
 import { API_CONFIG } from '@/constants/config';
 import { GetCollection, GetMintbaseCollection } from '@/services/api';
+import Add from './Add';
 
 interface QueryParams {
   guild_id?: string;
@@ -26,29 +27,15 @@ interface QueryParams {
   sign?: string;
 }
 
-interface CollectionInfo {
-  collection_id?: string;
-  creator?: string;
-  minted_count?: number;
-  total_copies?: number;
-  name?: string;
-  description?: string;
-  cover?: string;
-  logo?: string;
-  contract?: string;
-  serverName?: string;
-  serverIcon?: string;
-  contract_type?: string;
-}
-
 const CollectionDetail: React.FC = () => {
   const { walletSelector, nearAccount } = useModel('near.account');
-  const { GetServerInfo, GetUserInfo } = useModel('discord');
+  const { GetServerInfo } = useModel('discord');
   const { discordInfo, discordOperationSign } = useModel('store');
   const [errorState, setErrorState] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [showList, setShowList] = useState<CollectionInfo[]>([]);
+  const [showList, setShowList] = useState<Contract.CollectionInfo[]>([]);
   const [seriesList, setSeriesList] = useState([]);
+  const [addModal, setAddModal] = useState<boolean>(true);
 
   const intl = useIntl();
 
@@ -56,7 +43,7 @@ const CollectionDetail: React.FC = () => {
     id: string
   }>();
 
-  const [collectionInfo, setCollectionInfo] = useState<CollectionInfo>({
+  const [collectionInfo, setCollectionInfo] = useState<Contract.CollectionInfo>({
     collection_id: params.id,
     creator: '',
     minted_count: 0,
@@ -162,157 +149,167 @@ const CollectionDetail: React.FC = () => {
         });
       }
     })();
-  }, [walletSelector, nearAccount, discordInfo, discordOperationSign]);
+  }, [walletSelector, nearAccount, discordInfo, discordOperationSign, addModal]);
 
   return (
     <UserLayout>
-      <div className={styles.collectionDetailContainer}>
-        <div className={styles.cover}>
-          <img
-            src={!!collectionInfo?.cover ? collectionInfo?.cover : require('@/assets/collection/banner.webp')}
-            alt='cover'
-            className={styles.coverImage}
-          />
-        </div>
-        <div className={styles.headerContainer}>
-          <div className={styles.headerWrapper}>
-            <div className={styles.searchContainer}>
-              <AiOutlineSearch
-                className={styles.searchIcon}
-              />
-              <Input
-                bordered={false}
-                placeholder={intl.formatMessage({
-                  id: 'role.search.placeholder'
-                })}
-                className={styles.searchInput}
-                onChange={e => {
-                  setShowList(seriesList.filter((item: any) => item.name.toLowerCase().includes(e.target.value.toLowerCase())));
-                }}
-              />
-            </div>
-            <div className={styles.buttonsContainer}>
-              <div
-                className={styles.button}
-                onClick={() => {
-                  history.push(`/collection/${params.id}/add`);
-                }}
-              >
-                <AiOutlinePlus
-                  className={styles.buttonIcon}
+      {!loading && !addModal && (
+        <div className={styles.collectionDetailContainer}>
+          <div className={styles.cover}>
+            <img
+              src={!!collectionInfo?.cover ? collectionInfo?.cover : require('@/assets/collection/banner.webp')}
+              alt='cover'
+              className={styles.coverImage}
+            />
+          </div>
+          <div className={styles.headerContainer}>
+            <div className={styles.headerWrapper}>
+              <div className={styles.searchContainer}>
+                <AiOutlineSearch
+                  className={styles.searchIcon}
                 />
-                {intl.formatMessage({
-                  id: 'role.button.add'
-                })}
+                <Input
+                  bordered={false}
+                  placeholder={intl.formatMessage({
+                    id: 'role.search.placeholder'
+                  })}
+                  className={styles.searchInput}
+                  onChange={e => {
+                    setShowList(seriesList.filter((item: any) => item.name.toLowerCase().includes(e.target.value.toLowerCase())));
+                  }}
+                />
+              </div>
+              <div className={styles.buttonsContainer}>
+                <div
+                  className={styles.button}
+                  onClick={() => {
+                    setAddModal(true);
+                  }}
+                >
+                  <AiOutlinePlus
+                    className={styles.buttonIcon}
+                  />
+                  {intl.formatMessage({
+                    id: 'role.button.add'
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={styles.wrapper}>
+            <div className={styles.contentContainer}>
+              <div className={styles.iconContainer}>
+                <img
+                  src={!!collectionInfo?.logo ? collectionInfo?.logo : require('@/assets/collection/icon.webp')}
+                  alt='icon'
+                  className={styles.iconImage}
+                />
+              </div>
+              <div className={styles.contentHeaderContainer}>
+                <div className={styles.metaContainer}>
+                  <div className={styles.metaTitle}>
+                    {collectionInfo?.name}
+                  </div>
+                  <div className={styles.metaCreator}>
+                    {intl.formatMessage({
+                      id: 'collection.detail.creator'
+                    }, {
+                      name: (
+                        <b
+                          onClick={() => {
+                            window.open(`${API_CONFIG()?.NEARBLOCKS}${collectionInfo?.creator}`, '_blank');
+                          }}
+                        >
+                          {collectionInfo?.creator}
+                        </b>
+                      )
+                    })}
+                  </div>
+                  <div className={styles.metaCreator}>
+                    {intl.formatMessage({
+                      id: 'collection.detail.contract'
+                    }, {
+                      name: (
+                        <b
+                          onClick={() => {
+                            window.open(`${API_CONFIG()?.NEARBLOCKS}${collectionInfo?.contract}`, '_blank');
+                          }}
+                        >
+                          {collectionInfo?.contract}
+                        </b>
+                      )
+                    })}
+                  </div>
+                </div>
+                <div className={styles.discordContainer}>
+                  {!!collectionInfo.serverIcon ? (
+                    <img
+                      src={collectionInfo?.serverIcon}
+                      alt={collectionInfo?.serverName}
+                      className={styles.discordIcon}
+                    />
+                  ) : (
+                    <SiDiscord
+                      className={styles.discordIcon}
+                    />
+                  )}
+                  {collectionInfo?.serverName}
+                </div>
+              </div>
+              <div className={styles.statisticContainer}>
+                <div className={styles.statisticItem}>
+                  <div className={styles.statisticItemValue}>
+                    {!!collectionInfo?.total_copies ? collectionInfo?.total_copies : NaN}
+                  </div>
+                  <div className={styles.statisticItemLabel}>
+                    {intl.formatMessage({
+                      id: 'collection.detail.statistic.totalCopies'
+                    })}
+                  </div>
+                </div>
+                <div className={styles.statisticItem}>
+                  <div className={styles.statisticItemValue}>
+                    {!!collectionInfo?.minted_count ? collectionInfo?.minted_count : NaN}
+                  </div>
+                  <div className={styles.statisticItemLabel}>
+                    {intl.formatMessage({
+                      id: 'collection.detail.statistic.totalMinted'
+                    })}
+                  </div>
+                </div>
+              </div>
+              <div className={styles.descriptionContainer}>
+                {collectionInfo?.description}
+              </div>
+              <div className={styles.itemsContainer}>
+                <Row gutter={[30, 30]}>
+                  {!!showList?.length && showList.map((item: any, index: number) => {
+                    return (
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                        <ItemCard
+                          key={uuidv4()}
+                          item={item}
+                          onClick={() => {
+                            window.open(`${API_CONFIG().PARAS}/token/${API_CONFIG().PARAS_CONTRACT}::${item?.token_series_id}`, '_blank')
+                          }}
+                        />
+                      </Col>
+                    )
+                  })}
+                </Row>
               </div>
             </div>
           </div>
         </div>
-        <div className={styles.wrapper}>
-          <div className={styles.contentContainer}>
-            <div className={styles.iconContainer}>
-              <img
-                src={!!collectionInfo?.logo ? collectionInfo?.logo : require('@/assets/collection/icon.webp')}
-                alt='icon'
-                className={styles.iconImage}
-              />
-            </div>
-            <div className={styles.contentHeaderContainer}>
-              <div className={styles.metaContainer}>
-                <div className={styles.metaTitle}>
-                  {collectionInfo?.name}
-                </div>
-                <div className={styles.metaCreator}>
-                  {intl.formatMessage({
-                    id: 'collection.detail.creator'
-                  }, {
-                    name: (
-                      <b
-                        onClick={() => {
-                          window.open(`${API_CONFIG()?.NEARBLOCKS}${collectionInfo?.creator}`, '_blank');
-                        }}
-                      >
-                        {collectionInfo?.creator}
-                      </b>
-                    )
-                  })}
-                </div>
-                <div className={styles.metaCreator}>
-                  {intl.formatMessage({
-                    id: 'collection.detail.contract'
-                  }, {
-                    name: (
-                      <b
-                        onClick={() => {
-                          window.open(`${API_CONFIG()?.NEARBLOCKS}${collectionInfo?.contract}`, '_blank');
-                        }}
-                      >
-                        {collectionInfo?.contract}
-                      </b>
-                    )
-                  })}
-                </div>
-              </div>
-              <div className={styles.discordContainer}>
-                {!!collectionInfo.serverIcon ? (
-                  <img
-                    src={collectionInfo?.serverIcon}
-                    alt={collectionInfo?.serverName}
-                    className={styles.discordIcon}
-                  />
-                ) : (
-                  <SiDiscord
-                    className={styles.discordIcon}
-                  />
-                )}
-                {collectionInfo?.serverName}
-              </div>
-            </div>
-            <div className={styles.statisticContainer}>
-              <div className={styles.statisticItem}>
-                <div className={styles.statisticItemValue}>
-                  {!!collectionInfo?.total_copies ? collectionInfo?.total_copies : NaN}
-                </div>
-                <div className={styles.statisticItemLabel}>
-                  {intl.formatMessage({
-                    id: 'collection.detail.statistic.totalCopies'
-                  })}
-                </div>
-              </div>
-              <div className={styles.statisticItem}>
-                <div className={styles.statisticItemValue}>
-                  {!!collectionInfo?.minted_count ? collectionInfo?.minted_count : NaN}
-                </div>
-                <div className={styles.statisticItemLabel}>
-                  {intl.formatMessage({
-                    id: 'collection.detail.statistic.totalMinted'
-                  })}
-                </div>
-              </div>
-            </div>
-            <div className={styles.descriptionContainer}>
-              {collectionInfo?.description}
-            </div>
-            <div className={styles.itemsContainer}>
-              <Row gutter={[30, 30]}>
-                {!!showList?.length && showList.map((item: any, index: number) => {
-                  return (
-                    <Col xs={24} sm={24} md={12} lg={8} xl={8}>
-                      <ItemCard
-                        key={uuidv4()}
-                        item={item}
-                        onClick={() => {
-                          window.open(`${API_CONFIG().PARAS}/token/${API_CONFIG().PARAS_CONTRACT}::${item?.token_series_id}`, '_blank')
-                        }}
-                      />
-                    </Col>
-                  )
-                })}
-              </Row>
-            </div>
-          </div>
-        </div>
-      </div>
+      )}
+      {!loading && addModal && (
+        <Add
+          collectionInfo={collectionInfo}
+          onCancel={() => {
+            setAddModal(false);
+          }}
+        />
+      )}
     </UserLayout>
   );
 };

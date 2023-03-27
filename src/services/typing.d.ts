@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:18
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-26 04:01:22
+ * @ Modified time: 2023-03-27 17:58:45
  * @ Description: i@rua.moe
  */
 
@@ -368,7 +368,11 @@ declare namespace Resp {
     };
   }
 
-  interface CreateSeries extends Body {}
+  interface CreateSeries extends Body {
+    code?: number;
+    data?: any;
+    success?: boolean;
+  }
 
   interface GetCollection extends Body {
     code?: number;

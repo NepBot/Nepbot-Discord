@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-16 17:20:36
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-27 03:44:48
+ * @ Modified time: 2023-03-27 15:52:12
  * @ Description: i@rua.moe
  */
 
@@ -34,5 +34,20 @@ declare namespace Contract {
     description?: string;
     mintable_roles?: string[];
     price?: string;
+  }
+
+  interface CollectionInfo {
+    collection_id?: string;
+    creator?: string;
+    minted_count?: number;
+    total_copies?: number;
+    name?: string;
+    description?: string;
+    cover?: string;
+    logo?: string;
+    contract?: string;
+    serverName?: string;
+    serverIcon?: string;
+    contract_type?: string;
   }
 }

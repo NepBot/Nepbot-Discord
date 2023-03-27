@@ -2,25 +2,36 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-10 04:10:01
+ * @ Modified time: 2023-03-28 00:33:01
  * @ Description: i@rua.moe
  */
 
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styles from './style.less';
-import { useIntl } from 'umi';
-import { Button, Form, Input, InputNumber, Select, Space, Spin, Upload, message } from 'antd';
-import { TbCircleLetterN } from 'react-icons/tb';
+import { useIntl, useModel } from '@umijs/max';
+import { Button, Form, Input, InputNumber, Spin, Upload, message, notification } from 'antd';
 import { Loading3QuartersOutlined, PlusOutlined } from '@ant-design/icons';
 import { FiDelete } from 'react-icons/fi';
 import classNames from 'classnames';
 import { AiOutlineCloudUpload } from 'react-icons/ai';
 import ConfirmModal from './ConfirmModal';
+import { CreateSeries, GetOwnerSign } from '@/services/api';
+import { API_CONFIG } from '@/constants/config';
+import { base58 } from 'ethers/lib/utils';
+import { RequestTransaction } from '@/utils/contract';
 
-const Add: React.FC = () => {
+const Add: React.FC<{
+  collectionInfo: Contract.CollectionInfo,
+  onSubmit?: () => void,
+  onCancel?: () => void,
+}> = ({ collectionInfo, onSubmit, onCancel }) => {
   const [form] = Form.useForm();
-  const [logoUrl, setLogoUrl] = useState<string>();
-  const [coverUrl, setCoverUrl] = useState<string>();
+  const { nearAccount, nearWallet } = useModel('near.account');
+  const { discordInfo, discordOperationSign } = useModel('store');
+  const { mintbaseWallet } = useModel('mintbase');
+  const [imageFile, setImageFile] = useState<File>();
+  const [imageUrl, setImageUrl] = useState<string>();
+  const [errorState, setErrorState] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -29,6 +40,146 @@ const Add: React.FC = () => {
   const intl = useIntl();
 
   const { Dragger } = Upload;
+
+  const handleSubmit = useCallback(async () => {
+    try {
+      await form.validateFields();
+      const values = await form.getFieldsValue();
+
+      setLoading(true);
+      const outer_collection_id = collectionInfo?.collection_id?.split(':')[1];
+
+      const params = {
+        collection: collectionInfo?.name?.replaceAll("-", " "),
+        description: values?.description,
+        creator_id: nearAccount?.accountId,
+        collection_id: outer_collection_id,
+        attributes: values?.attribute,
+        mime_type: imageFile?.type,
+        blurhash: "UE3UQdpLQ8VWksZ}Z~ksL#Z}pfkXVWp0kXVq"
+      }
+
+      var media: string | undefined;
+      var reference: string | undefined;
+      switch (collectionInfo?.contract_type) {
+        case 'paras':
+          const res = await CreateSeries({
+            image: imageFile,
+            ...params
+          });
+          if (!res?.data?.success) {
+            notification.error({
+              key: 'error.create',
+              message: 'Error',
+              description: (res?.data as Resp.Error)?.message,
+            });
+            setLoading(false);
+            return;
+          }
+          const data = (res?.data as Resp.CreateSeries).data;
+          media = data[0]?.replace("ipfs://", "");
+          reference = data[1]?.replace("ipfs://", "");
+          break;
+        case 'mintbase':
+          const mediaRes = await mintbaseWallet?.minter?.upload(imageFile!);
+          media = mediaRes?.data?.uri;
+          reference = mediaRes?.data?.uri;
+          break;
+      }
+
+      const args = {
+        sign: discordOperationSign,
+        user_id: discordInfo?.user_id,
+        guild_id: discordInfo?.guild_id,
+      }
+
+      const sign = await nearAccount?.connection.signer.signMessage(Buffer.from(JSON.stringify(args)), nearAccount?.accountId, API_CONFIG().networkId);
+
+      const _sign = await GetOwnerSign({
+        args: args,
+        sign: base58.encode(sign?.signature!),
+        account_id: nearAccount?.accountId,
+      });
+
+      if (!discordOperationSign) {
+        notification.error({
+          key: 'error.create',
+          message: 'Error',
+          description: "Discord sign error",
+        });
+        setLoading(false);
+        setErrorState(true);
+        return;
+      }
+
+      const data = await RequestTransaction({
+        nearAccount: nearAccount,
+        nearWallet: nearWallet,
+        contractId: API_CONFIG().NFT_CONTRACT,
+        methodName: 'add_token_metadata',
+        args: {
+          collection_id: collectionInfo?.collection_id,
+          token_metadata: {
+            title: values.name,
+            description: values.description,
+            media: media,
+            reference: reference,
+            copies: Number(values.copies)
+          },
+          ..._sign
+        },
+        gas: '300000000000000',
+        deposit: '20000000000000000000000',
+      });
+
+      if (!!data) {
+        messageApi.success({
+          content: 'Success',
+          duration: 2,
+        });
+        setLoading(false);
+        form.resetFields();
+        setImageFile(undefined);
+        setImageUrl(undefined);
+        onSubmit?.();
+      }
+    } catch (e: any) {
+      console.log(e);
+      setLoading(false);
+      setErrorState(true);
+      notification.error({
+        key: 'error.create',
+        message: 'Error',
+        description: e.message,
+      });
+    }
+  }, []);
+
+  const beforeUpload = (file: File) => {
+    const isAllowType = file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/svg+xml';
+    if (!isAllowType) {
+      notification.error({
+        key: 'error.createCollection',
+        message: "Error",
+        description: "Only support jpg, jpeg, png, gif, svg format",
+      });
+    }
+    const isLt10M = file.size / 1024 / 1024 < 10;
+    if (!isLt10M) {
+      notification.error({
+        key: 'error.createCollection',
+        message: "Error",
+        description: "Image must smaller than 10MB!",
+      });
+    }
+    return isAllowType && isLt10M;
+  };
+
+  const getBase64 = (img: File, callback: (url: string) => void) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result as string));
+    reader.readAsDataURL(img);
+  };
 
   return (
     <div className={styles.createContainer}>
@@ -59,37 +210,55 @@ const Add: React.FC = () => {
                     })}
                   </div>
                 }
-                name="logo"
-                rules={[{
-                  required: true,
-                  message: intl.formatMessage({
-                    id: "collection.create.form.logo.required"
-                  })
-                }]}
+                required
+                name="image"
+                valuePropName="fileList"
+                rules={[
+                  {
+                    validator: async () => {
+                      if (!imageFile) {
+                        throw new Error(intl.formatMessage({
+                          id: "collection.add.form.image.required"
+                        }));
+                      }
+                    }
+                  }
+                ]}
                 className={classNames(styles.formItem, styles.formItemLogo)}
               >
                 <Dragger
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  name="logo"
+                  name="image"
                   multiple={false}
                   listType="picture-card"
+                  beforeUpload={beforeUpload}
                   showUploadList={false}
-                  onChange={(info) => {
-                    setLogoUrl('https://avatars.githubusercontent.com/u/16264281');
-                    // if (info.file.status === 'done') {
-                    //   setLogoUrl(info.file.response.url);
-                    // }
+                  onChange={async (info) => {
+                    if (info.file.status === 'uploading') {
+                      setLoading(true);
+                      return;
+                    }
 
-                    // if (info.file.status === 'removed') {
-                    //   setLogoUrl('');
-                    // }
+                    if (info.file.status === 'done' && !!info?.file?.originFileObj) {
+                      setImageFile(info?.file?.originFileObj);
+                      await getBase64(info?.file?.originFileObj, (url) => {
+                        setImageUrl(url);
+                        setLoading(false);
+                      });
+                      return;
+                    }
+
+                    if (info.file.status === 'removed') {
+                      setImageFile(undefined);
+                      setImageUrl('');
+                      return;
+                    }
                   }}
-                  className={classNames(styles.formItemUploadContainer, logoUrl && styles.formItemUploadContainerHasFile)}
+                  className={classNames(styles.formItemUploadContainer, imageUrl && styles.formItemUploadContainerHasFile)}
                 >
-                  {logoUrl ? (
+                  {imageUrl ? (
                     <img
-                      src={logoUrl}
-                      alt="avatar"
+                      src={imageUrl}
+                      alt="image"
                       className={styles.formItemUploadImage}
                     />
                   ) : (
@@ -228,8 +397,14 @@ const Add: React.FC = () => {
                         >
                           <Form.Item
                             {...restField}
-                            name={[name, 'type']}
+                            name={[name, 'trait_type']}
                             className={classNames(styles.formItem, styles.formListItem)}
+                            rules={[{
+                              required: true,
+                              message: intl.formatMessage({
+                                id: "collection.add.form.attributes.type.required"
+                              })
+                            }]}
                           >
                             <div className={classNames(styles.formItemInputContainer, styles.formListItemInputContainer)}>
                               <Input
@@ -245,6 +420,12 @@ const Add: React.FC = () => {
                             {...restField}
                             name={[name, 'value']}
                             className={classNames(styles.formItem, styles.formListItem)}
+                            rules={[{
+                              required: true,
+                              message: intl.formatMessage({
+                                id: "collection.add.form.attributes.value.required"
+                              })
+                            }]}
                           >
                             <div className={classNames(styles.formItemInputContainer, styles.formListItemInputContainer)}>
                               <InputNumber
@@ -293,7 +474,7 @@ const Add: React.FC = () => {
                 className={styles.button}
                 onClick={() => {
                   form.resetFields();
-                  history.back();
+                  onCancel?.();
                 }}
               >
                 {intl.formatMessage({
@@ -304,7 +485,6 @@ const Add: React.FC = () => {
                 className={classNames(styles.button, styles.buttonPrimary)}
                 onClick={async () => {
                   if (await form.validateFields()) {
-                    form.submit();
                     setIsModalOpen(true);
                     setLoading(true);
                   }
@@ -333,6 +513,7 @@ const Add: React.FC = () => {
         form={form}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
+        onSubmit={handleSubmit}
       />
     </div>
   );
