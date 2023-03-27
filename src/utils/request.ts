@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-20 16:39:02
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-20 16:58:03
+ * @ Modified time: 2023-03-28 04:27:07
  * @ Description: i@rua.moe
  */
 
@@ -26,4 +26,23 @@ export async function GenerateToken({ nearAccount }: { nearAccount: Account }) {
   const payload = [nearAccount?.accountId, publicKey, signature];
 
   return Buffer.from(payload?.join('&')).toString('base64');
+}
+
+export function IsObjectValueEqual(a: any, b: any) {
+  if (a === b) return true;
+  let aProps = Object.getOwnPropertyNames(a);
+  let bProps = Object.getOwnPropertyNames(b);
+  if (aProps.length !== bProps.length) return false;
+  for (let prop in a) {
+    if (b.hasOwnProperty(prop)) {
+      if (typeof a[prop] === 'object') {
+        if (!IsObjectValueEqual(a[prop], b[prop])) return false;
+      } else if (a[prop] !== b[prop]) {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+  return true;
 }

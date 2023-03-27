@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:18
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-27 17:58:45
+ * @ Modified time: 2023-03-28 04:33:49
  * @ Description: i@rua.moe
  */
 
@@ -306,9 +306,15 @@ declare namespace Resp {
   }
 
   interface GetTxByGuild extends Body {
+    code?: number;
     success?: boolean;
     data?: {
       transaction_hash?: string;
+      roles?: {
+        fields?: any;
+        key_field?: any;
+        role_id?: string;
+      }[];
     }[];
   }
 

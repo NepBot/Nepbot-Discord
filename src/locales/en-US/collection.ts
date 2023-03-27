@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:52:37
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-28 00:30:00
+ * @ Modified time: 2023-03-28 00:43:19
  * @ Description: i@rua.moe
  */
 
@@ -57,6 +57,7 @@ export default {
   'collection.create.modal.button.create': 'Create',
   'collection.add.title': 'Create New Item',
   'collection.add.form.image.label': 'Image',
+  'collection.add.form.image.required': 'Please upload image',
   'collection.add.form.name.label': 'Name',
   'collection.add.form.name.placeholder': 'Item name',
   'collection.add.form.name.required': 'Please input item name',
