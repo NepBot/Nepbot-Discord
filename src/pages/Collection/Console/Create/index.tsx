@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-27 22:09:28
+ * @ Modified time: 2023-03-29 02:42:29
  * @ Description: i@rua.moe
  */
 
@@ -649,15 +649,12 @@ const Create: React.FC<{
                 <div className={styles.formItemInputContainer}>
                   <Select
                     allowClear
-
+                    showSearch
                     mode='multiple'
                     size='middle'
                     bordered={false}
                     className={styles.select}
                     popupClassName={styles.selectPopup}
-                    onChange={() => {
-
-                    }}
                     options={(roleList || []).map((role) => ({
                       label: role.name,
                       value: role.id,

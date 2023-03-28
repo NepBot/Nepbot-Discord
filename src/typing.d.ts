@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-16 17:20:36
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-28 18:28:56
+ * @ Modified time: 2023-03-29 01:45:59
  * @ Description: i@rua.moe
  */
 
@@ -73,4 +73,6 @@ declare namespace Contract {
     };
     key?: number;
   }
+
+  interface AppchainIds {}
 }

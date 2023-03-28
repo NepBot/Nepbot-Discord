@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 03:45:34
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-28 18:28:26
+ * @ Modified time: 2023-03-29 04:36:54
  * @ Description: i@rua.moe
  */
 
@@ -25,6 +25,46 @@ export default {
   'role.item.title.duration': 'Duration:',
   'role.item.title.durationDays': '{days} days',
   'role.item.title.txHash': 'Tx:',
-  'role.modal.button.cancel': 'Cancel',
-  'role.modal.button.ok': 'OK',
+  'role.create.title': 'Create Role',
+  'role.create.form.label.role': 'Role',
+  'role.create.form.label.role.required': 'Please select a role',
+  'role.create.form.label.type': 'Type',
+  'role.create.form.label.type.required': 'Please select a type',
+  'role.create.form.tokenContract.label': 'Token Contract',
+  'role.create.form.tokenContract.placeholder': 'Enter a token contract',
+  'role.create.form.tokenContract.required': 'Please enter a token contract',
+  'role.create.form.tokenAmount.label': 'Token Amount',
+  'role.create.form.tokenAmount.placeholder': 'Enter a token amount',
+  'role.create.form.tokenAmount.required': 'Please enter a token amount',
+  'role.create.form.appchainId.label': 'AppChain ID',
+  'role.create.form.appchainId.required': 'Please enter a appchain id',
+  'role.create.form.appchainId.placeholder': 'Enter a appchain id',
+  'role.create.form.octRole.label': 'Oct Role',
+  'role.create.form.octRole.required': 'Please enter a oct role',
+  'role.create.form.balance.label': 'Balance',
+  'role.create.form.balance.required': 'Please enter a balance',
+  'role.create.form.balance.placeholder': 'Enter a balance',
+  'role.create.form.contractId.label': 'Contract ID',
+  'role.create.form.contractId.required': 'Please enter a contract id',
+  'role.create.form.contractId.placeholder': 'Enter a contract id',
+  'role.create.form.collectionUrl.label': 'Collection URL',
+  'role.create.form.collectionUrl.required': 'Please enter a collection url',
+  'role.create.form.collectionUrl.placeholder': 'Enter a collection url',
+  'role.create.form.amount.label': 'Amount',
+  'role.create.form.amount.required': 'Please enter a amount',
+  'role.create.form.amount.placeholder': 'Enter a amount',
+  'role.create.form.astrodaoID.label': 'AstroDAO ID',
+  'role.create.form.astrodaoID.required': 'Please enter a astrodao id',
+  'role.create.form.astrodaoID.placeholder': 'Enter a astrodao id',
+  'role.create.form.astrodaoRole.label': 'AstroDAO Role',
+  'role.create.form.astrodaoRole.required': 'Please select a astrodao role',
+  'role.create.form.gatingRule.label': 'Gating Rule',
+  'role.create.form.gatingRule.required': 'Please select a gating rule',
+  'role.create.form.loyaltyLevel.label': 'Loyalty Level',
+  'role.create.form.loyaltyLevel.required': 'Please select a loyalty level',
+  'role.create.form.duration.label': 'Duration',
+  'role.create.form.duration.required': 'Please enter a duration',
+  'role.create.form.duration.placeholder': 'Enter a duration',
+  'role.create.form.button.cancel': 'Cancel',
+  'role.create.form.button.ok': 'OK',
 };

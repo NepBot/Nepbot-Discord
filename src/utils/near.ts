@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-15 03:53:57
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-22 16:13:49
+ * @ Modified time: 2023-03-29 04:14:54
  * @ Description: i@rua.moe
  */
 
@@ -130,3 +130,19 @@ export function GetGas({ gas }: { gas: string }) {
 export function GetDeposit({ amount }: { amount: string }) {
   return amount ? new BN(amount) : new BN('0');
 }
+
+export const debounce = <F extends (...args: any[]) => any>(
+  func: F,
+  waitFor: number,
+) => {
+  let timeout: NodeJS.Timeout;
+
+  return (...args: Parameters<F>): Promise<ReturnType<F>> =>
+    new Promise((resolve) => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+
+      timeout = setTimeout(() => resolve(func(...args)), waitFor);
+    });
+};

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:18
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-10 03:48:05
+ * @ Modified time: 2023-03-29 02:45:06
  * @ Description: i@rua.moe
  */
 
@@ -164,6 +164,18 @@
                 color: #fff;
                 border: none;
                 border-left: 1px solid rgba(255, 255, 255, 0.2);
+              }
+            }
+
+            .select {
+              color: #fff;
+
+              :global(.ant-select-arrow) {
+                color: #fff;
+              }
+
+              :global(.ant-select-selection-item) {
+                color: #fff;
               }
             }
           }
@@ -402,47 +414,6 @@
   }
 }
 
-.select {
-  width: 100%;
-  color: #fff !important;
-  font-weight: 400;
-  font-size: 14px;
-  font-family: Gilroy;
-  letter-spacing: 0;
-  border-radius: 22px;
-  transition: all 0.3s ease-in-out;
-
-  :global(.ant-select-selection-item) {
-    padding-left: 10px;
-    color: #fff !important;
-  }
-
-  :global(.ant-select-arrow) {
-    color: #fff;
-  }
-
-  :global(.ant-select-selection-overflow-item) {
-    :global(.ant-select-selection-item) {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-weight: 400;
-      font-family: Gilroy;
-      background: rgba(78, 81, 112, 0.24);
-      border-radius: 4px;
-    }
-
-    :global(.ant-select-selection-item-remove) {
-      margin-left: 5px;
-      color: #fff;
-      font-weight: 400;
-      font-family: Gilroy;
-    }
-  }
-}
-
 .selectPopup {
   padding: 10px;
   color: #fff;
@@ -453,6 +424,10 @@
   background: #0d0d16;
   border-radius: 8px;
   box-shadow: 0px 12px 20px 0px rgba(0, 0, 0, 0.15);
+
+  :global(.ant-select-selection-overflow) {
+    color: #fff;
+  }
 
   :global(.ant-select-item-option-content) {
     padding: 6px;
@@ -469,18 +444,8 @@
     background: rgba(255, 255, 255, 0.1);
     border-radius: 6px;
   }
-}
 
-.message {
-  :global(.ant-message-notice-content) {
-    padding: 22px 40px;
+  :global(.ant-empty-description) {
     color: #fff;
-    font-weight: 400;
-    font-size: 14px;
-    font-family: Gilroy;
-    letter-spacing: 0;
-    text-align: center;
-    background: #000;
-    border-radius: 16px;
   }
 }

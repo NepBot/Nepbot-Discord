@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 03:35:39
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-28 18:29:11
+ * @ Modified time: 2023-03-29 02:37:36
  * @ Description: i@rua.moe
  */
 
@@ -26,6 +26,7 @@ import { API_CONFIG } from '@/constants/config';
 import { IsObjectValueEqual } from '@/utils/request';
 import { base58 } from 'ethers/lib/utils';
 import { RequestTransaction } from '@/utils/contract';
+import UserLayout from '@/layouts/UserLayout';
 
 interface QueryParams {
   guild_id?: string;
@@ -37,10 +38,9 @@ const Role: React.FC = () => {
   const { walletSelector, nearAccount, nearWallet } = useModel('near.account');
   const { discordServer, discordUser, GetServerInfo } = useModel('discord');
   const { discordInfo, discordOperationSign, setDiscordInfo, setDiscordOperationSign } = useModel('store');
-  const [roleList, setRoleList] = useState<Contract.RuleItem[]>([]);
   const [dataSource, setDataSource] = useState<Contract.RuleItem[]>([]);
   const [appchainIds, setAppchainIds] = useState<any[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
   const [errorState, setErrorState] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -251,68 +251,71 @@ const Role: React.FC = () => {
   }, [isModalOpen, walletSelector, discordServer, discordUser, nearAccount, nearWallet]);
 
   return (
-    <div className={styles.roleContainer}>
-      {contextHolder}
-      <div className={styles.wrapper}>
-        <div className={styles.headerContainer}>
-          <div className={styles.searchContainer}>
-            <AiOutlineSearch
-              className={styles.searchIcon}
-            />
-            <Input
-              bordered={false}
-              placeholder={intl.formatMessage({
-                id: 'role.search.placeholder'
-              })}
-              className={styles.searchInput}
-              onChange={async (e) => {
-                const data = await nearAccount?.viewFunction(API_CONFIG().RULE_CONTRACT, 'get_token', { token_id: e.target.value });
-                const _data = await handleData(data);
-                setDataSource(_data);
-              }}
-            />
-          </div>
-          <div className={styles.buttonsContainer}>
-            <div
-              className={styles.button}
-              onClick={async () => {
-                setIsModalOpen(true);
-              }}
-            >
-              <AiOutlinePlus
-                className={styles.buttonIcon}
+    <UserLayout>
+      <div className={styles.roleContainer}>
+        {contextHolder}
+        <div className={styles.wrapper}>
+          <div className={styles.headerContainer}>
+            <div className={styles.searchContainer}>
+              <AiOutlineSearch
+                className={styles.searchIcon}
               />
-              {intl.formatMessage({
-                id: 'role.button.add'
-              })}
+              <Input
+                bordered={false}
+                placeholder={intl.formatMessage({
+                  id: 'role.search.placeholder'
+                })}
+                className={styles.searchInput}
+                onChange={async (e) => {
+                  const data = await nearAccount?.viewFunction(API_CONFIG().RULE_CONTRACT, 'get_token', { token_id: e.target.value });
+                  const _data = await handleData(data);
+                  setDataSource(_data);
+                }}
+              />
+            </div>
+            <div className={styles.buttonsContainer}>
+              <div
+                className={styles.button}
+                onClick={async () => {
+                  setIsModalOpen(true);
+                }}
+              >
+                <AiOutlinePlus
+                  className={styles.buttonIcon}
+                />
+                {intl.formatMessage({
+                  id: 'role.button.add'
+                })}
+              </div>
             </div>
           </div>
+          <div className={styles.contentContainer}>
+            <Row gutter={[30, 30]}>
+              {!!dataSource?.length && dataSource?.map((item, index) => {
+                return (
+                  <Col
+                    xs={24} sm={24} md={12} lg={8} xl={8}
+                    key={uuidv4()}
+                  >
+                    <ItemCard
+                      item={item}
+                      onDelete={async () => {
+                        await handleDelete(item);
+                      }}
+                    />
+                  </Col>
+                )
+              })}
+            </Row>
+          </div>
         </div>
-        <div className={styles.contentContainer}>
-          <Row gutter={[30, 30]}>
-            {!!dataSource?.length && dataSource?.map((item, index) => {
-              return (
-                <Col
-                  xs={24} sm={24} md={12} lg={8} xl={8}
-                  key={uuidv4()}
-                >
-                  <ItemCard
-                    item={item}
-                    onDelete={async () => {
-                      await handleDelete(item);
-                    }}
-                  />
-                </Col>
-              )
-            })}
-          </Row>
-        </div>
+        <CreateModal
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          appchainIds={appchainIds}
+        />
       </div>
-      <CreateModal
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-      />
-    </div>
+    </UserLayout>
   )
 };
 

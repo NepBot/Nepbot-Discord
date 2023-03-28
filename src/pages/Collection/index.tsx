@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-28 16:05:34
+ * @ Modified time: 2023-03-29 02:10:22
  * @ Description: i@rua.moe
  */
 
@@ -39,7 +39,7 @@ const Collection: React.FC = () => {
   const [noAccessList, setNoAccessList] = useState<Contract.WrappedCollections[]>([]);
   const [mintedOutList, setMintedOutList] = useState<Contract.WrappedCollections[]>([]);
   const [selectItem, setSelectItem] = useState<Contract.WrappedCollections>();
-  const [mintModal, setMintModal] = useState<boolean>(true);
+  const [mintModal, setMintModal] = useState<boolean>(false);
 
   const intl = useIntl();
 
