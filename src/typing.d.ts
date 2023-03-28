@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-16 17:20:36
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-27 15:52:12
+ * @ Modified time: 2023-03-28 18:28:56
  * @ Description: i@rua.moe
  */
 
@@ -49,5 +49,28 @@ declare namespace Contract {
     serverName?: string;
     serverIcon?: string;
     contract_type?: string;
+  }
+
+  interface RuleItem {
+    icon?: string;
+    name?: string;
+    decimals?: number;
+    token_symbol?: string;
+    guild_id?: string;
+    guild_name?: string;
+    role_id?: string;
+    role_name?: string;
+    transaction_hash?: string;
+    key_field?: string[];
+    fields?: {
+      token_amount?: string;
+      oct_role?: string;
+      balance?: string;
+      astrodao_role?: string;
+      loyalty_level?: string;
+      paras_staking_amount?: string;
+      paras_staking_duration?: string;
+    };
+    key?: number;
   }
 }

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 03:35:39
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-28 16:52:01
+ * @ Modified time: 2023-03-28 18:29:11
  * @ Description: i@rua.moe
  */
 
@@ -13,6 +13,7 @@ import { useIntl, useModel, useLocation } from '@umijs/max';
 import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai';
 import { Col, Input, Row, message, notification } from 'antd';
 import querystring from 'query-string';
+import { v4 as uuidv4 } from 'uuid';
 import ItemCard from './components/ItemCard';
 import CreateModal from './components/CreateModal';
 import { GetOperationSign, GetRole, GetTxByGuild } from '@/services/api';
@@ -26,27 +27,6 @@ import { IsObjectValueEqual } from '@/utils/request';
 import { base58 } from 'ethers/lib/utils';
 import { RequestTransaction } from '@/utils/contract';
 
-interface RoleProps {
-  fields?: any[];
-  key_field?: string[];
-  token_symbol?: string;
-  icon?: string;
-  name?: string;
-  decimals?: number;
-  transaction_hash?: string;
-  role_name?: string;
-  role_id?: string;
-  guild_name?: string;
-  key?: number;
-}
-
-interface Record {
-  guild_id?: string;
-  role_id?: string;
-  key_field?: string[];
-  fields?: any[];
-}
-
 interface QueryParams {
   guild_id?: string;
   user_id?: string;
@@ -57,8 +37,8 @@ const Role: React.FC = () => {
   const { walletSelector, nearAccount, nearWallet } = useModel('near.account');
   const { discordServer, discordUser, GetServerInfo } = useModel('discord');
   const { discordInfo, discordOperationSign, setDiscordInfo, setDiscordOperationSign } = useModel('store');
-  const [roleList, setRoleList] = useState<RoleProps[]>([]);
-  const [dataSource, setDataSource] = useState<any[]>([]);
+  const [roleList, setRoleList] = useState<Contract.RuleItem[]>([]);
+  const [dataSource, setDataSource] = useState<Contract.RuleItem[]>([]);
   const [appchainIds, setAppchainIds] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [errorState, setErrorState] = useState<boolean>(false);
@@ -70,7 +50,7 @@ const Role: React.FC = () => {
   const location = useLocation();
   const search: QueryParams = querystring.parse(location.search);
 
-  const handleData = useCallback(async (data: RoleProps[], serverName?: string) => {
+  const handleData = useCallback(async (data: Contract.RuleItem[], serverName?: string) => {
     if (!!discordInfo && !!discordOperationSign) {
       const roleRes = await GetRole({
         guild_id: discordInfo.guild_id!,
@@ -159,7 +139,7 @@ const Role: React.FC = () => {
     return data;
   }, []);
 
-  const handleDelete = useCallback(async (record: Record) => {
+  const handleDelete = useCallback(async (record: Contract.RuleItem) => {
     const object = {
       guild_id: record.guild_id,
       role_id: record.role_id,
@@ -285,6 +265,11 @@ const Role: React.FC = () => {
                 id: 'role.search.placeholder'
               })}
               className={styles.searchInput}
+              onChange={async (e) => {
+                const data = await nearAccount?.viewFunction(API_CONFIG().RULE_CONTRACT, 'get_token', { token_id: e.target.value });
+                const _data = await handleData(data);
+                setDataSource(_data);
+              }}
             />
           </div>
           <div className={styles.buttonsContainer}>
@@ -305,15 +290,21 @@ const Role: React.FC = () => {
         </div>
         <div className={styles.contentContainer}>
           <Row gutter={[30, 30]}>
-            <Col xs={24} sm={24} md={12} lg={8} xl={8}>
-              <ItemCard />
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={8} xl={8}>
-              <ItemCard />
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={8} xl={8}>
-              <ItemCard />
-            </Col>
+            {!!dataSource?.length && dataSource?.map((item, index) => {
+              return (
+                <Col
+                  xs={24} sm={24} md={12} lg={8} xl={8}
+                  key={uuidv4()}
+                >
+                  <ItemCard
+                    item={item}
+                    onDelete={async () => {
+                      await handleDelete(item);
+                    }}
+                  />
+                </Col>
+              )
+            })}
           </Row>
         </div>
       </div>
