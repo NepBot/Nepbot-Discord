@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:07:16
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-26 01:05:48
+ * @ Modified time: 2023-03-28 16:10:27
  * @ Description: i@rua.moe
  */
 
@@ -48,7 +48,6 @@ const Item: React.FC<{
       }
 
       const signature = await nearAccount?.connection.signer.signMessage(Buffer.from(JSON.stringify(args)), nearAccount?.accountId, API_CONFIG().networkId);
-      console.log(signature)
       const res = await GetMintSign({
         args,
         account_id: nearAccount?.accountId,

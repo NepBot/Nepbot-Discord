@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:18
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-28 04:33:49
+ * @ Modified time: 2023-03-28 16:48:00
  * @ Description: i@rua.moe
  */
 
@@ -405,7 +405,7 @@ declare namespace Resp {
 
   interface GetOperationSign extends Body {
     code?: number;
-    data?: string;
+    data?: any;
     success?: boolean;
   }
 
