@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-29 02:10:22
+ * @ Modified time: 2023-03-30 04:00:29
  * @ Description: i@rua.moe
  */
 
@@ -21,6 +21,8 @@ import UserLayout from "@/layouts/UserLayout";
 import Mint from "./components/Mint";
 import { v4 as uuidv4 } from 'uuid';
 import { base58 } from "ethers/lib/utils";
+import Loading from "@/components/Loading";
+import LinkExpired from "@/components/LinkExpired";
 
 interface QueryParams {
   guild_id?: string;
@@ -201,119 +203,129 @@ const Collection: React.FC = () => {
 
   return (
     <UserLayout>
-      {!mintModal && (
-        <div className={styles.collectionContainer}>
-          <div className={styles.wrapper}>
-            <div className={styles.headerContainer}>
-              <div className={styles.title}>
-                {intl.formatMessage({
-                  id: "collection.title"
-                })}
+      {!errorState && loading && (
+        <Loading />
+      )}
+      {errorState && !loading && (
+        <LinkExpired />
+      )}
+      {!errorState && !loading && (
+        <>
+          {!mintModal && (
+            <div className={styles.collectionContainer}>
+              <div className={styles.wrapper}>
+                <div className={styles.headerContainer}>
+                  <div className={styles.title}>
+                    {intl.formatMessage({
+                      id: "collection.title"
+                    })}
+                  </div>
+                </div>
+                <div className={styles.contentContainer}>
+                  {!!haveAccessList?.length && (
+                    <div className={styles.itemContainer}>
+                      <div className={styles.itemTitle}>
+                        <AiFillCheckCircle
+                          className={classNames(styles.itemTitleIcon, styles.itemTitleIconHaveAccess)}
+                        />
+                        {intl.formatMessage({
+                          id: "collection.item.title.haveAccess"
+                        })}
+                      </div>
+                      <div className={styles.itemContent}>
+                        <Row gutter={[30, 30]}>
+                          {haveAccessList?.map((item: Contract.WrappedCollections, index: number) => {
+                            return (
+                              <Col
+                                xs={24} sm={24} md={12} lg={8} xl={8}
+                                key={uuidv4()}
+                              >
+                                <ItemCard
+                                  item={item}
+                                  roleMap={roleMap}
+                                  onClick={() => {
+                                    setSelectItem(item);
+                                    setMintModal(true);
+                                  }}
+                                />
+                              </Col>
+                            )
+                          })}
+                        </Row>
+                      </div>
+                    </div>
+                  )}
+                  {!!mintedOutList?.length && (
+                    <div className={styles.itemContainer}>
+                      <div className={styles.itemTitle}>
+                        <AiFillCloseCircle
+                          className={classNames(styles.itemTitleIcon, styles.itemTitleIconNoAccess)}
+                        />
+                        {intl.formatMessage({
+                          id: "collection.item.title.noAccess"
+                        })}
+                      </div>
+                      <div className={styles.itemContent}>
+                        <Row gutter={[30, 30]}>
+                          {noAccessList?.map((item: Contract.WrappedCollections, index: number) => {
+                            return (
+                              <Col
+                                xs={24} sm={24} md={12} lg={8} xl={8}
+                                key={uuidv4()}
+                              >
+                                <ItemCard
+                                  item={item}
+                                  roleMap={roleMap}
+                                />
+                              </Col>
+                            )
+                          })}
+                        </Row>
+                      </div>
+                    </div>
+                  )}
+                  {!!mintedOutList?.length && (
+                    <div className={styles.itemContainer}>
+                      <div className={styles.itemTitle}>
+                        <AiFillCodeSandboxCircle
+                          className={classNames(styles.itemTitleIcon, styles.itemTitleIconMintedOut)}
+                        />
+                        {intl.formatMessage({
+                          id: "collection.item.title.mintedOut"
+                        })}
+                      </div>
+                      <div className={styles.itemContent}>
+                        <Row gutter={[30, 30]}>
+                          {mintedOutList?.map((item: Contract.WrappedCollections, index: number) => {
+                            return (
+                              <Col
+                                xs={24} sm={24} md={12} lg={8} xl={8}
+                                key={uuidv4()}
+                              >
+                                <ItemCard
+                                  item={item}
+                                  roleMap={roleMap}
+                                />
+                              </Col>
+                            )
+                          })}
+                        </Row>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-            <div className={styles.contentContainer}>
-              {!!haveAccessList?.length && (
-                <div className={styles.itemContainer}>
-                  <div className={styles.itemTitle}>
-                    <AiFillCheckCircle
-                      className={classNames(styles.itemTitleIcon, styles.itemTitleIconHaveAccess)}
-                    />
-                    {intl.formatMessage({
-                      id: "collection.item.title.haveAccess"
-                    })}
-                  </div>
-                  <div className={styles.itemContent}>
-                    <Row gutter={[30, 30]}>
-                      {haveAccessList?.map((item: Contract.WrappedCollections, index: number) => {
-                        return (
-                          <Col
-                            xs={24} sm={24} md={12} lg={8} xl={8}
-                            key={uuidv4()}
-                          >
-                            <ItemCard
-                              item={item}
-                              roleMap={roleMap}
-                              onClick={() => {
-                                setSelectItem(item);
-                                setMintModal(true);
-                              }}
-                            />
-                          </Col>
-                        )
-                      })}
-                    </Row>
-                  </div>
-                </div>
-              )}
-              {!!mintedOutList?.length && (
-                <div className={styles.itemContainer}>
-                  <div className={styles.itemTitle}>
-                    <AiFillCloseCircle
-                      className={classNames(styles.itemTitleIcon, styles.itemTitleIconNoAccess)}
-                    />
-                    {intl.formatMessage({
-                      id: "collection.item.title.noAccess"
-                    })}
-                  </div>
-                  <div className={styles.itemContent}>
-                    <Row gutter={[30, 30]}>
-                      {noAccessList?.map((item: Contract.WrappedCollections, index: number) => {
-                        return (
-                          <Col
-                            xs={24} sm={24} md={12} lg={8} xl={8}
-                            key={uuidv4()}
-                          >
-                            <ItemCard
-                              item={item}
-                              roleMap={roleMap}
-                            />
-                          </Col>
-                        )
-                      })}
-                    </Row>
-                  </div>
-                </div>
-              )}
-              {!!mintedOutList?.length && (
-                <div className={styles.itemContainer}>
-                  <div className={styles.itemTitle}>
-                    <AiFillCodeSandboxCircle
-                      className={classNames(styles.itemTitleIcon, styles.itemTitleIconMintedOut)}
-                    />
-                    {intl.formatMessage({
-                      id: "collection.item.title.mintedOut"
-                    })}
-                  </div>
-                  <div className={styles.itemContent}>
-                    <Row gutter={[30, 30]}>
-                      {mintedOutList?.map((item: Contract.WrappedCollections, index: number) => {
-                        return (
-                          <Col
-                            xs={24} sm={24} md={12} lg={8} xl={8}
-                            key={uuidv4()}
-                          >
-                            <ItemCard
-                              item={item}
-                              roleMap={roleMap}
-                            />
-                          </Col>
-                        )
-                      })}
-                    </Row>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-      {mintModal && (
-        <Mint
-          item={selectItem}
-          onCancel={() => {
-            setMintModal(false);
-          }}
-        />
+          )}
+          {mintModal && (
+            <Mint
+              item={selectItem}
+              onCancel={() => {
+                setMintModal(false);
+              }}
+            />
+          )}
+        </>
       )}
     </UserLayout>
   )

@@ -1,0 +1,50 @@
+/**
+ * @ Author: Hikaru
+ * @ Create Time: 2023-03-30 03:51:36
+ * @ Modified by: Hikaru
+ * @ Modified time: 2023-03-30 03:57:33
+ * @ Description: i@rua.moe
+ */
+
+.contentBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+
+  .backgroundLeft {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50vw;
+    height: 50vw;
+    background-color: #241050;
+    border-radius: 100%;
+    box-shadow: 0 0 100px #241050;
+    transform: translate(-50%, 15%);
+    opacity: 1;
+    filter: blur(350px);
+    animation: circle 10s linear infinite;
+  }
+
+  .backgroundRight {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50vw;
+    height: 50vw;
+    background-color: #161d53;
+    border-radius: 100%;
+    box-shadow: 0 0 100px #161d53;
+    transform: translate(50%, -20%);
+    opacity: 1;
+    filter: blur(350px);
+    animation: circle 10s linear infinite;
+  }
+}

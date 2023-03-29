@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-16 01:18:40
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-26 00:44:28
+ * @ Modified time: 2023-03-30 04:06:22
  * @ Description: i@rua.moe
  */
 
@@ -17,6 +17,8 @@ import { ParseAmount } from "@/utils/near";
 import { API_CONFIG } from "@/constants/config";
 import { ExecuteMultipleTransactions } from "@/utils/contract";
 import UserLayout from "@/layouts/UserLayout";
+import Loading from "@/components/Loading";
+import LinkExpired from "@/components/LinkExpired";
 
 interface QueryParams {
   guild_id?: string;
@@ -172,7 +174,12 @@ const Airdrop: React.FC = () => {
 
   return (
     <UserLayout>
-
+      {!errorState && (
+        <Loading />
+      )}
+      {errorState && (
+        <LinkExpired />
+      )}
     </UserLayout>
   )
 };

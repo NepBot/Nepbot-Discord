@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 03:35:39
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 03:39:03
+ * @ Modified time: 2023-03-30 03:58:12
  * @ Description: i@rua.moe
  */
 
@@ -29,6 +29,7 @@ import { RequestTransaction } from '@/utils/contract';
 import UserLayout from '@/layouts/UserLayout';
 import Loading from '@/components/Loading';
 import LinkExpired from '@/components/LinkExpired';
+import NoData from '@/components/NoData';
 
 interface QueryParams {
   guild_id?: string;
@@ -302,23 +303,30 @@ const Role: React.FC = () => {
               </div>
             </div>
             <div className={styles.contentContainer}>
-              <Row gutter={[30, 30]}>
-                {!!dataSource?.length && dataSource?.map((item, index) => {
-                  return (
-                    <Col
-                      xs={24} sm={24} md={12} lg={8} xl={8}
-                      key={uuidv4()}
-                    >
-                      <ItemCard
-                        item={item}
-                        onDelete={async () => {
-                          await handleDelete(item);
-                        }}
-                      />
-                    </Col>
-                  )
-                })}
-              </Row>
+              {!!dataSource?.length && (
+                <Row gutter={[30, 30]}>
+                  {dataSource?.map((item, index) => {
+                    return (
+                      <Col
+                        xs={24} sm={24} md={12} lg={8} xl={8}
+                        key={uuidv4()}
+                      >
+                        <ItemCard
+                          item={item}
+                          onDelete={async () => {
+                            await handleDelete(item);
+                          }}
+                        />
+                      </Col>
+                    )
+                  })}
+                </Row>
+              )}
+              {!dataSource?.length && (
+                <NoData
+                  name='role'
+                />
+              )}
             </div>
           </div>
           <CreateModal

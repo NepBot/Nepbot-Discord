@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 02:53:34
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-24 02:44:52
+ * @ Modified time: 2023-03-30 04:11:38
  * @ Description: i@rua.moe
  */
 
@@ -14,6 +14,7 @@ import Background from '@/components/TopBackground';
 import classNames from 'classnames';
 import { Spin, notification } from 'antd';
 import { Loading3QuartersOutlined } from '@ant-design/icons';
+import LinkExpired from '@/components/LinkExpired';
 
 interface QueryParams {
   guild_id?: string;
@@ -52,86 +53,93 @@ const Verify: React.FC = () => {
   }, []);
 
   return (
-    <div className={styles.connectContainer}>
-      <Background />
-      <div className={styles.wrapper}>
-        <div className={styles.windowContainer}>
-          <div className={styles.userContainer}>
-            <div className={styles.avatar}>
-              <img
-                src={discordUser?.displayAvatarURL}
-                alt={discordUser?.displayName}
-                className={styles.avatarImg}
-              />
-            </div>
-            <div className={styles.nickname}>
-              {discordUser?.displayName}
-            </div>
-            <div className={styles.serverName}>
-              {discordServer?.name}
-            </div>
-          </div>
-          <div className={styles.buttonContainer}>
-            {!!nearWallet ? (
-              <div
-                className={classNames(styles.button, (!discordUser || !discordServer) && styles.buttonDisable)}
-                onClick={async () => {
-                  if (!!discordUser && !!discordServer && !loading) {
-                    await nearWallet.signOut();
-                  }
-                }}
-              >
-                {loading ? (
-                  <Spin
-                    indicator={
-                      <Loading3QuartersOutlined
-                        className={styles.loadingIcon}
-                        spin
-                      />
-                    }
+    <>
+      {errorState && (
+        <LinkExpired />
+      )}
+      {!errorState && (
+        <div className={styles.connectContainer}>
+          <Background />
+          <div className={styles.wrapper}>
+            <div className={styles.windowContainer}>
+              <div className={styles.userContainer}>
+                <div className={styles.avatar}>
+                  <img
+                    src={discordUser?.displayAvatarURL}
+                    alt={discordUser?.displayName}
+                    className={styles.avatarImg}
                   />
+                </div>
+                <div className={styles.nickname}>
+                  {discordUser?.displayName}
+                </div>
+                <div className={styles.serverName}>
+                  {discordServer?.name}
+                </div>
+              </div>
+              <div className={styles.buttonContainer}>
+                {!!nearWallet ? (
+                  <div
+                    className={classNames(styles.button, (!discordUser || !discordServer) && styles.buttonDisable)}
+                    onClick={async () => {
+                      if (!!discordUser && !!discordServer && !loading) {
+                        await nearWallet.signOut();
+                      }
+                    }}
+                  >
+                    {loading ? (
+                      <Spin
+                        indicator={
+                          <Loading3QuartersOutlined
+                            className={styles.loadingIcon}
+                            spin
+                          />
+                        }
+                      />
+                    ) : (
+                      intl.formatMessage({
+                        id: 'connect.button.disconnect'
+                      })
+                    )}
+                  </div>
                 ) : (
-                  intl.formatMessage({
-                    id: 'connect.button.disconnect'
-                  })
+                  <>
+                    <div
+                      className={classNames(styles.button, (!discordUser || !discordServer) && styles.buttonDisable)}
+                      onClick={async () => {
+                        if (!!discordUser && !!discordServer && !loading) {
+                          await OpenModalWallet();
+                        }
+                      }}
+                    >
+                      {loading ? (
+                        <Spin
+                          indicator={
+                            <Loading3QuartersOutlined
+                              className={styles.loadingIcon}
+                              spin
+                            />
+                          }
+                        />
+                      ) : (
+                        intl.formatMessage({
+                          id: 'connect.button.connect'
+                        })
+                      )}
+                    </div>
+                    <div className={styles.desc}>
+                      {intl.formatMessage({
+                        id: 'connect.button.desc'
+                      })}
+                    </div>
+                  </>
                 )}
               </div>
-            ) : (
-              <>
-                <div
-                  className={classNames(styles.button, (!discordUser || !discordServer) && styles.buttonDisable)}
-                  onClick={async () => {
-                    if (!!discordUser && !!discordServer && !loading) {
-                      await OpenModalWallet();
-                    }
-                  }}
-                >
-                  {loading ? (
-                    <Spin
-                      indicator={
-                        <Loading3QuartersOutlined
-                          className={styles.loadingIcon}
-                          spin
-                        />
-                      }
-                    />
-                  ) : (
-                    intl.formatMessage({
-                      id: 'connect.button.connect'
-                    })
-                  )}
-                </div>
-                <div className={styles.desc}>
-                  {intl.formatMessage({
-                    id: 'connect.button.desc'
-                  })}
-                </div>
-              </>
-            )}
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   )
 };
 

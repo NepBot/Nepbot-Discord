@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-17 00:37:10
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-26 00:44:39
+ * @ Modified time: 2023-03-30 04:06:58
  * @ Description: i@rua.moe
  */
 
@@ -15,6 +15,8 @@ import { notification } from "antd";
 import { API_CONFIG } from "@/constants/config";
 import { ExecuteMultipleTransactions } from "@/utils/contract";
 import UserLayout from "@/layouts/UserLayout";
+import LinkExpired from "@/components/LinkExpired";
+import Loading from "@/components/Loading";
 
 interface QueryParams {
   user_id?: string;
@@ -129,6 +131,12 @@ const Claim: React.FC = () => {
 
   return (
     <UserLayout>
+      {!errorState && (
+        <Loading />
+      )}
+      {errorState && (
+        <LinkExpired />
+      )}
     </UserLayout>
   );
 };

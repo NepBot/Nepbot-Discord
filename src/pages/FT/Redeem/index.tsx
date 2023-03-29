@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-17 04:09:10
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-26 00:43:16
+ * @ Modified time: 2023-03-30 04:07:53
  * @ Description: i@rua.moe
  */
 
@@ -13,6 +13,8 @@ import { RequestTransaction } from "@/utils/contract";
 import { API_CONFIG } from "@/constants/config";
 import { notification } from "antd";
 import UserLayout from "@/layouts/UserLayout";
+import Loading from "@/components/Loading";
+import LinkExpired from "@/components/LinkExpired";
 
 interface QueryParams {
   hash?: string;
@@ -62,7 +64,12 @@ const Redeem: React.FC = () => {
 
   return (
     <UserLayout>
-
+      {!errorState && (
+        <Loading />
+      )}
+      {errorState && (
+        <LinkExpired />
+      )}
     </UserLayout>
   )
 };

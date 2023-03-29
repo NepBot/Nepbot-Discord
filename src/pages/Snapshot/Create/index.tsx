@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-20 16:06:26
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-26 00:43:49
+ * @ Modified time: 2023-03-30 04:08:47
  * @ Description: i@rua.moe
  */
 
@@ -16,6 +16,8 @@ import { GetSnapshotSign, SendMsgSnapshot } from '@/services/api';
 import { base58 } from 'ethers/lib/utils';
 import { RequestTransaction } from '@/utils/contract';
 import UserLayout from '@/layouts/UserLayout';
+import Loading from '@/components/Loading';
+import LinkExpired from '@/components/LinkExpired';
 
 interface QueryParams {
   transactionHashes?: string;
@@ -100,7 +102,12 @@ const Create: React.FC = () => {
 
   return (
     <UserLayout>
-
+      {!errorState && (
+        <Loading />
+      )}
+      {errorState && (
+        <LinkExpired />
+      )}
     </UserLayout>
   )
 };

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-15 15:53:00
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-26 01:00:13
+ * @ Modified time: 2023-03-30 03:55:08
  * @ Description: i@rua.moe
  */
 
@@ -10,7 +10,8 @@ import { useModel } from '@umijs/max';
 import { WaterMark } from '@ant-design/pro-components';
 import styles from './style.less';
 import { _EXP_DATE } from '@/constants/env';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import ContentBackground from '@/components/ContentBackground';
 
 const UserLayout = (props: any) => {
   const { walletSelector, nearAccount, nearWallet, OpenModalWallet } = useModel('near.account');
@@ -33,6 +34,7 @@ const UserLayout = (props: any) => {
       className={styles.watermarkContainer}
     >
       <div className={styles.layoutContainer}>
+        <ContentBackground />
         {props.children}
       </div>
     </WaterMark>

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-18 03:42:43
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-24 02:45:23
+ * @ Modified time: 2023-03-30 04:09:46
  * @ Description: i@rua.moe
  */
 
@@ -14,6 +14,9 @@ import { TwitterVerify } from "@/services/api";
 import { API_CONFIG } from "@/constants/config";
 import { notification } from "antd";
 import UserLayout from "@/layouts/UserLayout";
+import Loading from "@/components/Loading";
+import LinkExpired from "@/components/LinkExpired";
+import Success from "@/components/Success";
 
 interface QueryParams {
   state?: string;
@@ -83,7 +86,15 @@ const Verify: React.FC = () => {
 
   return (
     <UserLayout>
-
+      {!errorState && !successState && (
+        <Loading />
+      )}
+      {errorState && !successState && (
+        <LinkExpired />
+      )}
+      {!errorState && successState && (
+        <Success />
+      )}
     </UserLayout>
   )
 };

@@ -2,11 +2,11 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-28 00:33:01
+ * @ Modified time: 2023-03-30 04:04:42
  * @ Description: i@rua.moe
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styles from './style.less';
 import { useIntl, useModel } from '@umijs/max';
 import { Button, Form, Input, InputNumber, Spin, Upload, message, notification } from 'antd';
@@ -19,6 +19,7 @@ import { CreateSeries, GetOwnerSign } from '@/services/api';
 import { API_CONFIG } from '@/constants/config';
 import { base58 } from 'ethers/lib/utils';
 import { RequestTransaction } from '@/utils/contract';
+import Fail from '@/components/Fail';
 
 const Add: React.FC<{
   collectionInfo: Contract.CollectionInfo,
@@ -182,340 +183,347 @@ const Add: React.FC<{
   };
 
   return (
-    <div className={styles.createContainer}>
-      {contextHolder}
-      <div className={styles.wrapper}>
-        <div className={styles.headerContainer}>
-          <div className={styles.title}>
-            {intl.formatMessage({
-              id: "collection.add.title"
-            })}
-          </div>
-        </div>
-        <div className={styles.contentContainer}>
-          <Form
-            form={form}
-            name="createItem"
-            autoComplete="off"
-            labelWrap={true}
-            layout="vertical"
-            className={styles.formContainer}
-          >
-            <div className={styles.formItemRow}>
-              <Form.Item
-                label={
-                  <div className={styles.formItemLabel}>
-                    {intl.formatMessage({
-                      id: "collection.add.form.image.label"
-                    })}
-                  </div>
-                }
-                required
-                name="image"
-                valuePropName="fileList"
-                rules={[
-                  {
-                    validator: async () => {
-                      if (!imageFile) {
-                        throw new Error(intl.formatMessage({
-                          id: "collection.add.form.image.required"
-                        }));
-                      }
-                    }
-                  }
-                ]}
-                className={classNames(styles.formItem, styles.formItemLogo)}
-              >
-                <Dragger
-                  name="image"
-                  multiple={false}
-                  listType="picture-card"
-                  beforeUpload={beforeUpload}
-                  showUploadList={false}
-                  onChange={async (info) => {
-                    if (info.file.status === 'uploading') {
-                      setLoading(true);
-                      return;
-                    }
-
-                    if (info.file.status === 'done' && !!info?.file?.originFileObj) {
-                      setImageFile(info?.file?.originFileObj);
-                      await getBase64(info?.file?.originFileObj, (url) => {
-                        setImageUrl(url);
-                        setLoading(false);
-                      });
-                      return;
-                    }
-
-                    if (info.file.status === 'removed') {
-                      setImageFile(undefined);
-                      setImageUrl('');
-                      return;
-                    }
-                  }}
-                  className={classNames(styles.formItemUploadContainer, imageUrl && styles.formItemUploadContainerHasFile)}
-                >
-                  {imageUrl ? (
-                    <img
-                      src={imageUrl}
-                      alt="image"
-                      className={styles.formItemUploadImage}
-                    />
-                  ) : (
-                    <>
-                      <div className={styles.formItemUploadIcon}>
-                        <AiOutlineCloudUpload />
-                      </div>
-                      <div className={styles.formItemUploadText}>
-                        {intl.formatMessage({
-                          id: "collection.create.form.upload.text"
-                        })}
-                      </div>
-                      <div className={styles.formItemUploadOr}>
-                        {intl.formatMessage({
-                          id: "collection.create.form.upload.or"
-                        })}
-                      </div>
-                      <div className={styles.formItemUploadButton}>
-                        {intl.formatMessage({
-                          id: "collection.create.form.upload.button"
-                        })}
-                      </div>
-                    </>
-                  )}
-                </Dragger>
-                <div className={styles.formItemLogoTip}>
-                  {intl.formatMessage({
-                    id: "collection.create.form.upload.tip"
-                  })}
-                </div>
-              </Form.Item>
-            </div>
-            <Form.Item
-              label={
-                <div className={styles.formItemLabel}>
-                  {intl.formatMessage({
-                    id: "collection.add.form.name.label"
-                  })}
-                </div>
-              }
-              name="name"
-              rules={[{
-                required: true,
-                message: intl.formatMessage({
-                  id: "collection.add.form.name.required"
-                })
-              }]}
-              className={styles.formItem}
-            >
-              <div className={styles.formItemInputContainer}>
-                <Input
-                  bordered={false}
-                  placeholder={intl.formatMessage({
-                    id: "collection.add.form.name.placeholder"
-                  })}
-                  className={styles.formItemInput}
-                />
-              </div>
-            </Form.Item>
-            <Form.Item
-              label={
-                <div className={styles.formItemLabel}>
-                  {intl.formatMessage({
-                    id: "collection.add.form.description.label"
-                  })}
-                </div>
-              }
-              name="description"
-              rules={[{
-                required: true,
-                message: intl.formatMessage({
-                  id: "collection.add.form.description.required"
-                })
-              }]}
-              className={styles.formItem}
-            >
-              <div className={styles.formItemInputContainer}>
-                <Input
-                  bordered={false}
-                  placeholder={intl.formatMessage({
-                    id: "collection.add.form.description.placeholder"
-                  })}
-                  className={styles.formItemInput}
-                />
-              </div>
-            </Form.Item>
-            <Form.Item
-              label={
-                <div className={styles.formItemLabel}>
-                  {intl.formatMessage({
-                    id: "collection.add.form.copies.label"
-                  })}
-                </div>
-              }
-              name="copies"
-              rules={[{
-                required: true,
-                message: intl.formatMessage({
-                  id: "collection.add.form.copies.required"
-                })
-              }]}
-              className={styles.formItem}
-            >
-              <div className={styles.formItemInputContainer}>
-                <InputNumber
-                  controls={false}
-                  bordered={false}
-                  placeholder={intl.formatMessage({
-                    id: "collection.add.form.copies.placeholder"
-                  })}
-                  type='number'
-                  className={styles.formItemInput}
-                />
-              </div>
-            </Form.Item>
-            <Form.Item
-              label={
-                <div className={styles.formItemLabel}>
-                  {intl.formatMessage({
-                    id: "collection.add.form.attributes.label"
-                  })}
-                </div>
-              }
-              className={styles.formItem}
-            >
-              <div className={styles.formItemListContainer}>
-                <Form.List
-                  name="attributes"
-                >
-                  {(fields, { add, remove }) => (
-                    <>
-                      {fields.map(({ key, name, ...restField }) => (
-                        <div
-                          key={key}
-                          className={styles.formItemSpaceContainer}
-                        >
-                          <Form.Item
-                            {...restField}
-                            name={[name, 'trait_type']}
-                            className={classNames(styles.formItem, styles.formListItem)}
-                            rules={[{
-                              required: true,
-                              message: intl.formatMessage({
-                                id: "collection.add.form.attributes.type.required"
-                              })
-                            }]}
-                          >
-                            <div className={classNames(styles.formItemInputContainer, styles.formListItemInputContainer)}>
-                              <Input
-                                bordered={false}
-                                placeholder={intl.formatMessage({
-                                  id: "collection.add.form.attributes.type.placeholder"
-                                })}
-                                className={styles.formItemInput}
-                              />
-                            </div>
-                          </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, 'value']}
-                            className={classNames(styles.formItem, styles.formListItem)}
-                            rules={[{
-                              required: true,
-                              message: intl.formatMessage({
-                                id: "collection.add.form.attributes.value.required"
-                              })
-                            }]}
-                          >
-                            <div className={classNames(styles.formItemInputContainer, styles.formListItemInputContainer)}>
-                              <InputNumber
-                                bordered={false}
-                                placeholder={intl.formatMessage({
-                                  id: "collection.add.form.attributes.value.placeholder"
-                                })}
-                                className={styles.formItemInput}
-                                controls={false}
-                                type='number'
-                              />
-                            </div>
-                          </Form.Item>
-                          <FiDelete
-                            className={styles.deleteButton}
-                            onClick={() => {
-                              remove(name)
-                            }}
-                          />
-                        </div>
-                      ))}
-                      <Form.Item
-                        className={classNames(styles.formItem, styles.formListItem)}
-                      >
-                        <Button
-                          ghost
-                          size='large'
-                          type="dashed"
-                          onClick={() => add()}
-                          block
-                          icon={<PlusOutlined />}
-                          className={styles.formItemAddButton}
-                        >
-                          Add field
-                        </Button>
-                      </Form.Item>
-                    </>
-                  )}
-                </Form.List>
-              </div>
-            </Form.Item>
-            <div
-              className={styles.formButtons}
-            >
-              <div
-                className={styles.button}
-                onClick={() => {
-                  form.resetFields();
-                  onCancel?.();
-                }}
-              >
+    <>
+      {errorState && (
+        <Fail />
+      )}
+      {!errorState && (
+        <div className={styles.createContainer}>
+          {contextHolder}
+          <div className={styles.wrapper}>
+            <div className={styles.headerContainer}>
+              <div className={styles.title}>
                 {intl.formatMessage({
-                  id: 'collection.create.form.button.cancel'
+                  id: "collection.add.title"
                 })}
               </div>
-              <div
-                className={classNames(styles.button, styles.buttonPrimary)}
-                onClick={async () => {
-                  if (await form.validateFields()) {
-                    setIsModalOpen(true);
-                    setLoading(true);
-                  }
-                }}
-              >
-                {loading ? (
-                  <Spin
-                    indicator={
-                      <Loading3QuartersOutlined
-                        className={styles.loadingIcon}
-                        spin
-                      />
-                    }
-                  />
-                ) : (
-                  intl.formatMessage({
-                    id: 'collection.create.form.button.ok'
-                  })
-                )}
-              </div>
             </div>
-          </Form>
+            <div className={styles.contentContainer}>
+              <Form
+                form={form}
+                name="createItem"
+                autoComplete="off"
+                labelWrap={true}
+                layout="vertical"
+                className={styles.formContainer}
+              >
+                <div className={styles.formItemRow}>
+                  <Form.Item
+                    label={
+                      <div className={styles.formItemLabel}>
+                        {intl.formatMessage({
+                          id: "collection.add.form.image.label"
+                        })}
+                      </div>
+                    }
+                    required
+                    name="image"
+                    valuePropName="fileList"
+                    rules={[
+                      {
+                        validator: async () => {
+                          if (!imageFile) {
+                            throw new Error(intl.formatMessage({
+                              id: "collection.add.form.image.required"
+                            }));
+                          }
+                        }
+                      }
+                    ]}
+                    className={classNames(styles.formItem, styles.formItemLogo)}
+                  >
+                    <Dragger
+                      name="image"
+                      multiple={false}
+                      listType="picture-card"
+                      beforeUpload={beforeUpload}
+                      showUploadList={false}
+                      onChange={async (info) => {
+                        if (info.file.status === 'uploading') {
+                          setLoading(true);
+                          return;
+                        }
+
+                        if (info.file.status === 'done' && !!info?.file?.originFileObj) {
+                          setImageFile(info?.file?.originFileObj);
+                          await getBase64(info?.file?.originFileObj, (url) => {
+                            setImageUrl(url);
+                            setLoading(false);
+                          });
+                          return;
+                        }
+
+                        if (info.file.status === 'removed') {
+                          setImageFile(undefined);
+                          setImageUrl('');
+                          return;
+                        }
+                      }}
+                      className={classNames(styles.formItemUploadContainer, imageUrl && styles.formItemUploadContainerHasFile)}
+                    >
+                      {imageUrl ? (
+                        <img
+                          src={imageUrl}
+                          alt="image"
+                          className={styles.formItemUploadImage}
+                        />
+                      ) : (
+                        <>
+                          <div className={styles.formItemUploadIcon}>
+                            <AiOutlineCloudUpload />
+                          </div>
+                          <div className={styles.formItemUploadText}>
+                            {intl.formatMessage({
+                              id: "collection.create.form.upload.text"
+                            })}
+                          </div>
+                          <div className={styles.formItemUploadOr}>
+                            {intl.formatMessage({
+                              id: "collection.create.form.upload.or"
+                            })}
+                          </div>
+                          <div className={styles.formItemUploadButton}>
+                            {intl.formatMessage({
+                              id: "collection.create.form.upload.button"
+                            })}
+                          </div>
+                        </>
+                      )}
+                    </Dragger>
+                    <div className={styles.formItemLogoTip}>
+                      {intl.formatMessage({
+                        id: "collection.create.form.upload.tip"
+                      })}
+                    </div>
+                  </Form.Item>
+                </div>
+                <Form.Item
+                  label={
+                    <div className={styles.formItemLabel}>
+                      {intl.formatMessage({
+                        id: "collection.add.form.name.label"
+                      })}
+                    </div>
+                  }
+                  name="name"
+                  rules={[{
+                    required: true,
+                    message: intl.formatMessage({
+                      id: "collection.add.form.name.required"
+                    })
+                  }]}
+                  className={styles.formItem}
+                >
+                  <div className={styles.formItemInputContainer}>
+                    <Input
+                      bordered={false}
+                      placeholder={intl.formatMessage({
+                        id: "collection.add.form.name.placeholder"
+                      })}
+                      className={styles.formItemInput}
+                    />
+                  </div>
+                </Form.Item>
+                <Form.Item
+                  label={
+                    <div className={styles.formItemLabel}>
+                      {intl.formatMessage({
+                        id: "collection.add.form.description.label"
+                      })}
+                    </div>
+                  }
+                  name="description"
+                  rules={[{
+                    required: true,
+                    message: intl.formatMessage({
+                      id: "collection.add.form.description.required"
+                    })
+                  }]}
+                  className={styles.formItem}
+                >
+                  <div className={styles.formItemInputContainer}>
+                    <Input
+                      bordered={false}
+                      placeholder={intl.formatMessage({
+                        id: "collection.add.form.description.placeholder"
+                      })}
+                      className={styles.formItemInput}
+                    />
+                  </div>
+                </Form.Item>
+                <Form.Item
+                  label={
+                    <div className={styles.formItemLabel}>
+                      {intl.formatMessage({
+                        id: "collection.add.form.copies.label"
+                      })}
+                    </div>
+                  }
+                  name="copies"
+                  rules={[{
+                    required: true,
+                    message: intl.formatMessage({
+                      id: "collection.add.form.copies.required"
+                    })
+                  }]}
+                  className={styles.formItem}
+                >
+                  <div className={styles.formItemInputContainer}>
+                    <InputNumber
+                      controls={false}
+                      bordered={false}
+                      placeholder={intl.formatMessage({
+                        id: "collection.add.form.copies.placeholder"
+                      })}
+                      type='number'
+                      className={styles.formItemInput}
+                    />
+                  </div>
+                </Form.Item>
+                <Form.Item
+                  label={
+                    <div className={styles.formItemLabel}>
+                      {intl.formatMessage({
+                        id: "collection.add.form.attributes.label"
+                      })}
+                    </div>
+                  }
+                  className={styles.formItem}
+                >
+                  <div className={styles.formItemListContainer}>
+                    <Form.List
+                      name="attributes"
+                    >
+                      {(fields, { add, remove }) => (
+                        <>
+                          {fields.map(({ key, name, ...restField }) => (
+                            <div
+                              key={key}
+                              className={styles.formItemSpaceContainer}
+                            >
+                              <Form.Item
+                                {...restField}
+                                name={[name, 'trait_type']}
+                                className={classNames(styles.formItem, styles.formListItem)}
+                                rules={[{
+                                  required: true,
+                                  message: intl.formatMessage({
+                                    id: "collection.add.form.attributes.type.required"
+                                  })
+                                }]}
+                              >
+                                <div className={classNames(styles.formItemInputContainer, styles.formListItemInputContainer)}>
+                                  <Input
+                                    bordered={false}
+                                    placeholder={intl.formatMessage({
+                                      id: "collection.add.form.attributes.type.placeholder"
+                                    })}
+                                    className={styles.formItemInput}
+                                  />
+                                </div>
+                              </Form.Item>
+                              <Form.Item
+                                {...restField}
+                                name={[name, 'value']}
+                                className={classNames(styles.formItem, styles.formListItem)}
+                                rules={[{
+                                  required: true,
+                                  message: intl.formatMessage({
+                                    id: "collection.add.form.attributes.value.required"
+                                  })
+                                }]}
+                              >
+                                <div className={classNames(styles.formItemInputContainer, styles.formListItemInputContainer)}>
+                                  <InputNumber
+                                    bordered={false}
+                                    placeholder={intl.formatMessage({
+                                      id: "collection.add.form.attributes.value.placeholder"
+                                    })}
+                                    className={styles.formItemInput}
+                                    controls={false}
+                                    type='number'
+                                  />
+                                </div>
+                              </Form.Item>
+                              <FiDelete
+                                className={styles.deleteButton}
+                                onClick={() => {
+                                  remove(name)
+                                }}
+                              />
+                            </div>
+                          ))}
+                          <Form.Item
+                            className={classNames(styles.formItem, styles.formListItem)}
+                          >
+                            <Button
+                              ghost
+                              size='large'
+                              type="dashed"
+                              onClick={() => add()}
+                              block
+                              icon={<PlusOutlined />}
+                              className={styles.formItemAddButton}
+                            >
+                              Add field
+                            </Button>
+                          </Form.Item>
+                        </>
+                      )}
+                    </Form.List>
+                  </div>
+                </Form.Item>
+                <div
+                  className={styles.formButtons}
+                >
+                  <div
+                    className={styles.button}
+                    onClick={() => {
+                      form.resetFields();
+                      onCancel?.();
+                    }}
+                  >
+                    {intl.formatMessage({
+                      id: 'collection.create.form.button.cancel'
+                    })}
+                  </div>
+                  <div
+                    className={classNames(styles.button, styles.buttonPrimary)}
+                    onClick={async () => {
+                      if (await form.validateFields()) {
+                        setIsModalOpen(true);
+                        setLoading(true);
+                      }
+                    }}
+                  >
+                    {loading ? (
+                      <Spin
+                        indicator={
+                          <Loading3QuartersOutlined
+                            className={styles.loadingIcon}
+                            spin
+                          />
+                        }
+                      />
+                    ) : (
+                      intl.formatMessage({
+                        id: 'collection.create.form.button.ok'
+                      })
+                    )}
+                  </div>
+                </div>
+              </Form>
+            </div>
+          </div>
+          <ConfirmModal
+            form={form}
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+            onSubmit={handleSubmit}
+          />
         </div>
-      </div>
-      <ConfirmModal
-        form={form}
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        onSubmit={handleSubmit}
-      />
-    </div>
+      )}
+    </>
   );
 };
 
