@@ -1,0 +1,91 @@
+/**
+ * @ Author: Hikaru
+ * @ Create Time: 2023-03-30 00:37:52
+ * @ Modified by: Hikaru
+ * @ Modified time: 2023-03-30 02:12:07
+ * @ Description: i@rua.moe
+ */
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 15vh;
+
+    .loadingImageContainer {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+
+      .loadingImage {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .eyesAnimation {
+        position: absolute;
+        bottom: 2%;
+        z-index: 2;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 33%;
+        height: 100%;
+
+        .eyeLeft {
+          width: 27%;
+          height: 13%;
+          background-color: #020116;
+          border-radius: 50%;
+          animation: eyesAnimation 2s infinite;
+        }
+
+        .eyeRight {
+          width: 27%;
+          height: 13%;
+          background-color: #020116;
+          border-radius: 50%;
+          animation: eyesAnimation 2s infinite;
+        }
+      }
+    }
+
+    .loadingText {
+      margin-top: 30px;
+      color: #fff;
+      font-weight: 400;
+      font-size: 18px;
+      font-family: Gilroy;
+      text-align: center;
+    }
+  }
+}
+
+@keyframes eyesAnimation {
+  0% {
+    height: 13%;
+  }
+  25% {
+    height: 5%;
+  }
+  70% {
+    height: 13%;
+  }
+  100% {
+    height: 13%;
+  }
+}

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 16:03:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-29 01:54:27
+ * @ Modified time: 2023-03-30 03:32:29
  * @ Description: i@rua.moe
  */
 
@@ -13,6 +13,7 @@ import home from './en-US/home';
 import mint from './en-US/mint';
 import platform from './en-US/platform';
 import role from './en-US/role';
+import special from './en-US/special';
 
 export default {
   ...header,
@@ -22,4 +23,5 @@ export default {
   ...mint,
   ...platform,
   ...collection,
+  ...special,
 };

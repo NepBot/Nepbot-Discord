@@ -2,19 +2,21 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 16:18:09
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-29 04:38:00
+ * @ Modified time: 2023-03-30 03:25:36
  * @ Description: i@rua.moe
  */
 
 import React, { useEffect, useState } from 'react';
 import styles from './style.less';
 import { useIntl, useModel } from '@umijs/max';
-import { Form, Input, InputNumber, Modal, Select, Spin, message } from 'antd';
+import { Form, Input, InputNumber, Modal, Select, Spin, message, notification } from 'antd';
 import classNames from 'classnames';
 import { Loading3QuartersOutlined } from '@ant-design/icons';
-import { GetRole } from '@/services/api';
+import { GetOwnerSign, GetRole } from '@/services/api';
 import { API_CONFIG } from '@/constants/config';
-import { debounce } from '@/utils/near';
+import { ParseAmount, debounce } from '@/utils/near';
+import { base58 } from 'ethers/lib/utils';
+import { RequestTransaction } from '@/utils/contract';
 
 const CreateModal: React.FC<{
   isModalOpen: boolean;
@@ -24,6 +26,7 @@ const CreateModal: React.FC<{
   onCancel?: () => void;
 }> = ({ isModalOpen, setIsModalOpen, appchainIds, onSubmit, onCancel }) => {
   const [form] = Form.useForm();
+  const { nearAccount, nearWallet } = useModel('near.account');
   const { discordServer } = useModel('discord');
   const { discordInfo, discordOperationSign } = useModel('store');
   const [roleList, setRoleList] = useState<Item.Role[]>([]);
@@ -32,6 +35,7 @@ const CreateModal: React.FC<{
   const [gatingRule, setGatingRule] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [isParas, setIsParas] = useState<boolean>(false);
+  const [errorState, setErrorState] = useState<boolean>(false);
 
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -47,12 +51,38 @@ const CreateModal: React.FC<{
         if (roles?.data?.success) {
           setRoleList((roles?.data as Resp.GetRole)?.data!);
         }
+
+      } else {
+        notification.error({
+          key: 'error.params',
+          message: 'Error',
+          description: 'Missing parameters',
+        });
+        setErrorState(true);
       }
     })()
   }, [isModalOpen, discordInfo]);
 
-  const searchRole = async (v) => {
-
+  const searchRole = async (v: any) => {
+    var res;
+    try {
+      res = await nearAccount?.viewFunction(v?.target?.value?.trim(), 'get_policy', {});
+    } catch (e: any) {
+      notification.error({
+        key: 'error.params',
+        message: 'Error',
+        description: e?.message,
+      });
+    }
+    if (!!res && res?.roles && !!res?.roles?.length) {
+      setAstroRoleList(res?.roles);
+      form.setFieldsValue({ astrodao_role: 'everyone' })
+      form.validateFields(['astrodao_id']);
+    } else if (!!astroRoleList?.length) {
+      setAstroRoleList([])
+      form.setFieldsValue({ astrodao_role: 'everyone' })
+      form.validateFields(['astrodao_id']);
+    }
   };
 
   const handleSubmit = async () => {
@@ -60,12 +90,118 @@ const CreateModal: React.FC<{
       await form.validateFields();
       const values = await form.getFieldsValue();
       setLoading(true);
-      const args = {
+      const arg: any = {
         guild_id: discordServer?.id,
         role_id: values.role,
       };
-    } catch (e: any) {
 
+      switch (type) {
+        case 'token_amount':
+          const metadata = await nearAccount?.viewFunction(values.token_id, 'ft_metadata', {});
+          const amount = ParseAmount({
+            amount: values.token_amount,
+            decimals: metadata?.decimals,
+          });
+          arg.key_field = ['token_id', values.token_id];
+          arg.fields = { token_amount: amount };
+          break;
+        case 'oct_roles':
+          arg.key_field = ['appchain_id', values.appchain_id];
+          arg.fields = { oct_role: values.oct_role };
+          break;
+        case 'near_balance':
+          arg.key_field = ['near', 'balance'];
+          arg.fields = {
+            balance: ParseAmount({
+              amount: values.balance,
+            })
+          }
+          break;
+        case 'nft_amount':
+          if (values.contract_id === API_CONFIG().PARAS_CONTRACT && values.collection_url && values.collection_url?.trim().length > 0) {
+            const fractions = values.collection_url?.split("/");
+            const lastFraction = fractions[fractions.length - 1]?.split("?");
+            arg.key_field = [API_CONFIG().PARAS_CONTRACT, lastFraction[0]];
+            arg.fields = { token_amount: values.token_amount };
+          } else {
+            await nearAccount?.viewFunction(values.contract_id, 'nft_metadata', {});
+            arg.key_field = ['nft_contract_id', values.contract_id];
+            arg.fields = { token_amount: values.token_amount };
+          }
+          break;
+        case 'astrodao_roles':
+          arg.key_field = ['astrodao_id', values.astrodao_id];
+          arg.fields = { astrodao_role: values.astrodao_role };
+          break;
+        case 'paras':
+          arg.key_field = ['gating_rule', values.gating_rule];
+          switch (values.gating_rule) {
+            case 'loyalty_level':
+              arg.fields = { loyalty_level: values.loyalty_level };
+              break;
+            case 'paras_staking':
+              arg.fields = {
+                paras_staking_amount: ParseAmount({
+                  amount: values.paras_staking_amount,
+                  decimals: 18,
+                }),
+                paras_staking_duration: values.paras_staking_duration,
+              };
+              break;
+          }
+          break;
+      }
+
+      const args = {
+        sign: discordOperationSign,
+        user_id: discordInfo?.user_id,
+        guild_id: discordInfo?.guild_id,
+      }
+      const signature = await nearAccount?.connection.signer.signMessage(Buffer.from(JSON.stringify(args)), nearAccount?.accountId, API_CONFIG().networkId);
+      const _sign = await GetOwnerSign({
+        args: args,
+        sign: base58.encode(signature?.signature!),
+        account_id: nearAccount?.accountId,
+      });
+
+      if (!_sign?.data?.success) {
+        notification.error({
+          key: 'error.params',
+          message: 'Error',
+          description: 'Missing parameters',
+        });
+        setErrorState(true);
+        return;
+      }
+
+      const data = await RequestTransaction({
+        nearAccount: nearAccount,
+        nearWallet: nearWallet,
+        contractId: API_CONFIG().RULE_CONTRACT,
+        methodName: 'set_roles',
+        args: {
+          roles: [arg],
+          ..._sign,
+        },
+        gas: '300000000000000',
+        deposit: '20000000000000000000000',
+      });
+
+      setTimeout(() => {
+        if (data) {
+          setLoading(false);
+          form.resetFields();
+          onSubmit?.();
+        }
+      })
+    } catch (e: any) {
+      setLoading(false);
+      notification.error({
+        key: 'error.params',
+        message: 'Error',
+        description: e.message,
+      });
+      setErrorState(true);
     }
   };
 
@@ -77,6 +213,7 @@ const CreateModal: React.FC<{
       closable={false}
       footer={null}
     >
+      {contextHolder}
       <div className={styles.wrapper}>
         <div className={styles.contentContainer}>
           <Form
@@ -735,10 +872,20 @@ const CreateModal: React.FC<{
                 onClick={async () => {
                   if (loading) return;
                   if (await form.validateFields()) {
-                    form.submit();
-                    await handleRoyalty();
-                    setIsModalOpen(true);
-                    setLoading(true);
+                    try {
+                      form.submit();
+                      await handleSubmit();
+                      setIsModalOpen(true);
+                      setLoading(true);
+                      messageApi.success('Success');
+                      onSubmit?.();
+                    } catch (e: any) {
+                      notification.error({
+                        key: 'error.role-create',
+                        message: 'Error',
+                        description: e.message,
+                      });
+                    }
                   }
                 }}
               >

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 03:35:39
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-29 02:37:36
+ * @ Modified time: 2023-03-30 03:39:03
  * @ Description: i@rua.moe
  */
 
@@ -11,7 +11,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import styles from './style.less';
 import { useIntl, useModel, useLocation } from '@umijs/max';
 import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai';
-import { Col, Input, Row, message, notification } from 'antd';
+import { Col, Input, Row, Spin, message, notification } from 'antd';
 import querystring from 'query-string';
 import { v4 as uuidv4 } from 'uuid';
 import ItemCard from './components/ItemCard';
@@ -27,6 +27,8 @@ import { IsObjectValueEqual } from '@/utils/request';
 import { base58 } from 'ethers/lib/utils';
 import { RequestTransaction } from '@/utils/contract';
 import UserLayout from '@/layouts/UserLayout';
+import Loading from '@/components/Loading';
+import LinkExpired from '@/components/LinkExpired';
 
 interface QueryParams {
   guild_id?: string;
@@ -40,7 +42,7 @@ const Role: React.FC = () => {
   const { discordInfo, discordOperationSign, setDiscordInfo, setDiscordOperationSign } = useModel('store');
   const [dataSource, setDataSource] = useState<Contract.RuleItem[]>([]);
   const [appchainIds, setAppchainIds] = useState<any[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [errorState, setErrorState] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -188,7 +190,7 @@ const Role: React.FC = () => {
         const data = await nearAccount?.viewFunction(API_CONFIG().RULE_CONTRACT, 'get_guild', { guild_id: discordInfo?.guild_id! });
         const _data = await handleData(data)
         setDataSource(_data);
-        message.info('Success');
+        messageApi.info('Success');
       }
     });
   }, []);
@@ -196,6 +198,7 @@ const Role: React.FC = () => {
   useEffect(() => {
     (async () => {
       if (!!search.guild_id && !!search.user_id && !!search.sign) {
+        setLoading(true);
         setDiscordInfo({
           guild_id: search.guild_id,
           user_id: search.user_id,
@@ -239,6 +242,7 @@ const Role: React.FC = () => {
 
         const guildData = await handleData(data, server?.name);
         setDataSource(guildData);
+        setLoading(false);
       } else {
         notification.error({
           key: 'error.params',
@@ -246,75 +250,90 @@ const Role: React.FC = () => {
           description: 'Missing parameters',
         });
         setErrorState(true);
+        // setLoading(false);
       }
     })()
   }, [isModalOpen, walletSelector, discordServer, discordUser, nearAccount, nearWallet]);
 
   return (
     <UserLayout>
-      <div className={styles.roleContainer}>
-        {contextHolder}
-        <div className={styles.wrapper}>
-          <div className={styles.headerContainer}>
-            <div className={styles.searchContainer}>
-              <AiOutlineSearch
-                className={styles.searchIcon}
-              />
-              <Input
-                bordered={false}
-                placeholder={intl.formatMessage({
-                  id: 'role.search.placeholder'
-                })}
-                className={styles.searchInput}
-                onChange={async (e) => {
-                  const data = await nearAccount?.viewFunction(API_CONFIG().RULE_CONTRACT, 'get_token', { token_id: e.target.value });
-                  const _data = await handleData(data);
-                  setDataSource(_data);
-                }}
-              />
-            </div>
-            <div className={styles.buttonsContainer}>
-              <div
-                className={styles.button}
-                onClick={async () => {
-                  setIsModalOpen(true);
-                }}
-              >
-                <AiOutlinePlus
-                  className={styles.buttonIcon}
+      {!errorState && loading && (
+        <Loading />
+      )}
+      {errorState && !loading && (
+        <LinkExpired />
+      )}
+      {!errorState && !loading && (
+        <div className={styles.roleContainer}>
+          {contextHolder}
+          <div className={styles.wrapper}>
+            <div className={styles.headerContainer}>
+              <div className={styles.searchContainer}>
+                <AiOutlineSearch
+                  className={styles.searchIcon}
                 />
-                {intl.formatMessage({
-                  id: 'role.button.add'
-                })}
+                <Input
+                  bordered={false}
+                  placeholder={intl.formatMessage({
+                    id: 'role.search.placeholder'
+                  })}
+                  className={styles.searchInput}
+                  onChange={async (e) => {
+                    const data = await nearAccount?.viewFunction(API_CONFIG().RULE_CONTRACT, 'get_token', { token_id: e.target.value });
+                    const _data = await handleData(data);
+                    setDataSource(_data);
+                  }}
+                />
+              </div>
+              <div className={styles.buttonsContainer}>
+                <div
+                  className={styles.button}
+                  onClick={async () => {
+                    setIsModalOpen(true);
+                  }}
+                >
+                  <AiOutlinePlus
+                    className={styles.buttonIcon}
+                  />
+                  {intl.formatMessage({
+                    id: 'role.button.add'
+                  })}
+                </div>
               </div>
             </div>
+            <div className={styles.contentContainer}>
+              <Row gutter={[30, 30]}>
+                {!!dataSource?.length && dataSource?.map((item, index) => {
+                  return (
+                    <Col
+                      xs={24} sm={24} md={12} lg={8} xl={8}
+                      key={uuidv4()}
+                    >
+                      <ItemCard
+                        item={item}
+                        onDelete={async () => {
+                          await handleDelete(item);
+                        }}
+                      />
+                    </Col>
+                  )
+                })}
+              </Row>
+            </div>
           </div>
-          <div className={styles.contentContainer}>
-            <Row gutter={[30, 30]}>
-              {!!dataSource?.length && dataSource?.map((item, index) => {
-                return (
-                  <Col
-                    xs={24} sm={24} md={12} lg={8} xl={8}
-                    key={uuidv4()}
-                  >
-                    <ItemCard
-                      item={item}
-                      onDelete={async () => {
-                        await handleDelete(item);
-                      }}
-                    />
-                  </Col>
-                )
-              })}
-            </Row>
-          </div>
+          <CreateModal
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+            appchainIds={appchainIds}
+            onSubmit={async () => {
+              setIsModalOpen(false);
+            }}
+            onCancel={async () => {
+              setIsModalOpen(false);
+            }}
+          />
         </div>
-        <CreateModal
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          appchainIds={appchainIds}
-        />
-      </div>
+      )}
     </UserLayout>
   )
 };
