@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 02:53:34
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 23:03:32
+ * @ Modified time: 2023-03-31 04:47:56
  * @ Description: i@rua.moe
  */
 
@@ -51,7 +51,7 @@ const Verify: React.FC = () => {
           notification.error({
             key: 'error.params',
             message: 'Error',
-            description: 'Missing parameters',
+            description: 'Link expired, please apply a new link',
           });
           setErrorState(true);
         }

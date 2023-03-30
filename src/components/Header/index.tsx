@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 02:53:11
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 23:27:02
+ * @ Modified time: 2023-03-31 04:45:47
  * @ Description: i@rua.moe
  */
 
@@ -78,7 +78,7 @@ const Header: React.FC = () => {
             <div
               className={classNames(styles.navItem, pathname === 'guide' && styles.navItemActive)}
               onClick={() => {
-                history.push('/guide');
+                window.open('https://nepbot.github.io/Nepbot-gitbook/doc/Add_Nepbot_to_Discord.html', '_blank');
               }}
             >
               {intl.formatMessage({
@@ -88,7 +88,7 @@ const Header: React.FC = () => {
             <div
               className={classNames(styles.navItem, pathname === 'blog' && styles.navItemActive)}
               onClick={() => {
-                history.push('/blog');
+                window.open('https://medium.com/nepbot', '_blank');
               }}
             >
               {intl.formatMessage({
@@ -98,7 +98,7 @@ const Header: React.FC = () => {
             <div
               className={classNames(styles.navItem, pathname === 'community' && styles.navItemActive)}
               onClick={() => {
-                history.push('/community');
+                window.open('https://discord.com/invite/d8u6YHgDMP', '_blank');
               }}
             >
               {intl.formatMessage({
@@ -108,7 +108,7 @@ const Header: React.FC = () => {
             <div
               className={classNames(styles.navItem, pathname === 'docs' && styles.navItemActive)}
               onClick={() => {
-                history.push('/docs');
+                window.open('https://nepbot.github.io/Nepbot-gitbook', '_blank');
               }}
             >
               {intl.formatMessage({
@@ -139,22 +139,50 @@ const Header: React.FC = () => {
           <div className={styles.socialContainer}>
             <div
               className={styles.socialItem}
+              onClick={() => {
+                window.open('https://popula.io/', '_blank');
+              }}
             >
               <Popula className={styles.socialItemImg} />
             </div>
-            <div className={styles.socialItem}>
+            <div
+              className={styles.socialItem}
+              onClick={() => {
+                window.open('https://github.com/NepBot', '_blank');
+              }}
+            >
               <SiGithub className={styles.socialItemImg} />
             </div>
-            <div className={styles.socialItem}>
+            <div
+              className={styles.socialItem}
+              onClick={() => {
+                window.open('https://twitter.com/nepbot4near', '_blank');
+              }}
+            >
               <SiTwitter className={styles.socialItemImg} />
             </div>
-            <div className={styles.socialItem}>
+            <div
+              className={styles.socialItem}
+              onClick={() => {
+                window.open('https://discord.gg/d8u6YHgDMP', '_blank');
+              }}
+            >
               <SiDiscord className={styles.socialItemImg} />
             </div>
-            <div className={styles.socialItem}>
+            <div
+              className={styles.socialItem}
+              onClick={() => {
+                window.open('https://www.youtube.com/@nepbot3934', '_blank');
+              }}
+            >
               <TfiYoutube className={styles.socialItemImg} />
             </div>
-            <div className={styles.socialItem}>
+            <div
+              className={styles.socialItem}
+              onClick={() => {
+                window.open('https://medium.com/nepbot', '_blank');
+              }}
+            >
               <SiMedium className={styles.socialItemImg} />
             </div>
             <div

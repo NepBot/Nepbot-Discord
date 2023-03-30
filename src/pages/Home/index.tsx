@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:15:45
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-31 04:06:13
+ * @ Modified time: 2023-03-31 04:49:47
  * @ Description: i@rua.moe
  */
 
@@ -26,9 +26,11 @@ import { PARTNERS, TRUSTED } from '@/constants/home/screen4';
 import BottomBackground from '@/components/BottomBackground';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { API_CONFIG } from '@/constants/config';
 
 const Home: React.FC = () => {
   const intl = useIntl();
+  const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${API_CONFIG().APPLICATION_ID}&permissions=8&scope=bot%20applications.commands`
 
   return (
     <div className={styles.homeContainer}>
@@ -52,7 +54,12 @@ const Home: React.FC = () => {
                     account: <span className={styles.screen1DescLink}>@NearProtocol</span>,
                   })}
                 </div>
-                <div className={styles.screen1Button}>
+                <div
+                  className={styles.screen1Button}
+                  onClick={() => {
+                    window.open(inviteUrl, '_blank');
+                  }}
+                >
                   <div className={styles.screen1ButtonLeft}>
                     {intl.formatMessage({
                       id: 'home.screen1.button.getStarted'
@@ -374,7 +381,12 @@ const Home: React.FC = () => {
                     id: 'home.screen6.title'
                   })}
                 </div>
-                <div className={styles.screen6Button}>
+                <div
+                  className={styles.screen6Button}
+                  onClick={() => {
+                    window.open(inviteUrl, '_blank');
+                  }}
+                >
                   <div className={styles.screen6ButtonLeft}>
                     {intl.formatMessage({
                       id: 'home.screen6.button'

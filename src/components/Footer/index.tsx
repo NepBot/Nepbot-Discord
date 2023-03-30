@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-16 04:16:28
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 21:13:05
+ * @ Modified time: 2023-03-31 04:46:39
  * @ Description: i@rua.moe
  */
 
@@ -19,31 +19,49 @@ const Footer: React.FC = () => {
         <div className={styles.snsContainer}>
           <div
             className={styles.snsItem}
+            onClick={() => {
+              window.open('https://popula.io/', '_blank');
+            }}
           >
             <Popula className={styles.snsImage} />
           </div>
           <div
             className={styles.snsItem}
+            onClick={() => {
+              window.open('https://github.com/NepBot', '_blank');
+            }}
           >
             <SiGithub className={styles.snsImage} />
           </div>
           <div
             className={styles.snsItem}
+            onClick={() => {
+              window.open('https://twitter.com/nepbot4near', '_blank');
+            }}
           >
             <SiTwitter className={styles.snsImage} />
           </div>
           <div
             className={styles.snsItem}
+            onClick={() => {
+              window.open('https://discord.gg/d8u6YHgDMP', '_blank');
+            }}
           >
             <SiDiscord className={styles.snsImage} />
           </div>
           <div
             className={styles.snsItem}
+            onClick={() => {
+              window.open('https://www.youtube.com/@nepbot3934', '_blank');
+            }}
           >
             <TfiYoutube className={styles.snsImage} />
           </div>
           <div
             className={styles.snsItem}
+            onClick={() => {
+              window.open('https://medium.com/nepbot', '_blank');
+            }}
           >
             <SiMedium className={styles.snsImage} />
           </div>
