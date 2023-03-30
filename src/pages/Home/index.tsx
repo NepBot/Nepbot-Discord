@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:15:45
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 19:54:26
+ * @ Modified time: 2023-03-31 04:06:13
  * @ Description: i@rua.moe
  */
 
@@ -19,7 +19,7 @@ import { ReactComponent as Free } from '@/assets/icon/ic-Free.svg';
 import { LIST } from '@/constants/home/screen2';
 import classNames from 'classnames';
 import Marquee from "react-fast-marquee";
-import { Carousel } from 'antd';
+import { Carousel, Col, Row } from 'antd';
 import Fullpage, { FullPageSections, FullpageSection } from '@ap.cx/react-fullpage'
 import { SWIPER } from '@/constants/home/screen3';
 import { PARTNERS, TRUSTED } from '@/constants/home/screen4';
@@ -288,18 +288,21 @@ const Home: React.FC = () => {
                     })}
                   </div>
                   <div className={styles.partnersContent}>
-                    {PARTNERS.map((item: any) => {
-                      return (
-                        <div
-                          className={styles.partnersContentItem}
-                          key={item.name}
-                        >
-                          <item.logo
-                            className={styles.partnersItemImg}
-                          />
-                        </div>
-                      )
-                    })}
+                    <Row gutter={[50, 50]}>
+                      {PARTNERS.map((item: any) => {
+                        return (
+                          <Col
+                            xs={8} sm={6} md={4} lg={4} xl={4}
+                            className={styles.partnersContentItem}
+                            key={item.name}
+                          >
+                            <item.logo
+                              className={styles.partnersItemImg}
+                            />
+                          </Col>
+                        )
+                      })}
+                    </Row>
                   </div>
                 </div>
               </div>
@@ -326,9 +329,13 @@ const Home: React.FC = () => {
                           className={styles.trustedRowItem}
                           key={item.name}
                         >
-                          <item.logo
-                            className={styles.trustedItemImg}
-                          />
+                          {typeof item.logo === "string" ? (
+                            item?.logo
+                          ) : (
+                            <item.logo
+                              className={styles.trustedItemImg}
+                            />
+                          )}
                         </div>
                       )
                     })}

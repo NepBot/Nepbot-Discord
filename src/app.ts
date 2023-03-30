@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 16:31:20
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 04:26:32
+ * @ Modified time: 2023-03-30 23:13:19
  * @ Description: i@rua.moe
  */
 
@@ -32,6 +32,7 @@ export function onRouteChange({ clientRoutes, location }: any) {
   // try {
   //   block();
   // } catch (err) {}
+
   const route: any = matchRoutes(clientRoutes, location.pathname)?.pop()?.route;
   if (route) {
     document.title = route.title

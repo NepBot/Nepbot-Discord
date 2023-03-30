@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="103.813" height="28" viewBox="0 0 103.813 28">
+  <g id="Group_298" data-name="Group 298" transform="translate(-128 -93.85)">
+    <g id="loozr" transform="translate(128 94.544)">
+      <path id="Path_1" data-name="Path 1" d="M18.75,23.327a12.5,12.5,0,1,1,0-21.655,12.5,12.5,0,1,1,0,21.655Z" transform="translate(0 0)" fill="none"/>
+      <path id="Path_2" data-name="Path 2" d="M25,17.059a4.559,4.559,0,0,0,0-9.118,4.483,4.483,0,0,0-2.274.605,7.941,7.941,0,0,1-7.952,0A4.483,4.483,0,0,0,12.5,7.941a4.559,4.559,0,1,0,0,9.118,4.483,4.483,0,0,0,2.274-.605,7.941,7.941,0,0,1,7.952,0A4.483,4.483,0,0,0,25,17.059M25,25a12.444,12.444,0,0,1-6.25-1.672,12.5,12.5,0,1,1,0-21.655A12.5,12.5,0,1,1,25,25Z" transform="translate(0 0)" fill="#8369f4"/>
+    </g>
+    <text id="Loozr-2" data-name="Loozr" transform="translate(175.813 114.85)" fill="#8369f4" font-size="20" font-family="Poppins-ExtraBold, Poppins" font-weight="800" letter-spacing="0.01em"><tspan x="0" y="0">Loozr</tspan></text>
+  </g>
+</svg>

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 02:53:11
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 20:44:03
+ * @ Modified time: 2023-03-30 23:27:02
  * @ Description: i@rua.moe
  */
 
@@ -20,7 +20,6 @@ const Header: React.FC = () => {
   const pathname = history.location.pathname.substring(1);
 
   const intl = useIntl();
-  console.log(location)
 
   const items: MenuProps['items'] = [
     {
