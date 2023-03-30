@@ -2,14 +2,14 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-16 04:16:28
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-16 04:34:18
+ * @ Modified time: 2023-03-30 21:13:05
  * @ Description: i@rua.moe
  */
 
 import React from 'react';
 import styles from './style.less';
 import { ReactComponent as Popula } from '@/assets/brand/logo-popula.svg';
-import { SiDiscord, SiGithub, SiMedium, SiTwitter } from 'react-icons/si';
+import { SiDiscord, SiGithub, SiGmail, SiMedium, SiTwitter } from 'react-icons/si';
 import { TfiYoutube } from 'react-icons/tfi';
 
 const Footer: React.FC = () => {
@@ -47,10 +47,13 @@ const Footer: React.FC = () => {
           >
             <SiMedium className={styles.snsImage} />
           </div>
-        </div>
-        <div className={styles.contactContainer}>
-          <div className={styles.contactItem}>
-            Email: hi@nepbot.org
+          <div
+            className={styles.snsItem}
+            onClick={() => {
+              window.open('mailto:hi@nepbot.org');
+            }}
+          >
+            <SiGmail className={styles.snsImage} />
           </div>
         </div>
       </div>

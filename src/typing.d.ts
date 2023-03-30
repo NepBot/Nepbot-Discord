@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-16 17:20:36
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-29 01:45:59
+ * @ Modified time: 2023-03-30 19:39:01
  * @ Description: i@rua.moe
  */
 
@@ -76,3 +76,5 @@ declare namespace Contract {
 
   interface AppchainIds {}
 }
+
+declare module '@ap.cx/react-fullpage';

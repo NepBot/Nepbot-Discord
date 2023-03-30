@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-13 04:12:37
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-15 03:45:25
+ * @ Modified time: 2023-03-30 20:53:40
  * @ Description: i@rua.moe
  */
 
@@ -34,9 +34,9 @@ export const LIST = [
     title: 'Special Support',
     content: 'Verify on-chain assets and status on NEAR Blockchain, including',
     list: [
-      'Paras Loyalty Progra',
+      'Paras Loyalty Program',
       'Castle Overlord Whitelist',
-      'verification',
+      'Verification',
       'vSelf verification',
     ],
     icon: 'ic-SpecialSupport.webp',
@@ -49,7 +49,8 @@ export const LIST = [
   },
   {
     title: 'NFT Toolbox',
-    content: 'Create exclusive NFTs for community members to mint. Synchronize tBadges, credentials, POAPs',
+    content:
+      'Create exclusive NFTs for community members to mint. Synchronize tBadges, credentials, POAPs',
     list: [],
     icon: 'ic-NFTToolbox.webp',
   },
@@ -58,5 +59,5 @@ export const LIST = [
     content: 'NFT Market tracking\nTipping\n...',
     list: [],
     icon: 'ic-ComingSoon.webp',
-  }
-]
+  },
+];

@@ -3,7 +3,7 @@ import { useEffect } from 'react';
  * @ Author: Hikaru
  * @ Create Time: 2023-03-15 22:56:35
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-28 16:24:51
+ * @ Modified time: 2023-03-30 22:38:45
  * @ Description: i@rua.moe
  */
 
@@ -50,11 +50,13 @@ export default () => {
       } else {
         setDiscordUser(undefined);
         notification.error({
+          key: 'error.params',
           message: 'Error',
           description: (res?.data as Resp.Error)?.message || 'Unknown error',
         });
+        setLoading(false);
+        return undefined;
       }
-      setLoading(false);
     },
     [],
   );
@@ -73,11 +75,13 @@ export default () => {
       } else {
         setDiscordUser(undefined);
         notification.error({
+          key: 'error.params',
           message: 'Error',
           description: (res?.data as Resp.Error)?.message || 'Unknown error',
         });
+        setLoading(false);
+        return undefined;
       }
-      setLoading(false);
     },
     [],
   );

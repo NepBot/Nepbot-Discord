@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 16:31:20
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-15 00:16:13
+ * @ Modified time: 2023-03-30 04:26:32
  * @ Description: i@rua.moe
  */
 
@@ -15,28 +15,6 @@ export async function getInitialState(): Promise<{ name: string }> {
 
 export function onRouteChange({ clientRoutes, location }: any) {
   // // Anti Debug
-  // JavaScriptObfuscator.obfuscate(
-  //   `
-  //       (function(){
-  //           var variable1 = '5' - 3;
-  //           var variable2 = '5' + 3;
-  //           var variable3 = '5' + - '2';
-  //           var variable4 = ['10','10','10','10','10'].map(parseInt);
-  //           var variable5 = 'foo ' + 1 + 1;
-  //       })();
-  //   `,
-  //   {
-  //     compact: true,
-  //     controlFlowFlattening: true,
-  //     controlFlowFlatteningThreshold: 1,
-  //     numbersToExpressions: true,
-  //     simplify: true,
-  //     stringArrayShuffle: true,
-  //     splitStrings: true,
-  //     stringArrayThreshold: 1,
-  //   },
-  // );
-
   // console.log(
   //   '\n %c Made with ❤️ by Nepbot %c Dev: Hikaru(i@rua.moe) \n\n',
   //   'color: #8C97FF; background: #fff; padding:5px 0;',
@@ -54,7 +32,6 @@ export function onRouteChange({ clientRoutes, location }: any) {
   // try {
   //   block();
   // } catch (err) {}
-
   const route: any = matchRoutes(clientRoutes, location.pathname)?.pop()?.route;
   if (route) {
     document.title = route.title

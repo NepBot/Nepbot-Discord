@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 02:53:41
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-16 04:30:39
+ * @ Modified time: 2023-03-30 20:43:06
  * @ Description: i@rua.moe
  */
 
@@ -54,7 +54,7 @@
           color: #fff;
           font-weight: 400;
           font-size: 16px;
-          font-family: Gilroy-Regular;
+          font-family: Gilroy;
           line-height: 16px;
           letter-spacing: 0;
           text-align: center;
@@ -117,7 +117,7 @@
 
     .accountContainer {
       display: flex;
-      flex: 1.5;
+      flex: 1;
       flex-direction: row;
       align-items: center;
       justify-content: flex-end;
@@ -128,10 +128,10 @@
         align-items: center;
         justify-content: center;
         padding: 12px 36px;
-        color: #ffffff;
+        color: #fff;
         font-weight: 400;
         font-size: 16px;
-        font-family: Gilroy-Regular;
+        font-family: Gilroy;
         line-height: 18px;
         letter-spacing: 0;
         border: 1px solid rgba(255, 255, 255, 0.2);
@@ -151,10 +151,72 @@
           width: 8px;
           height: 8px;
           margin-right: 10px;
-          background: #49ffa5;
           border-radius: 100%;
+        }
+
+        .buttonItemIconMainnet {
+          background: #49ffa5;
+        }
+
+        .buttonItemIconTestnet {
+          background: #ffca8b;
         }
       }
     }
+  }
+}
+
+.buttonDropdown {
+  background: transparent;
+
+  &::before {
+    position: absolute;
+    z-index: -1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(31 41 55 / 0.85);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    content: '';
+  }
+
+  :global(.ant-dropdown-menu) {
+    background-color: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    :global(.ant-dropdown-menu-item) {
+      text-align: left;
+    }
+  }
+}
+.buttonDropdownItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 12px 20px;
+  color: #fff;
+  font-weight: 400;
+  font-size: 16px;
+  font-family: Gilroy;
+  line-height: 18px;
+  letter-spacing: 0;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  .buttonItemIcon {
+    width: 8px;
+    height: 8px;
+    margin-right: 10px;
+    border-radius: 100%;
+  }
+
+  .buttonItemIconMainnet {
+    background: #49ffa5;
+  }
+
+  .buttonItemIconTestnet {
+    background: #ffca8b;
   }
 }

@@ -2,11 +2,14 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-16 04:16:28
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-16 04:34:45
+ * @ Modified time: 2023-03-30 21:12:57
  * @ Description: i@rua.moe
  */
 
 .footerContainer {
+  position: absolute;
+  bottom: 0;
+  z-index: 10;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -20,7 +23,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     width: 100%;
     max-width: 1200px;
     padding-right: 3%;
@@ -30,7 +33,7 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: center;
 
       .snsItem {
         width: 20px;
@@ -53,17 +56,6 @@
         &:hover {
           opacity: 1;
         }
-      }
-    }
-
-    .contactContainer {
-      .contactItem {
-        color: #fff;
-        font-weight: 400;
-        font-size: 16px;
-        font-family: Gilroy;
-        letter-spacing: 0;
-        text-align: right;
       }
     }
   }

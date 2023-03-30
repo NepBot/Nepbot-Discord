@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:18:33
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-16 04:15:35
+ * @ Modified time: 2023-03-30 20:00:46
  * @ Description: i@rua.moe
  */
 
@@ -15,15 +15,24 @@
   min-height: 100vh;
   background-color: #000;
 
-  .screen1 {
-    position: relative;
+  .homeCarousel {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     width: 100%;
     height: 100vh;
-    padding-top: 100px;
+  }
+
+  .screen1 {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    height: 100vh !important;
+    padding-top: 100px !important;
 
     .screen1Content {
       position: relative;
@@ -151,13 +160,13 @@
   }
 
   .screen2 {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-    height: 100vh;
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important ;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    height: 100vh !important;
     overflow: hidden;
     background: url('@/assets/bg-screen2.webp') no-repeat center center;
     background-size: cover;
@@ -344,13 +353,14 @@
   }
 
   .screen3 {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-    min-height: 100vh;
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    height: 100vh !important;
+    overflow: hidden;
 
     .screen3background {
       position: absolute;
@@ -509,7 +519,8 @@
             }
 
             .carouselItemInfoButton {
-              margin-bottom: 50px;
+              margin-top: 50px;
+              margin-bottom: 40px;
               padding: 21px 30px;
               color: #fff;
               font-weight: 400;
@@ -552,11 +563,31 @@
           justify-content: flex-start;
         }
       }
+    }
+  }
+
+  .screen4 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+
+    .screen4content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      max-width: 1200px;
+      height: 100%;
+      padding-right: 3%;
+      padding-left: 3%;
 
       .feature {
         display: flex;
         flex-direction: row;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
         width: 100%;
         margin-top: 240px;
@@ -598,26 +629,6 @@
           }
         }
       }
-    }
-  }
-
-  .screen4 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-
-    .screen4content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      width: 100%;
-      max-width: 1200px;
-      height: 100%;
-      padding-right: 3%;
-      padding-left: 3%;
 
       .partners {
         display: flex;
@@ -671,6 +682,17 @@
         }
       }
     }
+  }
+
+  .screen5 {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
 
     .trusted {
       display: flex;
@@ -725,7 +747,7 @@
     }
   }
 
-  .screen5 {
+  .screen6 {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -735,7 +757,7 @@
     height: 100vh;
     overflow: hidden;
 
-    .screen5content {
+    .screen6content {
       position: absolute;
       z-index: 2;
       display: flex;
@@ -748,7 +770,7 @@
       padding-right: 3%;
       padding-left: 3%;
 
-      .screen5Title {
+      .screen6Title {
         color: #fff;
         font-weight: 600;
         font-size: 60px;
@@ -758,7 +780,7 @@
         text-align: center;
       }
 
-      .screen5Button {
+      .screen6Button {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -769,7 +791,7 @@
         cursor: pointer;
         transition: all 0.3s ease-in-out;
 
-        .screen5ButtonLeft {
+        .screen6ButtonLeft {
           padding-right: 30px;
           padding-left: 30px;
           color: #000;
@@ -781,7 +803,7 @@
           text-transform: uppercase;
         }
 
-        .screen5ButtonRight {
+        .screen6ButtonRight {
           display: flex;
           align-items: center;
           justify-content: center;

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 02:53:11
  * @ Modified by: Hikaru
- * @ Modified time: 2023-02-16 04:31:54
+ * @ Modified time: 2023-03-30 20:44:03
  * @ Description: i@rua.moe
  */
 
@@ -12,15 +12,46 @@ import classNames from 'classnames';
 import styles from './style.less';
 import { ReactComponent as Logo } from '@/assets/logo.svg';
 import { ReactComponent as Popula } from '@/assets/brand/logo-popula.svg';
-import { ReactComponent as Twitter } from '@/assets/brand/logo-twitter.svg';
-import { ReactComponent as Facebook } from '@/assets/brand/logo-facebook.svg';
-import { ReactComponent as Instagram } from '@/assets/brand/logo-instagram.svg';
-import { SiPinterest } from 'react-icons/si';
+import { SiDiscord, SiGithub, SiGmail, SiMedium, SiPinterest, SiTwitter } from 'react-icons/si';
+import { TfiYoutube } from 'react-icons/tfi';
+import { Dropdown, MenuProps } from 'antd';
 
 const Header: React.FC = () => {
   const pathname = history.location.pathname.substring(1);
 
   const intl = useIntl();
+  console.log(location)
+
+  const items: MenuProps['items'] = [
+    {
+      key: 'mainnet',
+      label: (
+        <div
+          className={styles.buttonDropdownItem}
+          onClick={() => {
+            window.location.href = 'https://nepbot.org';
+          }}
+        >
+          <div className={classNames(styles.buttonItemIcon, styles.buttonItemIconMainnet)} />
+          Mainnet
+        </div>
+      ),
+    },
+    {
+      key: 'testnet',
+      label: (
+        <div
+          className={styles.buttonDropdownItem}
+          onClick={() => {
+            window.location.href = 'https://testnet.nepbot.org';
+          }}
+        >
+          <div className={classNames(styles.buttonItemIcon, styles.buttonItemIconTestnet)} />
+          Testnet
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div className={styles.headerContainer}>
@@ -85,7 +116,7 @@ const Header: React.FC = () => {
                 id: 'header.docs',
               })}
             </div>
-            <div
+            {/* <div
               className={classNames(styles.navItem, pathname === 'events' && styles.navItemActive)}
               onClick={() => {
                 history.push('/events');
@@ -104,7 +135,7 @@ const Header: React.FC = () => {
               {intl.formatMessage({
                 id: 'header.mint',
               })}
-            </div>
+            </div> */}
           </div>
           <div className={styles.socialContainer}>
             <div
@@ -113,29 +144,58 @@ const Header: React.FC = () => {
               <Popula className={styles.socialItemImg} />
             </div>
             <div className={styles.socialItem}>
-              <Twitter className={styles.socialItemImg} />
+              <SiGithub className={styles.socialItemImg} />
             </div>
             <div className={styles.socialItem}>
-              <Facebook className={styles.socialItemImg} />
+              <SiTwitter className={styles.socialItemImg} />
             </div>
             <div className={styles.socialItem}>
-              <Instagram className={styles.socialItemImg} />
+              <SiDiscord className={styles.socialItemImg} />
             </div>
             <div className={styles.socialItem}>
-              <SiPinterest className={styles.socialItemImg} />
+              <TfiYoutube className={styles.socialItemImg} />
+            </div>
+            <div className={styles.socialItem}>
+              <SiMedium className={styles.socialItemImg} />
+            </div>
+            <div
+              className={styles.socialItem}
+              onClick={() => {
+                window.open('mailto:hi@nepbot.org');
+              }}
+            >
+              <SiGmail className={styles.socialItemImg} />
             </div>
           </div>
         </div>
         <div className={styles.accountContainer}>
-          <div className={styles.buttonItem}>
+          {/* <div className={styles.buttonItem}>
             {intl.formatMessage({
               id: 'header.login',
             })}
-          </div>
-          <div className={styles.buttonItem}>
-            <div className={styles.buttonItemIcon} />
-            Mainnet
-          </div>
+          </div> */}
+          <Dropdown
+            menu={{ items }}
+            overlayClassName={styles.buttonDropdown}
+          >
+            {location.hostname === 'nepbot.org' ? (
+              <div
+                className={styles.buttonItem}
+                onClick={(e) => e.preventDefault()}
+              >
+                <div className={classNames(styles.buttonItemIcon, styles.buttonItemIconMainnet)} />
+                Mainnet
+              </div>
+            ) : (
+              <div
+                className={styles.buttonItem}
+                onClick={(e) => e.preventDefault()}
+              >
+                <div className={classNames(styles.buttonItemIcon, styles.buttonItemIconTestnet)} />
+                Testnet
+              </div>
+            )}
+          </Dropdown>
         </div>
       </div>
     </div>

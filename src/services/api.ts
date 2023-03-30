@@ -3,10 +3,11 @@ import { API_CONFIG } from '@/constants/config';
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:47
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-27 17:37:52
+ * @ Modified time: 2023-03-30 04:23:46
  * @ Description: i@rua.moe
  */
 
+import { _DEBUG, _DEBUG_API } from '@/constants/env';
 import { GenerateToken } from '@/utils/paras';
 import { request } from './request';
 
@@ -14,30 +15,36 @@ export const SetInfo = async (
   data: API.SetInfo,
   options?: { [key: string]: any },
 ) => {
-  return request<Resp.SetInfo | Resp.Error>('/api/setInfo', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  return request<Resp.SetInfo | Resp.Error>(
+    `${!_DEBUG ? '/api' : _DEBUG_API}/setInfo`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data,
+      ...(options || {}),
+      getResponse: true,
     },
-    data,
-    ...(options || {}),
-    getResponse: true,
-  });
+  );
 };
 
 export const GetOwnerSign = async (
   data: API.GetOwnerSign,
   options?: { [key: string]: any },
 ) => {
-  return request<Resp.GetOwnerSign | Resp.Error>('/api/getOwnerSign', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  return request<Resp.GetOwnerSign | Resp.Error>(
+    `${!_DEBUG ? '/api' : _DEBUG_API}/getOwnerSign`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data,
+      ...(options || {}),
+      getResponse: true,
     },
-    data,
-    ...(options || {}),
-    getResponse: true,
-  });
+  );
 };
 
 export const GetRole = async (
@@ -46,14 +53,17 @@ export const GetRole = async (
   },
   options?: { [key: string]: any },
 ) => {
-  return request<Resp.GetRole | Resp.Error>(`/api/getRole/${path.guild_id}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
+  return request<Resp.GetRole | Resp.Error>(
+    `${!_DEBUG ? '/api' : _DEBUG_API}/getRole/${path.guild_id}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+      getResponse: true,
     },
-    ...(options || {}),
-    getResponse: true,
-  });
+  );
 };
 
 export const GetServer = async (
@@ -63,7 +73,7 @@ export const GetServer = async (
   options?: { [key: string]: any },
 ) => {
   return request<Resp.GetServer | Resp.Error>(
-    `/api/getServer/${path.guild_id}`,
+    `${!_DEBUG ? '/api' : _DEBUG_API}/getServer/${path.guild_id}`,
     {
       method: 'GET',
       headers: {
@@ -82,7 +92,7 @@ export const GetTxByGuild = async (
   options?: { [key: string]: any },
 ) => {
   return request<Resp.GetTxByGuild | Resp.Error>(
-    `/api/getTxByGuild/${path.guild_id}`,
+    `${!_DEBUG ? '/api' : _DEBUG_API}/getTxByGuild/${path.guild_id}`,
     {
       method: 'GET',
       headers: {
@@ -103,7 +113,9 @@ export const GetUser = async (
   options?: { [key: string]: any },
 ) => {
   return request<Resp.GetUser | Resp.Error>(
-    `/api/getUser/${path.guild_id}/${path.user_id}/${path.sign}`,
+    `${!_DEBUG ? '/api' : _DEBUG_API}/getUser/${path.guild_id}/${
+      path.user_id
+    }/${path.sign}`,
     {
       method: 'GET',
       headers: {
@@ -123,7 +135,9 @@ export const GetConnectedAccount = async (
   options?: { [key: string]: any },
 ) => {
   return request<Resp.GetConnectedAccount | Resp.Error>(
-    `/api/getConnectedAccount/${path.guild_id}/${path.user_id}`,
+    `${!_DEBUG ? '/api' : _DEBUG_API}/getConnectedAccount/${path.guild_id}/${
+      path.user_id
+    }`,
     {
       method: 'GET',
       headers: {
@@ -140,7 +154,7 @@ export const DisconnectAccount = async (
   options?: { [key: string]: any },
 ) => {
   return request<Resp.DisconnectAccount | Resp.Error>(
-    '/api/disconnectAccount',
+    `${!_DEBUG ? '/api' : _DEBUG_API}/disconnectAccount`,
     {
       method: 'POST',
       headers: {
@@ -163,7 +177,7 @@ export const CreateParasCollection = async (
   formData.append('args', JSON.stringify(data.args));
 
   return request<Resp.CreateParasCollection | Resp.Error>(
-    '/api/createParasCollection',
+    `${!_DEBUG ? '/api' : _DEBUG_API}/createParasCollection`,
     {
       method: 'POST',
       headers: {
@@ -251,105 +265,126 @@ export const GetOperationSign = async (
   data: API.GetOperationSign,
   options?: { [key: string]: any },
 ) => {
-  return request<Resp.GetOperationSign | Resp.Error>('/api/getOperationSign', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  return request<Resp.GetOperationSign | Resp.Error>(
+    `${!_DEBUG ? '/api' : _DEBUG_API}/getOperationSign`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data,
+      ...(options || {}),
+      getResponse: true,
     },
-    data,
-    ...(options || {}),
-    getResponse: true,
-  });
+  );
 };
 
 export const GetMintSign = async (
   data: API.GetMintSign,
   options?: { [key: string]: any },
 ) => {
-  return request<Resp.GetMintSign | Resp.Error>('/api/getMintSign', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  return request<Resp.GetMintSign | Resp.Error>(
+    `${!_DEBUG ? '/api' : _DEBUG_API}/getMintSign`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data,
+      ...(options || {}),
+      getResponse: true,
     },
-    data,
-    ...(options || {}),
-    getResponse: true,
-  });
+  );
 };
 
 export const TwitterVerify = async (
   data: API.TwitterVerify,
   options?: { [key: string]: any },
 ) => {
-  return request<Resp.TwitterVerify[] | Resp.Error>('/api/twitter/callback', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  return request<Resp.TwitterVerify[] | Resp.Error>(
+    `${!_DEBUG ? '/api' : _DEBUG_API}/twitter/callback`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data,
+      ...(options || {}),
+      getResponse: true,
     },
-    data,
-    ...(options || {}),
-    getResponse: true,
-  });
+  );
 };
 
 export const GetSnapshotSign = async (
   data: API.GetSnapshotSign,
   options?: { [key: string]: any },
 ) => {
-  return request<Resp.GetSnapshotSign | Resp.Error>('/api/getSnapshotSign', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  return request<Resp.GetSnapshotSign | Resp.Error>(
+    `${!_DEBUG ? '/api' : _DEBUG_API}/getSnapshotSign`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data,
+      ...(options || {}),
+      getResponse: true,
     },
-    data,
-    ...(options || {}),
-    getResponse: true,
-  });
+  );
 };
 
 export const SendMsgSnapshot = async (
   data: API.SendMsgSnapshot,
   options?: { [key: string]: any },
 ) => {
-  return request<Resp.SendMsgSnapshot | Resp.Error>('/api/snapshot/sendmsg', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  return request<Resp.SendMsgSnapshot | Resp.Error>(
+    `${!_DEBUG ? '/api' : _DEBUG_API}/snapshot/sendmsg`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data,
+      ...(options || {}),
+      getResponse: true,
     },
-    data,
-    ...(options || {}),
-    getResponse: true,
-  });
+  );
 };
 
 export const SendFfMsg = async (
   data: API.SendFfMsg,
   options?: { [key: string]: any },
 ) => {
-  return request<Resp.SendFfMsg | Resp.Error>('/api/airdrop/sendftmsg', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  return request<Resp.SendFfMsg | Resp.Error>(
+    `${!_DEBUG ? '/api' : _DEBUG_API}/airdrop/sendftmsg`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data,
+      ...(options || {}),
+      getResponse: true,
     },
-    data,
-    ...(options || {}),
-    getResponse: true,
-  });
+  );
 };
 
 export const GetAirdropFTSign = async (
   data: API.GetAirdropFTSign,
   options?: { [key: string]: any },
 ) => {
-  return request<Resp.GetAirdropFTSign | Resp.Error>('/api/getAirdropFTSign', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  return request<Resp.GetAirdropFTSign | Resp.Error>(
+    `${!_DEBUG ? '/api' : _DEBUG_API}/getAirdropFTSign`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data,
+      ...(options || {}),
+      getResponse: true,
     },
-    data,
-    ...(options || {}),
-    getResponse: true,
-  });
+  );
 };
 
 export const GetAirdropNFTSign = async (
@@ -357,7 +392,7 @@ export const GetAirdropNFTSign = async (
   options?: { [key: string]: any },
 ) => {
   return request<Resp.GetAirdropNFTSign | Resp.Error>(
-    '/api/getAirdropNFTSign',
+    `${!_DEBUG ? '/api' : _DEBUG_API}/getAirdropNFTSign`,
     {
       method: 'POST',
       headers: {

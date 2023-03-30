@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-22 23:01:12
+ * @ Modified time: 2023-03-30 04:33:15
  * @ Description: i@rua.moe
  */
 
@@ -25,11 +25,9 @@ const Layout: React.FC = () => {
       className={styles.watermarkContainer}
     >
       <div className={styles.layoutContainer}>
-        <Header />
         <div className={styles.contentContainer}>
           <Outlet />
         </div>
-        <Footer />
       </div>
     </WaterMark>
   );
