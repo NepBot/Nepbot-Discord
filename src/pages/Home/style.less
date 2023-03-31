@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:18:33
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-31 04:17:57
+ * @ Modified time: 2023-03-31 16:38:09
  * @ Description: i@rua.moe
  */
 
@@ -15,24 +15,16 @@
   min-height: 100vh;
   background-color: #000;
 
-  .homeCarousel {
+  .screen1 {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     width: 100%;
     height: 100vh;
-  }
-
-  .screen1 {
-    position: relative !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    width: 100% !important;
-    height: 100vh !important;
-    padding-top: 100px !important;
+    padding-top: 100px;
+    overflow: hidden;
 
     .screen1Content {
       position: relative;
@@ -150,6 +142,7 @@
         font-size: 16px;
         font-family: Gilroy;
         line-height: 16px;
+        cursor: pointer;
 
         .screen1BarItemIcon {
           height: 16px;
@@ -160,18 +153,19 @@
   }
 
   .screen2 {
-    position: relative !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important ;
-    justify-content: flex-start !important;
-    width: 100% !important;
-    height: 100vh !important;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
     overflow: hidden;
     background: url('@/assets/bg-screen2.webp') no-repeat center center;
     background-size: cover;
 
     .screen2Content {
+      z-index: 2;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -353,13 +347,13 @@
   }
 
   .screen3 {
-    position: relative !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    width: 100% !important;
-    height: 100vh !important;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
     overflow: hidden;
 
     .screen3background {
@@ -382,7 +376,6 @@
         transform: translate(-50%, 150%);
         opacity: 1;
         filter: blur(150px);
-        animation: circle 10s linear infinite;
       }
 
       .screen3backgroundRight {
@@ -397,7 +390,6 @@
         transform: translate(50%, 20%);
         opacity: 1;
         filter: blur(150px);
-        animation: circle 10s linear infinite;
       }
     }
 
@@ -406,7 +398,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: center;
       width: 100%;
       max-width: 1200px;
       height: 100%;
@@ -419,8 +411,8 @@
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        margin-top: 240px;
-        margin-bottom: 240px;
+        margin-top: 80px;
+        margin-bottom: 150px;
 
         .statisticsItem {
           display: flex;
@@ -468,6 +460,67 @@
           }
         }
       }
+    }
+  }
+
+  .screen4 {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+
+    .screen4background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100vh;
+
+      .screen4backgroundLeft {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 30vw;
+        height: 30vw;
+        background-color: #161d53;
+        border-radius: 100%;
+        box-shadow: 0 0 100px #161d53;
+        transform: translate(-50%, 150%);
+        opacity: 1;
+        filter: blur(150px);
+      }
+
+      .screen4backgroundRight {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 30vw;
+        height: 30vw;
+        background-color: #241050;
+        border-radius: 100%;
+        box-shadow: 0 0 100px #241050;
+        transform: translate(50%, 20%);
+        opacity: 1;
+        filter: blur(150px);
+      }
+    }
+
+    .screen4content {
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 1200px;
+      height: 100%;
+      padding-right: 3%;
+      padding-left: 3%;
 
       .carousel {
         position: relative;
@@ -563,26 +616,6 @@
           justify-content: flex-start;
         }
       }
-    }
-  }
-
-  .screen4 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-
-    .screen4content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      width: 100%;
-      max-width: 1200px;
-      height: 100%;
-      padding-right: 3%;
-      padding-left: 3%;
 
       .feature {
         display: flex;
@@ -629,6 +662,67 @@
           }
         }
       }
+    }
+  }
+
+  .screen5 {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+
+    .screen5background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100vh;
+
+      .screen5backgroundLeft {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 30vw;
+        height: 30vw;
+        background-color: #161d53;
+        border-radius: 100%;
+        box-shadow: 0 0 100px #161d53;
+        transform: translate(-50%, 150%);
+        opacity: 1;
+        filter: blur(150px);
+      }
+
+      .screen5backgroundRight {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 30vw;
+        height: 30vw;
+        background-color: #241050;
+        border-radius: 100%;
+        box-shadow: 0 0 100px #241050;
+        transform: translate(50%, 20%);
+        opacity: 1;
+        filter: blur(150px);
+      }
+    }
+
+    .screen5content {
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 1200px;
+      height: 100%;
+      padding-right: 3%;
+      padding-left: 3%;
 
       .partners {
         display: flex;
@@ -636,7 +730,6 @@
         align-items: center;
         justify-content: center;
         width: 100%;
-        margin-bottom: 250px;
 
         .partnersTitle {
           margin-bottom: 30px;
@@ -675,7 +768,7 @@
     }
   }
 
-  .screen5 {
+  .screen6 {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -685,13 +778,49 @@
     height: 100vh;
     overflow: hidden;
 
+    .screen6background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100vh;
+
+      .screen6backgroundLeft {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 30vw;
+        height: 30vw;
+        background-color: #161d53;
+        border-radius: 100%;
+        box-shadow: 0 0 100px #161d53;
+        transform: translate(-50%, 150%);
+        opacity: 1;
+        filter: blur(150px);
+      }
+
+      .screen6backgroundRight {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 30vw;
+        height: 30vw;
+        background-color: #241050;
+        border-radius: 100%;
+        box-shadow: 0 0 100px #241050;
+        transform: translate(50%, 20%);
+        opacity: 1;
+        filter: blur(150px);
+      }
+    }
+
     .trusted {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       width: 100%;
-      margin-bottom: 250px;
 
       .trustedTitle {
         margin-bottom: 30px;
@@ -738,7 +867,7 @@
     }
   }
 
-  .screen6 {
+  .screen7 {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -748,8 +877,9 @@
     height: 100vh;
     overflow: hidden;
 
-    .screen6content {
+    .screen7content {
       position: absolute;
+      z-index: 2;
       z-index: 2;
       display: flex;
       flex-direction: column;
@@ -761,7 +891,7 @@
       padding-right: 3%;
       padding-left: 3%;
 
-      .screen6Title {
+      .screen7Title {
         color: #fff;
         font-weight: 600;
         font-size: 60px;
@@ -771,7 +901,7 @@
         text-align: center;
       }
 
-      .screen6Button {
+      .screen7Button {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -782,7 +912,7 @@
         cursor: pointer;
         transition: all 0.3s ease-in-out;
 
-        .screen6ButtonLeft {
+        .screen7ButtonLeft {
           padding-right: 30px;
           padding-left: 30px;
           color: #000;
@@ -794,7 +924,7 @@
           text-transform: uppercase;
         }
 
-        .screen6ButtonRight {
+        .screen7ButtonRight {
           display: flex;
           align-items: center;
           justify-content: center;

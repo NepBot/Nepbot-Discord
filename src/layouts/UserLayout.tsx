@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-15 15:53:00
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 03:55:08
+ * @ Modified time: 2023-03-31 16:52:16
  * @ Description: i@rua.moe
  */
 
@@ -28,7 +28,7 @@ const UserLayout = (props: any) => {
 
   return (
     <WaterMark
-      content={(date >= _EXP_DATE) ? '' : 'It has expired, this website is not authorized, please do not do any operation, otherwise there is a risk of funds'}
+      content={(date >= _EXP_DATE) ? 'Expired, not safe' : ''}
       fontColor="#ccc"
       zIndex={99999}
       className={styles.watermarkContainer}

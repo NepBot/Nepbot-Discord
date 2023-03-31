@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 02:50:33
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 20:37:51
+ * @ Modified time: 2023-03-31 15:52:22
  * @ Description: i@rua.moe
  */
 
@@ -21,6 +21,13 @@ export const MINTBASE_API_KEY = _MINTBASE_API_KEY;
 export const NETWORK_URL = {
   mainnet: 'https://nepbot.org/',
   testnet: 'https://testnet.nepbot.org/',
+};
+
+export const BOT_URL = {
+  mainnet:
+    'https://discord.com/oauth2/authorize?client_id=958997413803196476&permissions=8&scope=bot applications.commands',
+  testnet:
+    'https://discord.com/oauth2/authorize?client_id=928559137179172874&permissions=8&scope=bot applications.commands',
 };
 
 export const WALLETCONNECT_CONFIG = () => {

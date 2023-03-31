@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:15:45
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-31 04:49:47
+ * @ Modified time: 2023-03-31 16:58:51
  * @ Description: i@rua.moe
  */
 
@@ -16,21 +16,22 @@ import { ReactComponent as PopulaLogoWhite } from '@/assets/brand/popula_logo_wh
 import { ReactComponent as Safe } from '@/assets/icon/ic-Safe.svg';
 import { ReactComponent as Fast } from '@/assets/icon/ic-Fast.svg';
 import { ReactComponent as Free } from '@/assets/icon/ic-Free.svg';
-import { LIST } from '@/constants/home/screen2';
+import { LIST } from '@/constants/home/list';
 import classNames from 'classnames';
 import Marquee from "react-fast-marquee";
 import { Carousel, Col, Row } from 'antd';
 import Fullpage, { FullPageSections, FullpageSection } from '@ap.cx/react-fullpage'
-import { SWIPER } from '@/constants/home/screen3';
-import { PARTNERS, TRUSTED } from '@/constants/home/screen4';
+import { SWIPER } from '@/constants/home/swiper';
+import { PARTNERS, TRUSTED } from '@/constants/home/partner';
 import BottomBackground from '@/components/BottomBackground';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { API_CONFIG } from '@/constants/config';
+import { API_CONFIG, BOT_URL } from '@/constants/config';
+import { _NETWORK } from '@/constants/env';
 
 const Home: React.FC = () => {
   const intl = useIntl();
-  const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${API_CONFIG().APPLICATION_ID}&permissions=8&scope=bot%20applications.commands`
+  const inviteUrl = _NETWORK === 'mainnet' ? BOT_URL.mainnet : BOT_URL.testnet;
 
   return (
     <div className={styles.homeContainer}>
@@ -50,8 +51,26 @@ const Home: React.FC = () => {
                   {intl.formatMessage({
                     id: 'home.screen1.desc'
                   }, {
-                    discord: <span className={styles.screen1DescBold}>Discord</span>,
-                    account: <span className={styles.screen1DescLink}>@NearProtocol</span>,
+                    discord: (
+                      <span
+                        className={styles.screen1DescBold}
+                        onClick={() => {
+                          window.open('https://discord.com/', '_blank');
+                        }}
+                      >
+                        Discord
+                      </span>
+                    ),
+                    account: (
+                      <span
+                        className={styles.screen1DescLink}
+                        onClick={() => {
+                          window.open('https://near.org/', '_blank');
+                        }}
+                      >
+                        NearProtocol
+                      </span>
+                    ),
                   })}
                 </div>
                 <div
@@ -71,7 +90,12 @@ const Home: React.FC = () => {
                 </div>
               </div>
               <div className={styles.screen1Bar}>
-                <div className={styles.screen1BarItem}>
+                <div
+                  className={styles.screen1BarItem}
+                  onClick={() => {
+                    window.open('https://near.org/', '_blank');
+                  }}
+                >
                   {intl.formatMessage({
                     id: 'home.screen1.bar.poweredBy'
                   })}
@@ -79,7 +103,12 @@ const Home: React.FC = () => {
                     className={styles.screen1BarItemIcon}
                   />
                 </div>
-                <div className={styles.screen1BarItem}>
+                <div
+                  className={styles.screen1BarItem}
+                  onClick={() => {
+                    window.open('https://popula.io/', '_blank');
+                  }}
+                >
                   {intl.formatMessage({
                     id: 'home.screen1.bar.backedBy'
                   })}
@@ -104,7 +133,12 @@ const Home: React.FC = () => {
                       id: 'home.screen2.desc'
                     })}
                   </div>
-                  <div className={styles.screen2LeftButton}>
+                  <div
+                    className={styles.screen2LeftButton}
+                    onClick={() => {
+                      window.open('https://nepbot.github.io/Nepbot-gitbook/doc/What_is_Nepbot.html', '_blank');
+                    }}
+                  >
                     {intl.formatMessage({
                       id: 'home.screen2.button'
                     })}
@@ -198,6 +232,16 @@ const Home: React.FC = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </FullpageSection>
+          <FullpageSection>
+            <div className={styles.screen4}>
+              <div className={styles.screen4background}>
+                <div className={styles.screen4backgroundLeft} />
+                <div className={styles.screen4backgroundRight} />
+              </div>
+              <div className={styles.screen4content}>
                 <div className={styles.carousel}>
                   <Carousel
                     autoplay
@@ -219,7 +263,12 @@ const Home: React.FC = () => {
                                 {item.desc}
                               </div>
                             </div>
-                            <div className={styles.carouselItemInfoButton}>
+                            <div
+                              className={styles.carouselItemInfoButton}
+                              onClick={() => {
+                                window.open(item.link, '_blank');
+                              }}
+                            >
                               {item.button}
                             </div>
                           </div>
@@ -235,12 +284,6 @@ const Home: React.FC = () => {
                     })}
                   </Carousel>
                 </div>
-              </div>
-            </div>
-          </FullpageSection>
-          <FullpageSection>
-            <div className={styles.screen4}>
-              <div className={styles.screen4content}>
                 <div className={styles.feature}>
                   <div className={styles.featureItem}>
                     <div className={styles.featureItemIcon}>
@@ -248,12 +291,12 @@ const Home: React.FC = () => {
                     </div>
                     <div className={styles.featureItemTitle}>
                       {intl.formatMessage({
-                        id: 'home.screen3.featureItem1'
+                        id: 'home.screen4.featureItem1'
                       })}
                     </div>
                     <div className={styles.featureItemContent}>
                       {intl.formatMessage({
-                        id: 'home.screen3.featureItem1.content'
+                        id: 'home.screen4.featureItem1.content'
                       })}
                     </div>
                   </div>
@@ -263,12 +306,12 @@ const Home: React.FC = () => {
                     </div>
                     <div className={styles.featureItemTitle}>
                       {intl.formatMessage({
-                        id: 'home.screen3.featureItem2'
+                        id: 'home.screen4.featureItem2'
                       })}
                     </div>
                     <div className={styles.featureItemContent}>
                       {intl.formatMessage({
-                        id: 'home.screen3.featureItem2.content'
+                        id: 'home.screen4.featureItem2.content'
                       })}
                     </div>
                   </div>
@@ -278,20 +321,30 @@ const Home: React.FC = () => {
                     </div>
                     <div className={styles.featureItemTitle}>
                       {intl.formatMessage({
-                        id: 'home.screen3.featureItem3'
+                        id: 'home.screen4.featureItem3'
                       })}
                     </div>
                     <div className={styles.featureItemContent}>
                       {intl.formatMessage({
-                        id: 'home.screen3.featureItem3.content'
+                        id: 'home.screen4.featureItem3.content'
                       })}
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </FullpageSection>
+          <FullpageSection>
+            <div className={styles.screen5}>
+              <div className={styles.screen5background}>
+                <div className={styles.screen5backgroundLeft} />
+                <div className={styles.screen5backgroundRight} />
+              </div>
+              <div className={styles.screen5content}>
                 <div className={styles.partners}>
                   <div className={styles.partnersTitle}>
                     {intl.formatMessage({
-                      id: 'home.screen4.partnersTitle'
+                      id: 'home.screen5.partnersTitle'
                     })}
                   </div>
                   <div className={styles.partnersContent}>
@@ -302,6 +355,9 @@ const Home: React.FC = () => {
                             xs={8} sm={6} md={4} lg={4} xl={4}
                             className={styles.partnersContentItem}
                             key={item.name}
+                            onClick={() => {
+                              window.open(item?.url, '_blank');
+                            }}
                           >
                             <item.logo
                               className={styles.partnersItemImg}
@@ -316,11 +372,15 @@ const Home: React.FC = () => {
             </div>
           </FullpageSection>
           <FullpageSection>
-            <div className={styles.screen5}>
+            <div className={styles.screen6}>
+              <div className={styles.screen6background}>
+                <div className={styles.screen6backgroundLeft} />
+                <div className={styles.screen6backgroundRight} />
+              </div>
               <div className={styles.trusted}>
                 <div className={styles.trustedTitle}>
                   {intl.formatMessage({
-                    id: 'home.screen5.trustedTitle'
+                    id: 'home.screen6.trustedTitle'
                   })}
                 </div>
                 <div className={styles.trustedRow}>
@@ -373,26 +433,26 @@ const Home: React.FC = () => {
             </div>
           </FullpageSection>
           <FullpageSection>
-            <div className={styles.screen6}>
+            <div className={styles.screen7}>
               <BottomBackground />
-              <div className={styles.screen6content}>
-                <div className={styles.screen6Title}>
+              <div className={styles.screen7content}>
+                <div className={styles.screen7Title}>
                   {intl.formatMessage({
-                    id: 'home.screen6.title'
+                    id: 'home.screen7.title'
                   })}
                 </div>
                 <div
-                  className={styles.screen6Button}
+                  className={styles.screen7Button}
                   onClick={() => {
                     window.open(inviteUrl, '_blank');
                   }}
                 >
-                  <div className={styles.screen6ButtonLeft}>
+                  <div className={styles.screen7ButtonLeft}>
                     {intl.formatMessage({
-                      id: 'home.screen6.button'
+                      id: 'home.screen7.button'
                     })}
                   </div>
-                  <div className={styles.screen6ButtonRight}>
+                  <div className={styles.screen7ButtonRight}>
                     <RightArrow />
                   </div>
                 </div>

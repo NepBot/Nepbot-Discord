@@ -2,14 +2,14 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-09 03:09:07
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 20:51:15
+ * @ Modified time: 2023-03-31 16:53:49
  * @ Description: i@rua.moe
  */
 
 export default {
   'home.screen1.title': `Powering Your\nCommunity Experience`,
   'home.screen1.desc':
-    'An open source, permissionless token-based {discord} community platform, community management tool\nbuilding on {account}',
+    'An open source, permissionless token-based {discord} community platform, community management tool\nbuilding on @{account}',
   'home.screen1.button.getStarted': 'Get Started!',
   'home.screen1.bar.poweredBy': 'Powered by',
   'home.screen1.bar.backedBy': 'Backed by',
@@ -20,17 +20,17 @@ export default {
   'home.screen3.statisticsItem1': 'Used in\nDiscord servers',
   'home.screen3.statisticsItem2': 'Verified\nusers',
   'home.screen3.statisticsItem3': 'Launched\nNFT Collections',
-  'home.screen3.featureItem1': 'Safe',
-  'home.screen3.featureItem2': 'Fast',
-  'home.screen3.featureItem3': 'Free',
-  'home.screen3.featureItem1.content':
+  'home.screen4.featureItem1': 'Safe',
+  'home.screen4.featureItem2': 'Fast',
+  'home.screen4.featureItem3': 'Free',
+  'home.screen4.featureItem1.content':
     'Special security design to ensure the safety of your assets and data when connecting wallets with Nepbot',
-  'home.screen3.featureItem2.content':
+  'home.screen4.featureItem2.content':
     'Real time role update within minutes, operating with our own indexer based on NEAR-lake-framework',
-  'home.screen3.featureItem3.content':
+  'home.screen4.featureItem3.content':
     'Proud to be open-source, permissionless and free.\nAvaliable for anyone with smooth user experience.',
-  'home.screen4.partnersTitle': 'Partners',
-  'home.screen5.trustedTitle': 'Trusted by 130+ servers',
-  'home.screen6.title': 'Start boosting\nyour Discord server within minutes.',
-  'home.screen6.button': 'Add to Discord',
+  'home.screen5.partnersTitle': 'Partners',
+  'home.screen6.trustedTitle': 'Trusted by 130+ servers',
+  'home.screen7.title': 'Start boosting\nyour Discord server within minutes.',
+  'home.screen7.button': 'Add to Discord',
 };
