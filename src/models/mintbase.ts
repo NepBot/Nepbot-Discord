@@ -3,7 +3,7 @@ import { useCallback, useEffect } from 'react';
  * @ Author: Hikaru
  * @ Create Time: 2023-03-23 01:25:54
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-23 03:29:12
+ * @ Modified time: 2023-03-31 21:55:26
  * @ Description: i@rua.moe
  */
 
@@ -28,12 +28,16 @@ export default () => {
       const { data: details } = await wallet.details();
       console.log('Mintbase wallet details: ', details);
       /*
-      accountId: "qwerty.testnet"
-      allowance: "0.25"
-      balance: "365.77"
-      contractName: "mintbase13.testnet"
-    */
+        accountId: "qwerty.testnet"
+        allowance: "0.25"
+        balance: "365.77"
+        contractName: "mintbase13.testnet"
+      */
     }
+    if (error) {
+      console.log('Mintbase wallet error: ', error);
+    }
+
     setMintbaseWallet(wallet);
   }, []);
 

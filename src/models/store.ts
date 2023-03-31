@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-21 23:04:45
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-24 03:59:52
+ * @ Modified time: 2023-03-31 18:32:30
  * @ Description: i@rua.moe
  */
 
@@ -29,7 +29,7 @@ export default () => {
     }
 
     const _operationSign = store.Get({
-      key: 'nepbot:discord:operationSign',
+      key: 'nepbot:discord:operation:sign',
     });
     if (!!_operationSign) {
       setDiscordOperationSign(_operationSign);

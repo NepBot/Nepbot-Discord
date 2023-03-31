@@ -2,14 +2,14 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-15 03:53:57
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-29 04:14:54
+ * @ Modified time: 2023-03-31 18:28:32
  * @ Description: i@rua.moe
  */
 
 import { API_CONFIG } from '@/constants/config';
 import { encode } from 'blurhash';
 import BN from 'bn.js';
-import { base58 } from 'ethers/lib/utils';
+import bs58 from 'bs58';
 import { Account, KeyPair, connect } from 'near-api-js';
 
 export async function Contract({ nearAccount }: { nearAccount?: Account }) {
@@ -83,16 +83,16 @@ export function FormatAmount({
 
 export function SignMessage({
   keystore,
-  message,
+  object,
 }: {
   keystore: string;
-  message: string;
+  object: Object;
 }) {
   const keyPair = KeyPair.fromString(keystore);
-  const signed = keyPair.sign(Buffer.from(message));
+  const signed = keyPair.sign(Buffer.from(JSON.stringify(object)));
 
   return {
-    signature: base58.encode(signed.signature),
+    signature: bs58.encode(signed.signature),
     publicKey: signed.publicKey.toString(),
   };
 }

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 02:53:34
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-31 04:47:56
+ * @ Modified time: 2023-04-01 00:27:55
  * @ Description: i@rua.moe
  */
 
@@ -17,6 +17,9 @@ import { Loading3QuartersOutlined } from '@ant-design/icons';
 import LinkExpired from '@/components/LinkExpired';
 import Loading from '@/components/Loading';
 import { AiFillCheckCircle } from 'react-icons/ai';
+import { DisconnectAccount, SetInfo } from '@/services/api';
+import { SignMessage } from '@/utils/near';
+import Fail from '@/components/Fail';
 
 interface QueryParams {
   guild_id?: string;
@@ -25,8 +28,10 @@ interface QueryParams {
 }
 
 const Verify: React.FC = () => {
-  const { nearWallet, nearAccount, OpenModalWallet } = useModel('near.account');
-  const { discordUser, discordServer, GetUserInfo, GetServerInfo } = useModel('discord');
+  const { nearWallet, nearAccount, OpenModalWallet, GetKeyStore } = useModel('near.account');
+  const { discordUser, discordServer, GetUserInfo, GetServerInfo, GetConnected } = useModel('discord');
+  const { discordInfo, setDiscordInfo } = useModel('store');
+  const [expiredState, setExpiredState] = useState<boolean>(false);
   const [errorState, setErrorState] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -37,24 +42,38 @@ const Verify: React.FC = () => {
   useEffect(() => {
     (async () => {
       if (!!search?.guild_id && !!search?.user_id && !!search?.sign) {
+        setDiscordInfo({
+          guild_id: search.guild_id,
+          user_id: search.user_id,
+          sign: search.sign
+        });
+
         const userinfo = await GetUserInfo({
           guild_id: search.guild_id,
           user_id: search.user_id,
           sign: search.sign
         });
 
-        const serverinfo = await GetServerInfo({
-          guild_id: search.guild_id,
-        });
-
-        if (!userinfo || !serverinfo) {
+        if (!userinfo) {
           notification.error({
             key: 'error.params',
             message: 'Error',
             description: 'Link expired, please apply a new link',
           });
-          setErrorState(true);
+          setExpiredState(true);
+          setLoading(false);
+          return;
         }
+
+        await GetConnected({
+          guild_id: search.guild_id,
+          user_id: search.user_id,
+        });
+
+        await GetServerInfo({
+          guild_id: search.guild_id,
+        });
+
         setLoading(false);
       } else {
         notification.error({
@@ -68,15 +87,59 @@ const Verify: React.FC = () => {
     })();
   }, []);
 
+  useEffect(() => {
+    if (!!discordInfo && !!nearWallet && !!nearAccount) {
+      (async () => {
+        const keystore = await GetKeyStore(nearAccount?.accountId);
+
+        if (!keystore) {
+          return;
+        }
+
+        const args = {
+          account_id: nearAccount?.accountId,
+          user_id: discordInfo.user_id,
+          guild_id: discordInfo.guild_id,
+          sign: discordInfo.sign,
+        }
+
+        const signature = await SignMessage({
+          keystore: keystore,
+          object: args,
+        });
+
+        const result = await SetInfo({
+          args: args,
+          account_id: nearAccount?.accountId,
+          sign: signature.signature,
+        });
+
+        if (!result?.data?.success) {
+          notification.error({
+            key: 'error.connect',
+            message: 'Error',
+            description: 'Failed to connect',
+          });
+          setExpiredState(true);
+          setLoading(false);
+          return;
+        }
+      })();
+    }
+  }, [discordInfo, nearWallet, nearAccount]);
+
   return (
     <>
-      {!errorState && loading && (
+      {!errorState && !expiredState && loading && (
         <Loading />
       )}
-      {errorState && !loading && (
+      {!errorState && expiredState && !loading && (
         <LinkExpired />
       )}
-      {!errorState && !loading && (
+      {errorState && expiredState && !loading && (
+        <Fail />
+      )}
+      {!errorState && !expiredState && !loading && (
         <div className={styles.connectContainer}>
           <Background />
           <div className={styles.wrapper}>
@@ -103,7 +166,7 @@ const Verify: React.FC = () => {
                 </div>
               </div>
               <div className={styles.buttonContainer}>
-                {!nearWallet || !nearAccount && (
+                {(!nearWallet || !nearAccount) && (
                   <>
                     <div
                       className={classNames(styles.button, (!discordUser || !discordServer) && styles.buttonDisable)}
@@ -149,9 +212,15 @@ const Verify: React.FC = () => {
                     <div
                       className={classNames(styles.button, (!discordUser || !discordServer) && styles.buttonDisable)}
                       onClick={async () => {
-                        if (!!discordUser && !!discordServer && !loading) {
+                        if (!!nearWallet && !!nearWallet && !loading) {
                           await nearWallet.signOut();
-                          window.location.reload();
+                          if (!!search.guild_id && !!search.user_id && !!search.sign) {
+                            await DisconnectAccount({
+                              guild_id: search.guild_id,
+                              user_id: search.user_id,
+                              sign: search.sign
+                            });
+                          }
                         }
                       }}
                     >

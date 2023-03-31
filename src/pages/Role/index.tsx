@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 03:35:39
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 03:58:12
+ * @ Modified time: 2023-04-01 02:50:09
  * @ Description: i@rua.moe
  */
 
@@ -30,6 +30,7 @@ import UserLayout from '@/layouts/UserLayout';
 import Loading from '@/components/Loading';
 import LinkExpired from '@/components/LinkExpired';
 import NoData from '@/components/NoData';
+import { SignMessage } from '@/utils/near';
 
 interface QueryParams {
   guild_id?: string;
@@ -38,8 +39,8 @@ interface QueryParams {
 }
 
 const Role: React.FC = () => {
-  const { walletSelector, nearAccount, nearWallet } = useModel('near.account');
-  const { discordServer, discordUser, GetServerInfo } = useModel('discord');
+  const { walletSelector, nearAccount, nearWallet, GetKeyStore } = useModel('near.account');
+  const { discordServer, GetServerInfo } = useModel('discord');
   const { discordInfo, discordOperationSign, setDiscordInfo, setDiscordOperationSign } = useModel('store');
   const [dataSource, setDataSource] = useState<Contract.RuleItem[]>([]);
   const [appchainIds, setAppchainIds] = useState<any[]>([]);
@@ -155,11 +156,20 @@ const Role: React.FC = () => {
       guild_id: discordInfo?.guild_id,
     };
 
-    const signature = await nearAccount?.connection.signer.signMessage(Buffer.from(JSON.stringify(args)), nearAccount?.accountId, API_CONFIG().networkId);
+    const keystore = await GetKeyStore(nearAccount?.accountId);
+
+    if (!keystore) {
+      return;
+    }
+
+    const signature = await SignMessage({
+      keystore: keystore,
+      object: args,
+    })
 
     const _sign = await GetOperationSign({
       args: args,
-      sign: base58.encode(signature?.signature!),
+      sign: signature?.signature,
       account_id: nearAccount?.accountId,
     });
 
@@ -214,12 +224,21 @@ const Role: React.FC = () => {
           operationSign: discordOperationSign,
         };
 
-        const signature = await nearAccount?.connection.signer.signMessage(Buffer.from(JSON.stringify(args)), nearAccount?.accountId, API_CONFIG().networkId);
+        const keystore = await GetKeyStore(nearAccount?.accountId);
+
+        if (!keystore) {
+          return;
+        };
+
+        const signature = await SignMessage({
+          keystore: keystore,
+          object: args,
+        });
 
         const res = await GetOperationSign({
           args: args,
           account_id: nearAccount?.accountId,
-          sign: base58.encode(signature?.signature!),
+          sign: signature?.signature,
         });
 
         if (!res?.data?.success) {
@@ -251,10 +270,10 @@ const Role: React.FC = () => {
           description: 'Missing parameters',
         });
         setErrorState(true);
-        // setLoading(false);
+        setLoading(false);
       }
     })()
-  }, [isModalOpen, walletSelector, discordServer, discordUser, nearAccount, nearWallet]);
+  }, [isModalOpen, walletSelector, nearAccount, nearWallet]);
 
   return (
     <UserLayout>

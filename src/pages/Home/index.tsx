@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:15:45
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-31 16:58:51
+ * @ Modified time: 2023-03-31 17:03:40
  * @ Description: i@rua.moe
  */
 
@@ -26,7 +26,7 @@ import { PARTNERS, TRUSTED } from '@/constants/home/partner';
 import BottomBackground from '@/components/BottomBackground';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { API_CONFIG, BOT_URL } from '@/constants/config';
+import { BOT_URL } from '@/constants/config';
 import { _NETWORK } from '@/constants/env';
 
 const Home: React.FC = () => {

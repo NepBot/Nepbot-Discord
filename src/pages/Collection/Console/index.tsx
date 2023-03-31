@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-26 01:06:22
+ * @ Modified time: 2023-04-01 02:44:36
  * @ Description: i@rua.moe
  */
 
@@ -20,6 +20,7 @@ import SelectPlatform from "@/components/SelectPlatform";
 import Create from "./Create";
 import UserLayout from "@/layouts/UserLayout";
 import { base58 } from "ethers/lib/utils";
+import { SignMessage } from "@/utils/near";
 
 interface QueryParams {
   guild_id?: string;
@@ -28,7 +29,7 @@ interface QueryParams {
 }
 
 const Collection: React.FC = () => {
-  const { walletSelector, nearAccount, OpenModalWallet } = useModel('near.account');
+  const { walletSelector, nearAccount, GetKeyStore } = useModel('near.account');
   const { discordInfo, discordOperationSign, setDiscordInfo, setDiscordOperationSign } = useModel('store');
   const { GetServerInfo } = useModel('discord');
   const [selectPlatformModal, setSelectPlatformModal] = useState<boolean>(false);
@@ -61,11 +62,21 @@ const Collection: React.FC = () => {
           sign: search.sign,
           operationSign: discordOperationSign
         }
-        const signature = await nearAccount?.connection.signer.signMessage(Buffer.from(JSON.stringify(args)), nearAccount?.accountId, API_CONFIG().networkId);
+
+        const keystore = await GetKeyStore(nearAccount?.accountId);
+
+        if (!keystore) {
+          return;
+        };
+
+        const signature = await SignMessage({
+          keystore: keystore,
+          object: args,
+        });
 
         const res = await GetOperationSign({
           account_id: nearAccount?.accountId,
-          sign: base58.encode(signature?.signature!),
+          sign: signature?.signature,
           args: args,
         });
 
@@ -125,13 +136,13 @@ const Collection: React.FC = () => {
               collectionData = await GetCollection({
                 collection_id: collection?.outer_collection_id,
               });
-              if (!!collectionData?.data && !!(collectionData?.data as Resp.GetCollection)?.results?.length) {
+              if (!!collectionData?.data && !!(collectionData?.data as Resp.GetCollection)?.data?.results?.length) {
                 wrappedCollections.push({
                   royaltyTotal: royaltyTotal / 100,
                   inner_collection_id: collection.collection_id,
                   outer_collection_id: collection.outer_collection_id,
                   ...collection,
-                  ...(collectionData?.data as Resp.GetCollection)?.results[0],
+                  ...(collectionData?.data as Resp.GetCollection)?.data?.results![0],
                 });
               }
               break;

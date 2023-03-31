@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-31 14:37:44
+ * @ Modified time: 2023-03-31 18:06:32
  * @ Description: i@rua.moe
  */
 
@@ -66,11 +66,6 @@ export default defineConfig({
               path: '/collection/:id',
               component: 'Collection/Detail',
             },
-            {
-              title: 'Add Item',
-              path: '/collection/:id/add',
-              component: 'Collection/Detail/Add',
-            },
           ],
         },
       ],
@@ -118,6 +113,18 @@ export default defineConfig({
           title: 'Twitter Verify',
           path: '/twitter/verify',
           component: 'Twitter/Verify',
+        },
+      ],
+    },
+    {
+      title: 'Snapshot',
+      path: '/snapshot',
+      layout: false,
+      routes: [
+        {
+          title: 'Create Snapshot',
+          path: '/snapshot/create',
+          component: 'Snapshot/Create',
         },
       ],
     },

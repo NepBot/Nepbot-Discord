@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-20 16:06:26
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 04:08:47
+ * @ Modified time: 2023-04-01 02:51:58
  * @ Description: i@rua.moe
  */
 
@@ -18,6 +18,7 @@ import { RequestTransaction } from '@/utils/contract';
 import UserLayout from '@/layouts/UserLayout';
 import Loading from '@/components/Loading';
 import LinkExpired from '@/components/LinkExpired';
+import { SignMessage } from '@/utils/near';
 
 interface QueryParams {
   transactionHashes?: string;
@@ -29,7 +30,7 @@ interface QueryParams {
 }
 
 const Create: React.FC = () => {
-  const { walletSelector, nearAccount, nearWallet } = useModel('near.account');
+  const { walletSelector, nearAccount, nearWallet, GetKeyStore } = useModel('near.account');
   const [errorState, setErrorState] = useState<boolean>(false);
 
   const location = useLocation();
@@ -67,11 +68,22 @@ const Create: React.FC = () => {
             contract_address: search?.contract_address,
             sign: search?.sign,
           }
-          const signature = await nearAccount?.connection.signer.signMessage(Buffer.from(JSON.stringify(args)), nearAccount?.accountId, API_CONFIG().networkId);
+
+          const keystore = await GetKeyStore(nearAccount?.accountId);
+
+          if (!keystore) {
+            return;
+          };
+
+          const signature = await SignMessage({
+            keystore: keystore,
+            object: args,
+          });
+
           const sign = await GetSnapshotSign({
             args: args,
             account_id: nearAccount?.accountId,
-            sign: base58.encode(signature.signature),
+            sign: signature?.signature,
           });
 
           if (sign?.response?.status !== 200 || !sign?.data?.success) {

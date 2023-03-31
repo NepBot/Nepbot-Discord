@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-22 23:11:48
+ * @ Modified time: 2023-03-31 17:04:44
  * @ Description: i@rua.moe
  */
 
@@ -22,14 +22,14 @@
   }
 }
 
-.nws-modal-wrapper {
-  .nws-modal-overlay {
+:global(.nws-modal-wrapper) {
+  :global(.nws-modal-overlay) {
     display: none;
   }
 
-  .nws-modal {
-    .nws-modal-header {
-      .close-button {
+  :global(.nws-modal) {
+    :global(.nws-modal-header) {
+      :global(.close-button) {
         display: none;
       }
     }

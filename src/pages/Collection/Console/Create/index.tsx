@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-29 02:42:29
+ * @ Modified time: 2023-04-01 02:46:30
  * @ Description: i@rua.moe
  */
 
@@ -19,7 +19,7 @@ import ConfirmModal from './ConfirmModal';
 import UserLayout from '@/layouts/UserLayout';
 import { API_CONFIG } from '@/constants/config';
 import { CreateParasCollection, GetCollection, GetOwnerSign } from '@/services/api';
-import { ParseAmount } from '@/utils/near';
+import { ParseAmount, SignMessage } from '@/utils/near';
 import { RequestTransaction } from '@/utils/contract';
 import { base58 } from 'ethers/lib/utils';
 
@@ -42,7 +42,7 @@ const Create: React.FC<{
   onSubmit?: () => void;
   onCancel?: () => void;
 }> = ({ selectPlatform, urlSearch, roleList, setErrorState, onSubmit, onCancel }) => {
-  const { nearAccount, nearWallet, setCallbackUrl } = useModel('near.account');
+  const { nearAccount, nearWallet, setCallbackUrl, GetKeyStore } = useModel('near.account');
   const { discordServer } = useModel('discord');
   const { mintbaseWallet } = useModel('mintbase');
   const { discordInfo, discordOperationSign } = useModel('store');
@@ -124,8 +124,18 @@ const Create: React.FC<{
               account_id: nearAccount?.accountId,
               sign: '',
             }
-            const sign = await nearAccount?.connection.signer.signMessage(Buffer.from(JSON.stringify(params)), nearAccount?.accountId, API_CONFIG().networkId);
-            params.sign = base58.encode(sign?.signature!);
+            const keystore = await GetKeyStore(nearAccount?.accountId);
+
+            if (!keystore) {
+              return;
+            };
+
+            const sign = await SignMessage({
+              keystore: keystore,
+              object: params,
+            });
+
+            params.sign = sign?.signature;
 
             const result = await CreateParasCollection({
               logo: logoFile,
@@ -168,11 +178,20 @@ const Create: React.FC<{
         guild_id: discordInfo?.guild_id,
       }
 
-      const sign = await nearAccount?.connection.signer.signMessage(Buffer.from(JSON.stringify(args)), nearAccount?.accountId, API_CONFIG().networkId);
+      const keystore = await GetKeyStore(nearAccount?.accountId);
+
+      if (!keystore) {
+        return;
+      };
+
+      const sign = await SignMessage({
+        keystore: keystore,
+        object: args,
+      });
 
       const msg = {
         args: args,
-        sign: base58.encode(sign?.signature!),
+        sign: sign?.signature,
         account_id: nearAccount?.accountId,
       }
 

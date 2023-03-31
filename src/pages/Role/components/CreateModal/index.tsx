@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 16:18:09
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 03:25:36
+ * @ Modified time: 2023-04-01 02:51:15
  * @ Description: i@rua.moe
  */
 
@@ -14,7 +14,7 @@ import classNames from 'classnames';
 import { Loading3QuartersOutlined } from '@ant-design/icons';
 import { GetOwnerSign, GetRole } from '@/services/api';
 import { API_CONFIG } from '@/constants/config';
-import { ParseAmount, debounce } from '@/utils/near';
+import { ParseAmount, SignMessage, debounce } from '@/utils/near';
 import { base58 } from 'ethers/lib/utils';
 import { RequestTransaction } from '@/utils/contract';
 
@@ -26,7 +26,7 @@ const CreateModal: React.FC<{
   onCancel?: () => void;
 }> = ({ isModalOpen, setIsModalOpen, appchainIds, onSubmit, onCancel }) => {
   const [form] = Form.useForm();
-  const { nearAccount, nearWallet } = useModel('near.account');
+  const { nearAccount, nearWallet, GetKeyStore } = useModel('near.account');
   const { discordServer } = useModel('discord');
   const { discordInfo, discordOperationSign } = useModel('store');
   const [roleList, setRoleList] = useState<Item.Role[]>([]);
@@ -157,10 +157,21 @@ const CreateModal: React.FC<{
         user_id: discordInfo?.user_id,
         guild_id: discordInfo?.guild_id,
       }
-      const signature = await nearAccount?.connection.signer.signMessage(Buffer.from(JSON.stringify(args)), nearAccount?.accountId, API_CONFIG().networkId);
+
+      const keystore = await GetKeyStore(nearAccount?.accountId);
+
+      if (!keystore) {
+        return;
+      };
+
+      const signature = await SignMessage({
+        keystore: keystore,
+        object: args,
+      });
+
       const _sign = await GetOwnerSign({
         args: args,
-        sign: base58.encode(signature?.signature!),
+        sign: signature?.signature,
         account_id: nearAccount?.accountId,
       });
 

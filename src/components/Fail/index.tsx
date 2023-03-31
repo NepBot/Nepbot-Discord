@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-30 00:30:45
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 03:42:42
+ * @ Modified time: 2023-03-31 23:39:39
  * @ Description: i@rua.moe
  */
 
@@ -31,7 +31,16 @@ const Fail: React.FC = () => {
           {intl.formatMessage({
             id: 'fail.description',
           }, {
-            support: <b>Support</b>
+            support: (
+              <b
+                className={styles.support}
+                onClick={() => {
+                  window.open('https://discord.com/channels/', '_blank');
+                }}
+              >
+                Support
+              </b>
+            )
           })}
         </div>
       </div>

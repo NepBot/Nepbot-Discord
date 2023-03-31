@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-17 00:37:10
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 04:06:58
+ * @ Modified time: 2023-04-01 02:49:39
  * @ Description: i@rua.moe
  */
 
@@ -26,7 +26,7 @@ interface QueryParams {
 }
 
 const Claim: React.FC = () => {
-  const { walletSelector, walletList, activeAccount, nearAccount, nearWallet, setCallbackUrl } = useModel('near.account');
+  const { walletSelector, walletList, activeAccount, nearAccount, nearWallet, setCallbackUrl, GetKeyStore } = useModel('near.account');
   const [errorState, setErrorState] = useState<boolean>(false);
 
   const location = useLocation();
@@ -42,16 +42,23 @@ const Claim: React.FC = () => {
           sign: search.sign
         }
 
-        const res = await SignMessage({
-          keystore: walletList?.get(activeAccount)?.privateKey!,
-          message: JSON.stringify(args),
-        })
+        const keystore = await GetKeyStore(nearAccount?.accountId);
+
+        if (!keystore) {
+          return;
+        };
+
+        const signature = await SignMessage({
+          keystore: keystore,
+          object: args,
+        });
 
         const sign = await GetAirdropFTSign({
           args: args,
           account_id: search.user_id,
-          sign: res.signature,
+          sign: signature?.signature,
         });
+
         if (!sign || !sign?.data?.success) {
           notification.error({
             message: 'Error',

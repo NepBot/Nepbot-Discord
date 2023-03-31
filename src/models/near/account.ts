@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-15 02:13:40
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-16 17:55:52
+ * @ Modified time: 2023-03-31 17:51:37
  * @ Description: i@rua.moe
  */
 
@@ -10,8 +10,8 @@ import { API_CONFIG, WALLETCONNECT_CONFIG } from '@/constants/config';
 import { setupCoin98Wallet } from '@near-wallet-selector/coin98-wallet';
 import {
   Account,
-  setupWalletSelector,
   Wallet,
+  setupWalletSelector,
 } from '@near-wallet-selector/core';
 import type { WalletSelector } from '@near-wallet-selector/core/lib/wallet-selector.types';
 import { setupFinerWallet } from '@near-wallet-selector/finer-wallet';
@@ -20,8 +20,8 @@ import { setupLedger } from '@near-wallet-selector/ledger';
 import { setupMathWallet } from '@near-wallet-selector/math-wallet';
 import { setupMeteorWallet } from '@near-wallet-selector/meteor-wallet';
 import {
-  setupModal,
   WalletSelectorModal,
+  setupModal,
 } from '@near-wallet-selector/modal-ui';
 import '@near-wallet-selector/modal-ui/styles.css';
 import { setupMyNearWallet } from '@near-wallet-selector/my-near-wallet';
@@ -39,7 +39,7 @@ import walletConnectIconUrl from '@near-wallet-selector/wallet-connect/assets/wa
 import { setupWelldoneWallet } from '@near-wallet-selector/welldone-wallet';
 import { setupXDEFI } from '@near-wallet-selector/xdefi';
 import { notification } from 'antd';
-import { Account as NearAccount, connect, Near } from 'near-api-js';
+import { Near, Account as NearAccount, connect } from 'near-api-js';
 import { useCallback, useEffect, useState } from 'react';
 
 interface WalletInfo {
@@ -59,6 +59,7 @@ export default () => {
   const [nearConnection, setNearConnection] = useState<Near>();
   const [nearAccount, setNearAccount] = useState<NearAccount>();
   const [activeAccount, setActiveAccount] = useState<string>();
+  const [nearKeyStore, setNearKeyStore] = useState<string>();
 
   const [successUrl, setSuccessUrl] = useState<string>();
   const [callbackUrl, setCallbackUrl] = useState<string>();
@@ -202,6 +203,19 @@ export default () => {
       });
   }, [successUrl, callbackUrl]);
 
+  const GetKeyStore = useCallback(async (accountId?: string) => {
+    if (!accountId) return;
+    const keystore = localStorage.getItem(
+      `nepbot:keystore:${accountId}:${API_CONFIG().networkId}`,
+    );
+    if (!!keystore) {
+      setNearKeyStore(keystore);
+      return keystore;
+    } else {
+      return undefined;
+    }
+  }, []);
+
   // Get Wallet Info
   useEffect(() => {
     if (walletSelector?.isSignedIn()) {
@@ -270,9 +284,11 @@ export default () => {
     walletList,
     nearConnection,
     nearAccount,
+    nearKeyStore,
     activeAccount,
     OpenModalWallet,
     setSuccessUrl,
     setCallbackUrl,
+    GetKeyStore,
   };
 };

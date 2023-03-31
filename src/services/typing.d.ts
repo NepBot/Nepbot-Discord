@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:18
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-28 16:48:00
+ * @ Modified time: 2023-04-01 00:17:46
  * @ Description: i@rua.moe
  */
 
@@ -83,12 +83,8 @@ declare namespace API {
   }
 
   interface DisconnectAccount {
-    args?: {
-      user_id?: string;
-      guild_id?: string;
-      sign?: string;
-    };
-    account_id?: string;
+    guild_id?: string;
+    user_id?: string;
     sign?: string;
   }
 
@@ -227,7 +223,9 @@ declare namespace Resp {
   }
 
   interface SetInfo extends Body {
-    seccess?: boolean;
+    code?: number;
+    success?: boolean;
+    message?: string;
   }
 
   interface GetOwnerSign extends Body {
@@ -343,12 +341,15 @@ declare namespace Resp {
   }
 
   interface GetConnectedAccount extends Body {
+    code?: number;
     success?: boolean;
-    data?: string;
+    data?: any;
   }
 
   interface DisconnectAccount extends Body {
+    code?: number;
     success?: boolean;
+    data?: any;
   }
 
   interface CreateParasCollection extends Body {

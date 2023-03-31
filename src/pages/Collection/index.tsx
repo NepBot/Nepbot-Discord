@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 04:00:29
+ * @ Modified time: 2023-04-01 02:16:02
  * @ Description: i@rua.moe
  */
 
@@ -23,6 +23,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { base58 } from "ethers/lib/utils";
 import Loading from "@/components/Loading";
 import LinkExpired from "@/components/LinkExpired";
+import { SignMessage } from "@/utils/near";
 
 interface QueryParams {
   guild_id?: string;
@@ -31,7 +32,7 @@ interface QueryParams {
 }
 
 const Collection: React.FC = () => {
-  const { walletSelector, nearAccount } = useModel('near.account');
+  const { walletSelector, nearAccount, GetKeyStore } = useModel('near.account');
   const { GetServerInfo, GetUserInfo } = useModel('discord');
   const { discordInfo, discordOperationSign, setDiscordInfo, setDiscordOperationSign } = useModel('store');
   const [errorState, setErrorState] = useState<boolean>(false);
@@ -77,11 +78,20 @@ const Collection: React.FC = () => {
           sign: search.sign,
           opoperationSign: discordOperationSign,
         };
-        const signature = await nearAccount?.connection.signer.signMessage(Buffer.from(JSON.stringify(args)), nearAccount?.accountId, API_CONFIG().networkId);
+        const keystore = await GetKeyStore(nearAccount?.accountId);
+
+        if (!keystore) {
+          return;
+        }
+
+        const signature = await SignMessage({
+          keystore: keystore,
+          object: args,
+        })
 
         const res = await GetOperationSign({
           account_id: nearAccount?.accountId,
-          sign: base58.encode(signature?.signature!),
+          sign: signature?.signature,
           args: args,
         });
         if (res?.response?.status !== 200 || !(res?.data as Resp.GetOperationSign)?.data) {

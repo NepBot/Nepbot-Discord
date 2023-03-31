@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:07:16
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-28 16:10:27
+ * @ Modified time: 2023-04-01 02:41:20
  * @ Description: i@rua.moe
  */
 
@@ -17,7 +17,7 @@ import UserLayout from '@/layouts/UserLayout';
 import { API_CONFIG } from '@/constants/config';
 import { GetMintSign } from '@/services/api';
 import BN from 'bn.js';
-import { ParseAmount } from '@/utils/near';
+import { ParseAmount, SignMessage } from '@/utils/near';
 import { RequestTransaction } from '@/utils/contract';
 import { FinalExecutionOutcome, FinalExecutionStatus } from 'near-api-js/lib/providers';
 import { base58 } from 'ethers/lib/utils';
@@ -26,15 +26,14 @@ const Item: React.FC<{
   item?: Contract.WrappedCollections,
   onClick?: () => void,
   onCancel?: () => void,
-}> = ({ item, onCancel }) => {
-  const { nearAccount, nearWallet } = useModel('near.account');
+  setErrorState: React.Dispatch<React.SetStateAction<boolean>>,
+  setSuccessState: React.Dispatch<React.SetStateAction<boolean>>,
+}> = ({ item, onCancel, setErrorState, setSuccessState }) => {
+  const { nearAccount, nearWallet, GetKeyStore } = useModel('near.account');
   const { discordInfo, discordOperationSign } = useModel('store');
   const [inputValue, setInputValue] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
   const [errorInput, setErrorInput] = useState<boolean>(false);
-  const [errorState, setErrorState] = useState<boolean>(false);
-  const [successState, setSuccessState] = useState<boolean>(false);
-
   const intl = useIntl();
 
   const Mint = useCallback(async () => {
@@ -47,7 +46,17 @@ const Item: React.FC<{
         sign: discordOperationSign,
       }
 
-      const signature = await nearAccount?.connection.signer.signMessage(Buffer.from(JSON.stringify(args)), nearAccount?.accountId, API_CONFIG().networkId);
+      const keystore = await GetKeyStore(nearAccount?.accountId);
+
+      if (!keystore) {
+        return;
+      };
+
+      const signature = await SignMessage({
+        keystore: keystore,
+        object: args,
+      });
+
       const res = await GetMintSign({
         args,
         account_id: nearAccount?.accountId,

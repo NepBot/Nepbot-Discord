@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 04:04:42
+ * @ Modified time: 2023-04-01 02:48:21
  * @ Description: i@rua.moe
  */
 
@@ -20,6 +20,7 @@ import { API_CONFIG } from '@/constants/config';
 import { base58 } from 'ethers/lib/utils';
 import { RequestTransaction } from '@/utils/contract';
 import Fail from '@/components/Fail';
+import { SignMessage } from '@/utils/near';
 
 const Add: React.FC<{
   collectionInfo: Contract.CollectionInfo,
@@ -27,7 +28,7 @@ const Add: React.FC<{
   onCancel?: () => void,
 }> = ({ collectionInfo, onSubmit, onCancel }) => {
   const [form] = Form.useForm();
-  const { nearAccount, nearWallet } = useModel('near.account');
+  const { nearAccount, nearWallet, GetKeyStore } = useModel('near.account');
   const { discordInfo, discordOperationSign } = useModel('store');
   const { mintbaseWallet } = useModel('mintbase');
   const [imageFile, setImageFile] = useState<File>();
@@ -94,11 +95,20 @@ const Add: React.FC<{
         guild_id: discordInfo?.guild_id,
       }
 
-      const sign = await nearAccount?.connection.signer.signMessage(Buffer.from(JSON.stringify(args)), nearAccount?.accountId, API_CONFIG().networkId);
+      const keystore = await GetKeyStore(nearAccount?.accountId);
+
+      if (!keystore) {
+        return;
+      };
+
+      const sign = await SignMessage({
+        keystore: keystore,
+        object: args,
+      });
 
       const _sign = await GetOwnerSign({
         args: args,
-        sign: base58.encode(sign?.signature!),
+        sign: sign?.signature,
         account_id: nearAccount?.accountId,
       });
 
