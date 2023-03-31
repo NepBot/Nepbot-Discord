@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-17 04:09:10
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 04:07:53
+ * @ Modified time: 2023-04-01 03:27:04
  * @ Description: i@rua.moe
  */
 
@@ -29,7 +29,11 @@ const Redeem: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      if (!!walletSelector?.isSignedIn() && !!nearAccount && !!search.hash && !!activeAccount) {
+      if (!walletSelector || !walletList || !nearAccount || !nearWallet || !activeAccount) {
+        return;
+      }
+
+      if (!!search.hash) {
         const res = await RequestTransaction({
           nearAccount: nearAccount,
           nearWallet: nearWallet,
@@ -60,7 +64,7 @@ const Redeem: React.FC = () => {
         setErrorState(true);
       }
     })()
-  }, [walletSelector, walletList, nearAccount, activeAccount, search]);
+  }, [walletSelector, walletList, nearAccount, nearWallet, activeAccount, search]);
 
   return (
     <UserLayout>

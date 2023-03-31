@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-16 01:18:40
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 04:06:22
+ * @ Modified time: 2023-04-01 03:25:21
  * @ Description: i@rua.moe
  */
 
@@ -71,9 +71,13 @@ const Airdrop: React.FC = () => {
 
   useEffect(() => {
     (async () => {
+      if (!nearAccount || !nearWallet || !walletSelector) {
+        return;
+      }
+
       if (!!search?.transactionHashes) {
         await checkResult();
-      } else if (!!walletSelector?.isSignedIn() && !!nearAccount && !!search?.token_contract) {
+      } else if (!!search?.token_contract) {
         const metadata = await nearAccount?.viewFunction(search?.token_contract, 'ft_metadata', {});
 
         if (!!search?.amount_per_share && !!search?.total_amount && !!search?.end_time && !!search?.guild_id && !!search?.role_id && !!metadata) {
@@ -170,7 +174,7 @@ const Airdrop: React.FC = () => {
         setErrorState(true);
       }
     })()
-  }, [walletSelector, nearAccount, search]);
+  }, [walletSelector, nearAccount, nearWallet, search]);
 
   return (
     <UserLayout>

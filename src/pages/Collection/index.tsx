@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 02:16:02
+ * @ Modified time: 2023-04-01 03:29:56
  * @ Description: i@rua.moe
  */
 
@@ -24,6 +24,7 @@ import { base58 } from "ethers/lib/utils";
 import Loading from "@/components/Loading";
 import LinkExpired from "@/components/LinkExpired";
 import { SignMessage } from "@/utils/near";
+import NoData from "@/components/NoData";
 
 interface QueryParams {
   guild_id?: string;
@@ -51,7 +52,11 @@ const Collection: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      if (!!search?.guild_id && !!search?.user_id && !!search?.sign && !!discordOperationSign && !!nearAccount) {
+      if (!!search?.guild_id && !!search?.user_id && !!search?.sign) {
+        if (!nearAccount || !discordOperationSign || !walletSelector) {
+          return;
+        }
+
         var roleList: string[] = [];
         setDiscordInfo({
           guild_id: search.guild_id,
@@ -112,7 +117,7 @@ const Collection: React.FC = () => {
         setErrorState(true);
       }
     })();
-  }, [walletSelector, nearAccount, discordOperationSign, search]);
+  }, [mintModal, walletSelector, nearAccount, discordOperationSign]);
 
   const handleData = async (roleList: string[]) => {
     if (!!discordInfo?.guild_id) {
@@ -322,6 +327,11 @@ const Collection: React.FC = () => {
                         </Row>
                       </div>
                     </div>
+                  )}
+                  {!haveAccessList?.length && !mintedOutList?.length && !noAccessList?.length && (
+                    <NoData
+                      name='collection'
+                    />
                   )}
                 </div>
               </div>

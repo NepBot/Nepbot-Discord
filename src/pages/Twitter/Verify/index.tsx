@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-18 03:42:43
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 04:09:46
+ * @ Modified time: 2023-04-01 03:30:41
  * @ Description: i@rua.moe
  */
 
@@ -33,7 +33,11 @@ const Verify: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      if (!!walletSelector?.isSignedIn() && !!nearAccount && !!search.code && !!search.state) {
+      if (!!search.code && !!search.state) {
+        if (!nearAccount || !walletSelector) {
+          return;
+        }
+
         const res = await TwitterVerify({
           code: search.code,
           state: search.state,
@@ -45,7 +49,7 @@ const Verify: React.FC = () => {
           const data = res?.data as Resp.TwitterVerify[];
 
           if (data[0]['name'] === 'Add role success' || data[0]['name'] == 'Already in role') {
-            localStorage.setItem(`nepbot:twitter:verify:${nearAccount.accountId}:${API_CONFIG().networkId}`, data[0]['value']!);
+            localStorage.setItem(`nepbot:twitter:verify:${nearAccount?.accountId}:${API_CONFIG().networkId}`, data[0]['value']!);
             setSuccessState(true);
           } else {
             data.forEach((item) => {
@@ -67,7 +71,7 @@ const Verify: React.FC = () => {
                 }
               }
             });
-            localStorage.setItem(`nepbot:twitter:verify:${nearAccount.accountId}:${API_CONFIG().networkId}`, info);
+            localStorage.setItem(`nepbot:twitter:verify:${nearAccount?.accountId}:${API_CONFIG().networkId}`, info);
             setErrorState(true);
           }
         } else {

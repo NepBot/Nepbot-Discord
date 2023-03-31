@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-20 16:06:26
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 02:51:58
+ * @ Modified time: 2023-04-01 03:30:25
  * @ Description: i@rua.moe
  */
 
@@ -57,56 +57,58 @@ const Create: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      if (!!walletSelector?.isSignedIn() && !!nearAccount) {
-        if (!!search?.transactionHashes) {
-          await checkResult();
+      if (!!search?.transactionHashes) {
+        if (!walletSelector || !nearAccount) {
           return;
-        } else if (!!search?.user_id && !!search?.guild_id && !!search?.contract_address && !!search?.sign) {
-          const args = {
-            user_id: search?.user_id,
-            guild_id: search?.guild_id,
-            contract_address: search?.contract_address,
-            sign: search?.sign,
-          }
+        }
 
-          const keystore = await GetKeyStore(nearAccount?.accountId);
+        await checkResult();
+        return;
+      } else if (!!search?.user_id && !!search?.guild_id && !!search?.contract_address && !!search?.sign) {
+        const args = {
+          user_id: search?.user_id,
+          guild_id: search?.guild_id,
+          contract_address: search?.contract_address,
+          sign: search?.sign,
+        }
 
-          if (!keystore) {
-            return;
-          };
+        const keystore = await GetKeyStore(nearAccount?.accountId);
 
-          const signature = await SignMessage({
-            keystore: keystore,
-            object: args,
-          });
+        if (!keystore) {
+          return;
+        };
 
-          const sign = await GetSnapshotSign({
-            args: args,
-            account_id: nearAccount?.accountId,
-            sign: signature?.signature,
-          });
+        const signature = await SignMessage({
+          keystore: keystore,
+          object: args,
+        });
 
-          if (sign?.response?.status !== 200 || !sign?.data?.success) {
-            setErrorState(true);
-            return;
-          }
+        const sign = await GetSnapshotSign({
+          args: args,
+          account_id: nearAccount?.accountId,
+          sign: signature?.signature,
+        });
 
-          const res = await RequestTransaction({
-            nearAccount: nearAccount,
-            nearWallet: nearWallet,
-            contractId: API_CONFIG().SNAPSHOT_CONTRACT,
-            methodName: 'set_snapshot',
-            args: {
-              contract_address: search.contract_address,
-              ...sign
-            },
-            gas: '300000000000000',
-            deposit: '0',
-          });
+        if (sign?.response?.status !== 200 || !sign?.data?.success) {
+          setErrorState(true);
+          return;
+        }
 
-          if (!!res) {
-            await checkResult(res as providers.FinalExecutionOutcome);
-          }
+        const res = await RequestTransaction({
+          nearAccount: nearAccount,
+          nearWallet: nearWallet,
+          contractId: API_CONFIG().SNAPSHOT_CONTRACT,
+          methodName: 'set_snapshot',
+          args: {
+            contract_address: search.contract_address,
+            ...sign
+          },
+          gas: '300000000000000',
+          deposit: '0',
+        });
+
+        if (!!res) {
+          await checkResult(res as providers.FinalExecutionOutcome);
         }
       }
     })()

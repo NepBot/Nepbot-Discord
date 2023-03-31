@@ -2,13 +2,13 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 19:42:06
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-30 04:02:10
+ * @ Modified time: 2023-04-01 03:23:35
  * @ Description: i@rua.moe
  */
 
 import React, { useEffect, useState } from 'react';
 import styles from './style.less';
-import { useIntl, history, useModel, useLocation } from '@umijs/max';
+import { useIntl, useModel, useLocation } from '@umijs/max';
 import { AiOutlinePlus, AiOutlineSearch } from 'react-icons/ai';
 import { Col, Input, Row, notification } from 'antd';
 import querystring from 'query-string';
@@ -22,6 +22,7 @@ import { GetCollection, GetMintbaseCollection } from '@/services/api';
 import Add from './Add';
 import Loading from '@/components/Loading';
 import LinkExpired from '@/components/LinkExpired';
+import NoData from '@/components/NoData';
 
 interface QueryParams {
   guild_id?: string;
@@ -32,7 +33,6 @@ interface QueryParams {
 const CollectionDetail: React.FC = () => {
   const { walletSelector, nearAccount } = useModel('near.account');
   const { GetServerInfo } = useModel('discord');
-  const { discordInfo, discordOperationSign } = useModel('store');
   const [errorState, setErrorState] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [showList, setShowList] = useState<Contract.CollectionInfo[]>([]);
@@ -67,8 +67,7 @@ const CollectionDetail: React.FC = () => {
         });
         return;
       }
-      if (!discordInfo || !walletSelector?.isSignedIn() || !discordOperationSign || !nearAccount) {
-        setErrorState(true);
+      if (!nearAccount || !walletSelector) {
         return;
       }
 
@@ -151,7 +150,7 @@ const CollectionDetail: React.FC = () => {
         });
       }
     })();
-  }, [walletSelector, nearAccount, discordInfo, discordOperationSign, addModal]);
+  }, [walletSelector, nearAccount]);
 
   return (
     <UserLayout>
@@ -292,21 +291,28 @@ const CollectionDetail: React.FC = () => {
                     {collectionInfo?.description}
                   </div>
                   <div className={styles.itemsContainer}>
-                    <Row gutter={[30, 30]}>
-                      {!!showList?.length && showList.map((item: any, index: number) => {
-                        return (
-                          <Col xs={24} sm={24} md={12} lg={8} xl={8}>
-                            <ItemCard
-                              key={uuidv4()}
-                              item={item}
-                              onClick={() => {
-                                window.open(`${API_CONFIG().PARAS}/token/${API_CONFIG().PARAS_CONTRACT}::${item?.token_series_id}`, '_blank')
-                              }}
-                            />
-                          </Col>
-                        )
-                      })}
-                    </Row>
+                    {!!showList?.length && (
+                      <Row gutter={[30, 30]}>
+                        {showList.map((item: any, index: number) => {
+                          return (
+                            <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                              <ItemCard
+                                key={uuidv4()}
+                                item={item}
+                                onClick={() => {
+                                  window.open(`${API_CONFIG().PARAS}/token/${API_CONFIG().PARAS_CONTRACT}::${item?.token_series_id}`, '_blank')
+                                }}
+                              />
+                            </Col>
+                          )
+                        })}
+                      </Row>
+                    )}
+                    {!showList?.length && (
+                      <NoData
+                        name='collection'
+                      />
+                    )}
                   </div>
                 </div>
               </div>
