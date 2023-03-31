@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 16:18:09
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 02:51:15
+ * @ Modified time: 2023-04-01 03:03:15
  * @ Description: i@rua.moe
  */
 
@@ -265,6 +265,11 @@ const CreateModal: React.FC<{
                     value: role.id,
                     key: role.id,
                   }))}
+                  onChange={(value) => {
+                    form.setFieldsValue({
+                      role: value,
+                    });
+                  }}
                 />
               </div>
             </Form.Item>
@@ -295,6 +300,9 @@ const CreateModal: React.FC<{
                   popupClassName={styles.selectPopup}
                   onChange={(value) => {
                     setType(value as string);
+                    form.setFieldsValue({
+                      type: value,
+                    });
                   }}
                   options={[
                     {
@@ -424,6 +432,11 @@ const CreateModal: React.FC<{
                         value: item,
                         key: item,
                       }))}
+                      onChange={(value) => {
+                        form.setFieldsValue({
+                          appchain_id: value,
+                        });
+                      }}
                     />
                   </div>
                 </Form.Item>
@@ -464,6 +477,11 @@ const CreateModal: React.FC<{
                           label: 'Validator',
                         },
                       ]}
+                      onChange={(value) => {
+                        form.setFieldsValue({
+                          oct_role: value,
+                        });
+                      }}
                     />
                   </div>
                 </Form.Item>
@@ -673,6 +691,11 @@ const CreateModal: React.FC<{
                           label: role?.name,
                         }))
                       ]}
+                      onChange={(value) => {
+                        form.setFieldsValue({
+                          astrodao_role: value
+                        });
+                      }}
                     />
                   </div>
                 </Form.Item>
@@ -707,6 +730,9 @@ const CreateModal: React.FC<{
                       popupClassName={styles.selectPopup}
                       onChange={(value) => {
                         setGatingRule(value);
+                        form.setFieldsValue({
+                          gating_rule: value
+                        });
                       }}
                       options={[
                         {
@@ -777,6 +803,11 @@ const CreateModal: React.FC<{
                               label: 'All',
                             }
                           ]}
+                          onChange={(value) => {
+                            form.setFieldsValue({
+                              loyalty_level: value
+                            });
+                          }}
                         />
                       </div>
                     </Form.Item>

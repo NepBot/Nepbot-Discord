@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 02:46:30
+ * @ Modified time: 2023-04-01 03:01:55
  * @ Description: i@rua.moe
  */
 
@@ -679,6 +679,11 @@ const Create: React.FC<{
                       value: role.id,
                       key: role.id,
                     }))}
+                    onChange={(value) => {
+                      form.setFieldsValue({
+                        requiredRole: value
+                      });
+                    }}
                   />
                 </div>
               </Form.Item>
