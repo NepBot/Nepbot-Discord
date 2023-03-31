@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-16 01:18:40
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 03:25:21
+ * @ Modified time: 2023-04-01 04:15:47
  * @ Description: i@rua.moe
  */
 
@@ -71,7 +71,7 @@ const Airdrop: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      if (!nearAccount || !nearWallet || !walletSelector) {
+      if (!nearAccount) {
         return;
       }
 
@@ -174,7 +174,7 @@ const Airdrop: React.FC = () => {
         setErrorState(true);
       }
     })()
-  }, [walletSelector, nearAccount, nearWallet, search]);
+  }, [nearAccount]);
 
   return (
     <UserLayout>

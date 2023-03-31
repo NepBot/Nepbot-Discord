@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 02:44:36
+ * @ Modified time: 2023-04-01 04:12:34
  * @ Description: i@rua.moe
  */
 
@@ -48,7 +48,11 @@ const Collection: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      if (!!walletSelector?.isSignedIn() && !!nearAccount && !!search?.guild_id && !!search?.user_id && !!search?.sign) {
+      if (!nearAccount) {
+        return;
+      }
+
+      if (!!search?.guild_id && !!search?.user_id && !!search?.sign) {
         setDiscordInfo({
           guild_id: search.guild_id,
           user_id: search.user_id,
@@ -98,7 +102,7 @@ const Collection: React.FC = () => {
         setErrorState(true);
       }
     })()
-  }, [walletSelector, nearAccount, search]);
+  }, [nearAccount]);
 
   const handleData = async () => {
     if (!!discordInfo?.guild_id) {

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 03:29:56
+ * @ Modified time: 2023-04-01 04:10:05
  * @ Description: i@rua.moe
  */
 
@@ -20,7 +20,6 @@ import { GetCollection, GetMintbaseCollection, GetOperationSign, GetRole } from 
 import UserLayout from "@/layouts/UserLayout";
 import Mint from "./components/Mint";
 import { v4 as uuidv4 } from 'uuid';
-import { base58 } from "ethers/lib/utils";
 import Loading from "@/components/Loading";
 import LinkExpired from "@/components/LinkExpired";
 import { SignMessage } from "@/utils/near";
@@ -52,11 +51,11 @@ const Collection: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      if (!!search?.guild_id && !!search?.user_id && !!search?.sign) {
-        if (!nearAccount || !discordOperationSign || !walletSelector) {
-          return;
-        }
+      if (!nearAccount) {
+        return;
+      }
 
+      if (!!search?.guild_id && !!search?.user_id && !!search?.sign) {
         var roleList: string[] = [];
         setDiscordInfo({
           guild_id: search.guild_id,
@@ -83,6 +82,7 @@ const Collection: React.FC = () => {
           sign: search.sign,
           opoperationSign: discordOperationSign,
         };
+
         const keystore = await GetKeyStore(nearAccount?.accountId);
 
         if (!keystore) {
@@ -117,102 +117,97 @@ const Collection: React.FC = () => {
         setErrorState(true);
       }
     })();
-  }, [mintModal, walletSelector, nearAccount, discordOperationSign]);
+  }, [nearAccount]);
 
   const handleData = async (roleList: string[]) => {
     if (!!discordInfo?.guild_id) {
       setLoading(true);
-      try {
-        const roles = await GetRole({
-          guild_id: discordInfo?.guild_id,
-        });
-        if (roles?.response?.status !== 200 || !(roles?.data as Resp.GetRole)?.data) {
-          setErrorState(true);
-          return;
-        }
-
-        (roles?.data as Resp.GetRole)?.data?.forEach((item: any) => {
-          if (item.name !== '@everyone') {
-            setRoleMap((roleMap) => roleMap.set(item.id, item.name));
-          }
-        });
-
-        const collections = await nearAccount?.viewFunction(API_CONFIG().NFT_CONTRACT, 'get_collections_by_guild', {
-          guild_id: discordInfo?.guild_id,
-        });
-
-        for (let collection of collections) {
-          var royaltyTotal: number = 0;
-          if (!!collection.royalty) {
-            Object.keys(collection.royalty).forEach(key => {
-              royaltyTotal += Number(collection.royalty[key]);
-            });
-          }
-
-          var collectionData: any;
-          var collectionItems: Contract.WrappedCollections = {};
-
-          switch (collection?.contract_type) {
-            case 'paras':
-              collectionData = await GetCollection({
-                collection_id: collection?.outer_collection_id,
-              });
-              if (!!collectionData?.data && !!(collectionData?.data as Resp.GetCollection)?.data?.results?.length) {
-                collectionItems = {
-                  name: collection?.collection_id?.split(":")[1]?.split("-guild-")[0]?.replaceAll("-", " "),
-                  cover: API_CONFIG().IPFS + collectionData?.results[0]['cover'],
-                  media: API_CONFIG().IPFS + collectionData?.results[0]['media'],
-                  contract: API_CONFIG().PARAS_CONTRACT,
-                  royaltyTotal: royaltyTotal / 100,
-                  inner_collection_id: collection?.inner_collection_id,
-                  outer_collection_id: collection?.outer_collection_id,
-                  ...collection,
-                  ...collectionData?.results[0],
-                }
-              }
-              break;
-            case 'mintbase':
-              collectionData = await GetMintbaseCollection({
-                collection_id: collection?.outer_collection_id,
-              });
-              if (!!collectionData) {
-                collectionItems = {
-                  royaltyTotal: royaltyTotal / 100,
-                  inner_collection_id: collection.collection_id,
-                  outer_collection_id: collection.outer_collection_id,
-                  media: collectionData.logo,
-                  cover: collectionData.background,
-                  ...collection,
-                  ...collectionData,
-                }
-              }
-          }
-
-          const collectionInfo = await nearAccount?.viewFunction(API_CONFIG().NFT_CONTRACT, "get_collection", { collection_id: collection.collection_id });
-          collectionItems = {
-            ...collectionItems,
-            creator: collectionInfo.creator_id,
-            minted_count: collectionInfo.minted_count,
-            total_copies: collectionInfo.total_copies,
-          }
-
-          if (!!collectionItems?.minted_count && !!collectionItems?.total_copies && collectionItems?.minted_count >= collectionItems?.total_copies) {
-            setMintedOutList((mintedOutList) => [...mintedOutList, collectionItems]);
-          } else if (!collectionItems.mintable_roles || (collectionItems.mintable_roles && Array.from(new Set([...collectionItems.mintable_roles, ...roleList])).length < collectionItems.mintable_roles.length + roleList.length)) {
-            setHaveAccessList((haveAccessList) => [...haveAccessList, collectionItems]);
-          } else {
-            setNoAccessList((noAccessList) => [...noAccessList, collectionItems]);
-          }
-        }
-        setLoading(false);
-      } catch (error: any) {
-        notification.error({
-          key: 'error.fetch',
-          message: 'Error',
-          description: error,
-        });
+      const roles = await GetRole({
+        guild_id: discordInfo?.guild_id,
+      });
+      if (roles?.response?.status !== 200 || !(roles?.data as Resp.GetRole)?.data) {
         setErrorState(true);
+        return;
       }
+
+      (roles?.data as Resp.GetRole)?.data?.forEach((item: any) => {
+        if (item.name !== '@everyone') {
+          setRoleMap((roleMap) => roleMap.set(item.id, item.name));
+        }
+      });
+      var collections: any[] = [];
+      try {
+        collections = await nearAccount?.viewFunction(API_CONFIG().NFT_CONTRACT, 'get_collections_by_guild', {
+          guild_id: discordInfo?.guild_id,
+        });
+      } catch (e: any) {
+        console.log(e);
+      }
+
+      for (let collection of collections) {
+        var royaltyTotal: number = 0;
+        if (!!collection.royalty) {
+          Object.keys(collection.royalty).forEach(key => {
+            royaltyTotal += Number(collection.royalty[key]);
+          });
+        }
+
+        var collectionData: any;
+        var collectionItems: Contract.WrappedCollections = {};
+
+        switch (collection?.contract_type) {
+          case 'paras':
+            collectionData = await GetCollection({
+              collection_id: collection?.outer_collection_id,
+            });
+            if (!!collectionData?.data && !!(collectionData?.data as Resp.GetCollection)?.data?.results?.length) {
+              collectionItems = {
+                name: collection?.collection_id?.split(":")[1]?.split("-guild-")[0]?.replaceAll("-", " "),
+                cover: API_CONFIG().IPFS + collectionData?.results[0]['cover'],
+                media: API_CONFIG().IPFS + collectionData?.results[0]['media'],
+                contract: API_CONFIG().PARAS_CONTRACT,
+                royaltyTotal: royaltyTotal / 100,
+                inner_collection_id: collection?.inner_collection_id,
+                outer_collection_id: collection?.outer_collection_id,
+                ...collection,
+                ...collectionData?.results[0],
+              }
+            }
+            break;
+          case 'mintbase':
+            collectionData = await GetMintbaseCollection({
+              collection_id: collection?.outer_collection_id,
+            });
+            if (!!collectionData) {
+              collectionItems = {
+                royaltyTotal: royaltyTotal / 100,
+                inner_collection_id: collection.collection_id,
+                outer_collection_id: collection.outer_collection_id,
+                media: collectionData.logo,
+                cover: collectionData.background,
+                ...collection,
+                ...collectionData,
+              }
+            }
+        }
+
+        const collectionInfo = await nearAccount?.viewFunction(API_CONFIG().NFT_CONTRACT, "get_collection", { collection_id: collection.collection_id });
+        collectionItems = {
+          ...collectionItems,
+          creator: collectionInfo.creator_id,
+          minted_count: collectionInfo.minted_count,
+          total_copies: collectionInfo.total_copies,
+        }
+
+        if (!!collectionItems?.minted_count && !!collectionItems?.total_copies && collectionItems?.minted_count >= collectionItems?.total_copies) {
+          setMintedOutList((mintedOutList) => [...mintedOutList, collectionItems]);
+        } else if (!collectionItems.mintable_roles || (collectionItems.mintable_roles && Array.from(new Set([...collectionItems.mintable_roles, ...roleList])).length < collectionItems.mintable_roles.length + roleList.length)) {
+          setHaveAccessList((haveAccessList) => [...haveAccessList, collectionItems]);
+        } else {
+          setNoAccessList((noAccessList) => [...noAccessList, collectionItems]);
+        }
+      }
+      setLoading(false);
     }
   };
 

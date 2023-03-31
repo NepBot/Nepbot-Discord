@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-18 03:42:43
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 03:30:41
+ * @ Modified time: 2023-04-01 04:16:45
  * @ Description: i@rua.moe
  */
 
@@ -34,7 +34,7 @@ const Verify: React.FC = () => {
   useEffect(() => {
     (async () => {
       if (!!search.code && !!search.state) {
-        if (!nearAccount || !walletSelector) {
+        if (!nearAccount) {
           return;
         }
 
@@ -86,7 +86,7 @@ const Verify: React.FC = () => {
         setErrorState(true);
       }
     })()
-  }, [walletSelector, nearAccount, search]);
+  }, [nearAccount]);
 
   return (
     <UserLayout>

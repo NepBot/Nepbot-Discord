@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-20 16:06:26
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 03:30:25
+ * @ Modified time: 2023-04-01 04:16:34
  * @ Description: i@rua.moe
  */
 
@@ -58,7 +58,7 @@ const Create: React.FC = () => {
   useEffect(() => {
     (async () => {
       if (!!search?.transactionHashes) {
-        if (!walletSelector || !nearAccount) {
+        if (!nearAccount) {
           return;
         }
 
@@ -112,7 +112,7 @@ const Create: React.FC = () => {
         }
       }
     })()
-  }, [walletSelector, nearAccount, search]);
+  }, [nearAccount]);
 
   return (
     <UserLayout>

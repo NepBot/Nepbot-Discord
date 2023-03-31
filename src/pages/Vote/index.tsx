@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-17 18:08:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 03:31:18
+ * @ Modified time: 2023-04-01 04:17:18
  * @ Description: i@rua.moe
  */
 
@@ -33,7 +33,7 @@ const Vote: React.FC = () => {
   useEffect(() => {
     (async () => {
       if (!!search?.contract_address && !!search?.proposal_id && !!search.action) {
-        if (!walletSelector || !nearAccount) {
+        if (!nearAccount) {
           return;
         }
 
@@ -69,7 +69,7 @@ const Vote: React.FC = () => {
         setErrorState(true);
       }
     })()
-  }, [walletSelector, nearAccount, search]);
+  }, [nearAccount]);
 
   return (
     <UserLayout>

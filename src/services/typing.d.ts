@@ -2,18 +2,18 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:18
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 00:17:46
+ * @ Modified time: 2023-04-01 03:56:07
  * @ Description: i@rua.moe
  */
 
 declare namespace Item {
   interface Tag {
-    bot_id?: string;
-    integration_id?: string;
-    premium_subscriber?: null;
-    subscription_listing_id?: string;
-    available_for_purchase?: boolean;
-    guild_connections?: boolean;
+    botId?: string;
+    integrationId?: string;
+    premiumSubscriber?: null;
+    subscriptionListingId?: string;
+    availableForPurchase?: boolean;
+    guildConnections?: boolean;
   }
 
   interface Role {
@@ -22,12 +22,13 @@ declare namespace Item {
     color?: number;
     hoist?: boolean;
     icon?: string;
-    unicode_emoji?: string;
+    unicodeEmoji?: string;
     position?: number;
     permissions?: string;
     managed?: boolean;
     mentionable?: boolean;
     tags?: Tag[];
+    rawPosition?: number;
   }
 
   interface Emoji {
@@ -35,7 +36,7 @@ declare namespace Item {
     name?: string;
     roles?: string[];
     user?: User;
-    require_colons?: boolean;
+    requireColons?: boolean;
     managed?: boolean;
     animated?: boolean;
     available?: boolean;
@@ -48,15 +49,15 @@ declare namespace Item {
     avatar?: string;
     bot?: boolean;
     system?: boolean;
-    mfa_enabled?: boolean;
+    mfaEnabled?: boolean;
     banner?: string;
-    accent_color?: number;
+    accentColor?: number;
     locale?: string;
     verified?: boolean;
     email?: string;
     flags?: number;
-    premium_type?: number;
-    public_flags?: number;
+    premiumType?: number;
+    publicFlags?: number;
   }
 }
 
@@ -237,8 +238,9 @@ declare namespace Resp {
   }
 
   interface GetRole extends Body {
-    success?: boolean;
+    code?: number;
     data?: Item.Role[];
+    success?: boolean;
   }
 
   interface Server {

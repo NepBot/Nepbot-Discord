@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 03:35:39
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 03:29:37
+ * @ Modified time: 2023-04-01 04:16:22
  * @ Description: i@rua.moe
  */
 
@@ -209,7 +209,7 @@ const Role: React.FC = () => {
   useEffect(() => {
     (async () => {
       if (!!search.guild_id && !!search.user_id && !!search.sign) {
-        if (!walletSelector || !nearAccount || !nearWallet) {
+        if (!nearAccount) {
           return;
         }
 
@@ -277,7 +277,7 @@ const Role: React.FC = () => {
         setLoading(false);
       }
     })()
-  }, [isModalOpen, walletSelector, nearAccount, nearWallet]);
+  }, [isModalOpen, nearAccount]);
 
   return (
     <UserLayout>

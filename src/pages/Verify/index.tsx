@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 02:53:34
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 00:27:55
+ * @ Modified time: 2023-04-01 04:17:09
  * @ Description: i@rua.moe
  */
 
@@ -88,7 +88,7 @@ const Verify: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!!discordInfo && !!nearWallet && !!nearAccount) {
+    if (!!discordInfo && !!nearAccount) {
       (async () => {
         const keystore = await GetKeyStore(nearAccount?.accountId);
 
@@ -126,7 +126,7 @@ const Verify: React.FC = () => {
         }
       })();
     }
-  }, [discordInfo, nearWallet, nearAccount]);
+  }, [discordInfo, nearAccount]);
 
   return (
     <>
