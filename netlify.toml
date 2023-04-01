@@ -4,6 +4,12 @@
   base = "/"
 
 [[redirects]]
+  from = "/api/*"
+  to = "http://13.214.203.20:8080/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
