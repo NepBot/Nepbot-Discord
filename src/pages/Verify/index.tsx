@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 02:53:34
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 04:17:09
+ * @ Modified time: 2023-04-04 04:10:26
  * @ Description: i@rua.moe
  */
 
@@ -219,6 +219,15 @@ const Verify: React.FC = () => {
                               guild_id: search.guild_id,
                               user_id: search.user_id,
                               sign: search.sign
+                            });
+                            notification.success({
+                              key: 'success.disconnect',
+                              message: intl.formatMessage({
+                                id: 'connect.disconnect.title',
+                              }),
+                              description: intl.formatMessage({
+                                id: 'connect.disconnect.desc',
+                              }),
                             });
                           }
                         }

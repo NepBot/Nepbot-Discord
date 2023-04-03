@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-15 02:13:40
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-31 17:51:37
+ * @ Modified time: 2023-04-04 04:12:00
  * @ Description: i@rua.moe
  */
 
@@ -245,6 +245,12 @@ export default () => {
             walletList.delete(event.walletId);
             return walletList;
           });
+        setNearWallet(undefined);
+        setWalletId(undefined);
+        setNearConnection(undefined);
+        setNearAccount(undefined);
+        setNearKeyStore(undefined);
+        setActiveAccount(undefined);
         localStorage.clear();
       });
     }
