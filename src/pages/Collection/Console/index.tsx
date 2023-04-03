@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 04:12:34
+ * @ Modified time: 2023-04-04 04:28:18
  * @ Description: i@rua.moe
  */
 
@@ -21,6 +21,8 @@ import Create from "./Create";
 import UserLayout from "@/layouts/UserLayout";
 import { base58 } from "ethers/lib/utils";
 import { SignMessage } from "@/utils/near";
+import Loading from "@/components/Loading";
+import LinkExpired from "@/components/LinkExpired";
 
 interface QueryParams {
   guild_id?: string;
@@ -111,7 +113,7 @@ const Collection: React.FC = () => {
         const roles = await GetRole({
           guild_id: discordInfo?.guild_id,
         });
-        if (roles?.response?.status !== 200 || !(roles?.data as Resp.GetRole)?.data) {
+        if (!(roles?.data as Resp.GetRole)?.success) {
           setErrorState(true);
           return;
         }
@@ -184,12 +186,7 @@ const Collection: React.FC = () => {
         }
         setCollectionList(result);
       } catch (error: any) {
-        notification.error({
-          key: 'error.fetch',
-          message: 'Error',
-          description: error,
-        });
-        setErrorState(true);
+        console.log(error);
       }
       setLoading(false);
     } else {
@@ -204,7 +201,13 @@ const Collection: React.FC = () => {
 
   return (
     <UserLayout>
-      {!selectPlatformModal && !addCollectionModal && (
+      {!errorState && loading && !selectPlatformModal && !addCollectionModal && (
+        <Loading />
+      )}
+      {errorState && !loading && !selectPlatformModal && !addCollectionModal && (
+        <LinkExpired />
+      )}
+      {!errorState && !loading && !selectPlatformModal && !addCollectionModal && (
         <div className={styles.collectionContainer}>
           <div className={styles.wrapper}>
             <div className={styles.headerContainer}>
@@ -254,7 +257,7 @@ const Collection: React.FC = () => {
           </div>
         </div>
       )}
-      {selectPlatformModal && !addCollectionModal && (
+      {!errorState && !loading && selectPlatformModal && !addCollectionModal && (
         <SelectPlatform
           setSelectPlatform={setSelectPlatform}
           onSubmit={() => {
@@ -266,7 +269,7 @@ const Collection: React.FC = () => {
           }}
         />
       )}
-      {!selectPlatformModal && addCollectionModal && (
+      {!errorState && !loading && !selectPlatformModal && addCollectionModal && (
         <Create
           selectPlatform={selectPlatform}
           urlSearch={search}

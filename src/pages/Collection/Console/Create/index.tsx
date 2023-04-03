@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 03:01:55
+ * @ Modified time: 2023-04-04 04:50:15
  * @ Description: i@rua.moe
  */
 
@@ -21,7 +21,6 @@ import { API_CONFIG } from '@/constants/config';
 import { CreateParasCollection, GetCollection, GetOwnerSign } from '@/services/api';
 import { ParseAmount, SignMessage } from '@/utils/near';
 import { RequestTransaction } from '@/utils/contract';
-import { base58 } from 'ethers/lib/utils';
 
 interface QueryParams {
   guild_id?: string;
@@ -48,8 +47,6 @@ const Create: React.FC<{
   const { discordInfo, discordOperationSign } = useModel('store');
 
   const [form] = Form.useForm();
-  const [logoFile, setLogoFile] = useState<File>();
-  const [coverFile, setCoverFile] = useState<File>();
   const [logoUrl, setLogoUrl] = useState<string>();
   const [coverUrl, setCoverUrl] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -65,10 +62,10 @@ const Create: React.FC<{
   const handleRoyalty = async () => {
     await form.validateFields();
     const values = await form.getFieldsValue();
-    values.royalty.forEach((item: RoyaltyItem) => {
+    values?.royalty?.forEach((item: RoyaltyItem) => {
       if (!!item?.accountId && !!item?.ratio) {
         setRoyalty((royalty) => {
-          royalty.set(item.accountId, item.ratio * 100);
+          royalty?.set(item.accountId, item.ratio * 100);
           return royalty;
         });
       }
@@ -83,6 +80,7 @@ const Create: React.FC<{
       const outerCollectionId = `${values?.name.replace(/\s+/g, "-")}-guild-${discordServer?.name?.replace(/\s+/g, "-")}-by-${API_CONFIG()?.NFT_CONTRACT?.replaceAll(".", "")}`.toLowerCase().replaceAll(".", "");
 
       var res: any;
+
       switch (selectPlatform) {
         case 'paras':
           const collection = await GetCollection({
@@ -100,6 +98,7 @@ const Create: React.FC<{
                   message: "Error",
                   description: "Collection name already exists"
                 });
+                return;
               }
             } catch (error) {
               res = {
@@ -138,8 +137,8 @@ const Create: React.FC<{
             params.sign = sign?.signature;
 
             const result = await CreateParasCollection({
-              logo: logoFile,
-              cover: coverFile,
+              logo: values?.logo,
+              cover: values?.cover,
               args: params
             });
 
@@ -156,8 +155,8 @@ const Create: React.FC<{
           }
           break;
         case 'mintbase':
-          const logoRes = await mintbaseWallet?.minter?.upload(logoFile!);
-          const coverRes = await mintbaseWallet?.minter?.upload(coverFile!);
+          const logoRes = await mintbaseWallet?.minter?.upload(values?.logo);
+          const coverRes = await mintbaseWallet?.minter?.upload(values?.cover);
           await mintbaseWallet?.minter?.setMetadata({
             metadata: {
               name: values?.name?.trim(),
@@ -242,8 +241,6 @@ const Create: React.FC<{
         if (!!data) {
           setLoading(false);
           form.resetFields();
-          setLogoFile(undefined);
-          setCoverFile(undefined);
           setLogoUrl('');
           setCoverUrl('');
           onSubmit?.();
@@ -319,17 +316,12 @@ const Create: React.FC<{
                   }
                   required
                   name="logo"
-                  rules={[
-                    {
-                      validator: async () => {
-                        if (!logoFile) {
-                          throw new Error(intl.formatMessage({
-                            id: "collection.create.form.logo.required"
-                          }));
-                        }
-                      }
-                    }
-                  ]}
+                  rules={[{
+                    required: true,
+                    message: intl.formatMessage({
+                      id: "collection.create.form.logo.required"
+                    })
+                  }]}
                   className={classNames(styles.formItem, styles.formItemLogo)}
                 >
                   <Dragger
@@ -345,17 +337,13 @@ const Create: React.FC<{
                       }
 
                       if (info.file.status === 'done' && !!info?.file?.originFileObj) {
-                        setLogoFile(info?.file?.originFileObj);
+                        form.setFieldsValue({
+                          logo: info?.file?.originFileObj
+                        });
                         await getBase64(info?.file?.originFileObj, (url) => {
                           setLogoUrl(url);
                           setLoading(false);
                         });
-                        return;
-                      }
-
-                      if (info.file.status === 'removed') {
-                        setLogoFile(undefined);
-                        setLogoUrl('');
                         return;
                       }
                     }}
@@ -405,6 +393,12 @@ const Create: React.FC<{
                     </div>
                   }
                   name="cover"
+                  rules={[{
+                    required: true,
+                    message: intl.formatMessage({
+                      id: "collection.create.form.cover.required"
+                    })
+                  }]}
                   className={classNames(styles.formItem, styles.formItemCover)}
                 >
                   <Dragger
@@ -419,17 +413,13 @@ const Create: React.FC<{
                       }
 
                       if (info.file.status === 'done' && !!info?.file?.originFileObj) {
-                        setCoverFile(info?.file?.originFileObj);
+                        form.setFieldsValue({
+                          cover: info?.file?.originFileObj
+                        });
                         await getBase64(info?.file?.originFileObj, (url) => {
                           setCoverUrl(url);
                           setLoading(false);
                         });
-                        return;
-                      }
-
-                      if (info.file.status === 'removed') {
-                        setCoverFile(undefined);
-                        setCoverUrl('');
                         return;
                       }
                     }}

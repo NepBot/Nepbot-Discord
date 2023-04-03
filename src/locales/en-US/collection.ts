@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:52:37
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-28 00:43:19
+ * @ Modified time: 2023-04-04 04:50:42
  * @ Description: i@rua.moe
  */
 
@@ -25,6 +25,7 @@ export default {
   'collection.create.form.upload.button': 'Browse',
   'collection.create.form.upload.tip': 'JPG/JPEG/ PNG/GIF/SVG. Max size:1MB.',
   'collection.create.form.cover.label': 'Cover',
+  'collection.create.form.cover.required': 'Please upload cover',
   'collection.create.form.name.label': 'Name',
   'collection.create.form.name.placeholder': 'Name of the collection',
   'collection.create.form.name.required': 'Please input collection name',
