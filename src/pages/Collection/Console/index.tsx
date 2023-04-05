@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-04 04:28:18
+ * @ Modified time: 2023-04-05 16:38:05
  * @ Description: i@rua.moe
  */
 
@@ -19,7 +19,6 @@ import { GetCollection, GetMintbaseCollection, GetOperationSign, GetRole } from 
 import SelectPlatform from "@/components/SelectPlatform";
 import Create from "./Create";
 import UserLayout from "@/layouts/UserLayout";
-import { base58 } from "ethers/lib/utils";
 import { SignMessage } from "@/utils/near";
 import Loading from "@/components/Loading";
 import LinkExpired from "@/components/LinkExpired";
@@ -31,13 +30,13 @@ interface QueryParams {
 }
 
 const Collection: React.FC = () => {
-  const { walletSelector, nearAccount, GetKeyStore } = useModel('near.account');
+  const { nearAccount, GetKeyStore } = useModel('near.account');
   const { discordInfo, discordOperationSign, setDiscordInfo, setDiscordOperationSign } = useModel('store');
   const { GetServerInfo } = useModel('discord');
   const [selectPlatformModal, setSelectPlatformModal] = useState<boolean>(false);
   const [addCollectionModal, setAddCollectionModal] = useState<boolean>(false);
   const [errorState, setErrorState] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [roleMap, setRoleMap] = useState<Map<string, string>>(new Map());
   const [roleList, setRoleList] = useState<Item.Role[]>();
   const [collectionList, setCollectionList] = useState<Contract.WrappedCollections[]>([]);
@@ -60,6 +59,8 @@ const Collection: React.FC = () => {
           user_id: search.user_id,
           sign: search.sign
         });
+
+        console.log(discordOperationSign)
 
         const args = {
           account_id: nearAccount?.accountId,
@@ -88,6 +89,12 @@ const Collection: React.FC = () => {
 
         if (res?.response?.status !== 200 || !(res?.data as Resp.GetOperationSign)?.data) {
           setErrorState(true);
+          setLoading(false);
+          notification.error({
+            key: 'error.params',
+            message: 'Error',
+            description: (res.data as Resp.Error)?.message,
+          });
           return;
         }
         setDiscordOperationSign((res?.data as Resp.GetOperationSign)?.data);
@@ -102,6 +109,7 @@ const Collection: React.FC = () => {
           description: 'Missing parameters',
         });
         setErrorState(true);
+        setLoading(false);
       }
     })()
   }, [nearAccount]);
@@ -115,6 +123,7 @@ const Collection: React.FC = () => {
         });
         if (!(roles?.data as Resp.GetRole)?.success) {
           setErrorState(true);
+          setLoading(false);
           return;
         }
 
@@ -196,6 +205,7 @@ const Collection: React.FC = () => {
         description: 'Missing parameters',
       });
       setErrorState(true);
+      setLoading(false);
     }
   };
 

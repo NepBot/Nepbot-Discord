@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:18
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 03:56:07
+ * @ Modified time: 2023-04-05 04:49:00
  * @ Description: i@rua.moe
  */
 
@@ -230,9 +230,11 @@ declare namespace Resp {
   }
 
   interface GetOwnerSign extends Body {
+    code?: number;
+    message?: string;
     success?: boolean;
     data?: {
-      timestamp?: number;
+      timestamp?: string;
       sign?: string;
     };
   }

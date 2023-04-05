@@ -2,14 +2,12 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-15 22:56:35
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-31 19:21:02
+ * @ Modified time: 2023-04-05 16:37:14
  * @ Description: i@rua.moe
  */
 
 import { GetConnectedAccount, GetServer, GetUser } from '@/services/api';
-import { history } from '@umijs/max';
 import { notification } from 'antd';
-import querystring from 'query-string';
 import { useCallback, useState } from 'react';
 
 interface QueryParams {
@@ -23,8 +21,6 @@ export default () => {
   const [discordServer, setDiscordServer] = useState<Resp.Server>();
   const [discordAccountId, setDiscordAccountId] = useState<string>();
   const [loading, setLoading] = useState<boolean>(true);
-
-  const search: QueryParams = querystring.parse(history?.location?.search);
 
   const GetUserInfo = useCallback(
     async ({
