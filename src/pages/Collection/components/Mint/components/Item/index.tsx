@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:07:16
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 03:08:44
+ * @ Modified time: 2023-04-06 03:42:06
  * @ Description: i@rua.moe
  */
 
@@ -38,6 +38,7 @@ const Item: React.FC<{
 
   const Mint = async () => {
     setLoading(true);
+
     const args = {
       user_id: discordInfo?.user_id,
       guild_id: discordInfo?.guild_id,
@@ -51,7 +52,7 @@ const Item: React.FC<{
       return;
     };
 
-    const signature = await SignMessage({
+    const sign = await SignMessage({
       keystore: keystore,
       object: args,
     });
@@ -59,7 +60,7 @@ const Item: React.FC<{
     const _sign = await GetMintSign({
       args: args,
       account_id: nearAccount?.accountId,
-      sign: signature?.signature,
+      sign: sign?.signature,
     });
 
     if (!_sign?.data?.success) {

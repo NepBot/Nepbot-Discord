@@ -2,13 +2,12 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 00:39:24
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 02:26:13
+ * @ Modified time: 2023-04-06 03:31:04
  * @ Description: i@rua.moe
  */
 
 import React, { useState } from 'react';
 import styles from './style.less';
-import { useIntl } from 'umi';
 import Background from '@/components/TopBackground';
 import Item from './components/Item';
 import { Col, Row } from 'antd';

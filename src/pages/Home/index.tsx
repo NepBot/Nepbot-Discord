@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:15:45
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-31 17:03:40
+ * @ Modified time: 2023-04-06 03:42:28
  * @ Description: i@rua.moe
  */
 
@@ -54,9 +54,6 @@ const Home: React.FC = () => {
                     discord: (
                       <span
                         className={styles.screen1DescBold}
-                        onClick={() => {
-                          window.open('https://discord.com/', '_blank');
-                        }}
                       >
                         Discord
                       </span>

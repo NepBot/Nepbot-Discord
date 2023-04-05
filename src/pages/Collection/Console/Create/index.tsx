@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-05 23:50:18
+ * @ Modified time: 2023-04-06 03:37:37
  * @ Description: i@rua.moe
  */
 
@@ -188,15 +188,11 @@ const Create: React.FC<{
         object: args,
       });
 
-      console.log(sign?.signature)
-
-      const msg = {
+      const _sign = await GetOwnerSign({
         args: args,
-        sign: sign?.signature,
         account_id: nearAccount?.accountId,
-      }
-
-      const _sign = await GetOwnerSign(msg);
+        sign: sign?.signature,
+      });
 
       if (!discordOperationSign) {
         setErrorState?.(true);
