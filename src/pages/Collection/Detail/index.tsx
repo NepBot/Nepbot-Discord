@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 19:42:06
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 04:14:50
+ * @ Modified time: 2023-04-06 00:44:43
  * @ Description: i@rua.moe
  */
 
@@ -31,13 +31,13 @@ interface QueryParams {
 }
 
 const CollectionDetail: React.FC = () => {
-  const { walletSelector, nearAccount } = useModel('near.account');
+  const { nearAccount } = useModel('near.account');
   const { GetServerInfo } = useModel('discord');
   const [errorState, setErrorState] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [showList, setShowList] = useState<Contract.CollectionInfo[]>([]);
   const [seriesList, setSeriesList] = useState([]);
-  const [addModal, setAddModal] = useState<boolean>(true);
+  const [addModal, setAddModal] = useState<boolean>(false);
 
   const intl = useIntl();
 
@@ -96,6 +96,7 @@ const CollectionDetail: React.FC = () => {
 
             if (!parasRes?.data?.success) {
               setErrorState(true);
+              setLoading(false);
               notification.error({
                 key: 'error.getData',
                 message: 'Error',
@@ -117,15 +118,16 @@ const CollectionDetail: React.FC = () => {
               collection_id: collection?.outer_collection_id,
             });
 
-            if (!mintbaseRes?.data?.success) {
-              setErrorState(true);
-              notification.error({
-                key: 'error.getData',
-                message: 'Error',
-                description: (mintbaseRes?.data as Resp.Error)?.message,
-              });
-              return;
-            }
+            // if (!mintbaseRes?.data) {
+            //   setErrorState(true);
+            //   setLoading(false);
+            //   notification.error({
+            //     key: 'error.getData',
+            //     message: 'Error',
+            //     description: (mintbaseRes?.data as Resp.Error)?.message,
+            //   });
+            //   return;
+            // }
             const mintbaseData = mintbaseRes?.data as Resp.GetMintbaseCollection;
 
             if (!!mintbaseData) {
@@ -141,12 +143,14 @@ const CollectionDetail: React.FC = () => {
         const res = await nearAccount.viewFunction(API_CONFIG().NFT_CONTRACT, 'get_token_metadata', { collection_id: params.id });
         setSeriesList(res);
         setShowList(res);
+        setLoading(false);
       } catch (error: any) {
         setErrorState(true);
+        setLoading(false);
         notification.error({
           key: 'error.getData',
           message: 'Error',
-          description: error.message,
+          description: error.message || error,
         });
       }
     })();
@@ -268,7 +272,7 @@ const CollectionDetail: React.FC = () => {
                   <div className={styles.statisticContainer}>
                     <div className={styles.statisticItem}>
                       <div className={styles.statisticItemValue}>
-                        {!!collectionInfo?.total_copies ? collectionInfo?.total_copies : NaN}
+                        {!!collectionInfo?.total_copies ? collectionInfo?.total_copies : 0}
                       </div>
                       <div className={styles.statisticItemLabel}>
                         {intl.formatMessage({
@@ -278,7 +282,7 @@ const CollectionDetail: React.FC = () => {
                     </div>
                     <div className={styles.statisticItem}>
                       <div className={styles.statisticItemValue}>
-                        {!!collectionInfo?.minted_count ? collectionInfo?.minted_count : NaN}
+                        {!!collectionInfo?.minted_count ? collectionInfo?.minted_count : 0}
                       </div>
                       <div className={styles.statisticItemLabel}>
                         {intl.formatMessage({
@@ -293,7 +297,7 @@ const CollectionDetail: React.FC = () => {
                   <div className={styles.itemsContainer}>
                     {!!showList?.length && (
                       <Row gutter={[30, 30]}>
-                        {showList.map((item: any, index: number) => {
+                        {showList.map((item: any) => {
                           return (
                             <Col xs={24} sm={24} md={12} lg={8} xl={8}>
                               <ItemCard

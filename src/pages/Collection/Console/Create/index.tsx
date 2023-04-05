@@ -2,13 +2,13 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-05 16:21:42
+ * @ Modified time: 2023-04-05 23:50:18
  * @ Description: i@rua.moe
  */
 
 import React, { useCallback, useState } from 'react';
 import styles from './style.less';
-import { useIntl, useModel, useLocation } from '@umijs/max';
+import { useIntl, useModel } from '@umijs/max';
 import { Button, Form, Input, InputNumber, Select, Spin, Upload, notification } from 'antd';
 import { TbCircleLetterN } from 'react-icons/tb';
 import { Loading3QuartersOutlined, PlusOutlined } from '@ant-design/icons';
@@ -19,7 +19,8 @@ import ConfirmModal from './ConfirmModal';
 import UserLayout from '@/layouts/UserLayout';
 import { API_CONFIG } from '@/constants/config';
 import { CreateParasCollection, GetCollection, GetOwnerSign } from '@/services/api';
-import { SignMessage } from '@/utils/near';
+import { ParseAmount, SignMessage } from '@/utils/near';
+import { RequestTransaction } from '@/utils/contract';
 
 interface QueryParams {
   guild_id?: string;
@@ -54,7 +55,6 @@ const Create: React.FC<{
   const [parasCreatedList, setParasCreatedList] = useState<any[]>([]);
 
   const intl = useIntl();
-  const location = useLocation();
 
   const { Dragger } = Upload;
 
@@ -168,6 +168,7 @@ const Create: React.FC<{
           res = {
             collection_id: result?.data
           }
+          break;
       }
 
       const args = {
@@ -195,61 +196,61 @@ const Create: React.FC<{
         account_id: nearAccount?.accountId,
       }
 
-      // const _sign = await GetOwnerSign(msg);
+      const _sign = await GetOwnerSign(msg);
 
-      // if (!discordOperationSign) {
-      //   setErrorState?.(true);
-      //   return;
-      // }
+      if (!discordOperationSign) {
+        setErrorState?.(true);
+        return;
+      }
 
-      // // Contract Request
-      // const contract_args: any = {
-      //   outer_collection_id: res.collection_id,
-      //   contract_type: selectPlatform,
-      //   guild_id: discordInfo?.guild_id,
-      //   royalty: royalty,
-      //   mintable_roles: values.role_id,
-      //   price: ParseAmount({
-      //     amount: values?.mintPrice,
-      //   }) || "0",
-      //   ...(_sign.data as Resp.GetOwnerSign)?.data,
-      // };
+      // Contract Request
+      const contract_args: any = {
+        outer_collection_id: res.collection_id,
+        contract_type: selectPlatform,
+        guild_id: discordInfo?.guild_id,
+        royalty: royalty,
+        mintable_roles: values.role_id,
+        price: ParseAmount({
+          amount: values?.mintPrice,
+        }) || "0",
+        ...(_sign.data as Resp.GetOwnerSign)?.data,
+      };
 
-      // if (values.mintLimit) {
-      //   contract_args.mint_count_limit = parseInt(values.mintLimit);
-      // }
+      if (values.mintLimit) {
+        contract_args.mint_count_limit = parseInt(values.mintLimit);
+      }
 
-      // var callbackUrl: string = "";
-      // switch (selectPlatform) {
-      //   case 'paras':
-      //     callbackUrl = `${window.location.origin}/collection/console/#paras:${outerCollectionId}${location.search}`;
-      //     break;
-      //   case 'mintbase':
-      //     callbackUrl = `${window.location.origin}/collection/console/#mintbase:${res.collection_id}${location.search}`
-      //     break;
-      // }
+      var callbackUrl: string = "";
+      switch (selectPlatform) {
+        case 'paras':
+          callbackUrl = `${window.location.origin}/collection/console/paras:${outerCollectionId}${location.search}`;
+          break;
+        case 'mintbase':
+          callbackUrl = `${window.location.origin}/collection/console/mintbase:${res.collection_id}${location.search}`
+          break;
+      }
 
-      // const data = await RequestTransaction({
-      //   nearAccount: nearAccount,
-      //   nearWallet: nearWallet,
-      //   contractId: API_CONFIG().NFT_CONTRACT,
-      //   methodName: 'create_collection',
-      //   args: contract_args,
-      //   gas: '300000000000000',
-      //   deposit: '20000000000000000000000',
-      //   walletCallbackUrl: callbackUrl,
-      //   setCallbackUrl: setCallbackUrl,
-      // });
+      const data = await RequestTransaction({
+        nearAccount: nearAccount,
+        nearWallet: nearWallet,
+        contractId: API_CONFIG().NFT_CONTRACT,
+        methodName: 'create_collection',
+        args: contract_args,
+        gas: '300000000000000',
+        deposit: '20000000000000000000000',
+        walletCallbackUrl: callbackUrl,
+        setCallbackUrl: setCallbackUrl,
+      });
 
-      // setTimeout(() => {
-      //   if (!!data) {
-      //     setLoading(false);
-      //     form.resetFields();
-      //     setLogoUrl('');
-      //     setCoverUrl('');
-      //     onSubmit?.();
-      //   }
-      // });
+      setTimeout(() => {
+        if (!!data) {
+          setLoading(false);
+          form.resetFields();
+          setLogoUrl('');
+          setCoverUrl('');
+          onSubmit?.();
+        }
+      });
 
     } catch (error: any) {
       setLoading(false);

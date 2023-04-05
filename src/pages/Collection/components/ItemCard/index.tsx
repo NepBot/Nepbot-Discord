@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:59:56
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-25 23:23:51
+ * @ Modified time: 2023-04-06 00:42:17
  * @ Description: i@rua.moe
  */
 
@@ -120,7 +120,7 @@ const ItemCard: React.FC<{
                     amount: item?.price,
                     decimals: 24,
                     fracDigits: 4,
-                  }) : NaN}
+                  }) : 0}
                   <TbCircleLetterN
                     className={styles.statisticsItemValueIcon}
                   />
@@ -133,7 +133,7 @@ const ItemCard: React.FC<{
             <Col span={12}>
               <div className={styles.statisticsItem}>
                 <div className={styles.statisticsItemValue}>
-                  {!!item?.royaltyTotal ? item?.royaltyTotal : NaN}%
+                  {!!item?.royaltyTotal ? item?.royaltyTotal : 0}%
                 </div>
                 <div className={styles.statisticsItemName}>
                   Royality
@@ -143,7 +143,7 @@ const ItemCard: React.FC<{
             <Col span={12}>
               <div className={styles.statisticsItem}>
                 <div className={styles.statisticsItemValue}>
-                  {!!item?.total_copies ? item?.total_copies : NaN}
+                  {!!item?.total_copies ? item?.total_copies : 0}
                 </div>
                 <div className={styles.statisticsItemName}>
                   Total Copies
@@ -153,7 +153,7 @@ const ItemCard: React.FC<{
             <Col span={12}>
               <div className={styles.statisticsItem}>
                 <div className={styles.statisticsItemValue}>
-                  {!!item?.minted_count ? item?.minted_count : NaN}
+                  {!!item?.minted_count ? item?.minted_count : 0}
                 </div>
                 <div className={styles.statisticsItemName}>
                   Total Minted

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-05 16:38:05
+ * @ Modified time: 2023-04-06 00:15:27
  * @ Description: i@rua.moe
  */
 
@@ -57,10 +57,8 @@ const Collection: React.FC = () => {
         setDiscordInfo({
           guild_id: search.guild_id,
           user_id: search.user_id,
-          sign: search.sign
+          sign: search.sign,
         });
-
-        console.log(discordOperationSign)
 
         const args = {
           account_id: nearAccount?.accountId,
@@ -82,9 +80,9 @@ const Collection: React.FC = () => {
         });
 
         const res = await GetOperationSign({
+          args: args,
           account_id: nearAccount?.accountId,
           sign: signature?.signature,
-          args: args,
         });
 
         if (res?.response?.status !== 200 || !(res?.data as Resp.GetOperationSign)?.data) {
@@ -171,7 +169,7 @@ const Collection: React.FC = () => {
                   inner_collection_id: collection.collection_id,
                   outer_collection_id: collection.outer_collection_id,
                   ...collection,
-                  ...collectionData
+                  ...collectionData?.data,
                 })
               }
               break;
@@ -181,18 +179,17 @@ const Collection: React.FC = () => {
         setCollectionList(wrappedCollections);
 
         const result: Contract.WrappedCollections[] = [];
-        for (let collection of wrappedCollections) {
-          const collection_id = collection['inner_collection_id'];
-          const collectionInfo = await nearAccount?.viewFunction(API_CONFIG().NFT_CONTRACT, 'get_collection', {
-            collection_id,
-          });
-          result.push({
-            creator: collectionInfo?.creator_id,
-            minted_count: collectionInfo?.minted_count,
-            total_copies: collectionInfo?.total_copies,
-            updated: true,
-          });
+        for (var i = 0; i < wrappedCollections.length; i++) {
+          const item = wrappedCollections[i];
+          const collection_id = item['inner_collection_id'];
+          const collectionInfo = await nearAccount?.viewFunction(API_CONFIG().NFT_CONTRACT, "get_collection", { collection_id: collection_id })
+          item.creator = collectionInfo?.creator_id;
+          item.minted_count = collectionInfo?.minted_count;
+          item.total_copies = collectionInfo?.total_copies;
+          item.updated = true;
+          result.push(item);
         }
+
         setCollectionList(result);
       } catch (error: any) {
         console.log(error);
@@ -254,7 +251,10 @@ const Collection: React.FC = () => {
                             roleMap={roleMap}
                             key={uuidv4().toString()}
                             onClick={() => {
-                              history.push(`/collection/${item.inner_collection_id}`);
+                              history.push({
+                                pathname: `/collection/${item.inner_collection_id}`,
+                                search: location.search,
+                              });
                             }}
                           />
                         </Col>

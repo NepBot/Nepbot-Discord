@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 02:48:21
+ * @ Modified time: 2023-04-06 00:37:16
  * @ Description: i@rua.moe
  */
 
@@ -31,7 +31,6 @@ const Add: React.FC<{
   const { nearAccount, nearWallet, GetKeyStore } = useModel('near.account');
   const { discordInfo, discordOperationSign } = useModel('store');
   const { mintbaseWallet } = useModel('mintbase');
-  const [imageFile, setImageFile] = useState<File>();
   const [imageUrl, setImageUrl] = useState<string>();
   const [errorState, setErrorState] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -57,7 +56,7 @@ const Add: React.FC<{
         creator_id: nearAccount?.accountId,
         collection_id: outer_collection_id,
         attributes: values?.attribute,
-        mime_type: imageFile?.type,
+        mime_type: values?.image?.type,
         blurhash: "UE3UQdpLQ8VWksZ}Z~ksL#Z}pfkXVWp0kXVq"
       }
 
@@ -66,7 +65,7 @@ const Add: React.FC<{
       switch (collectionInfo?.contract_type) {
         case 'paras':
           const res = await CreateSeries({
-            image: imageFile,
+            image: values?.image,
             ...params
           });
           if (!res?.data?.success) {
@@ -83,7 +82,7 @@ const Add: React.FC<{
           reference = data[1]?.replace("ipfs://", "");
           break;
         case 'mintbase':
-          const mediaRes = await mintbaseWallet?.minter?.upload(imageFile!);
+          const mediaRes = await mintbaseWallet?.minter?.upload(values?.image);
           media = mediaRes?.data?.uri;
           reference = mediaRes?.data?.uri;
           break;
@@ -137,7 +136,7 @@ const Add: React.FC<{
             reference: reference,
             copies: Number(values.copies)
           },
-          ..._sign
+          ...(_sign?.data as Resp.GetOwnerSign)?.data,
         },
         gas: '300000000000000',
         deposit: '20000000000000000000000',
@@ -150,7 +149,6 @@ const Add: React.FC<{
         });
         setLoading(false);
         form.resetFields();
-        setImageFile(undefined);
         setImageUrl(undefined);
         onSubmit?.();
       }
@@ -228,18 +226,12 @@ const Add: React.FC<{
                     }
                     required
                     name="image"
-                    valuePropName="fileList"
-                    rules={[
-                      {
-                        validator: async () => {
-                          if (!imageFile) {
-                            throw new Error(intl.formatMessage({
-                              id: "collection.add.form.image.required"
-                            }));
-                          }
-                        }
-                      }
-                    ]}
+                    rules={[{
+                      required: true,
+                      message: intl.formatMessage({
+                        id: "collection.add.form.image.required"
+                      })
+                    }]}
                     className={classNames(styles.formItem, styles.formItemLogo)}
                   >
                     <Dragger
@@ -255,17 +247,13 @@ const Add: React.FC<{
                         }
 
                         if (info.file.status === 'done' && !!info?.file?.originFileObj) {
-                          setImageFile(info?.file?.originFileObj);
+                          form.setFieldsValue({
+                            image: info?.file?.originFileObj
+                          });
                           await getBase64(info?.file?.originFileObj, (url) => {
                             setImageUrl(url);
                             setLoading(false);
                           });
-                          return;
-                        }
-
-                        if (info.file.status === 'removed') {
-                          setImageFile(undefined);
-                          setImageUrl('');
                           return;
                         }
                       }}

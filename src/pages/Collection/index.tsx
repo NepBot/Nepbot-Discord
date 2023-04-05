@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-05 16:39:23
+ * @ Modified time: 2023-04-05 23:53:29
  * @ Description: i@rua.moe
  */
 
@@ -32,7 +32,7 @@ interface QueryParams {
 }
 
 const Collection: React.FC = () => {
-  const { walletSelector, nearAccount, GetKeyStore } = useModel('near.account');
+  const { nearAccount, GetKeyStore } = useModel('near.account');
   const { GetServerInfo, GetUserInfo } = useModel('discord');
   const { discordInfo, discordOperationSign, setDiscordInfo, setDiscordOperationSign } = useModel('store');
   const [errorState, setErrorState] = useState<boolean>(false);
