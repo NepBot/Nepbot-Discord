@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:07:16
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 02:41:20
+ * @ Modified time: 2023-04-06 03:08:44
  * @ Description: i@rua.moe
  */
 
@@ -20,7 +20,6 @@ import BN from 'bn.js';
 import { ParseAmount, SignMessage } from '@/utils/near';
 import { RequestTransaction } from '@/utils/contract';
 import { FinalExecutionOutcome, FinalExecutionStatus } from 'near-api-js/lib/providers';
-import { base58 } from 'ethers/lib/utils';
 
 const Item: React.FC<{
   item?: Contract.WrappedCollections,
@@ -34,76 +33,68 @@ const Item: React.FC<{
   const [inputValue, setInputValue] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
   const [errorInput, setErrorInput] = useState<boolean>(false);
+
   const intl = useIntl();
 
-  const Mint = useCallback(async () => {
+  const Mint = async () => {
     setLoading(true);
-    try {
-      const args = {
-        user_id: discordInfo?.user_id,
-        guild_id: discordInfo?.guild_id,
-        channel_id: item?.inner_collection_id,
-        sign: discordOperationSign,
-      }
+    const args = {
+      user_id: discordInfo?.user_id,
+      guild_id: discordInfo?.guild_id,
+      channel_id: item?.inner_collection_id,
+      sign: discordOperationSign,
+    }
 
-      const keystore = await GetKeyStore(nearAccount?.accountId);
+    const keystore = await GetKeyStore(nearAccount?.accountId);
 
-      if (!keystore) {
-        return;
-      };
+    if (!keystore) {
+      return;
+    };
 
-      const signature = await SignMessage({
-        keystore: keystore,
-        object: args,
-      });
+    const signature = await SignMessage({
+      keystore: keystore,
+      object: args,
+    });
 
-      const res = await GetMintSign({
-        args,
-        account_id: nearAccount?.accountId,
-        sign: base58.encode(signature?.signature!),
-      });
+    const _sign = await GetMintSign({
+      args: args,
+      account_id: nearAccount?.accountId,
+      sign: signature?.signature,
+    });
 
-      if (!res?.data?.success) {
-        setErrorState(true);
-        notification.error({
-          key: 'error.mint',
-          message: 'Error',
-          description: (res?.data as Resp.Error)?.message,
-        });
-        return;
-      }
-
-      const price = new BN(ParseAmount({
-        amount: item?.price!,
-      })?.toString()!).add(new BN('20000000000000000000000'));
-
-      const result = await RequestTransaction({
-        nearAccount: nearAccount,
-        nearWallet: nearWallet,
-        contractId: API_CONFIG().NFT_CONTRACT,
-        methodName: 'nft_mint',
-        args: {
-          collection_id: item?.inner_collection_id,
-          ...res?.data,
-        },
-        gas: '300000000000000',
-        deposit: price?.mul(new BN(inputValue?.toString()!)).toString(),
-      });
-
-      if (!!((result as FinalExecutionOutcome)?.status as FinalExecutionStatus)?.SuccessValue) {
-        setSuccessState(true);
-      }
-
-      setLoading(false);
-    } catch (e: any) {
+    if (!_sign?.data?.success) {
       setErrorState(true);
       notification.error({
         key: 'error.mint',
         message: 'Error',
-        description: e.message,
+        description: (_sign?.data as Resp.Error)?.message,
       });
+      return;
     }
-  }, [nearAccount, nearWallet, discordOperationSign]);
+
+    const price = new BN(ParseAmount({
+      amount: item?.price!,
+    })?.toString()!).add(new BN('20000000000000000000000'));
+
+    const result = await RequestTransaction({
+      nearAccount: nearAccount,
+      nearWallet: nearWallet,
+      contractId: API_CONFIG().NFT_CONTRACT,
+      methodName: 'nft_mint',
+      args: {
+        collection_id: item?.inner_collection_id,
+        ...(_sign?.data as Resp.GetMintSign)?.data,
+      },
+      gas: '300000000000000',
+      deposit: price?.mul(new BN(inputValue?.toString()!)).toString(),
+    });
+
+    if (!!((result as FinalExecutionOutcome)?.status as FinalExecutionStatus)?.SuccessValue) {
+      setSuccessState(true);
+    }
+
+    setLoading(false);
+  };
 
   return (
     <UserLayout>
@@ -119,7 +110,7 @@ const Item: React.FC<{
         <div className={styles.userContainer}>
           <div className={styles.avatar}>
             <img
-              src={item?.media ? item?.media : require('@/assets/collection/icon.webp')}
+              src={!!item?.media ? item?.media : require('@/assets/collection/icon.webp')}
               alt='media'
               className={styles.avatarImg}
             />
@@ -127,7 +118,7 @@ const Item: React.FC<{
           <div className={styles.nftName}>
             {item?.name}
           </div>
-          {!!item?.total_copies && item?.minted_count && (
+          {item?.total_copies !== undefined && item?.minted_count !== undefined && (
             <div className={styles.availableNum}>
               {intl.formatMessage({
                 id: 'mint.availableNum'

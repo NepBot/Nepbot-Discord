@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-05 23:53:29
+ * @ Modified time: 2023-04-06 02:28:28
  * @ Description: i@rua.moe
  */
 
@@ -36,7 +36,7 @@ const Collection: React.FC = () => {
   const { GetServerInfo, GetUserInfo } = useModel('discord');
   const { discordInfo, discordOperationSign, setDiscordInfo, setDiscordOperationSign } = useModel('store');
   const [errorState, setErrorState] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [roleMap, setRoleMap] = useState<Map<string, string>>(new Map());
   const [haveAccessList, setHaveAccessList] = useState<Contract.WrappedCollections[]>([]);
   const [noAccessList, setNoAccessList] = useState<Contract.WrappedCollections[]>([]);
@@ -72,6 +72,7 @@ const Collection: React.FC = () => {
           roleList = userInfo?.roles;
         } else {
           setErrorState(true);
+          setLoading(false);
           return;
         }
 
@@ -101,6 +102,7 @@ const Collection: React.FC = () => {
         });
         if (res?.response?.status !== 200 || !(res?.data as Resp.GetOperationSign)?.data) {
           setErrorState(true);
+          setLoading(false);
           return;
         }
         setDiscordOperationSign((res?.data as Resp.GetOperationSign)?.data);
@@ -115,6 +117,7 @@ const Collection: React.FC = () => {
           description: 'Missing parameters',
         });
         setErrorState(true);
+        setLoading(false);
       }
     })();
   }, [nearAccount]);
@@ -126,7 +129,12 @@ const Collection: React.FC = () => {
         guild_id: discordInfo?.guild_id,
       });
       if (roles?.response?.status !== 200 || !(roles?.data as Resp.GetRole)?.data) {
-        setErrorState(true);
+        notification.error({
+          key: 'error.roles',
+          message: 'Error',
+          description: 'Failed to get roles',
+        });
+        setLoading(false);
         return;
       }
 
@@ -170,7 +178,7 @@ const Collection: React.FC = () => {
                 inner_collection_id: collection?.inner_collection_id,
                 outer_collection_id: collection?.outer_collection_id,
                 ...collection,
-                ...collectionData?.results[0],
+                ...collectionData?.data?.results[0],
               }
             }
             break;
@@ -186,7 +194,7 @@ const Collection: React.FC = () => {
                 media: collectionData.logo,
                 cover: collectionData.background,
                 ...collection,
-                ...collectionData,
+                ...collectionData?.data,
               }
             }
         }

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-16 01:18:40
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 04:15:47
+ * @ Modified time: 2023-04-06 02:14:18
  * @ Description: i@rua.moe
  */
 
@@ -33,7 +33,7 @@ interface QueryParams {
 }
 
 const Airdrop: React.FC = () => {
-  const { walletSelector, nearAccount, nearWallet } = useModel('near.account');
+  const { nearAccount, nearWallet } = useModel('near.account');
   const [errorState, setErrorState] = useState<boolean>(false);
 
   const location = useLocation();

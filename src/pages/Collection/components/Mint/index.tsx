@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 00:39:24
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 02:42:14
+ * @ Modified time: 2023-04-06 02:26:13
  * @ Description: i@rua.moe
  */
 
@@ -23,8 +23,6 @@ const Mint: React.FC<{
 }> = ({ item, onClick, onCancel }) => {
   const [errorState, setErrorState] = useState<boolean>(false);
   const [successState, setSuccessState] = useState<boolean>(false);
-
-  const intl = useIntl();
 
   return (
     <UserLayout>

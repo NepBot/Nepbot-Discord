@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 19:42:06
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 00:44:43
+ * @ Modified time: 2023-04-06 02:30:58
  * @ Description: i@rua.moe
  */
 
@@ -94,15 +94,12 @@ const CollectionDetail: React.FC = () => {
               collection_id: collection?.outer_collection_id,
             })
 
-            if (!parasRes?.data?.success) {
-              setErrorState(true);
-              setLoading(false);
+            if (!parasRes?.data) {
               notification.error({
                 key: 'error.getData',
                 message: 'Error',
-                description: (parasRes?.data as Resp.Error)?.message,
+                description: 'Failed to get collection info'
               });
-              return;
             }
             const parasData = (parasRes?.data as Resp.GetCollection)?.data;
 
@@ -118,16 +115,13 @@ const CollectionDetail: React.FC = () => {
               collection_id: collection?.outer_collection_id,
             });
 
-            // if (!mintbaseRes?.data) {
-            //   setErrorState(true);
-            //   setLoading(false);
-            //   notification.error({
-            //     key: 'error.getData',
-            //     message: 'Error',
-            //     description: (mintbaseRes?.data as Resp.Error)?.message,
-            //   });
-            //   return;
-            // }
+            if (!mintbaseRes?.data) {
+              notification.error({
+                key: 'error.getData',
+                message: 'Error',
+                description: 'Failed to get collection info',
+              });
+            }
             const mintbaseData = mintbaseRes?.data as Resp.GetMintbaseCollection;
 
             if (!!mintbaseData) {
