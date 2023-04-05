@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 00:15:27
+ * @ Modified time: 2023-04-06 04:23:24
  * @ Description: i@rua.moe
  */
 
@@ -79,23 +79,23 @@ const Collection: React.FC = () => {
           object: args,
         });
 
-        const res = await GetOperationSign({
+        const _sign = await GetOperationSign({
           args: args,
           account_id: nearAccount?.accountId,
           sign: signature?.signature,
         });
 
-        if (res?.response?.status !== 200 || !(res?.data as Resp.GetOperationSign)?.data) {
+        if (!_sign?.data?.success) {
           setErrorState(true);
           setLoading(false);
           notification.error({
             key: 'error.params',
             message: 'Error',
-            description: (res.data as Resp.Error)?.message,
+            description: (_sign?.data as Resp.Error)?.message,
           });
           return;
         }
-        setDiscordOperationSign((res?.data as Resp.GetOperationSign)?.data);
+        setDiscordOperationSign((_sign?.data as Resp.GetOperationSign)?.data);
         await GetServerInfo({
           guild_id: search.guild_id,
         });

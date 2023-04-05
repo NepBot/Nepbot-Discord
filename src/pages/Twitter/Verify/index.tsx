@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-18 03:42:43
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 04:16:45
+ * @ Modified time: 2023-04-06 04:27:55
  * @ Description: i@rua.moe
  */
 
@@ -24,7 +24,7 @@ interface QueryParams {
 }
 
 const Verify: React.FC = () => {
-  const { walletSelector, nearAccount, OpenModalWallet } = useModel('near.account');
+  const { nearAccount, OpenModalWallet } = useModel('near.account');
   const [errorState, setErrorState] = useState<boolean>(false);
   const [successState, setSuccessState] = useState<boolean>(false);
 
@@ -39,8 +39,8 @@ const Verify: React.FC = () => {
         }
 
         const res = await TwitterVerify({
-          code: search.code,
-          state: search.state,
+          code: search?.code,
+          state: search?.state,
         });
 
         if (typeof res.data === "object" && !!res.data) {

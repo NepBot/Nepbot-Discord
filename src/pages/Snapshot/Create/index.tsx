@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-20 16:06:26
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 04:16:34
+ * @ Modified time: 2023-04-06 04:27:11
  * @ Description: i@rua.moe
  */
 
@@ -83,13 +83,13 @@ const Create: React.FC = () => {
           object: args,
         });
 
-        const sign = await GetSnapshotSign({
+        const _sign = await GetSnapshotSign({
           args: args,
           account_id: nearAccount?.accountId,
           sign: signature?.signature,
         });
 
-        if (sign?.response?.status !== 200 || !sign?.data?.success) {
+        if (!_sign?.data?.success) {
           setErrorState(true);
           return;
         }
@@ -101,7 +101,7 @@ const Create: React.FC = () => {
           methodName: 'set_snapshot',
           args: {
             contract_address: search.contract_address,
-            ...sign
+            ...(_sign?.data as Resp.GetSnapshotSign)?.data,
           },
           gas: '300000000000000',
           deposit: '0',

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-17 18:08:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 04:17:18
+ * @ Modified time: 2023-04-06 04:28:36
  * @ Description: i@rua.moe
  */
 
@@ -24,7 +24,7 @@ interface QueryParams {
 }
 
 const Vote: React.FC = () => {
-  const { walletSelector, nearAccount, nearWallet, setCallbackUrl } = useModel('near.account');
+  const { nearAccount, nearWallet, setCallbackUrl } = useModel('near.account');
   const [errorState, setErrorState] = useState<boolean>(false);
 
   const location = useLocation();

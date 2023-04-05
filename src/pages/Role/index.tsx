@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 03:35:39
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 04:16:22
+ * @ Modified time: 2023-04-06 04:25:03
  * @ Description: i@rua.moe
  */
 
@@ -24,7 +24,6 @@ import H00KD from '@/assets/collection/h00kd.svg';
 import ASTRO from '@/assets/collection/astro.svg';
 import { API_CONFIG } from '@/constants/config';
 import { IsObjectValueEqual } from '@/utils/request';
-import { base58 } from 'ethers/lib/utils';
 import { RequestTransaction } from '@/utils/contract';
 import UserLayout from '@/layouts/UserLayout';
 import Loading from '@/components/Loading';
@@ -39,14 +38,14 @@ interface QueryParams {
 }
 
 const Role: React.FC = () => {
-  const { walletSelector, nearAccount, nearWallet, GetKeyStore } = useModel('near.account');
+  const { nearAccount, nearWallet, GetKeyStore } = useModel('near.account');
   const { discordServer, GetServerInfo } = useModel('discord');
   const { discordInfo, discordOperationSign, setDiscordInfo, setDiscordOperationSign } = useModel('store');
   const [dataSource, setDataSource] = useState<Contract.RuleItem[]>([]);
   const [appchainIds, setAppchainIds] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [errorState, setErrorState] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const intl = useIntl();
   const [messageApi, contextHolder] = message.useMessage();
@@ -239,26 +238,28 @@ const Role: React.FC = () => {
           object: args,
         });
 
-        const res = await GetOperationSign({
+        const _sign = await GetOperationSign({
           args: args,
           account_id: nearAccount?.accountId,
           sign: signature?.signature,
         });
 
-        if (!res?.data?.success) {
+        if (!_sign?.data?.success) {
           notification.error({
             key: 'error.getOperationSign',
             message: 'Error',
-            description: (res?.data as Resp.Error)?.message,
+            description: (_sign?.data as Resp.Error)?.message,
           });
           setErrorState(true);
+          setLoading(false);
           return;
         }
 
-        setDiscordOperationSign((res?.data as Resp.GetOperationSign)?.data);
+        setDiscordOperationSign((_sign?.data as Resp.GetOperationSign)?.data);
         const server = await GetServerInfo({
           guild_id: search.guild_id,
         });
+
         const appchainIds = await nearAccount?.viewFunction(API_CONFIG().OCT_CONTRACT, 'get_appchain_ids', {});
         setAppchainIds(appchainIds);
 

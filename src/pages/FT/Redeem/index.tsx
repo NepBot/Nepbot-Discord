@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-17 04:09:10
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 04:16:04
+ * @ Modified time: 2023-04-06 04:17:22
  * @ Description: i@rua.moe
  */
 
@@ -21,7 +21,7 @@ interface QueryParams {
 }
 
 const Redeem: React.FC = () => {
-  const { walletSelector, walletList, activeAccount, nearAccount, nearWallet, setCallbackUrl } = useModel('near.account');
+  const { nearAccount, nearWallet, setCallbackUrl } = useModel('near.account');
   const [errorState, setErrorState] = useState<boolean>(false);
 
   const location = useLocation();

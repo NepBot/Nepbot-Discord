@@ -17,7 +17,6 @@ import { AiOutlineCloudUpload } from 'react-icons/ai';
 import ConfirmModal from './ConfirmModal';
 import { CreateSeries, GetOwnerSign } from '@/services/api';
 import { API_CONFIG } from '@/constants/config';
-import { base58 } from 'ethers/lib/utils';
 import { RequestTransaction } from '@/utils/contract';
 import Fail from '@/components/Fail';
 import { SignMessage } from '@/utils/near';

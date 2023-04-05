@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-17 00:37:10
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 04:15:44
+ * @ Modified time: 2023-04-06 04:20:21
  * @ Description: i@rua.moe
  */
 
@@ -26,7 +26,7 @@ interface QueryParams {
 }
 
 const Claim: React.FC = () => {
-  const { walletSelector, walletList, activeAccount, nearAccount, nearWallet, setCallbackUrl, GetKeyStore } = useModel('near.account');
+  const { nearAccount, nearWallet, setCallbackUrl, GetKeyStore } = useModel('near.account');
   const [errorState, setErrorState] = useState<boolean>(false);
 
   const location = useLocation();
@@ -57,16 +57,16 @@ const Claim: React.FC = () => {
           object: args,
         });
 
-        const sign = await GetAirdropFTSign({
+        const _sign = await GetAirdropFTSign({
           args: args,
           account_id: search.user_id,
           sign: signature?.signature,
         });
 
-        if (!sign || !sign?.data?.success) {
+        if (!_sign?.data?.success) {
           notification.error({
             message: 'Error',
-            description: (sign?.data as Resp.Error)?.message || 'Unknown error',
+            description: (_sign?.data as Resp.Error)?.message || 'Unknown error',
           });
           setErrorState(true);
           return;
@@ -81,7 +81,7 @@ const Claim: React.FC = () => {
         const isRegistered = await nearAccount?.viewFunction(
           contractId,
           'storage_balance_of',
-          { account_id: activeAccount },
+          { account_id: nearAccount?.accountId },
         );
 
         var txs: any[] = [];
@@ -91,7 +91,7 @@ const Claim: React.FC = () => {
             actions: [{
               methodName: "storage_deposit",
               args: {
-                account_id: activeAccount
+                account_id: nearAccount?.accountId
               },
               deposit: '12500000000000000000000',
               gas: '300000000000000'
@@ -106,7 +106,7 @@ const Claim: React.FC = () => {
             args: {
               hash: search.hash,
               user_id: search.user_id,
-              ...sign.data,
+              ...(_sign.data as Resp.GetAirdropFTSign)?.data,
             },
             deposit: "0",
             gas: "300000000000000",
