@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 04:22:20
+ * @ Modified time: 2023-04-06 20:30:06
  * @ Description: i@rua.moe
  */
 
@@ -24,11 +24,13 @@ import Loading from "@/components/Loading";
 import LinkExpired from "@/components/LinkExpired";
 import { SignMessage } from "@/utils/near";
 import NoData from "@/components/NoData";
+import Success from "@/components/Success";
 
 interface QueryParams {
   guild_id?: string;
   user_id?: string;
   sign?: string;
+  state?: string;
 }
 
 const Collection: React.FC = () => {
@@ -36,6 +38,7 @@ const Collection: React.FC = () => {
   const { GetServerInfo, GetUserInfo } = useModel('discord');
   const { discordInfo, discordOperationSign, setDiscordInfo, setDiscordOperationSign } = useModel('store');
   const [errorState, setErrorState] = useState<boolean>(false);
+  const [successState, setSuccessState] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [roleMap, setRoleMap] = useState<Map<string, string>>(new Map());
   const [haveAccessList, setHaveAccessList] = useState<Contract.WrappedCollections[]>([]);
@@ -52,6 +55,12 @@ const Collection: React.FC = () => {
   useEffect(() => {
     (async () => {
       if (!nearAccount) {
+        return;
+      }
+
+      if (search?.state === 'success') {
+        setSuccessState(true);
+        setLoading(false);
         return;
       }
 
@@ -222,13 +231,16 @@ const Collection: React.FC = () => {
 
   return (
     <UserLayout>
-      {!errorState && loading && (
+      {!errorState && !successState && loading && (
         <Loading />
       )}
-      {errorState && !loading && (
+      {errorState && !successState && !loading && (
         <LinkExpired />
       )}
-      {!errorState && !loading && (
+      {!errorState && successState && !loading && (
+        <Success />
+      )}
+      {!errorState && !successState && !loading && (
         <>
           {!mintModal && (
             <div className={styles.collectionContainer}>

@@ -2,11 +2,11 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:07:16
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 03:42:06
+ * @ Modified time: 2023-04-06 20:32:14
  * @ Description: i@rua.moe
  */
 
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './style.less';
 import { useIntl, useModel } from '@umijs/max';
 import { IoCloseSharp } from 'react-icons/io5';
@@ -17,18 +17,16 @@ import UserLayout from '@/layouts/UserLayout';
 import { API_CONFIG } from '@/constants/config';
 import { GetMintSign } from '@/services/api';
 import BN from 'bn.js';
-import { ParseAmount, SignMessage } from '@/utils/near';
+import { FormatAmount, ParseAmount, SignMessage } from '@/utils/near';
 import { RequestTransaction } from '@/utils/contract';
-import { FinalExecutionOutcome, FinalExecutionStatus } from 'near-api-js/lib/providers';
 
 const Item: React.FC<{
   item?: Contract.WrappedCollections,
   onClick?: () => void,
   onCancel?: () => void,
   setErrorState: React.Dispatch<React.SetStateAction<boolean>>,
-  setSuccessState: React.Dispatch<React.SetStateAction<boolean>>,
-}> = ({ item, onCancel, setErrorState, setSuccessState }) => {
-  const { nearAccount, nearWallet, GetKeyStore } = useModel('near.account');
+}> = ({ item, onCancel, setErrorState }) => {
+  const { nearAccount, nearWallet, GetKeyStore, setCallbackUrl } = useModel('near.account');
   const { discordInfo, discordOperationSign } = useModel('store');
   const [inputValue, setInputValue] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
@@ -42,7 +40,7 @@ const Item: React.FC<{
     const args = {
       user_id: discordInfo?.user_id,
       guild_id: discordInfo?.guild_id,
-      channel_id: item?.inner_collection_id,
+      collection_id: item?.inner_collection_id,
       sign: discordOperationSign,
     }
 
@@ -64,20 +62,23 @@ const Item: React.FC<{
     });
 
     if (!_sign?.data?.success) {
-      setErrorState(true);
       notification.error({
         key: 'error.mint',
         message: 'Error',
         description: (_sign?.data as Resp.Error)?.message,
       });
+      setErrorState(true);
+      setLoading(false);
       return;
     }
 
     const price = new BN(ParseAmount({
-      amount: item?.price!,
+      amount: FormatAmount({
+        amount: item?.price,
+      })
     })?.toString()!).add(new BN('20000000000000000000000'));
 
-    const result = await RequestTransaction({
+    await RequestTransaction({
       nearAccount: nearAccount,
       nearWallet: nearWallet,
       contractId: API_CONFIG().NFT_CONTRACT,
@@ -88,11 +89,9 @@ const Item: React.FC<{
       },
       gas: '300000000000000',
       deposit: price?.mul(new BN(inputValue?.toString()!)).toString(),
+      walletCallbackUrl: `${window.location.href}&state=success`,
+      setCallbackUrl: setCallbackUrl,
     });
-
-    if (!!((result as FinalExecutionOutcome)?.status as FinalExecutionStatus)?.SuccessValue) {
-      setSuccessState(true);
-    }
 
     setLoading(false);
   };

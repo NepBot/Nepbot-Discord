@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 00:39:24
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 03:31:04
+ * @ Modified time: 2023-04-06 20:26:46
  * @ Description: i@rua.moe
  */
 
@@ -13,7 +13,6 @@ import Item from './components/Item';
 import { Col, Row } from 'antd';
 import UserLayout from '@/layouts/UserLayout';
 import Fail from '@/components/Fail';
-import Success from '@/components/Success';
 
 const Mint: React.FC<{
   item?: Contract.WrappedCollections,
@@ -21,17 +20,13 @@ const Mint: React.FC<{
   onCancel?: () => void,
 }> = ({ item, onClick, onCancel }) => {
   const [errorState, setErrorState] = useState<boolean>(false);
-  const [successState, setSuccessState] = useState<boolean>(false);
 
   return (
     <UserLayout>
-      {errorState && !successState && (
+      {errorState && (
         <Fail />
       )}
-      {successState && !errorState && (
-        <Success />
-      )}
-      {!errorState && !successState && (
+      {!errorState && (
         <div className={styles.mintContainer}>
           <Background />
           <div className={styles.wrapper}>
@@ -43,7 +38,6 @@ const Mint: React.FC<{
                 <Item
                   item={item}
                   onCancel={onCancel}
-                  setSuccessState={setSuccessState}
                   setErrorState={setErrorState}
                 />
               </Col>
