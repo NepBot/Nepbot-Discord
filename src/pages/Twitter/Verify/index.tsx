@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-18 03:42:43
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 04:27:55
+ * @ Modified time: 2023-04-06 22:37:17
  * @ Description: i@rua.moe
  */
 
@@ -24,7 +24,7 @@ interface QueryParams {
 }
 
 const Verify: React.FC = () => {
-  const { nearAccount, OpenModalWallet } = useModel('near.account');
+  const { nearAccount } = useModel('near.account');
   const [errorState, setErrorState] = useState<boolean>(false);
   const [successState, setSuccessState] = useState<boolean>(false);
 
@@ -97,7 +97,9 @@ const Verify: React.FC = () => {
         <LinkExpired />
       )}
       {!errorState && successState && (
-        <Success />
+        <Success
+          from='twitter_verify'
+        />
       )}
     </UserLayout>
   )

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 20:30:06
+ * @ Modified time: 2023-04-07 03:06:49
  * @ Description: i@rua.moe
  */
 
@@ -238,7 +238,9 @@ const Collection: React.FC = () => {
         <LinkExpired />
       )}
       {!errorState && successState && !loading && (
-        <Success />
+        <Success
+          from="mint"
+        />
       )}
       {!errorState && !successState && !loading && (
         <>
