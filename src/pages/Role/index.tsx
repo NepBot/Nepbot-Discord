@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 03:35:39
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-08 00:04:39
+ * @ Modified time: 2023-04-08 00:31:11
  * @ Description: i@rua.moe
  */
 
@@ -16,7 +16,7 @@ import querystring from 'query-string';
 import { v4 as uuidv4 } from 'uuid';
 import ItemCard from './components/ItemCard';
 import CreateModal from './components/CreateModal';
-import { GetOperationSign, GetRole, GetTxByGuild } from '@/services/api';
+import { GetOperationSign, GetOwnerSign, GetRole, GetTxByGuild } from '@/services/api';
 import Octopus from '@/assets/collection/octopus.svg';
 import Near from '@/assets/collection/near.svg';
 import Paras from '@/assets/collection/paras.svg';
@@ -53,7 +53,7 @@ const Role: React.FC = () => {
   const location = useLocation();
   const search: QueryParams = querystring.parse(location.search);
 
-  const handleData = useCallback(async (data: Contract.RuleItem[], serverName?: string) => {
+  const handleData = async (data: Contract.RuleItem[], serverName?: string) => {
     if (!!discordInfo && !!discordOperationSign) {
       const roleRes = await GetRole({
         guild_id: discordInfo.guild_id!,
@@ -140,9 +140,9 @@ const Role: React.FC = () => {
     }
 
     return data;
-  }, []);
+  };
 
-  const handleDelete = useCallback(async (record: Contract.RuleItem) => {
+  const handleDelete = async (record: Contract.RuleItem) => {
     const object = {
       guild_id: record.guild_id,
       role_id: record.role_id,
@@ -167,7 +167,7 @@ const Role: React.FC = () => {
       object: args,
     })
 
-    const _sign = await GetOperationSign({
+    const _sign = await GetOwnerSign({
       args: args,
       sign: signature?.signature,
       account_id: nearAccount?.accountId,
@@ -205,7 +205,7 @@ const Role: React.FC = () => {
         messageApi.info('Success');
       }
     });
-  }, []);
+  };
 
   useEffect(() => {
     (async () => {
@@ -306,7 +306,17 @@ const Role: React.FC = () => {
                   })}
                   className={styles.searchInput}
                   onChange={async (e) => {
+                    if (e.target.value === '') {
+                      const data = await nearAccount?.viewFunction(API_CONFIG().RULE_CONTRACT, 'get_guild', { guild_id: discordInfo?.guild_id! });
+                      const _data = await handleData(data);
+                      if (!_data) {
+                        return;
+                      }
+                      setDataSource(_data);
+                      return;
+                    }
                     const data = await nearAccount?.viewFunction(API_CONFIG().RULE_CONTRACT, 'get_token', { token_id: e.target.value });
+                    console.log(data)
                     const _data = await handleData(data);
                     setDataSource(_data);
                   }}
@@ -339,8 +349,8 @@ const Role: React.FC = () => {
                       >
                         <ItemCard
                           item={item}
-                          onDelete={async () => {
-                            await handleDelete(item);
+                          onDelete={() => {
+                            handleDelete(item);
                           }}
                         />
                       </Col>

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-17 00:37:10
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 04:20:21
+ * @ Modified time: 2023-04-08 02:16:34
  * @ Description: i@rua.moe
  */
 
@@ -17,6 +17,7 @@ import { ExecuteMultipleTransactions } from "@/utils/contract";
 import UserLayout from "@/layouts/UserLayout";
 import LinkExpired from "@/components/LinkExpired";
 import Loading from "@/components/Loading";
+import Fail from "@/components/Fail";
 
 interface QueryParams {
   user_id?: string;
@@ -28,6 +29,7 @@ interface QueryParams {
 const Claim: React.FC = () => {
   const { nearAccount, nearWallet, setCallbackUrl, GetKeyStore } = useModel('near.account');
   const [errorState, setErrorState] = useState<boolean>(false);
+  const [expiredState, setExpiredState] = useState<boolean>(false);
 
   const location = useLocation();
   const search: QueryParams = querystring.parse(location.search);
@@ -59,7 +61,7 @@ const Claim: React.FC = () => {
 
         const _sign = await GetAirdropFTSign({
           args: args,
-          account_id: search.user_id,
+          account_id: nearAccount?.accountId,
           sign: signature?.signature,
         });
 
@@ -68,7 +70,7 @@ const Claim: React.FC = () => {
             message: 'Error',
             description: (_sign?.data as Resp.Error)?.message || 'Unknown error',
           });
-          setErrorState(true);
+          setExpiredState(true);
           return;
         }
 
@@ -135,17 +137,22 @@ const Claim: React.FC = () => {
           message: 'Error',
           description: 'Missing parameters',
         });
-        setErrorState(true);
+        setExpiredState(true);
       }
     })()
   }, [nearAccount]);
 
   return (
     <UserLayout>
-      {!errorState && (
+      {!errorState && !expiredState && (
         <Loading />
       )}
-      {errorState && (
+      {errorState && !expiredState && (
+        <Fail
+          from="airdrop"
+        />
+      )}
+      {!errorState && expiredState && (
         <LinkExpired />
       )}
     </UserLayout>

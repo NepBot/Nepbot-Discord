@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-17 18:08:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 04:28:36
+ * @ Modified time: 2023-04-08 02:34:45
  * @ Description: i@rua.moe
  */
 
@@ -16,6 +16,7 @@ import { notification } from "antd";
 import UserLayout from "@/layouts/UserLayout";
 import Loading from "@/components/Loading";
 import LinkExpired from "@/components/LinkExpired";
+import Fail from "@/components/Fail";
 
 interface QueryParams {
   contract_address?: string;
@@ -25,7 +26,7 @@ interface QueryParams {
 
 const Vote: React.FC = () => {
   const { nearAccount, nearWallet, setCallbackUrl } = useModel('near.account');
-  const [errorState, setErrorState] = useState<boolean>(false);
+  const [expiredState, setExpiredState] = useState<boolean>(false);
 
   const location = useLocation();
   const search: QueryParams = querystring.parse(location.search);
@@ -37,13 +38,13 @@ const Vote: React.FC = () => {
           return;
         }
 
-        const res = await RequestTransaction({
+        await RequestTransaction({
           nearAccount: nearAccount,
           nearWallet: nearWallet,
           contractId: search.contract_address,
           methodName: 'act_proposal',
           args: {
-            id: search.proposal_id,
+            id: Number(search.proposal_id),
             action: search.action,
           },
           gas: '300000000000000',
@@ -51,32 +52,23 @@ const Vote: React.FC = () => {
           setCallbackUrl,
           walletCallbackUrl: `${API_CONFIG().ASTRO}/dao/${search?.contract_address}/proposals/${search?.contract_address}-${search?.proposal_id}`,
         });
-
-        if (!res) {
-          notification.error({
-            key: 'error.params',
-            message: 'Error',
-            description: 'Vote failed',
-          });
-          setErrorState(true);
-        }
       } else {
         notification.error({
           key: 'error.params',
           message: 'Error',
           description: 'Missing parameters',
         });
-        setErrorState(true);
+        setExpiredState(true);
       }
     })()
   }, [nearAccount]);
 
   return (
     <UserLayout>
-      {!errorState && (
+      {!expiredState && (
         <Loading />
       )}
-      {errorState && (
+      {expiredState && (
         <LinkExpired />
       )}
     </UserLayout>

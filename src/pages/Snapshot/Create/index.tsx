@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-20 16:06:26
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 04:27:11
+ * @ Modified time: 2023-04-08 02:26:35
  * @ Description: i@rua.moe
  */
 
@@ -19,6 +19,8 @@ import UserLayout from '@/layouts/UserLayout';
 import Loading from '@/components/Loading';
 import LinkExpired from '@/components/LinkExpired';
 import { SignMessage } from '@/utils/near';
+import { notification } from 'antd';
+import Fail from '@/components/Fail';
 
 interface QueryParams {
   transactionHashes?: string;
@@ -30,8 +32,9 @@ interface QueryParams {
 }
 
 const Create: React.FC = () => {
-  const { walletSelector, nearAccount, nearWallet, GetKeyStore } = useModel('near.account');
+  const { nearAccount, nearWallet, GetKeyStore } = useModel('near.account');
   const [errorState, setErrorState] = useState<boolean>(false);
+  const [expiredState, setExpiredState] = useState<boolean>(false);
 
   const location = useLocation();
   const search: QueryParams = querystring.parse(location.search);
@@ -45,11 +48,16 @@ const Create: React.FC = () => {
       const res = await SendMsgSnapshot({
         guild_id: search?.guild_id,
         channel_id: search?.channel_id,
-        hash: Buffer.from((txRes?.status as providers.FinalExecutionStatus)?.SuccessValue!).toString('base64').replaceAll('\"', ''),
+        hash: Buffer.from((txRes?.status as providers.FinalExecutionStatus)?.SuccessValue!)?.toString('base64')?.replaceAll('\"', ''),
       })
-      if (res?.response?.status === 200 && res?.data?.success) {
+      if (res?.data?.success) {
         window.location.href = `https://discord.com/channels/${search?.guild_id}/${search?.channel_id}`;
       } else {
+        notification.error({
+          key: 'error.sendMsgSnapshot',
+          message: 'Error',
+          description: (res.data as Resp.Error)?.message,
+        });
         setErrorState(true);
       }
     }
@@ -90,7 +98,12 @@ const Create: React.FC = () => {
         });
 
         if (!_sign?.data?.success) {
-          setErrorState(true);
+          notification.error({
+            key: 'error.getSnapshotSign',
+            message: 'Error',
+            description: (_sign?.data as Resp.Error)?.message,
+          });
+          setExpiredState(true);
           return;
         }
 
@@ -110,16 +123,26 @@ const Create: React.FC = () => {
         if (!!res) {
           await checkResult(res as providers.FinalExecutionOutcome);
         }
+      } else {
+        notification.error({
+          key: 'error.params',
+          message: 'Error',
+          description: 'Missing parameters',
+        });
+        setExpiredState(true);
       }
     })()
   }, [nearAccount]);
 
   return (
     <UserLayout>
-      {!errorState && (
+      {!errorState && !expiredState && (
         <Loading />
       )}
-      {errorState && (
+      {errorState && !expiredState && (
+        <Fail />
+      )}
+      {!errorState && expiredState && (
         <LinkExpired />
       )}
     </UserLayout>

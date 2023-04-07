@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-16 01:18:40
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-07 04:46:10
+ * @ Modified time: 2023-04-08 02:12:47
  * @ Description: i@rua.moe
  */
 
@@ -19,6 +19,7 @@ import { ExecuteMultipleTransactions } from "@/utils/contract";
 import UserLayout from "@/layouts/UserLayout";
 import Loading from "@/components/Loading";
 import Fail from "@/components/Fail";
+import LinkExpired from "@/components/LinkExpired";
 
 interface QueryParams {
   guild_id?: string;
@@ -35,6 +36,7 @@ interface QueryParams {
 const Airdrop: React.FC = () => {
   const { nearAccount, nearWallet } = useModel('near.account');
   const [errorState, setErrorState] = useState<boolean>(false);
+  const [expiredState, setExpiredState] = useState<boolean>(false);
 
   const location = useLocation();
   const search: QueryParams = querystring.parse(location.search);
@@ -54,7 +56,7 @@ const Airdrop: React.FC = () => {
         hash: airdropHash,
       })
 
-      if (res?.response?.status === 200 && res?.data?.success) {
+      if (res?.data?.success) {
         window.location.href = `https://discord.com/channels/${search.guild_id}/${search.channel_id}`;
       } else {
         notification.error({
@@ -68,6 +70,7 @@ const Airdrop: React.FC = () => {
         message: 'Error',
         description: 'Missing parameters',
       });
+      setExpiredState(true);
     }
   };
 
@@ -119,7 +122,7 @@ const Airdrop: React.FC = () => {
             }]
           }
 
-          txs.push({
+          txs.concat([{
             receiverId: API_CONFIG()?.AIRDROP_CONTRACT,
             actions: [{
               methodName: "add_campaign",
@@ -130,9 +133,7 @@ const Airdrop: React.FC = () => {
               gas: "100000000000000",
               // kind: "functionCall",
             }]
-          });
-
-          txs.push({
+          }, {
             receiverId: search?.token_contract,
             actions: [{
               args: {
@@ -148,7 +149,7 @@ const Airdrop: React.FC = () => {
               methodName: "ft_transfer_call"
               // kind: "functionCall",
             }]
-          });
+          }]);
 
           const result = await ExecuteMultipleTransactions({
             nearAccount,
@@ -165,7 +166,7 @@ const Airdrop: React.FC = () => {
             message: 'Error',
             description: 'Missing parameters',
           });
-          setErrorState(true);
+          setExpiredState(true);
         }
       } else {
         notification.error({
@@ -173,20 +174,23 @@ const Airdrop: React.FC = () => {
           message: 'Error',
           description: 'Missing parameters',
         });
-        setErrorState(true);
+        setExpiredState(true);
       }
     })()
   }, [nearAccount]);
 
   return (
     <UserLayout>
-      {!errorState && (
+      {!errorState && !expiredState && (
         <Loading />
       )}
-      {errorState && (
+      {errorState && !expiredState && (
         <Fail
           from="airdrop"
         />
+      )}
+      {!errorState && expiredState && (
+        <LinkExpired />
       )}
     </UserLayout>
   )

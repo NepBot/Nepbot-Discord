@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 04:00:13
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-28 18:28:58
+ * @ Modified time: 2023-04-08 00:23:06
  * @ Description: i@rua.moe
  */
 
@@ -39,7 +39,9 @@ const ItemCard: React.FC<{
         <div className={styles.buttonContainer}>
           <div
             className={styles.button}
-            onClick={() => onDelete(item)}
+            onClick={async () => {
+              await onDelete(item);
+            }}
           >
             <RiDeleteBin4Line
               className={styles.buttonIcon}

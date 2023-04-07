@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-17 04:09:10
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 04:17:22
+ * @ Modified time: 2023-04-08 02:18:12
  * @ Description: i@rua.moe
  */
 
@@ -15,6 +15,7 @@ import { notification } from "antd";
 import UserLayout from "@/layouts/UserLayout";
 import Loading from "@/components/Loading";
 import LinkExpired from "@/components/LinkExpired";
+import Fail from "@/components/Fail";
 
 interface QueryParams {
   hash?: string;
@@ -23,6 +24,7 @@ interface QueryParams {
 const Redeem: React.FC = () => {
   const { nearAccount, nearWallet, setCallbackUrl } = useModel('near.account');
   const [errorState, setErrorState] = useState<boolean>(false);
+  const [expiredState, setExpiredState] = useState<boolean>(false);
 
   const location = useLocation();
   const search: QueryParams = querystring.parse(location.search);
@@ -61,17 +63,22 @@ const Redeem: React.FC = () => {
           message: 'Error',
           description: 'Missing parameters',
         });
-        setErrorState(true);
+        setExpiredState(true);
       }
     })()
   }, [nearAccount]);
 
   return (
     <UserLayout>
-      {!errorState && (
+      {!errorState && !expiredState && (
         <Loading />
       )}
-      {errorState && (
+      {errorState && !expiredState && (
+        <Fail
+          from="airdrop"
+        />
+      )}
+      {!errorState && expiredState && (
         <LinkExpired />
       )}
     </UserLayout>
