@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-18 03:42:43
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 22:37:17
+ * @ Modified time: 2023-04-07 04:34:04
  * @ Description: i@rua.moe
  */
 
@@ -15,8 +15,8 @@ import { API_CONFIG } from "@/constants/config";
 import { notification } from "antd";
 import UserLayout from "@/layouts/UserLayout";
 import Loading from "@/components/Loading";
-import LinkExpired from "@/components/LinkExpired";
 import Success from "@/components/Success";
+import Fail from "@/components/Fail";
 
 interface QueryParams {
   state?: string;
@@ -27,6 +27,7 @@ const Verify: React.FC = () => {
   const { nearAccount } = useModel('near.account');
   const [errorState, setErrorState] = useState<boolean>(false);
   const [successState, setSuccessState] = useState<boolean>(false);
+  const [status, setStatus] = useState<number>();
 
   const location = useLocation();
   const search: QueryParams = querystring.parse(location.search);
@@ -73,9 +74,11 @@ const Verify: React.FC = () => {
             });
             localStorage.setItem(`nepbot:twitter:verify:${nearAccount?.accountId}:${API_CONFIG().networkId}`, info);
             setErrorState(true);
+            setStatus(1);
           }
         } else {
           setErrorState(true);
+          setStatus(0);
         }
       } else {
         notification.error({
@@ -94,7 +97,10 @@ const Verify: React.FC = () => {
         <Loading />
       )}
       {errorState && !successState && (
-        <LinkExpired />
+        <Fail
+          from='twitter_verify'
+          status={status}
+        />
       )}
       {!errorState && successState && (
         <Success

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 04:23:24
+ * @ Modified time: 2023-04-07 03:41:11
  * @ Description: i@rua.moe
  */
 
@@ -122,6 +122,11 @@ const Collection: React.FC = () => {
         if (!(roles?.data as Resp.GetRole)?.success) {
           setErrorState(true);
           setLoading(false);
+          notification.error({
+            key: 'error.getRole',
+            message: 'Error',
+            description: (roles?.data as Resp.Error)?.message,
+          });
           return;
         }
 

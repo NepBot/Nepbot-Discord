@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 16:18:09
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-01 03:03:15
+ * @ Modified time: 2023-04-07 15:35:26
  * @ Description: i@rua.moe
  */
 
@@ -175,6 +175,8 @@ const CreateModal: React.FC<{
         account_id: nearAccount?.accountId,
       });
 
+      const _signData = (_sign?.data as Resp.GetOwnerSign)?.data;
+
       if (!_sign?.data?.success) {
         notification.error({
           key: 'error.params',
@@ -192,7 +194,7 @@ const CreateModal: React.FC<{
         methodName: 'set_roles',
         args: {
           roles: [arg],
-          ..._sign,
+          ..._signData,
         },
         gas: '300000000000000',
         deposit: '20000000000000000000000',
@@ -206,13 +208,11 @@ const CreateModal: React.FC<{
         }
       })
     } catch (e: any) {
-      setLoading(false);
-      notification.error({
+      notification.warning({
         key: 'error.params',
         message: 'Error',
         description: e.message,
       });
-      setErrorState(true);
     }
   };
 

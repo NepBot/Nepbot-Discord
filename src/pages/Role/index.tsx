@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-08 03:35:39
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 04:25:03
+ * @ Modified time: 2023-04-08 00:04:39
  * @ Description: i@rua.moe
  */
 
@@ -62,76 +62,76 @@ const Role: React.FC = () => {
         guild_id: discordInfo.guild_id!,
       });
 
-      if (!!roleRes?.data && roleRes?.data?.success) {
-        const roleData = roleRes?.data as Resp.GetRole;
-        data?.forEach((item: any, index) => {
-          roleData?.data?.forEach(role => {
-            if (role.id === item["role_id"]) {
-              item.role_name = role.name
-              item.guild_name = discordServer?.name || serverName
-              item.key = index;
-            }
-          })
+      const roleList = (roleRes?.data as Resp.GetRole)?.data;
+      data?.forEach((item: any, index) => {
+        roleList?.forEach(role => {
+          if (role.id === item["role_id"]) {
+            item.role_name = role.name
+            item.guild_name = discordServer?.name || serverName
+            item.key = index;
+          }
+        })
+      });
+      roleList?.forEach(role => {
+        data?.forEach((item, index) => {
+          if (role?.id === item["role_id"] && role?.name !== '@everyone' && !!role?.name) {
+            item.role_name = role.name
+            item.guild_name = discordServer?.name || serverName
+            item.key = index;
+          }
         });
-        roleData?.data?.forEach(role => {
-          data?.forEach((item, index) => {
-            if (role?.id === item["role_id"] && role?.name !== '@everyone' && !!role?.name) {
-              item.role_name = role.name
-              item.guild_name = discordServer?.name || serverName
-              item.key = index;
-            }
-          });
-        });
+      });
 
-        for (let item of data) {
-          if (!!!!item?.key_field) {
-            switch (item?.key_field[0]) {
-              case 'token_id':
-                var metadata = await nearAccount?.viewFunction(item.key_field[1], 'ft_metadata', {});
-                item.token_symbol = metadata?.symbol;
-                item.icon = metadata?.icon;
-                item.decimals = metadata?.decimals;
-                break;
-              case 'appchain_id':
-                item.icon = Octopus;
-                break;
-              case 'near':
-                item.icon = Near;
-                break;
-              case 'nft_contract_id':
-                var metadata = await nearAccount?.viewFunction(item?.key_field[1], 'nft_metadata', {});
-                item.icon = metadata?.icon;
-                item.name = metadata?.name;
-                break;
-              case API_CONFIG().PARAS_CONTRACT:
-                item.icon = Paras;
-                item.name = item?.key_field[1];
-                break;
-              case API_CONFIG().H00KD_CONTRACT:
-                try {
-                  const eventdata = await nearAccount?.viewFunction(API_CONFIG().H00KD_CONTRACT, 'get_event_data', { event_id: item?.key_field[1] });
-                  item.name = eventdata?.name;
-                  item.icon = H00KD;
-                } catch (e: any) {
-                  notification.error({
-                    key: 'error.viewFunction',
-                    message: 'Error',
-                    description: e.message,
-                  });
-                };
-                break;
-              case 'astrodao_id':
-                item.icon = ASTRO;
-                break;
-              case 'gating_rule':
-                item.icon = Paras;
-            }
+      for (let item of data) {
+        if (!!item?.key_field) {
+          switch (item?.key_field[0]) {
+            case 'token_id':
+              var metadata = await nearAccount?.viewFunction(item.key_field[1], 'ft_metadata', {});
+              item.token_symbol = metadata?.symbol;
+              item.icon = metadata?.icon;
+              item.decimals = metadata?.decimals;
+              break;
+            case 'appchain_id':
+              item.icon = Octopus;
+              break;
+            case 'near':
+              item.icon = Near;
+              break;
+            case 'nft_contract_id':
+              var metadata = await nearAccount?.viewFunction(item?.key_field[1], 'nft_metadata', {});
+              item.icon = metadata?.icon;
+              item.name = metadata?.name;
+              break;
+            case API_CONFIG().PARAS_CONTRACT:
+              item.icon = Paras;
+              item.name = item?.key_field[1];
+              break;
+            case API_CONFIG().H00KD_CONTRACT:
+              try {
+                const eventdata = await nearAccount?.viewFunction(API_CONFIG().H00KD_CONTRACT, 'get_event_data', { event_id: item?.key_field[1] });
+                item.name = eventdata?.title;
+                item.icon = H00KD;
+              } catch (e: any) {
+                notification.error({
+                  key: 'error.viewFunction',
+                  message: 'Error',
+                  description: e.message,
+                });
+                console.log(e)
+              };
+              break;
+            case 'astrodao_id':
+              item.icon = ASTRO;
+              break;
+            case 'gating_rule':
+              item.icon = Paras;
+          }
 
-            if (txRes?.data?.success && !!(txRes?.data as Resp.GetTxByGuild)?.data) {
-              for (let tx of (txRes?.data as Resp.GetTxByGuild)?.data!) {
-                if (IsObjectValueEqual(item?.fields, tx?.roles?.[0]?.fields) && item?.key_field.join('') === tx?.roles?.[0]?.key_field?.join('') && item.role_id === tx?.roles?.[0]?.role_id) {
-                  item.transaction_hash = tx.transaction_hash;
-                }
+          const txList = (txRes?.data as Resp.GetTxByGuild)?.data;
+          if (!!txList) {
+            for (let tx of txList) {
+              if (IsObjectValueEqual(item?.fields, tx?.roles?.[0]?.fields) && item?.key_field.join('') === tx?.roles?.[0]?.key_field?.join('') && item.role_id === tx?.roles?.[0]?.role_id) {
+                item.transaction_hash = tx.transaction_hash;
               }
             }
           }
@@ -149,6 +149,7 @@ const Role: React.FC = () => {
       key_field: record.key_field,
       fields: record.fields,
     };
+
     const args = {
       sign: discordOperationSign,
       user_id: discordInfo?.user_id,
@@ -179,6 +180,7 @@ const Role: React.FC = () => {
         description: (_sign?.data as Resp.Error)?.message,
       });
       setErrorState(true);
+      setLoading(false);
       return;
     }
 

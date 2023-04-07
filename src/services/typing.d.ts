@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:18
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 02:46:33
+ * @ Modified time: 2023-04-07 03:56:00
  * @ Description: i@rua.moe
  */
 
@@ -90,9 +90,9 @@ declare namespace API {
   }
 
   interface CreateParasCollection {
-    logo?: File | Blob;
-    cover?: File | Blob;
-    args?: {
+    logo?: File;
+    cover?: File;
+    params?: {
       args?: {
         args?: {
           collection?: string;

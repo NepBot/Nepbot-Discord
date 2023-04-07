@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-07 03:06:49
+ * @ Modified time: 2023-04-07 05:02:37
  * @ Description: i@rua.moe
  */
 
@@ -113,6 +113,11 @@ const Collection: React.FC = () => {
         if (!_sign?.data?.success) {
           setErrorState(true);
           setLoading(false);
+          notification.error({
+            key: 'error.sign',
+            message: 'Error',
+            description: (_sign?.data as Resp.Error)?.message || 'Failed to get sign',
+          });
           return;
         }
         setDiscordOperationSign((_sign?.data as Resp.GetOperationSign)?.data);
@@ -144,7 +149,6 @@ const Collection: React.FC = () => {
           message: 'Error',
           description: 'Failed to get roles',
         });
-        setLoading(false);
         return;
       }
 
@@ -175,37 +179,37 @@ const Collection: React.FC = () => {
 
         switch (collection?.contract_type) {
           case 'paras':
-            collectionData = await GetCollection({
+            const ParasRes = await GetCollection({
               collection_id: collection?.outer_collection_id,
             });
-            if (!!collectionData?.data && !!(collectionData?.data as Resp.GetCollection)?.data?.results?.length) {
+            collectionData = (ParasRes?.data as Resp.GetCollection)?.data;
+            if (!!collectionData && !!collectionData?.results?.length) {
               collectionItems = {
                 name: collection?.collection_id?.split(":")[1]?.split("-guild-")[0]?.replaceAll("-", " "),
                 cover: API_CONFIG().IPFS + collectionData?.results[0]['cover'],
                 media: API_CONFIG().IPFS + collectionData?.results[0]['media'],
                 contract: API_CONFIG().PARAS_CONTRACT,
                 royaltyTotal: royaltyTotal / 100,
-                inner_collection_id: collection?.inner_collection_id,
+                inner_collection_id: collection?.collection_id,
                 outer_collection_id: collection?.outer_collection_id,
                 ...collection,
-                ...collectionData?.data?.results[0],
+                ...collectionData?.results[0],
               }
             }
             break;
           case 'mintbase':
-            collectionData = await GetMintbaseCollection({
+            const mintbaseRes = await GetMintbaseCollection({
               collection_id: collection?.outer_collection_id,
             });
-            if (!!collectionData) {
-              collectionItems = {
-                royaltyTotal: royaltyTotal / 100,
-                inner_collection_id: collection.collection_id,
-                outer_collection_id: collection.outer_collection_id,
-                media: collectionData.logo,
-                cover: collectionData.background,
-                ...collection,
-                ...collectionData?.data,
-              }
+            collectionData = (mintbaseRes?.data as Resp.GetMintbaseCollection)?.data;
+            collectionItems = {
+              royaltyTotal: royaltyTotal / 100,
+              inner_collection_id: collection.collection_id,
+              outer_collection_id: collection.outer_collection_id,
+              media: collectionData?.logo,
+              cover: collectionData?.background,
+              ...collection,
+              ...collectionData,
             }
         }
 
@@ -268,6 +272,7 @@ const Collection: React.FC = () => {
                       <div className={styles.itemContent}>
                         <Row gutter={[30, 30]}>
                           {haveAccessList?.map((item: Contract.WrappedCollections, index: number) => {
+                            console.log(item)
                             return (
                               <Col
                                 xs={24} sm={24} md={12} lg={8} xl={8}

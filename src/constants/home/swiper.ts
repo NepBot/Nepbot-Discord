@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-15 03:22:13
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-31 15:56:04
+ * @ Modified time: 2023-04-07 04:50:15
  * @ Description: i@rua.moe
  */
 
@@ -36,6 +36,6 @@ export const SWIPER = [
     desc: 'Connect wallet, verify your ownership, and unlock possibilities',
     button: 'How to verify',
     image: 'pic-4.webp',
-    link: '',
+    link: 'https://nepbot.github.io/Nepbot-gitbook/doc/Verify_Assets.html',
   },
 ];

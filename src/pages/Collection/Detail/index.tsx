@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 19:42:06
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 02:30:58
+ * @ Modified time: 2023-04-07 04:23:28
  * @ Description: i@rua.moe
  */
 
@@ -50,7 +50,7 @@ const CollectionDetail: React.FC = () => {
     creator: '',
     minted_count: 0,
     total_copies: 0,
-    name: params.id?.split(":")[1]?.split("-guild-")[0]?.replaceAll("-", " ")
+    name: params.id?.split(":")[1]?.split("-guild-")[0]?.replaceAll("-", " "),
   })
 
   const location = useLocation();
@@ -60,6 +60,7 @@ const CollectionDetail: React.FC = () => {
     (async () => {
       if (!search.guild_id) {
         setErrorState(true);
+        setLoading(false);
         notification.error({
           key: 'error.params',
           message: 'Error',
@@ -67,6 +68,7 @@ const CollectionDetail: React.FC = () => {
         });
         return;
       }
+
       if (!nearAccount) {
         return;
       }
@@ -80,12 +82,12 @@ const CollectionDetail: React.FC = () => {
         });
         var info: any = {
           collection_id: params?.id,
-          creator: collection.creator_id,
-          minted_count: collection.minted_count,
-          total_copies: collection.total_copies,
+          creator: collection?.creator_id,
+          minted_count: collection?.minted_count,
+          total_copies: collection?.total_copies,
           serverName: server?.name,
           serverIcon: server?.iconURL,
-          contract_type: collection.contract_type,
+          contract_type: collection?.contract_type,
         }
 
         switch (collection.contract_type) {
@@ -103,7 +105,7 @@ const CollectionDetail: React.FC = () => {
             }
             const parasData = (parasRes?.data as Resp.GetCollection)?.data;
 
-            info.name = params.id?.split(":")[1].split("-guild-")[0].replaceAll("-", " ");
+            info.name = params.id?.split(":")[1]?.split("-guild-")[0]?.replaceAll("-", " ");
             info.cover = API_CONFIG().IPFS + parasData?.results![0]['cover']!;
             info.logo = API_CONFIG().IPFS + parasData?.results![0]['media']!;
             info.contract = API_CONFIG().PARAS_CONTRACT;
@@ -122,13 +124,14 @@ const CollectionDetail: React.FC = () => {
                 description: 'Failed to get collection info',
               });
             }
-            const mintbaseData = mintbaseRes?.data as Resp.GetMintbaseCollection;
+
+            const mintbaseData = (mintbaseRes?.data as Resp.GetMintbaseCollection).metadata;
 
             if (!!mintbaseData) {
-              info.name = mintbaseData?.metadata?.name;
-              info.description = mintbaseData?.metadata?.description;
-              info.cover = mintbaseData?.metadata?.background;
-              info.logo = mintbaseData?.metadata?.logo;
+              info.name = mintbaseData?.name;
+              info.description = mintbaseData?.description;
+              info.cover = mintbaseData?.background;
+              info.logo = mintbaseData?.logo;
             }
             break;
         }
@@ -139,13 +142,7 @@ const CollectionDetail: React.FC = () => {
         setShowList(res);
         setLoading(false);
       } catch (error: any) {
-        setErrorState(true);
-        setLoading(false);
-        notification.error({
-          key: 'error.getData',
-          message: 'Error',
-          description: error.message || error,
-        });
+        console.log(error);
       }
     })();
   }, [addModal, nearAccount]);
@@ -182,7 +179,11 @@ const CollectionDetail: React.FC = () => {
                       })}
                       className={styles.searchInput}
                       onChange={e => {
-                        setShowList(seriesList.filter((item: any) => item.name.toLowerCase().includes(e.target.value.toLowerCase())));
+                        if (e.target.value === '') {
+                          setShowList(seriesList);
+                          return;
+                        }
+                        setShowList(seriesList?.filter((item: any) => item?.name?.toLowerCase()?.includes(e.target.value?.toLowerCase())));
                       }}
                     />
                   </div>

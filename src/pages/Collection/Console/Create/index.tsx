@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 03:37:37
+ * @ Modified time: 2023-04-07 03:59:47
  * @ Description: i@rua.moe
  */
 
@@ -51,7 +51,7 @@ const Create: React.FC<{
   const [coverUrl, setCoverUrl] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [royalty, setRoyalty] = useState<Map<string, number>>(new Map());
+  const [royalty, setRoyalty] = useState<{}>({});
   const [parasCreatedList, setParasCreatedList] = useState<any[]>([]);
 
   const intl = useIntl();
@@ -60,15 +60,16 @@ const Create: React.FC<{
 
   const handleRoyalty = async () => {
     await form.validateFields();
+    var royaltyCount = 0;
+    var royalty_list: any = {};
     const values = await form.getFieldsValue();
-    values?.royalty?.forEach((item: RoyaltyItem) => {
-      if (!!item?.accountId && !!item?.ratio) {
-        setRoyalty((royalty) => {
-          royalty?.set(item.accountId, item.ratio * 100);
-          return royalty;
-        });
+    values?.royalty?.forEach((royalty: RoyaltyItem) => {
+      if (!!royalty?.accountId && !!royalty?.ratio) {
+        royalty_list[royalty?.accountId] = royalty?.ratio * 100;
+        royaltyCount += 1;
       }
     });
+    setRoyalty(royaltyCount ? royalty_list : null);
   };
 
   const handleSubmit = useCallback(async () => {
@@ -76,7 +77,7 @@ const Create: React.FC<{
       await form.validateFields();
       const values = await form.getFieldsValue();
       setLoading(true);
-      const outerCollectionId = `${values?.name.replace(/\s+/g, "-")}-guild-${discordServer?.name?.replace(/\s+/g, "-")}-by-${API_CONFIG()?.NFT_CONTRACT?.replaceAll(".", "")}`.toLowerCase().replaceAll(".", "");
+      const outerCollectionId = `${values.name.replace(/\s+/g, "-")}-guild-${discordServer?.name?.replace(/\s+/g, "-")}-by-${API_CONFIG().NFT_CONTRACT?.replaceAll(".", "")}`.toLowerCase().replaceAll(".", "");
 
       var res: any;
 
@@ -85,27 +86,26 @@ const Create: React.FC<{
           const collection = await GetCollection({
             collection_id: outerCollectionId
           });
-          if (!collection || !(collection.data as Resp.GetCollection)?.data?.results?.length || parasCreatedList.indexOf(values?.name) > -1) {
+          if (!collection || !!(collection.data as Resp.GetCollection)?.data?.results?.length || parasCreatedList.indexOf(values?.name) > -1) {
             try {
-              const contract = await nearAccount?.viewFunction(API_CONFIG()?.NFT_CONTRACT, 'get_collection', {
+              await nearAccount?.viewFunction(API_CONFIG()?.NFT_CONTRACT, 'get_collection', {
                 collection_id: `paras:${outerCollectionId}`
               });
               setLoading(false);
-              if (!!contract) {
-                notification.error({
-                  key: 'error.createCollection',
-                  message: "Error",
-                  description: "Collection name already exists"
-                });
-                return;
-              }
+              setIsModalOpen(false);
+              notification.error({
+                key: 'error.createCollection',
+                message: "Error",
+                description: "Collection name already exists"
+              });
+              return;
             } catch (error) {
               res = {
                 collection_id: outerCollectionId,
               }
             }
           } else {
-            var params = {
+            var params: any = {
               args: {
                 args: {
                   collection: `${values.name.replace(/\s+/g, "-")}-guild-${discordServer?.name?.replace(/\s+/g, "-")}`,
@@ -120,7 +120,6 @@ const Create: React.FC<{
                 guild_id: discordInfo?.guild_id
               },
               account_id: nearAccount?.accountId,
-              sign: '',
             }
             const keystore = await GetKeyStore(nearAccount?.accountId);
 
@@ -130,7 +129,7 @@ const Create: React.FC<{
 
             const sign = await SignMessage({
               keystore: keystore,
-              object: params,
+              object: params.args,
             });
 
             params.sign = sign?.signature;
@@ -138,17 +137,14 @@ const Create: React.FC<{
             const result = await CreateParasCollection({
               logo: values?.logo,
               cover: values?.cover,
-              args: params
+              params: params
             });
 
             if (result?.response?.status === 200) {
               res = result.data;
 
-              if (!!res.data.collection_id) {
-                setParasCreatedList((list) => {
-                  list.push(values?.name);
-                  return list;
-                });
+              if (!!res.collection_id) {
+                setParasCreatedList([...parasCreatedList, values?.name]);
               }
             }
           }
@@ -241,6 +237,7 @@ const Create: React.FC<{
       setTimeout(() => {
         if (!!data) {
           setLoading(false);
+          setIsModalOpen(false);
           form.resetFields();
           setLogoUrl('');
           setCoverUrl('');

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 00:37:16
+ * @ Modified time: 2023-04-07 04:31:29
  * @ Description: i@rua.moe
  */
 
@@ -67,15 +67,14 @@ const Add: React.FC<{
             image: values?.image,
             ...params
           });
-          if (!res?.data?.success) {
+          if (!res?.data) {
             notification.error({
               key: 'error.create',
               message: 'Error',
               description: (res?.data as Resp.Error)?.message,
             });
-            setLoading(false);
-            return;
           }
+
           const data = (res?.data as Resp.CreateSeries).data;
           media = data[0]?.replace("ipfs://", "");
           reference = data[1]?.replace("ipfs://", "");
@@ -142,13 +141,10 @@ const Add: React.FC<{
       });
 
       if (!!data) {
-        messageApi.success({
-          content: 'Success',
-          duration: 2,
-        });
+        messageApi.success('Success');
         setLoading(false);
         form.resetFields();
-        setImageUrl(undefined);
+        setImageUrl('');
         onSubmit?.();
       }
     } catch (e: any) {

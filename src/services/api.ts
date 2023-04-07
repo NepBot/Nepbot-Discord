@@ -3,7 +3,7 @@ import { API_CONFIG } from '@/constants/config';
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:47
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 15:48:08
+ * @ Modified time: 2023-04-07 14:39:56
  * @ Description: i@rua.moe
  */
 
@@ -172,9 +172,9 @@ export const CreateParasCollection = async (
   options?: { [key: string]: any },
 ) => {
   const formData = new FormData();
-  formData.append('files', data.logo as Blob);
-  formData.append('files', data.cover as Blob);
-  formData.append('args', JSON.stringify(data.args));
+  formData.append('files', data.logo!);
+  formData.append('files', data.cover!);
+  formData.append('args', JSON.stringify(data.params));
 
   return request<Resp.CreateParasCollection | Resp.Error>(
     `${!_DEBUG ? '/api' : _DEBUG_API}/createParasCollection`,

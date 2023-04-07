@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-15 03:53:57
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-31 18:28:32
+ * @ Modified time: 2023-04-07 04:54:30
  * @ Description: i@rua.moe
  */
 
@@ -75,9 +75,10 @@ export function FormatAmount({
     ?.substring(amount?.length - decimals)
     ?.padStart(decimals, '0')
     ?.substring(0, fracDigits);
-
   return TrimTrailingZeroes({
-    value: FormatWithCommas({ value: wholeStr }) + '.' + fractionStr,
+    value: `${FormatWithCommas({
+      value: wholeStr,
+    })}.${fractionStr}`,
   });
 }
 

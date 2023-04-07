@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-16 01:18:40
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 02:14:18
+ * @ Modified time: 2023-04-07 04:46:10
  * @ Description: i@rua.moe
  */
 
@@ -18,7 +18,7 @@ import { API_CONFIG } from "@/constants/config";
 import { ExecuteMultipleTransactions } from "@/utils/contract";
 import UserLayout from "@/layouts/UserLayout";
 import Loading from "@/components/Loading";
-import LinkExpired from "@/components/LinkExpired";
+import Fail from "@/components/Fail";
 
 interface QueryParams {
   guild_id?: string;
@@ -38,6 +38,7 @@ const Airdrop: React.FC = () => {
 
   const location = useLocation();
   const search: QueryParams = querystring.parse(location.search);
+
   const airdropHash = localStorage.getItem(`nepbot:airdrop:${search?.user_id}`)
 
   const checkResult = async () => {
@@ -60,6 +61,7 @@ const Airdrop: React.FC = () => {
           message: 'Error',
           description: (res?.data as Resp.Error)?.message || 'Unknown error',
         });
+        setErrorState(true);
       }
     } else {
       notification.error({
@@ -182,7 +184,9 @@ const Airdrop: React.FC = () => {
         <Loading />
       )}
       {errorState && (
-        <LinkExpired />
+        <Fail
+          from="airdrop"
+        />
       )}
     </UserLayout>
   )
