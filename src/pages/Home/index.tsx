@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 23:15:45
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 03:49:10
+ * @ Modified time: 2023-04-11 21:33:12
  * @ Description: i@rua.moe
  */
 
@@ -229,6 +229,53 @@ const Home: React.FC = () => {
                     </div>
                   </div>
                 </div>
+                <div className={styles.feature}>
+                  <div className={styles.featureItem}>
+                    <div className={styles.featureItemIcon}>
+                      <Safe />
+                    </div>
+                    <div className={styles.featureItemTitle}>
+                      {intl.formatMessage({
+                        id: 'home.screen4.featureItem1'
+                      })}
+                    </div>
+                    <div className={styles.featureItemContent}>
+                      {intl.formatMessage({
+                        id: 'home.screen4.featureItem1.content'
+                      })}
+                    </div>
+                  </div>
+                  <div className={styles.featureItem}>
+                    <div className={styles.featureItemIcon}>
+                      <Fast />
+                    </div>
+                    <div className={styles.featureItemTitle}>
+                      {intl.formatMessage({
+                        id: 'home.screen4.featureItem2'
+                      })}
+                    </div>
+                    <div className={styles.featureItemContent}>
+                      {intl.formatMessage({
+                        id: 'home.screen4.featureItem2.content'
+                      })}
+                    </div>
+                  </div>
+                  <div className={styles.featureItem}>
+                    <div className={styles.featureItemIcon}>
+                      <Free />
+                    </div>
+                    <div className={styles.featureItemTitle}>
+                      {intl.formatMessage({
+                        id: 'home.screen4.featureItem3'
+                      })}
+                    </div>
+                    <div className={styles.featureItemContent}>
+                      {intl.formatMessage({
+                        id: 'home.screen4.featureItem3.content'
+                      })}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </FullpageSection>
@@ -280,53 +327,6 @@ const Home: React.FC = () => {
                       )
                     })}
                   </Carousel>
-                </div>
-                <div className={styles.feature}>
-                  <div className={styles.featureItem}>
-                    <div className={styles.featureItemIcon}>
-                      <Safe />
-                    </div>
-                    <div className={styles.featureItemTitle}>
-                      {intl.formatMessage({
-                        id: 'home.screen4.featureItem1'
-                      })}
-                    </div>
-                    <div className={styles.featureItemContent}>
-                      {intl.formatMessage({
-                        id: 'home.screen4.featureItem1.content'
-                      })}
-                    </div>
-                  </div>
-                  <div className={styles.featureItem}>
-                    <div className={styles.featureItemIcon}>
-                      <Fast />
-                    </div>
-                    <div className={styles.featureItemTitle}>
-                      {intl.formatMessage({
-                        id: 'home.screen4.featureItem2'
-                      })}
-                    </div>
-                    <div className={styles.featureItemContent}>
-                      {intl.formatMessage({
-                        id: 'home.screen4.featureItem2.content'
-                      })}
-                    </div>
-                  </div>
-                  <div className={styles.featureItem}>
-                    <div className={styles.featureItemIcon}>
-                      <Free />
-                    </div>
-                    <div className={styles.featureItemTitle}>
-                      {intl.formatMessage({
-                        id: 'home.screen4.featureItem3'
-                      })}
-                    </div>
-                    <div className={styles.featureItemContent}>
-                      {intl.formatMessage({
-                        id: 'home.screen4.featureItem3.content'
-                      })}
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
