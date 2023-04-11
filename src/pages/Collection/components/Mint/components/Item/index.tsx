@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:07:16
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-07 04:58:49
+ * @ Modified time: 2023-04-12 03:29:25
  * @ Description: i@rua.moe
  */
 
@@ -89,7 +89,7 @@ const Item: React.FC<{
       },
       gas: '300000000000000',
       deposit: price?.mul(new BN(inputValue?.toString()!)).toString(),
-      walletCallbackUrl: `${window.location.href}&state=success`,
+      walletCallbackUrl: `${window.location.href}&state=success&contract_type=${item?.contract_type}`,
       setCallbackUrl: setCallbackUrl,
     });
 

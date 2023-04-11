@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-30 03:27:35
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-07 03:23:30
+ * @ Modified time: 2023-04-12 03:30:17
  * @ Description: i@rua.moe
  */
 
@@ -11,8 +11,9 @@ export default {
   'linkexpired.text': 'Link expired',
   'linkexpired.description': 'Please create a new link.',
   'success.title.twitter_verify': 'Twitter verification success',
-  'success.title.mint': 'Mint success',
-  'success.description.mint': 'View NFT on {type}',
+  'success.title.mint': 'Congratulations!',
+  'success.description.mint':
+    'Your NFT has been minted successfully.\nCheck and refresh you wallet as it might not apprear immediately.',
   'success.title.default': 'Wallet is connected.',
   'success.description.default':
     'Please go back to Discord and check your roles!',
