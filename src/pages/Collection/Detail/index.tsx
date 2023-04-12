@@ -125,7 +125,7 @@ const CollectionDetail: React.FC = () => {
               });
             }
 
-            const mintbaseData = (mintbaseRes?.data as Resp.GetMintbaseCollection).metadata;
+            const mintbaseData = (mintbaseRes?.data as Resp.GetMintbaseCollection)?.metadata;
 
             if (!!mintbaseData) {
               info.name = mintbaseData?.name;

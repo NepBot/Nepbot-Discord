@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-16 03:29:38
  * @ Modified by: Hikaru
- * @ Modified time: 2023-03-31 16:34:16
+ * @ Modified time: 2023-04-13 03:44:46
  * @ Description: i@rua.moe
  */
 
@@ -10,6 +10,7 @@ import { ReactComponent as AMP } from '@/assets/partners/AMP.svg';
 import { ReactComponent as De3Verse } from '@/assets/partners/De3Verse.svg';
 import { ReactComponent as AstroDao } from '@/assets/partners/astrodao.svg';
 import { ReactComponent as Atocha } from '@/assets/partners/atocha.svg';
+import { ReactComponent as AwesomeNear } from '@/assets/partners/awesomenear.svg';
 import { ReactComponent as BluntDAO } from '@/assets/partners/bluntDAO.svg';
 import { ReactComponent as CastleOverlord } from '@/assets/partners/castle-overlord.svg';
 import { ReactComponent as Coreto } from '@/assets/partners/coreto.svg';
@@ -229,5 +230,9 @@ export const TRUSTED = [
   {
     name: 'FLUX',
     logo: FLUX,
+  },
+  {
+    name: 'AwesomeNear',
+    logo: AwesomeNear,
   },
 ];

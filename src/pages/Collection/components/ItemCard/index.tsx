@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:59:56
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-06 00:42:17
+ * @ Modified time: 2023-04-13 04:14:24
  * @ Description: i@rua.moe
  */
 
@@ -25,6 +25,8 @@ const ItemCard: React.FC<{
 
   const intl = useIntl();
 
+  console.log(item);
+
   return (
     <div
       className={styles.itemContainer}
@@ -33,14 +35,14 @@ const ItemCard: React.FC<{
       <div className={styles.itemCover}>
         {item?.contract_type === 'paras' && (
           <img
-            src={item?.cover ? API_CONFIG().IPFS + item?.cover : require('@/assets/collection/banner.webp')}
+            src={!!item?.cover ? API_CONFIG().IPFS + item?.cover : require('@/assets/collection/banner.webp')}
             alt="cover"
             className={styles.itemCoverImage}
           />
         )}
         {item?.contract_type === 'mintbase' && (
           <img
-            src={item?.background ? API_CONFIG().IPFS + item?.background : require('@/assets/collection/banner.webp')}
+            src={!!item?.background ? item?.background : require('@/assets/collection/banner.webp')}
             alt="cover"
             className={styles.itemCoverImage}
           />
@@ -52,7 +54,7 @@ const ItemCard: React.FC<{
             {item?.contract_type === 'paras' && (
               <>
                 <img
-                  src={item?.media ? API_CONFIG().IPFS + item?.media : require('@/assets/collection/icon.webp')}
+                  src={!!item?.media ? API_CONFIG().IPFS + item?.media : require('@/assets/collection/icon.webp')}
                   alt="media"
                   className={styles.itemMetaIconImage}
                 />
@@ -64,7 +66,7 @@ const ItemCard: React.FC<{
             {item?.contract_type === 'mintbase' && (
               <>
                 <img
-                  src={item?.logo ? API_CONFIG().IPFS + item?.logo : require('@/assets/collection/icon.webp')}
+                  src={!!item?.logo ? item?.logo : require('@/assets/collection/icon.webp')}
                   alt="media"
                   className={styles.itemMetaIconImage}
                 />

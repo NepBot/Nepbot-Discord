@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-11 21:44:40
+ * @ Modified time: 2023-04-13 04:11:25
  * @ Description: i@rua.moe
  */
 
@@ -201,7 +201,7 @@ const Collection: React.FC = () => {
             const mintbaseRes = await GetMintbaseCollection({
               collection_id: collection?.outer_collection_id,
             });
-            collectionData = (mintbaseRes?.data as Resp.GetMintbaseCollection)?.data;
+            collectionData = (mintbaseRes?.data as Resp.GetMintbaseCollection)?.metadata;
             collectionItems = {
               royaltyTotal: royaltyTotal / 100,
               inner_collection_id: collection.collection_id,

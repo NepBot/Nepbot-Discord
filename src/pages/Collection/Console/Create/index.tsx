@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-07 03:59:47
+ * @ Modified time: 2023-04-13 03:54:41
  * @ Description: i@rua.moe
  */
 
@@ -266,6 +266,7 @@ const Create: React.FC<{
         description: "Only support jpg, jpeg, png, gif, svg format",
       });
     }
+
     const isLt10M = file.size / 1024 / 1024 < 10;
     if (!isLt10M) {
       notification.error({

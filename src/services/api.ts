@@ -1,9 +1,9 @@
 import { API_CONFIG } from '@/constants/config';
 /**
  * @ Author: Hikaru
- * @ Create Time: 2023-03-11 20:36:47
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-07 14:39:56
+ * @ Modified time: 2023-04-13 04:12:10
+ * @ Modified time: 2023-04-13 04:13:54
  * @ Description: i@rua.moe
  */
 
@@ -249,7 +249,7 @@ export const GetMintbaseCollection = async (
   options?: { [key: string]: any },
 ) => {
   return request<Resp.GetMintbaseCollection | Resp.Error>(
-    `${API_CONFIG().AEWEAVE_API}/${params.collection_id}`,
+    `${!_DEBUG ? '/aeweave' : _DEBUG_API}/${params.collection_id}`,
     {
       method: 'GET',
       headers: {
