@@ -13,35 +13,36 @@ import { API_CONFIG } from "@/constants/config";
 
 const ItemCard: React.FC<{
   item: any;
+  contractType: string | undefined
   onClick?: () => void;
-}> = ({ item, onClick }) => {
+}> = ({ item, contractType, onClick }) => {
   const intl = useIntl();
-
+  console.log(item)
   return (
     <div
       className={styles.itemContainer}
       onClick={onClick}
     >
       <div className={styles.itemCover}>
-        {item?.contract_type === 'paras' && (
+        {contractType === 'paras' && (
           <img
-            src={item?.media ? API_CONFIG().IPFS + item?.media : require('@/assets/collection/icon.webp')}
+            src={item ? API_CONFIG().IPFS + item.metadata.media : require('@/assets/collection/icon.webp')}
             alt="cover"
             className={styles.itemCoverImage}
           />
         )}
-        {item?.contract_type === 'mintbase' && (
+        {contractType === 'mintbase' && (
           <img
-            src={item?.media ? item?.media : require('@/assets/collection/icon.webp')}
+            src={item ? item?.metadata.media : require('@/assets/collection/icon.webp')}
             alt="cover"
             className={styles.itemCoverImage}
           />
         )}
-        <img
+        {/* <img
           src={item?.media ? API_CONFIG().IPFS + item?.media : require('@/assets/collection/icon.webp')}
           alt="cover"
           className={styles.itemCoverImage}
-        />
+        /> */}
       </div>
       <div className={styles.itemContent}>
         <div className={styles.itemMeta}>

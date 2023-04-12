@@ -165,6 +165,7 @@ const Collection: React.FC = () => {
               }
               break;
             case 'mintbase':
+              console.log(collection)
               collectionData = await GetMintbaseCollection({
                 collection_id: collection?.outer_collection_id,
               });

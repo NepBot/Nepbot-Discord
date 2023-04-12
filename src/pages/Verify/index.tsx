@@ -8,7 +8,7 @@
 
 import React, { useEffect, useState } from 'react';
 import styles from './style.less';
-import { useIntl, useModel, useLocation } from '@umijs/max';
+import { history, useIntl, useModel, useLocation } from '@umijs/max';
 import querystring from 'query-string';
 import Background from '@/components/TopBackground';
 import classNames from 'classnames';
@@ -128,6 +128,42 @@ const Verify: React.FC = () => {
     }
   }, [discordInfo, nearAccount]);
 
+  const handleDisconnect = async () => {
+    if (!!nearWallet && !!nearWallet && !loading) {
+      if (!!search.guild_id && !!search.user_id && !!search.sign) {
+        const args = {
+          guild_id: search.guild_id,
+          user_id: search.user_id,
+          sign: search.sign
+        }
+        const keystore = await GetKeyStore(nearAccount?.accountId);
+        // await nearWallet.signOut();
+
+        const signature = await SignMessage({
+          keystore: keystore!,
+          object: args,
+        });
+        let res = await DisconnectAccount({
+          args: args,
+          account_id: nearAccount?.accountId,
+          sign: signature.signature,
+        });
+        console.log(res)
+        
+        notification.success({
+          key: 'success.disconnect',
+          message: intl.formatMessage({
+            id: 'connect.disconnect.title',
+          }),
+          description: intl.formatMessage({
+            id: 'connect.disconnect.desc',
+          }),
+        });
+        window.location.href = (res.data as Resp.DisconnectAccount).data
+      }
+    }
+  }
+
   return (
     <>
       {!errorState && !expiredState && loading && (
@@ -212,25 +248,7 @@ const Verify: React.FC = () => {
                     <div
                       className={classNames(styles.button, (!discordUser || !discordServer) && styles.buttonDisable)}
                       onClick={async () => {
-                        if (!!nearWallet && !!nearWallet && !loading) {
-                          await nearWallet.signOut();
-                          if (!!search.guild_id && !!search.user_id && !!search.sign) {
-                            await DisconnectAccount({
-                              guild_id: search.guild_id,
-                              user_id: search.user_id,
-                              sign: search.sign
-                            });
-                            notification.success({
-                              key: 'success.disconnect',
-                              message: intl.formatMessage({
-                                id: 'connect.disconnect.title',
-                              }),
-                              description: intl.formatMessage({
-                                id: 'connect.disconnect.desc',
-                              }),
-                            });
-                          }
-                        }
+                        await handleDisconnect()
                       }}
                     >
                       {loading ? (

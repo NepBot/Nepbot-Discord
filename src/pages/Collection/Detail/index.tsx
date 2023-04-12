@@ -294,10 +294,10 @@ const CollectionDetail: React.FC = () => {
                       <Row gutter={[30, 30]}>
                         {showList.map((item: any) => {
                           return (
-                            <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                            <Col xs={24} sm={24} md={12} lg={8} xl={8} key={uuidv4()}>
                               <ItemCard
-                                key={uuidv4()}
                                 item={item}
+                                contractType = {params.id?.split(":")[0]}
                                 onClick={() => {
                                   window.open(`${API_CONFIG().PARAS}/token/${API_CONFIG().PARAS_CONTRACT}::${item?.token_series_id}`, '_blank')
                                 }}

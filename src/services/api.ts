@@ -172,8 +172,8 @@ export const CreateParasCollection = async (
   options?: { [key: string]: any },
 ) => {
   const formData = new FormData();
-  formData.append('files', data.logo!);
-  formData.append('files', data.cover!);
+  formData.append('files', data.logo as Blob);
+  formData.append('files', data.cover as Blob);
   formData.append('args', JSON.stringify(data.params));
 
   return request<Resp.CreateParasCollection | Resp.Error>(
@@ -181,9 +181,9 @@ export const CreateParasCollection = async (
     {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'multipart/form-data;',
       },
-      data,
+      data: formData,
       ...(options || {}),
       getResponse: true,
       requestType: 'form',
@@ -209,10 +209,10 @@ export const CreateSeries = async (
     {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'multipart/form-data;',
         Authorization: Authorization,
       },
-      data,
+      data: formData,
       ...(options || {}),
       getResponse: true,
       requestType: 'form',

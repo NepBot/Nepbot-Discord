@@ -17,14 +17,13 @@ import { ReactComponent as Paras } from '@/assets/collection/paras.svg';
 import { ReactComponent as Mintbase } from '@/assets/collection/mintbase.svg';
 
 const ItemCard: React.FC<{
-  item: Contract.WrappedCollections;
+  item: any;
   roleMap: Map<string, string>;
   onClick?: () => void;
 }> = ({ item, roleMap, onClick }) => {
   const { discordServer } = useModel('discord');
-
   const intl = useIntl();
-
+  console.log(item)
   return (
     <div
       className={styles.itemContainer}

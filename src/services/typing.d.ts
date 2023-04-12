@@ -84,8 +84,12 @@ declare namespace API {
   }
 
   interface DisconnectAccount {
-    guild_id?: string;
-    user_id?: string;
+    args?: {
+      guild_id?: string;
+      user_id?: string;
+      sign?: string;
+    }
+    account_id?: string;
     sign?: string;
   }
 

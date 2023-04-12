@@ -34,6 +34,7 @@ declare namespace Contract {
     description?: string;
     mintable_roles?: string[];
     price?: string;
+    metadata?: any
   }
 
   interface CollectionInfo {

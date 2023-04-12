@@ -140,13 +140,12 @@ const Create: React.FC<{
               params: params
             });
 
-            if (result?.response?.status === 200) {
-              res = result.data;
+            res = (result.data as Resp.CreateParasCollection).data?.collection
 
-              if (!!res.collection_id) {
-                setParasCreatedList([...parasCreatedList, values?.name]);
-              }
+            if (!!res.collection_id) {
+              setParasCreatedList([...parasCreatedList, values?.name]);
             }
+          
           }
           break;
         case 'mintbase':

@@ -122,7 +122,7 @@ const Airdrop: React.FC = () => {
             }]
           }
 
-          txs.concat([{
+          txs = txs.concat([{
             receiverId: API_CONFIG()?.AIRDROP_CONTRACT,
             actions: [{
               methodName: "add_campaign",

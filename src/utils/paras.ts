@@ -11,7 +11,7 @@ import { connect, WalletConnection } from 'near-api-js';
 
 export async function GenerateToken() {
   const near = await connect(API_CONFIG());
-  const wallet = new WalletConnection(near, 'nepbot');
+  const wallet = new WalletConnection(near, "near_app");
   const account = await wallet.account();
   const accountId = account.accountId;
 
