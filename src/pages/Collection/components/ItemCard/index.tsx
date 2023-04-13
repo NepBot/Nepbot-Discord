@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:59:56
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-13 04:14:24
+ * @ Modified time: 2023-04-14 04:52:53
  * @ Description: i@rua.moe
  */
 
@@ -24,8 +24,6 @@ const ItemCard: React.FC<{
   const { discordServer } = useModel('discord');
 
   const intl = useIntl();
-
-  console.log(item);
 
   return (
     <div

@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:07:16
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-12 03:29:25
+ * @ Modified time: 2023-04-14 04:53:22
  * @ Description: i@rua.moe
  */
 
@@ -76,7 +76,7 @@ const Item: React.FC<{
       amount: FormatAmount({
         amount: item?.price,
       })
-    })?.toString()!).add(new BN('20000000000000000000000'));
+    })?.toString()!)?.add(new BN('20000000000000000000000'));
 
     await RequestTransaction({
       nearAccount: nearAccount,
@@ -88,7 +88,7 @@ const Item: React.FC<{
         ...(_sign?.data as Resp.GetMintSign)?.data,
       },
       gas: '300000000000000',
-      deposit: price?.mul(new BN(inputValue?.toString()!)).toString(),
+      deposit: price?.mul(new BN(inputValue?.toString()!))?.toString(),
       walletCallbackUrl: `${window.location.href}&state=success&contract_type=${item?.contract_type}`,
       setCallbackUrl: setCallbackUrl,
     });
