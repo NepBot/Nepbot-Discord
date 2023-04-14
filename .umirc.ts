@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-02-08 01:35:14
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-05 23:49:54
+ * @ Modified time: 2023-04-13 04:04:54
  * @ Description: i@rua.moe
  */
 
@@ -145,6 +145,11 @@ export default defineConfig({
     '/api': {
       target: 'http://13.214.203.20:8080',
       changeOrigin: true,
+    },
+    '/aeweave': {
+      target: 'https://arweave.net',
+      changeOrigin: true,
+      pathRewrite: { '^/aeweave': '' },
     },
   },
 });

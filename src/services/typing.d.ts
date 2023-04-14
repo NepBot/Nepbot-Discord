@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-11 20:36:18
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-07 03:56:00
+ * @ Modified time: 2023-04-13 04:11:02
  * @ Description: i@rua.moe
  */
 
@@ -402,14 +402,12 @@ declare namespace Resp {
   }
 
   interface GetMintbaseCollection extends Body {
-    code?: number;
     metadata?: {
       name?: string;
       description?: string;
       background?: string;
       logo?: string;
     };
-    success?: boolean;
   }
 
   interface GetOperationSign extends Body {

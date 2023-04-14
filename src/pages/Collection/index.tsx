@@ -2,7 +2,7 @@
  * @ Author: Hikaru
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
- * @ Modified time: 2023-04-07 05:02:37
+ * @ Modified time: 2023-04-13 04:11:25
  * @ Description: i@rua.moe
  */
 
@@ -201,7 +201,7 @@ const Collection: React.FC = () => {
             const mintbaseRes = await GetMintbaseCollection({
               collection_id: collection?.outer_collection_id,
             });
-            collectionData = (mintbaseRes?.data as Resp.GetMintbaseCollection)?.data;
+            collectionData = (mintbaseRes?.data as Resp.GetMintbaseCollection)?.metadata;
             collectionItems = {
               royaltyTotal: royaltyTotal / 100,
               inner_collection_id: collection.collection_id,
@@ -244,6 +244,7 @@ const Collection: React.FC = () => {
       {!errorState && successState && !loading && (
         <Success
           from="mint"
+          contract_type="Paras"
         />
       )}
       {!errorState && !successState && !loading && (
@@ -272,7 +273,6 @@ const Collection: React.FC = () => {
                       <div className={styles.itemContent}>
                         <Row gutter={[30, 30]}>
                           {haveAccessList?.map((item: Contract.WrappedCollections, index: number) => {
-                            console.log(item)
                             return (
                               <Col
                                 xs={24} sm={24} md={12} lg={8} xl={8}
