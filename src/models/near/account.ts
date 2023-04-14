@@ -6,7 +6,7 @@
  * @ Description: i@rua.moe
  */
 
-import { API_CONFIG, WALLETCONNECT_CONFIG } from '@/constants/config';
+import { API_CONFIG } from '@/constants/config';
 import { setupCoin98Wallet } from '@near-wallet-selector/coin98-wallet';
 import {
   Account,
@@ -161,34 +161,34 @@ export default () => {
         setupMyNearWallet(),
         setupSender(),
         setupHereWallet(),
-        setupMathWallet(),
-        setupNightly(),
+        // setupMathWallet(),
+        // setupNightly(),
         setupMeteorWallet(),
-        setupNearSnap(),
-        setupNarwallets(),
-        setupWelldoneWallet(),
-        setupLedger(),
-        setupNearFi(),
-        setupCoin98Wallet(),
-        setupOptoWallet(),
-        setupFinerWallet(),
-        setupNeth(),
-        setupXDEFI(),
-        setupWalletConnect({
-          projectId: WALLETCONNECT_CONFIG().projectID,
-          metadata: WALLETCONNECT_CONFIG().metadata,
-          chainId: WALLETCONNECT_CONFIG().chainsId,
-          iconUrl: walletConnectIconUrl,
-        }),
-        setupNightlyConnect({
-          url: 'wss://relay.nightly.app/app',
-          appMetadata: {
-            additionalInfo: '',
-            application: WALLETCONNECT_CONFIG().metadata.name,
-            description: WALLETCONNECT_CONFIG().metadata.description,
-            icon: WALLETCONNECT_CONFIG().metadata.icons[0],
-          },
-        }),
+        // setupNearSnap(),
+        // setupNarwallets(),
+        // setupWelldoneWallet(),
+        // setupLedger(),
+        // setupNearFi(),
+        // setupCoin98Wallet(),
+        // setupOptoWallet(),
+        // setupFinerWallet(),
+        // setupNeth(),
+        // setupXDEFI(),
+        // setupWalletConnect({
+        //   projectId: WALLETCONNECT_CONFIG().projectID,
+        //   metadata: WALLETCONNECT_CONFIG().metadata,
+        //   chainId: WALLETCONNECT_CONFIG().chainsId,
+        //   iconUrl: walletConnectIconUrl,
+        // }),
+        // setupNightlyConnect({
+        //   url: 'wss://relay.nightly.app/app',
+        //   appMetadata: {
+        //     additionalInfo: '',
+        //     application: WALLETCONNECT_CONFIG().metadata.name,
+        //     description: WALLETCONNECT_CONFIG().metadata.description,
+        //     icon: WALLETCONNECT_CONFIG().metadata.icons[0],
+        //   },
+        // }),
       ],
     })
       .then((selector) => {

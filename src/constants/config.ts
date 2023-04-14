@@ -7,7 +7,7 @@
  */
 
 import { keyStores } from 'near-api-js';
-import { _MINTBASE_API_KEY, _NETWORK, _WALLETCONNECT_PROJECT_ID } from './env';
+import { _MINTBASE_API_KEY, _NETWORK } from './env';
 
 const key = new keyStores.BrowserLocalStorageKeyStore();
 
@@ -30,113 +30,113 @@ export const BOT_URL = {
     'https://discord.com/oauth2/authorize?client_id=928559137179172874&permissions=8&scope=bot applications.commands',
 };
 
-export const WALLETCONNECT_CONFIG = () => {
-  switch (_NETWORK) {
-    case 'production':
-    case 'mainnet':
-      return {
-        projectID: _WALLETCONNECT_PROJECT_ID,
-        appName: 'NEPBOT',
-        chainsId: 'near:mainnet',
-        metadata: {
-          name: 'Nepbot',
-          description: 'Nepbot for WalletConnect',
-          url: 'https://Nepbot.io/',
-          icons: ['https://avatars.githubusercontent.com/u/37784886'],
-        },
-        iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
-        logger: 'info',
-      };
-    case 'development':
-    case 'testnet':
-      return {
-        projectID: _WALLETCONNECT_PROJECT_ID,
-        appName: 'NEPBOT',
-        chainsId: 'near:testnet',
-        metadata: {
-          name: 'Nepbot',
-          description: 'Nepbot for WalletConnect',
-          url: 'https://Nepbot.io/',
-          icons: ['https://avatars.githubusercontent.com/u/37784886'],
-        },
-        iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
-        logger: 'info',
-      };
-    case 'dev-testnet':
-      return {
-        projectID: _WALLETCONNECT_PROJECT_ID,
-        appName: 'NEPBOT',
-        chainsId: 'near:testnet',
-        metadata: {
-          name: 'Nepbot',
-          description: 'Nepbot for WalletConnect',
-          url: 'https://Nepbot.io/',
-          icons: ['https://avatars.githubusercontent.com/u/37784886'],
-        },
-        iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
-        logger: 'info',
-      };
-    case 'betanet':
-      return {
-        projectID: _WALLETCONNECT_PROJECT_ID,
-        appName: 'NEPBOT',
-        chainsId: 'near:betanet',
-        metadata: {
-          name: 'Nepbot',
-          description: 'Nepbot for WalletConnect',
-          url: 'https://Nepbot.io/',
-          icons: ['https://avatars.githubusercontent.com/u/37784886'],
-        },
-        iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
-        logger: 'info',
-      };
-    case 'local':
-      return {
-        projectID: _WALLETCONNECT_PROJECT_ID,
-        appName: 'NEPBOT',
-        chainsId: 'near:local',
-        metadata: {
-          name: 'Nepbot',
-          description: 'Nepbot for WalletConnect',
-          url: 'https://Nepbot.io/',
-          icons: ['https://avatars.githubusercontent.com/u/37784886'],
-        },
-        iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
-        logger: 'info',
-      };
-    case 'test':
-    case 'ci':
-      return {
-        projectID: _WALLETCONNECT_PROJECT_ID,
-        appName: 'NEPBOT',
-        chainsId: 'near:shared-test',
-        metadata: {
-          name: 'Nepbot',
-          description: 'Nepbot for WalletConnect',
-          url: 'https://Nepbot.io/',
-          icons: ['https://avatars.githubusercontent.com/u/37784886'],
-        },
-        iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
-        logger: 'info',
-      };
-    case 'ci-betanet':
-      return {
-        projectID: _WALLETCONNECT_PROJECT_ID,
-        appName: 'NEPBOT',
-        chainsId: 'near:shared-test-staging',
-        metadata: {
-          name: 'Nepbot',
-          description: 'Nepbot for WalletConnect',
-          url: 'https://Nepbot.io/',
-          icons: ['https://avatars.githubusercontent.com/u/37784886'],
-        },
-        iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
-        logger: 'info',
-      };
-    default:
-      throw Error(`Unconfigured environment '${_NETWORK}'.`);
-  }
-};
+// export const WALLETCONNECT_CONFIG = () => {
+//   switch (_NETWORK) {
+//     case 'production':
+//     case 'mainnet':
+//       return {
+//         projectID: _WALLETCONNECT_PROJECT_ID,
+//         appName: 'NEPBOT',
+//         chainsId: 'near:mainnet',
+//         metadata: {
+//           name: 'Nepbot',
+//           description: 'Nepbot for WalletConnect',
+//           url: 'https://Nepbot.io/',
+//           icons: ['https://avatars.githubusercontent.com/u/37784886'],
+//         },
+//         iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+//         logger: 'info',
+//       };
+//     case 'development':
+//     case 'testnet':
+//       return {
+//         projectID: _WALLETCONNECT_PROJECT_ID,
+//         appName: 'NEPBOT',
+//         chainsId: 'near:testnet',
+//         metadata: {
+//           name: 'Nepbot',
+//           description: 'Nepbot for WalletConnect',
+//           url: 'https://Nepbot.io/',
+//           icons: ['https://avatars.githubusercontent.com/u/37784886'],
+//         },
+//         iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+//         logger: 'info',
+//       };
+//     case 'dev-testnet':
+//       return {
+//         projectID: _WALLETCONNECT_PROJECT_ID,
+//         appName: 'NEPBOT',
+//         chainsId: 'near:testnet',
+//         metadata: {
+//           name: 'Nepbot',
+//           description: 'Nepbot for WalletConnect',
+//           url: 'https://Nepbot.io/',
+//           icons: ['https://avatars.githubusercontent.com/u/37784886'],
+//         },
+//         iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+//         logger: 'info',
+//       };
+//     case 'betanet':
+//       return {
+//         projectID: _WALLETCONNECT_PROJECT_ID,
+//         appName: 'NEPBOT',
+//         chainsId: 'near:betanet',
+//         metadata: {
+//           name: 'Nepbot',
+//           description: 'Nepbot for WalletConnect',
+//           url: 'https://Nepbot.io/',
+//           icons: ['https://avatars.githubusercontent.com/u/37784886'],
+//         },
+//         iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+//         logger: 'info',
+//       };
+//     case 'local':
+//       return {
+//         projectID: _WALLETCONNECT_PROJECT_ID,
+//         appName: 'NEPBOT',
+//         chainsId: 'near:local',
+//         metadata: {
+//           name: 'Nepbot',
+//           description: 'Nepbot for WalletConnect',
+//           url: 'https://Nepbot.io/',
+//           icons: ['https://avatars.githubusercontent.com/u/37784886'],
+//         },
+//         iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+//         logger: 'info',
+//       };
+//     case 'test':
+//     case 'ci':
+//       return {
+//         projectID: _WALLETCONNECT_PROJECT_ID,
+//         appName: 'NEPBOT',
+//         chainsId: 'near:shared-test',
+//         metadata: {
+//           name: 'Nepbot',
+//           description: 'Nepbot for WalletConnect',
+//           url: 'https://Nepbot.io/',
+//           icons: ['https://avatars.githubusercontent.com/u/37784886'],
+//         },
+//         iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+//         logger: 'info',
+//       };
+//     case 'ci-betanet':
+//       return {
+//         projectID: _WALLETCONNECT_PROJECT_ID,
+//         appName: 'NEPBOT',
+//         chainsId: 'near:shared-test-staging',
+//         metadata: {
+//           name: 'Nepbot',
+//           description: 'Nepbot for WalletConnect',
+//           url: 'https://Nepbot.io/',
+//           icons: ['https://avatars.githubusercontent.com/u/37784886'],
+//         },
+//         iconUrl: 'https://avatars.githubusercontent.com/u/37784886',
+//         logger: 'info',
+//       };
+//     default:
+//       throw Error(`Unconfigured environment '${_NETWORK}'.`);
+//   }
+// };
 
 export const API_CONFIG = () => {
   switch (_NETWORK) {
