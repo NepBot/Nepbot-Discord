@@ -3,7 +3,7 @@
  * @ Create Time: 2023-03-15 02:13:40
  * @ Modified by: Hikaru
  * @ Modified time: 2023-04-12 03:27:45
- * @ Description: i@rua.moe
+ * @ Description: 
  */
 
 import { API_CONFIG } from '@/constants/config';
@@ -62,6 +62,7 @@ export default () => {
   const [nearKeyStore, setNearKeyStore] = useState<string>();
 
   const [successUrl, setSuccessUrl] = useState<string>();
+  const [failureUrl, setFailureUrl] = useState<string>();
   const [callbackUrl, setCallbackUrl] = useState<string>();
 
   const setLocalWallet = useCallback(
@@ -154,11 +155,12 @@ export default () => {
 
   // Init Wallet Selector
   useEffect(() => {
+    console.log(successUrl, failureUrl)
     setupWalletSelector({
       network: 'testnet',
       modules: [
-        setupNearWallet(),
-        setupMyNearWallet(),
+        setupNearWallet({successUrl, failureUrl}),
+        setupMyNearWallet({successUrl, failureUrl}),
         setupSender(),
         setupHereWallet(),
         // setupMathWallet(),
@@ -294,6 +296,7 @@ export default () => {
     activeAccount,
     OpenModalWallet,
     setSuccessUrl,
+    setFailureUrl,
     setCallbackUrl,
     GetKeyStore,
   };

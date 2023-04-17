@@ -4,7 +4,7 @@ import { API_CONFIG } from '@/constants/config';
  * @ Modified by: Hikaru
  * @ Modified time: 2023-04-13 04:12:10
  * @ Modified time: 2023-04-13 04:13:54
- * @ Description: i@rua.moe
+ * @ Description: 
  */
 
 import { _DEBUG, _DEBUG_API } from '@/constants/env';
@@ -249,7 +249,7 @@ export const GetMintbaseCollection = async (
   options?: { [key: string]: any },
 ) => {
   return request<Resp.GetMintbaseCollection | Resp.Error>(
-    `${!_DEBUG ? '/aeweave' : _DEBUG_API}/${params.collection_id}`,
+    `${!_DEBUG ? '/arweave' : _DEBUG_API}/${params.collection_id}`,
     {
       method: 'GET',
       headers: {

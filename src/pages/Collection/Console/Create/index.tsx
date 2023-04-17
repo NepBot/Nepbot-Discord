@@ -3,7 +3,7 @@
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
  * @ Modified time: 2023-04-13 03:54:41
- * @ Description: i@rua.moe
+ * @ Description: 
  */
 
 import React, { useCallback, useState } from 'react';
@@ -328,13 +328,10 @@ const Create: React.FC<{
                     listType="picture-card"
                     beforeUpload={beforeUpload}
                     showUploadList={false}
+                    customRequest={() => {} }
                     onChange={async (info) => {
-                      if (info.file.status === 'uploading') {
-                        setLoading(true);
-                        return;
-                      }
 
-                      if (info.file.status === 'done' && !!info?.file?.originFileObj) {
+                      if (!!info?.file?.originFileObj) {
                         form.setFieldsValue({
                           logo: info?.file?.originFileObj
                         });
@@ -404,13 +401,10 @@ const Create: React.FC<{
                     multiple={false}
                     listType="picture-card"
                     showUploadList={false}
+                    customRequest={() => {} }
                     onChange={async (info) => {
-                      if (info.file.status === 'uploading') {
-                        setLoading(true);
-                        return;
-                      }
 
-                      if (info.file.status === 'done' && !!info?.file?.originFileObj) {
+                      if (!!info?.file?.originFileObj) {
                         form.setFieldsValue({
                           cover: info?.file?.originFileObj
                         });

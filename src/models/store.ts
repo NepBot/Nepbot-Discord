@@ -3,7 +3,7 @@
  * @ Create Time: 2023-03-21 23:04:45
  * @ Modified by: Hikaru
  * @ Modified time: 2023-04-05 16:43:28
- * @ Description: i@rua.moe
+ * @ Description: 
  */
 
 import { store } from '@/store/localStore';
@@ -17,16 +17,16 @@ interface DiscordInfo {
 }
 
 export default () => {
-  const [discordInfo, setDiscordInfo] = useState<DiscordInfo>({});
+  const [discordInfo, setDiscordInfo] = useState<DiscordInfo>();
   const [discordOperationSign, setDiscordOperationSign] = useState<string>();
 
   useEffect(() => {
-    const _info = store.Get({
-      key: 'nepbot:discord:info',
-    });
-    if (!!_info) {
-      setDiscordInfo(_info);
-    }
+    // const _info = store.Get({
+    //   key: 'nepbot:discord:info',
+    // });
+    // if (!!_info) {
+    //   setDiscordInfo(_info);
+    // }
 
     const _operationSign = store.Get({
       key: 'nepbot:discord:operation:sign',
@@ -37,17 +37,17 @@ export default () => {
   }, []);
 
   useEffect(() => {
-    store.Set({
-      key: 'nepbot:discord:info',
-      data: {
-        guild_id: discordInfo.guild_id,
-        user_id: discordInfo.user_id,
-        sign: discordInfo.sign,
-      },
-      options: {
-        expires: discordInfo.expires || 1,
-      },
-    });
+    // store.Set({
+    //   key: 'nepbot:discord:info',
+    //   data : {
+    //     guild_id: discordInfo?.guild_id,
+    //     user_id: discordInfo?.user_id,
+    //     sign: discordInfo?.sign,
+    //   },
+    //   options: {
+    //     expires: discordInfo?.expires || 1,
+    //   },
+    // });
   }, [discordInfo]);
 
   useEffect(() => {

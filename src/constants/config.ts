@@ -3,7 +3,7 @@
  * @ Create Time: 2023-02-08 02:50:33
  * @ Modified by: Hikaru
  * @ Modified time: 2023-04-13 04:03:04
- * @ Description: i@rua.moe
+ * @ Description: 
  */
 
 import { keyStores } from 'near-api-js';

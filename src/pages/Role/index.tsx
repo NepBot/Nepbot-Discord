@@ -3,7 +3,7 @@
  * @ Create Time: 2023-03-08 03:35:39
  * @ Modified by: Hikaru
  * @ Modified time: 2023-04-08 00:31:11
- * @ Description: i@rua.moe
+ * @ Description: 
  */
 
 
@@ -54,12 +54,12 @@ const Role: React.FC = () => {
   const search: QueryParams = querystring.parse(location.search);
 
   const handleData = async (data: Contract.RuleItem[], serverName?: string) => {
-    if (!!discordInfo && !!discordOperationSign) {
+    if (!!search && !!discordOperationSign) {
       const roleRes = await GetRole({
-        guild_id: discordInfo.guild_id!,
+        guild_id: search.guild_id!,
       });
       const txRes = await GetTxByGuild({
-        guild_id: discordInfo.guild_id!,
+        guild_id: search.guild_id!,
       });
 
       const roleList = (roleRes?.data as Resp.GetRole)?.data;
@@ -152,8 +152,8 @@ const Role: React.FC = () => {
 
     const args = {
       sign: discordOperationSign,
-      user_id: discordInfo?.user_id,
-      guild_id: discordInfo?.guild_id,
+      user_id: search?.user_id,
+      guild_id: search?.guild_id,
     };
 
     const keystore = await GetKeyStore(nearAccount?.accountId);
@@ -199,7 +199,7 @@ const Role: React.FC = () => {
 
     setTimeout(async () => {
       if (!!delRule) {
-        const data = await nearAccount?.viewFunction(API_CONFIG().RULE_CONTRACT, 'get_guild', { guild_id: discordInfo?.guild_id! });
+        const data = await nearAccount?.viewFunction(API_CONFIG().RULE_CONTRACT, 'get_guild', { guild_id: search?.guild_id! });
         const _data = await handleData(data)
         setDataSource(_data);
         messageApi.info('Success');
@@ -307,7 +307,7 @@ const Role: React.FC = () => {
                   className={styles.searchInput}
                   onChange={async (e) => {
                     if (e.target.value === '') {
-                      const data = await nearAccount?.viewFunction(API_CONFIG().RULE_CONTRACT, 'get_guild', { guild_id: discordInfo?.guild_id! });
+                      const data = await nearAccount?.viewFunction(API_CONFIG().RULE_CONTRACT, 'get_guild', { guild_id: search?.guild_id! });
                       const _data = await handleData(data);
                       if (!_data) {
                         return;

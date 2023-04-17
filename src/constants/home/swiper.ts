@@ -3,7 +3,7 @@
  * @ Create Time: 2023-02-15 03:22:13
  * @ Modified by: Hikaru
  * @ Modified time: 2023-04-07 04:50:15
- * @ Description: i@rua.moe
+ * @ Description: 
  */
 
 import { BOT_URL } from '../config';

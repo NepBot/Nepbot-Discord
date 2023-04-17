@@ -2,7 +2,7 @@
   "name": "nepbot-frontend",
   "version": "1.0.0",
   "private": true,
-  "author": "Hikaru Chang <i@rua.moe>",
+  "author": "Hikaru Chang <>",
   "scripts": {
     "dev": "max dev",
     "build": "max build",

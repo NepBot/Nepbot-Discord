@@ -3,7 +3,7 @@
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
  * @ Modified time: 2023-04-13 04:11:25
- * @ Description: i@rua.moe
+ * @ Description: 
  */
 
 import React, { useEffect, useState } from "react";
@@ -71,6 +71,7 @@ const Collection: React.FC = () => {
           user_id: search.user_id,
           sign: search.sign
         });
+
         const userInfo = await GetUserInfo({
           guild_id: search.guild_id,
           user_id: search.user_id,
@@ -109,6 +110,7 @@ const Collection: React.FC = () => {
           sign: signature?.signature,
           args: args,
         });
+        
 
         if (!_sign?.data?.success) {
           setErrorState(true);
@@ -138,10 +140,10 @@ const Collection: React.FC = () => {
   }, [nearAccount]);
 
   const handleData = async (roleList: string[]) => {
-    if (!!discordInfo?.guild_id) {
+    if (!!search?.guild_id) {
       setLoading(true);
       const roles = await GetRole({
-        guild_id: discordInfo?.guild_id,
+        guild_id: search?.guild_id,
       });
       if (roles?.response?.status !== 200 || !(roles?.data as Resp.GetRole)?.data) {
         notification.error({
@@ -160,7 +162,7 @@ const Collection: React.FC = () => {
       var collections: any[] = [];
       try {
         collections = await nearAccount?.viewFunction(API_CONFIG().NFT_CONTRACT, 'get_collections_by_guild', {
-          guild_id: discordInfo?.guild_id,
+          guild_id: search?.guild_id,
         });
       } catch (e: any) {
         console.log(e);

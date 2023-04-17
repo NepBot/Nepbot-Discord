@@ -3,7 +3,7 @@
  * @ Create Time: 2023-02-16 03:29:38
  * @ Modified by: Hikaru
  * @ Modified time: 2023-04-13 03:44:46
- * @ Description: i@rua.moe
+ * @ Description: 
  */
 
 import { ReactComponent as AMP } from '@/assets/partners/AMP.svg';

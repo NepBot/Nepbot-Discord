@@ -3,7 +3,7 @@
  * @ Create Time: 2023-03-09 21:36:12
  * @ Modified by: Hikaru
  * @ Modified time: 2023-04-07 04:31:29
- * @ Description: i@rua.moe
+ * @ Description: 
  */
 
 import React, { useCallback, useState } from 'react';
@@ -235,13 +235,10 @@ const Add: React.FC<{
                       listType="picture-card"
                       beforeUpload={beforeUpload}
                       showUploadList={false}
+                      customRequest={() => {} }
                       onChange={async (info) => {
-                        if (info.file.status === 'uploading') {
-                          setLoading(true);
-                          return;
-                        }
 
-                        if (info.file.status === 'done' && !!info?.file?.originFileObj) {
+                        if (!!info?.file?.originFileObj) {
                           form.setFieldsValue({
                             image: info?.file?.originFileObj
                           });

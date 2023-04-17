@@ -3,7 +3,7 @@
  * @ Create Time: 2023-03-09 03:47:44
  * @ Modified by: Hikaru
  * @ Modified time: 2023-04-07 03:41:11
- * @ Description: i@rua.moe
+ * @ Description: 
  */
 
 import React, { useEffect, useState } from "react";
@@ -113,11 +113,11 @@ const Collection: React.FC = () => {
   }, [nearAccount]);
 
   const handleData = async () => {
-    if (!!discordInfo?.guild_id) {
+    if (!!search?.guild_id) {
       setLoading(true);
       try {
         const roles = await GetRole({
-          guild_id: discordInfo?.guild_id,
+          guild_id: search?.guild_id,
         });
         if (!(roles?.data as Resp.GetRole)?.success) {
           setErrorState(true);
@@ -137,7 +137,7 @@ const Collection: React.FC = () => {
         });
         setRoleList((roles?.data as Resp.GetRole)?.data?.filter((item) => item.name !== '@everyone'));
         const collections = await nearAccount?.viewFunction(API_CONFIG().NFT_CONTRACT, 'get_collections_by_guild', {
-          guild_id: discordInfo?.guild_id,
+          guild_id: search?.guild_id,
         });
 
         var wrappedCollections: Contract.WrappedCollections[] = [];
@@ -165,7 +165,6 @@ const Collection: React.FC = () => {
               }
               break;
             case 'mintbase':
-              console.log(collection)
               collectionData = await GetMintbaseCollection({
                 collection_id: collection?.outer_collection_id,
               });

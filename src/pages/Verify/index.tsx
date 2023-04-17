@@ -3,7 +3,7 @@
  * @ Create Time: 2023-03-08 02:53:34
  * @ Modified by: Hikaru
  * @ Modified time: 2023-04-04 04:10:26
- * @ Description: i@rua.moe
+ * @ Description: 
  */
 
 import React, { useEffect, useState } from 'react';
@@ -39,6 +39,13 @@ const Verify: React.FC = () => {
   const location = useLocation();
   const search: QueryParams = querystring.parse(location.search);
 
+  function changeURLStatic(name: string, value: string) {
+    var url = window.location.href;
+    var url2 = url.replace(eval('/([\?|&]'+name+'=)[^&]*/gi') , '$1' + value);  
+    if(url == url2) url2 += (url.indexOf('?') > -1 ? '&' : '?') + name + '=' +value;  
+    window.location.replace(url2)
+  }
+
   useEffect(() => {
     (async () => {
       if (!!search?.guild_id && !!search?.user_id && !!search?.sign) {
@@ -65,11 +72,6 @@ const Verify: React.FC = () => {
           return;
         }
 
-        await GetConnected({
-          guild_id: search.guild_id,
-          user_id: search.user_id,
-        });
-
         await GetServerInfo({
           guild_id: search.guild_id,
         });
@@ -88,44 +90,54 @@ const Verify: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!!discordInfo && !!nearAccount) {
       (async () => {
-        const keystore = await GetKeyStore(nearAccount?.accountId);
+        if (!!discordInfo && !!nearAccount) {
+          const keystore = await GetKeyStore(nearAccount?.accountId);
 
-        if (!keystore) {
-          return;
-        }
+          if (!keystore) {
+            return;
+          }
 
-        const args = {
-          account_id: nearAccount?.accountId,
-          user_id: discordInfo.user_id,
-          guild_id: discordInfo.guild_id,
-          sign: discordInfo.sign,
-        }
-
-        const signature = await SignMessage({
-          keystore: keystore,
-          object: args,
-        });
-
-        const result = await SetInfo({
-          args: args,
-          account_id: nearAccount?.accountId,
-          sign: signature.signature,
-        });
-
-        if (!result?.data?.success) {
-          notification.error({
-            key: 'error.connect',
-            message: 'Error',
-            description: 'Failed to connect',
+          const connectedAccountId = await GetConnected({
+            guild_id: search.guild_id!,
+            user_id: search.user_id!,
           });
-          setExpiredState(true);
-          setLoading(false);
-          return;
+
+          if (connectedAccountId == nearAccount?.accountId) {
+            return
+          }
+
+          const args = {
+            account_id: nearAccount?.accountId,
+            user_id: discordInfo.user_id,
+            guild_id: discordInfo.guild_id,
+            sign: discordInfo.sign,
+          }
+
+          const signature = await SignMessage({
+            keystore: keystore,
+            object: args,
+          });
+
+          const result = await SetInfo({
+            args: args,
+            account_id: nearAccount?.accountId,
+            sign: signature.signature,
+          });
+
+          if (!result?.data?.success) {
+            notification.error({
+              key: 'error.connect',
+              message: 'Error',
+              description: 'Failed to connect',
+            });
+            setExpiredState(true);
+            setLoading(false);
+            return;
+          }
         }
       })();
-    }
+    
   }, [discordInfo, nearAccount]);
 
   const handleDisconnect = async () => {
@@ -137,7 +149,7 @@ const Verify: React.FC = () => {
           sign: search.sign
         }
         const keystore = await GetKeyStore(nearAccount?.accountId);
-        // await nearWallet.signOut();
+        await nearWallet.signOut();
 
         const signature = await SignMessage({
           keystore: keystore!,
@@ -148,7 +160,6 @@ const Verify: React.FC = () => {
           account_id: nearAccount?.accountId,
           sign: signature.signature,
         });
-        console.log(res)
         
         notification.success({
           key: 'success.disconnect',
@@ -159,7 +170,13 @@ const Verify: React.FC = () => {
             id: 'connect.disconnect.desc',
           }),
         });
-        window.location.href = (res.data as Resp.DisconnectAccount).data
+        const sign = (res.data as Resp.DisconnectAccount).data
+        // setDiscordInfo({
+        //   guild_id: search.guild_id,
+        //   user_id: search.user_id,
+        //   sign: sign
+        // });
+        changeURLStatic("sign", sign)
       }
     }
   }
