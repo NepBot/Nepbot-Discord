@@ -168,13 +168,14 @@ const Collection: React.FC = () => {
               collectionData = await GetMintbaseCollection({
                 collection_id: collection?.outer_collection_id,
               });
+              console.log(collectionData)
               if (!!collectionData) {
                 wrappedCollections.push({
                   royaltyTotal: royaltyTotal / 100,
                   inner_collection_id: collection.collection_id,
                   outer_collection_id: collection.outer_collection_id,
                   ...collection,
-                  ...collectionData?.data,
+                  ...collectionData?.data.metadata,
                 })
               }
               break;
@@ -194,7 +195,7 @@ const Collection: React.FC = () => {
           item.updated = true;
           result.push(item);
         }
-
+        console.log(result)
         setCollectionList(result);
       } catch (error: any) {
         console.log(error);

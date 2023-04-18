@@ -196,12 +196,12 @@ export const CreateSeries = async (
   options?: { [key: string]: any },
 ) => {
   const Authorization = await GenerateToken();
-
   const formData = new FormData();
   formData.append('files', data.image as Blob);
+  delete data.image
   formData.append(
     'files',
-    new Blob([JSON.stringify(data.params)], { type: 'application/json' }),
+    new Blob([JSON.stringify(data)], { type: 'application/json' }),
   );
 
   return request<Resp.CreateSeries | Resp.Error>(
@@ -249,11 +249,11 @@ export const GetMintbaseCollection = async (
   options?: { [key: string]: any },
 ) => {
   return request<Resp.GetMintbaseCollection | Resp.Error>(
-    `${!_DEBUG ? '/arweave' : _DEBUG_API}/${params.collection_id}`,
+    `${API_CONFIG().ARWEAVE_API}/${params.collection_id}`,
     {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+
       },
       ...(options || {}),
       getResponse: true,

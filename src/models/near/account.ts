@@ -155,7 +155,6 @@ export default () => {
 
   // Init Wallet Selector
   useEffect(() => {
-    console.log(successUrl, failureUrl)
     setupWalletSelector({
       network: 'testnet',
       modules: [

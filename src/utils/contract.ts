@@ -98,7 +98,9 @@ export async function ExecuteMultipleTransactions({
     transactions: txs,
     callbackUrl: walletCallbackUrl,
   });
-
+  if (!result) {
+    return false
+  }
   if (!!result?.length && !!walletCallbackUrl) {
     window.location.href = walletCallbackUrl;
     return true;

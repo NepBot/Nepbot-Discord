@@ -91,7 +91,7 @@ const Collection: React.FC = () => {
           user_id: search.user_id,
           guild_id: search.guild_id,
           sign: search.sign,
-          opoperationSign: discordOperationSign,
+          operationSign: discordOperationSign,
         };
 
         const keystore = await GetKeyStore(nearAccount?.accountId);
@@ -176,42 +176,36 @@ const Collection: React.FC = () => {
           });
         }
 
-        var collectionData: any;
-        var collectionItems: Contract.WrappedCollections = {};
+        let collectionData: any;
+        let collectionItems: Contract.WrappedCollections = {};
 
         switch (collection?.contract_type) {
           case 'paras':
-            const ParasRes = await GetCollection({
+            collectionData = await GetCollection({
               collection_id: collection?.outer_collection_id,
             });
-            collectionData = (ParasRes?.data as Resp.GetCollection)?.data;
-            if (!!collectionData && !!collectionData?.results?.length) {
+            if (!!collectionData?.data && !!(collectionData?.data as Resp.GetCollection)?.data?.results?.length) {
               collectionItems = {
                 name: collection?.collection_id?.split(":")[1]?.split("-guild-")[0]?.replaceAll("-", " "),
-                cover: API_CONFIG().IPFS + collectionData?.results[0]['cover'],
-                media: API_CONFIG().IPFS + collectionData?.results[0]['media'],
                 contract: API_CONFIG().PARAS_CONTRACT,
                 royaltyTotal: royaltyTotal / 100,
                 inner_collection_id: collection?.collection_id,
                 outer_collection_id: collection?.outer_collection_id,
                 ...collection,
-                ...collectionData?.results[0],
+                ...(collectionData?.data as Resp.GetCollection)?.data?.results![0],
               }
             }
             break;
           case 'mintbase':
-            const mintbaseRes = await GetMintbaseCollection({
+            collectionData = await GetMintbaseCollection({
               collection_id: collection?.outer_collection_id,
             });
-            collectionData = (mintbaseRes?.data as Resp.GetMintbaseCollection)?.metadata;
             collectionItems = {
               royaltyTotal: royaltyTotal / 100,
               inner_collection_id: collection.collection_id,
               outer_collection_id: collection.outer_collection_id,
-              media: collectionData?.logo,
-              cover: collectionData?.background,
               ...collection,
-              ...collectionData,
+              ...collectionData?.data.metadata,
             }
         }
 
@@ -233,6 +227,7 @@ const Collection: React.FC = () => {
       }
       setLoading(false);
     }
+
   };
 
   return (
@@ -274,7 +269,7 @@ const Collection: React.FC = () => {
                       </div>
                       <div className={styles.itemContent}>
                         <Row gutter={[30, 30]}>
-                          {haveAccessList?.map((item: Contract.WrappedCollections, index: number) => {
+                          {haveAccessList?.map((item: any, index: number) => {
                             return (
                               <Col
                                 xs={24} sm={24} md={12} lg={8} xl={8}

@@ -17,7 +17,6 @@ const ItemCard: React.FC<{
   onClick?: () => void;
 }> = ({ item, contractType, onClick }) => {
   const intl = useIntl();
-  console.log(item)
   return (
     <div
       className={styles.itemContainer}
@@ -33,7 +32,7 @@ const ItemCard: React.FC<{
         )}
         {contractType === 'mintbase' && (
           <img
-            src={item ? item?.metadata.media : require('@/assets/collection/icon.webp')}
+            src={item ? API_CONFIG().ARWEAVE_API + "/" + item?.metadata.media : require('@/assets/collection/icon.webp')}
             alt="cover"
             className={styles.itemCoverImage}
           />

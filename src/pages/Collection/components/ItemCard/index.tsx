@@ -23,7 +23,7 @@ const ItemCard: React.FC<{
 }> = ({ item, roleMap, onClick }) => {
   const { discordServer } = useModel('discord');
   const intl = useIntl();
-  console.log(item)
+  // console.log(item)
   return (
     <div
       className={styles.itemContainer}
@@ -74,9 +74,12 @@ const ItemCard: React.FC<{
             )}
           </div>
           <div className={styles.itemMetaInfo}>
-            <div className={styles.itemMetaInfoTitle}>
+            {item?.contract_type === 'paras' && (<div className={styles.itemMetaInfoTitle}>
               {item?.collection?.split("-guild-")[0].replaceAll("-", " ")}
-            </div>
+            </div>)}
+            {item?.contract_type === 'mintbase' && (<div className={styles.itemMetaInfoTitle}>
+              {item?.name}
+            </div>)}
             <div className={styles.itemMetaInfoDescription}>
               {discordServer?.name}
             </div>

@@ -47,22 +47,21 @@ const Add: React.FC<{
       const values = await form.getFieldsValue();
 
       setLoading(true);
-      const outer_collection_id = collectionInfo?.collection_id?.split(':')[1];
-
-      const params = {
-        collection: collectionInfo?.name?.replaceAll("-", " "),
-        description: values?.description,
-        creator_id: nearAccount?.accountId,
-        collection_id: outer_collection_id,
-        attributes: values?.attribute,
-        mime_type: values?.image?.type,
-        blurhash: "UE3UQdpLQ8VWksZ}Z~ksL#Z}pfkXVWp0kXVq"
-      }
 
       var media: string | undefined;
       var reference: string | undefined;
       switch (collectionInfo?.contract_type) {
         case 'paras':
+          const outer_collection_id = collectionInfo?.collection_id?.split(':')[1];
+          const params = {
+            collection: collectionInfo?.name?.replaceAll("-", " "),
+            description: values?.description,
+            creator_id: nearAccount?.accountId,
+            collection_id: outer_collection_id,
+            attributes: values?.attributes,
+            mime_type: values?.image?.type,
+            blurhash: "UE3UQdpLQ8VWksZ}Z~ksL#Z}pfkXVWp0kXVq"
+          }
           const res = await CreateSeries({
             image: values?.image,
             ...params
@@ -81,8 +80,18 @@ const Add: React.FC<{
           break;
         case 'mintbase':
           const mediaRes = await mintbaseWallet?.minter?.upload(values?.image);
-          media = mediaRes?.data?.uri;
+          media = mediaRes?.data?.uri.replace("https://arweave.net/", "")
           reference = mediaRes?.data?.uri;
+          const metadata = {
+            title: values?.name,
+            description: values?.description,
+            media: media,
+            copies:Number(values?.copies),
+            extra: values?.attributes
+          }
+          mintbaseWallet?.minter?.setMetadata(metadata)
+          const metadataRes = await mintbaseWallet?.minter?.getMetadataId()
+          reference = metadataRes?.data;
           break;
       }
 
@@ -431,7 +440,6 @@ const Add: React.FC<{
                                     })}
                                     className={styles.formItemInput}
                                     controls={false}
-                                    type='number'
                                   />
                                 </div>
                               </Form.Item>

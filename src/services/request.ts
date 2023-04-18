@@ -18,5 +18,6 @@ const errorHandler = (error: any) => {
 
 export const request = extend({
   errorHandler,
-  credentials: 'same-origin',
+  // credentials: "same-origin",
+  // mode: "no-cors"
 });

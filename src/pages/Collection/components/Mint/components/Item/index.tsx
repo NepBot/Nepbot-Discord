@@ -109,11 +109,17 @@ const Item: React.FC<{
         </div>
         <div className={styles.userContainer}>
           <div className={styles.avatar}>
-            <img
-              src={!!item?.media ? item?.media : require('@/assets/collection/icon.webp')}
+            {item?.contract_type === 'paras' && (<img
+              src={!!item?.cover ? API_CONFIG().IPFS + item?.cover : require('@/assets/collection/icon.webp')}
               alt='media'
               className={styles.avatarImg}
-            />
+            />)}
+            {item?.contract_type === 'mintbase' && (<img
+              src={!!item?.background ? item?.background : require('@/assets/collection/icon.webp')}
+              alt='media'
+              className={styles.avatarImg}
+            />)}
+            
           </div>
           <div className={styles.nftName}>
             {item?.name}

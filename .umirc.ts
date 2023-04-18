@@ -146,10 +146,10 @@ export default defineConfig({
       target: 'http://13.214.203.20:8080',
       changeOrigin: true,
     },
-    '/aeweave': {
-      target: 'https://arweave.net',
-      changeOrigin: true,
-      pathRewrite: { '^/aeweave': '' },
-    },
+    // '/arweave': {
+    //   target: 'https://arweave.net',
+    //   changeOrigin: true,
+    //   pathRewrite: { '^/aeweave': '' },
+    // },
   },
 });

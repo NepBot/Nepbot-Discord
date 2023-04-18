@@ -10,7 +10,7 @@
   force = true
 
 [[redirects]]
-  from = "/aeweave/*"
+  from = "/arweave/*"
   to = "https://arweave.net/:splat"
   status = 200
   force = true
