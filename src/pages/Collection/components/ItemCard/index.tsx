@@ -23,7 +23,6 @@ const ItemCard: React.FC<{
 }> = ({ item, roleMap, onClick }) => {
   const { discordServer } = useModel('discord');
   const intl = useIntl();
-  // console.log(item)
   return (
     <div
       className={styles.itemContainer}

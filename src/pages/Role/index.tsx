@@ -316,7 +316,6 @@ const Role: React.FC = () => {
                       return;
                     }
                     const data = await nearAccount?.viewFunction(API_CONFIG().RULE_CONTRACT, 'get_token', { token_id: e.target.value });
-                    console.log(data)
                     const _data = await handleData(data);
                     setDataSource(_data);
                   }}

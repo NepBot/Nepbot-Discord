@@ -156,7 +156,7 @@ const Airdrop: React.FC = () => {
             nearWallet,
             transactions: txs,
           });
-          console.log(result)
+
           if (!!result) {
             await checkResult();
           }
