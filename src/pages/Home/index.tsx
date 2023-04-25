@@ -6,9 +6,9 @@
  * @ Description: 
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './style.less';
-import { useIntl } from '@umijs/max';
+import { useIntl, useModel } from '@umijs/max';
 import TopBackground from '@/components/TopBackground';
 import { ReactComponent as RightArrow } from '@/assets/icon/right-arrow.svg';
 import { ReactComponent as NearLogoWhite } from '@/assets/brand/near_logo_wht.svg';
@@ -26,12 +26,25 @@ import { PARTNERS, TRUSTED } from '@/constants/home/partner';
 import BottomBackground from '@/components/BottomBackground';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { BOT_URL } from '@/constants/config';
+import { BOT_URL, API_CONFIG } from '@/constants/config';
 import { _NETWORK } from '@/constants/env';
+import { GetTotalServerCount, GetTotalVerifiedCount } from '@/services/api';
 
 const Home: React.FC = () => {
+  const { nearAccount } = useModel('near.account');
   const intl = useIntl();
   const inviteUrl = _NETWORK === 'mainnet' ? BOT_URL.mainnet : BOT_URL.testnet;
+  const [collectionCount, setCollectionCount] = useState()
+  const [serverCount, setServerCount] = useState<string>()
+  const [verifiedCount, setVerifiedCount] = useState<string>()
+
+  useEffect(() => {
+    (async () => {
+      setVerifiedCount(((await GetTotalVerifiedCount())?.data as Resp.GetTotalVerifiedCount).data as string)
+      setServerCount(((await GetTotalServerCount())?.data as Resp.GetTotalServerCount).data as string)
+      setCollectionCount((await nearAccount?.viewFunction(API_CONFIG().NFT_CONTRACT, "get_collection_count", {})))
+    })();
+  }, [])
 
   return (
     <div className={styles.homeContainer}>
@@ -200,7 +213,7 @@ const Home: React.FC = () => {
                 <div className={styles.statistics}>
                   <div className={styles.statisticsItem}>
                     <div className={styles.statisticsItemValue}>
-                      136
+                      { serverCount } 
                     </div>
                     <div className={styles.statisticsItemDesc}>
                       {intl.formatMessage({
@@ -210,7 +223,7 @@ const Home: React.FC = () => {
                   </div>
                   <div className={styles.statisticsItem}>
                     <div className={styles.statisticsItemValue}>
-                      1500
+                      { verifiedCount }
                     </div>
                     <div className={styles.statisticsItemDesc}>
                       {intl.formatMessage({
@@ -220,7 +233,7 @@ const Home: React.FC = () => {
                   </div>
                   <div className={styles.statisticsItem}>
                     <div className={styles.statisticsItemValue}>
-                      10
+                      { collectionCount }
                     </div>
                     <div className={styles.statisticsItemDesc}>
                       {intl.formatMessage({

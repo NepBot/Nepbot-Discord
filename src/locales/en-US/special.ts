@@ -13,7 +13,7 @@ export default {
   'success.title.twitter_verify': 'Twitter verification success',
   'success.title.mint': 'Congratulations!',
   'success.description.mint':
-    'Your NFT has been minted successfully.\nCheck and refresh you wallet as it might not apprear immediately.',
+    'Your NFT has been minted successfully.',
   'success.title.default': 'Wallet is connected.',
   'success.description.default':
     'Please go back to Discord and check your roles!',

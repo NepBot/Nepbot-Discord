@@ -85,6 +85,38 @@ export const GetServer = async (
   );
 };
 
+export const GetTotalServerCount = async (
+  options?: { [key: string]: any },
+) => {
+  return request<Resp.GetTotalServerCount | Resp.Error>(
+    `${!_DEBUG ? '/api' : _DEBUG_API}/getTotalServerCount`,
+    {
+      method: 'GET',
+      headers: {
+
+      },
+      ...(options || {}),
+      getResponse: true,
+    },
+  );
+};
+
+export const GetTotalVerifiedCount = async (
+  options?: { [key: string]: any },
+) => {
+  return request<Resp.GetTotalVerifiedCount | Resp.Error>(
+    `${!_DEBUG ? '/api' : _DEBUG_API}/getTotalVerifiedCount`,
+    {
+      method: 'GET',
+      headers: {
+
+      },
+      ...(options || {}),
+      getResponse: true,
+    },
+  );
+};
+
 export const GetTxByGuild = async (
   path: {
     guild_id: string;

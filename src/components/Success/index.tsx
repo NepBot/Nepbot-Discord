@@ -14,14 +14,13 @@ import { API_CONFIG } from '@/constants/config';
 
 const Success: React.FC<{
   from?: string,
-  contract_type?: string,
-  token_id?: string,
-}> = ({ from, contract_type, token_id }) => {
+}> = ({ from }) => {
   const { nearAccount } = useModel('near.account');
   const [info, setInfo] = useState<any>();
   const [title, setTitle] = useState<any>();
 
   const intl = useIntl();
+  
 
   useEffect(() => {
     (async () => {
@@ -40,22 +39,22 @@ const Success: React.FC<{
           setInfo(intl.formatMessage({
             id: 'success.description.mint',
           }, {
-            type: (
-              <b
-                onClick={() => {
-                  switch (contract_type) {
-                    case 'paras':
-                      window.open(`https://paras.id/token/${API_CONFIG().PARAS_CONTRACT}::${token_id}`);
-                      break;
-                    case 'mintbase':
-                      window.open(`https://www.mintbase.xyz/contract/${API_CONFIG().MINTBASE_CONTRACT}/token/${token_id}`);
-                      break;
-                  }
-                }}
-              >
-                {!!contract_type ? contract_type : 'Paras'}
-              </b>
-            )
+            // type: (
+            //   <b
+            //     onClick={() => {
+            //       switch (contract_type) {
+            //         case 'paras':
+            //           window.open(`https://paras.id/token/${API_CONFIG().PARAS_CONTRACT}::${token_id}`);
+            //           break;
+            //         case 'mintbase':
+            //           window.open(`https://www.mintbase.io/contract/${API_CONFIG().MINTBASE_CONTRACT}/token/${token_id}`);
+            //           break;
+            //       }
+            //     }}
+            //   >
+            //     {!!contract_type ? contract_type : 'Paras'}
+            //   </b>
+            // )
           }));
           break;
         default:

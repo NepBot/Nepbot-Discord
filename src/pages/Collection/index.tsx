@@ -241,7 +241,6 @@ const Collection: React.FC = () => {
       {!errorState && successState && !loading && (
         <Success
           from="mint"
-          contract_type="Paras"
         />
       )}
       {!errorState && !successState && !loading && (

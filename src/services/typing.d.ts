@@ -311,6 +311,18 @@ declare namespace Resp {
     data?: Server;
   }
 
+  interface GetTotalServerCount extends Body {
+    code?: number;
+    success?: boolean;
+    data?: Server;
+  }
+
+  interface GetTotalVerifiedCount extends Body {
+    code?: number;
+    success?: boolean;
+    data?: Server;
+  }
+
   interface GetTxByGuild extends Body {
     code?: number;
     success?: boolean;
@@ -428,8 +440,9 @@ declare namespace Resp {
   }
 
   interface TwitterVerify extends Body {
-    name?: string;
-    value?: string;
+    code?: number;
+    success?: boolean;
+    data?: any;
   }
 
   interface SendFfMsg extends Body {

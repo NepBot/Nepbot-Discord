@@ -49,14 +49,14 @@ const Verify: React.FC = () => {
         if (typeof res.data === "object" && !!res.data) {
           var info: string = "";
 
-          const data = res?.data as Resp.TwitterVerify[];
+          const data = (res?.data as Resp.TwitterVerify).data;
 
           if (data[0]['name'] === 'Add role success' || data[0]['name'] == 'Already in role') {
             localStorage.setItem(`nepbot:twitter:verify:${nearAccount?.accountId}:${API_CONFIG().networkId}`, data[0]['value']!);
             setSuccessState(true);
             return;
           } else {
-            data.forEach((item) => {
+            data.forEach((item: { value: string; }) => {
               if (!!item?.value && item?.value?.indexOf('https://') > -1) {
                 const infoArr = item?.value?.split('https://');
                 const url = `https://${infoArr[1]}`

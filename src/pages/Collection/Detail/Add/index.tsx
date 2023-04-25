@@ -433,13 +433,12 @@ const Add: React.FC<{
                                 }]}
                               >
                                 <div className={classNames(styles.formItemInputContainer, styles.formListItemInputContainer)}>
-                                  <InputNumber
+                                  <Input
                                     bordered={false}
                                     placeholder={intl.formatMessage({
                                       id: "collection.add.form.attributes.value.placeholder"
                                     })}
                                     className={styles.formItemInput}
-                                    controls={false}
                                   />
                                 </div>
                               </Form.Item>
