@@ -10,6 +10,7 @@ import { API_CONFIG } from '@/constants/config';
 import { setupCoin98Wallet } from '@near-wallet-selector/coin98-wallet';
 import {
   Account,
+  NetworkId,
   Wallet,
   setupWalletSelector,
 } from '@near-wallet-selector/core';
@@ -59,6 +60,7 @@ export default () => {
   const [nearConnection, setNearConnection] = useState<Near>();
   const [nearAccount, setNearAccount] = useState<NearAccount>();
   const [activeAccount, setActiveAccount] = useState<string>();
+  const [viewAccount, setViewAccount] = useState<NearAccount>();
   const [nearKeyStore, setNearKeyStore] = useState<string>();
 
   const [successUrl, setSuccessUrl] = useState<string>();
@@ -156,7 +158,7 @@ export default () => {
   // Init Wallet Selector
   useEffect(() => {
     setupWalletSelector({
-      network: 'testnet',
+      network: API_CONFIG()?.networkId as NetworkId,
       modules: [
         setupNearWallet({successUrl, failureUrl}),
         setupMyNearWallet({successUrl, failureUrl}),
@@ -264,7 +266,8 @@ export default () => {
         ...API_CONFIG(),
       });
       setNearConnection(nearConnection);
-
+      const viewAccount = await nearConnection.account("view")
+      setViewAccount(viewAccount)
       if (!!activeAccount) {
         const nearAccount = await nearConnection.account(activeAccount);
         setNearAccount(nearAccount);
@@ -291,6 +294,7 @@ export default () => {
     walletList,
     nearConnection,
     nearAccount,
+    viewAccount,
     nearKeyStore,
     activeAccount,
     OpenModalWallet,

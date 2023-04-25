@@ -31,7 +31,7 @@ import { _NETWORK } from '@/constants/env';
 import { GetTotalServerCount, GetTotalVerifiedCount } from '@/services/api';
 
 const Home: React.FC = () => {
-  const { nearAccount } = useModel('near.account');
+  const { viewAccount } = useModel('near.account');
   const intl = useIntl();
   const inviteUrl = _NETWORK === 'mainnet' ? BOT_URL.mainnet : BOT_URL.testnet;
   const [collectionCount, setCollectionCount] = useState()
@@ -42,9 +42,9 @@ const Home: React.FC = () => {
     (async () => {
       setVerifiedCount(((await GetTotalVerifiedCount())?.data as Resp.GetTotalVerifiedCount).data as string)
       setServerCount(((await GetTotalServerCount())?.data as Resp.GetTotalServerCount).data as string)
-      setCollectionCount((await nearAccount?.viewFunction(API_CONFIG().NFT_CONTRACT, "get_collection_count", {})))
+      setCollectionCount((await viewAccount?.viewFunction(API_CONFIG().NFT_CONTRACT, "get_collection_count", {})))
     })();
-  }, [])
+  }, [viewAccount])
 
   return (
     <div className={styles.homeContainer}>

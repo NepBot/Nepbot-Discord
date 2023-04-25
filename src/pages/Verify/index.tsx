@@ -34,6 +34,7 @@ const Verify: React.FC = () => {
   const [expiredState, setExpiredState] = useState<boolean>(false);
   const [errorState, setErrorState] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [connectedAccountId, setConnectedAccountId] = useState<string | undefined>()
 
   const intl = useIntl();
   const location = useLocation();
@@ -54,6 +55,12 @@ const Verify: React.FC = () => {
           user_id: search.user_id,
           sign: search.sign
         });
+
+        const connectedAccountId = await GetConnected({
+          guild_id: search.guild_id!,
+          user_id: search.user_id!,
+        });
+        setConnectedAccountId(connectedAccountId)
 
         const userinfo = await GetUserInfo({
           guild_id: search.guild_id,
@@ -91,20 +98,13 @@ const Verify: React.FC = () => {
 
   useEffect(() => {
       (async () => {
-        if (!!discordInfo && !!nearAccount) {
+        if (!!discordInfo && !!nearAccount && !connectedAccountId && !loading) {
+          setLoading(true)
+          setConnectedAccountId(nearAccount?.accountId)
           const keystore = await GetKeyStore(nearAccount?.accountId);
 
           if (!keystore) {
             return;
-          }
-
-          const connectedAccountId = await GetConnected({
-            guild_id: search.guild_id!,
-            user_id: search.user_id!,
-          });
-
-          if (connectedAccountId == nearAccount?.accountId) {
-            return
           }
 
           const args = {
@@ -135,30 +135,28 @@ const Verify: React.FC = () => {
             setLoading(false);
             return;
           }
+          setLoading(false);
         }
       })();
     
-  }, [discordInfo, nearAccount]);
+  }, [discordInfo, nearAccount, connectedAccountId, loading]);
 
   const handleDisconnect = async () => {
-    if (!!nearWallet && !!nearWallet && !loading) {
+    if (!loading) {
       if (!!search.guild_id && !!search.user_id && !!search.sign) {
+        setConnectedAccountId(undefined)
         const args = {
           guild_id: search.guild_id,
           user_id: search.user_id,
           sign: search.sign
         }
-        const keystore = await GetKeyStore(nearAccount?.accountId);
-        await nearWallet.signOut();
 
-        const signature = await SignMessage({
-          keystore: keystore!,
-          object: args,
-        });
+        if (!!nearWallet && !!nearAccount) {
+          await nearWallet?.signOut();
+        }
+        
         let res = await DisconnectAccount({
           args: args,
-          account_id: nearAccount?.accountId,
-          sign: signature.signature,
         });
         
         notification.success({
@@ -212,14 +210,14 @@ const Verify: React.FC = () => {
                   {discordUser?.displayName}
                 </div>
                 <div className={styles.accountId}>
-                  {nearAccount?.accountId}
+                  {connectedAccountId}
                 </div>
                 <div className={styles.serverName}>
                   {discordServer?.name}
                 </div>
               </div>
               <div className={styles.buttonContainer}>
-                {(!nearWallet || !nearAccount) && (
+                {(!connectedAccountId) && (
                   <>
                     <div
                       className={classNames(styles.button, (!discordUser || !discordServer) && styles.buttonDisable)}
@@ -251,7 +249,7 @@ const Verify: React.FC = () => {
                     </div>
                   </>
                 )}
-                {!!nearWallet && !!nearAccount && (
+                {!!connectedAccountId && (
                   <>
                     {notification.success({
                       key: 'success.connect',

@@ -36,8 +36,7 @@ export const LIST = [
     list: [
       'Paras Loyalty Program',
       'Castle Overlord Whitelist',
-      'Verification',
-      'vSelf verification',
+      'Atocha Verification',
     ],
     icon: 'ic-SpecialSupport.webp',
   },
@@ -50,7 +49,7 @@ export const LIST = [
   {
     title: 'NFT Toolbox',
     content:
-      'Create exclusive NFTs for community members to mint. Synchronize tBadges, credentials, POAPs',
+      'Create exclusive NFTs for community members to mint. Synchronize Badges, credentials, POAPs',
     list: [],
     icon: 'ic-NFTToolbox.webp',
   },

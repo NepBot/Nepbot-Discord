@@ -143,7 +143,7 @@ export default defineConfig({
   npmClient: 'yarn',
   proxy: {
     '/api': {
-      target: 'http://13.214.203.20:8080',
+      target: 'http://18.141.153.225:8080',
       changeOrigin: true,
     },
     // '/arweave': {
